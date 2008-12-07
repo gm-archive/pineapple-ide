@@ -154,6 +154,7 @@ public class Core {
             System.out.println("-h --help          Displays this help message");
             System.out.println("-v --version       Displays the G-Creator version");
             System.out.println("-s --safe          Doesn't load plug-ins and settings (Safe mode)");
+            System.out.println("-l --license       Displays the Pineapple Core license");
             System.exit(0);
         } else if (args[0].equalsIgnoreCase("--version") || args[0].equalsIgnoreCase("-version") || args[0].equalsIgnoreCase("-v")) {
             System.out.println("G-Creator version " + Core.version());
@@ -162,8 +163,29 @@ public class Core {
             System.exit(0);
         } else if (args[0].equalsIgnoreCase("--safe") || args[0].equalsIgnoreCase("-s") || args[0].equalsIgnoreCase("-safe")) {
             safe = true;
-        } else {
-            safe = false;
+        } else if (args[0].equalsIgnoreCase("--license") || args[0].equalsIgnoreCase("-l")) {
+            System.out.println(
+"Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>\n"+
+"Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>\n"+
+"\n"+
+"Permission is hereby granted, free of charge, to any person obtaining a copy\n"+
+"of this software and associated documentation files (the \"Software\"), to deal\n"+
+"in the Software without restriction, including without limitation the rights\n"+
+"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"+
+"copies of the Software, and to permit persons to whom the Software is\n"+
+"furnished to do so, subject to the following conditions:\n"+
+"\n"+
+"The above copyright notice and this permission notice shall be included in\n"+
+"all copies or substantial portions of the Software.\n"+
+"\n"+
+"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"+
+"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"+
+"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"+
+"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"+
+"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"+
+"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"+
+"THE SOFTWARE.");
+            System.exit(0);
         }
         load(safe);
     }
