@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pdi version="1.0" name="X" extends="Y">
+<package>pineapple.testcase.sample1</package>
+<import>pineapple.lang</import>
+<import>pineapple.std</import>
+<field privacy="public" static="true" const="false" type="int" name="name"/>
+<method privacy="public" static="false" return="int" name="sum">
+<argument type="int" name="x"/>
+<argument type="string" name="y"/>
+</method>
+</pdi>

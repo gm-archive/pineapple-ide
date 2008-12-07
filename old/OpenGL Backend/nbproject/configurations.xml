@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="45">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>actor.h</itemPath>
+      <itemPath>application.h</itemPath>
+      <itemPath>color.h</itemPath>
+      <itemPath>drawable.h</itemPath>
+      <itemPath>drawingprimitives.h</itemPath>
+      <itemPath>dummy-interop.h</itemPath>
+      <itemPath>functionpointer.h</itemPath>
+      <itemPath>math.h</itemPath>
+      <itemPath>pineapple.h</itemPath>
+      <itemPath>scene.h</itemPath>
+      <itemPath>texture.h</itemPath>
+      <itemPath>unix-interop.h</itemPath>
+      <itemPath>view.h</itemPath>
+      <itemPath>window.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>actor.cpp</itemPath>
+      <itemPath>application.cpp</itemPath>
+      <itemPath>color.cpp</itemPath>
+      <itemPath>drawingprimitives.cpp</itemPath>
+      <itemPath>dummy-interop.cpp</itemPath>
+      <itemPath>functionpointer.cpp</itemPath>
+      <itemPath>math.cpp</itemPath>
+      <itemPath>pineapple.cpp</itemPath>
+      <itemPath>scene.cpp</itemPath>
+      <itemPath>texture.cpp</itemPath>
+      <itemPath>unix-interop.cpp</itemPath>
+      <itemPath>view.cpp</itemPath>
+      <itemPath>window.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceEncoding>UTF-8</sourceEncoding>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>/usr/include/SDL</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_DEBUG_</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>SDL</linkerLibLibItem>
+            <linkerLibLibItem>GL</linkerLibLibItem>
+            <linkerLibLibItem>SDL_image</linkerLibLibItem>
+            <linkerLibLibItem>GLU</linkerLibLibItem>
+            <linkerLibLibItem>m</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="actor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="actor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="application.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="application.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="color.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="color.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="drawable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="drawingprimitives.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="drawingprimitives.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="dummy-interop.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="dummy-interop.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="functionpointer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="functionpointer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="math.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="math.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="pineapple.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="pineapple.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="scene.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="scene.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="texture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="texture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="unix-interop.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="unix-interop.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="view.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="view.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="window.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="window.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <developmentMode>5</developmentMode>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>/usr/include/SDL</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_RELEASE_</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </ccCompilerTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <linkerLibItems>
+            <linkerLibLibItem>SDL</linkerLibLibItem>
+            <linkerLibLibItem>GL</linkerLibLibItem>
+            <linkerLibLibItem>SDL_image</linkerLibLibItem>
+            <linkerLibLibItem>GLU</linkerLibLibItem>
+            <linkerLibLibItem>m</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="actor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="actor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="application.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="application.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="color.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="color.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="drawable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="drawingprimitives.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="drawingprimitives.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="dummy-interop.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="dummy-interop.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="functionpointer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="functionpointer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="math.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="math.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="pineapple.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="pineapple.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="scene.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="scene.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="texture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="texture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="unix-interop.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="unix-interop.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="view.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="view.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="window.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="window.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
