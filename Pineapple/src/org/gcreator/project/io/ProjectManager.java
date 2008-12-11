@@ -77,6 +77,20 @@ public interface ProjectManager {
     public BasicFile createFolder(ProjectFolder folder, String name);
     
     /**
+     * Moves a {@link java.io.File} from the user's filesystem to
+     * the project and adds the resulting file to the project.
+     * 
+     * @param file The file to copy. This may be a file or a folder.
+     * @param folder The {@link ProjectFolder} to copy the new file to,
+     * or <tt>null</tt> if you just want to copy the file to the base 
+     * of the project.
+     * @param newName The new name of the file.
+     * 
+     * @return A new {@link BasicFile} to represent the newly copied file.
+     */
+    public BasicFile moveFileToProject(File file, ProjectFolder folder, String newName);
+    
+    /**
      * Imports some file (such as a ZIP) to the project.
      * Note that this isn't just called 'import' because
      * that is a Java keyword.

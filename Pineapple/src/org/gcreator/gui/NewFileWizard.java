@@ -2,6 +2,7 @@ package org.gcreator.gui;
 
 import java.awt.CardLayout;
 import javax.swing.AbstractListModel;
+import javax.swing.SwingUtilities;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
@@ -20,7 +21,7 @@ public final class NewFileWizard extends javax.swing.JDialog {
     private ProjectFolder folder;
     private Project project;
     private String type;
-    
+
     /**
      * Creates a {@link NewFileWizard}.
      * Note that this does not show the dialog.
@@ -36,8 +37,9 @@ public final class NewFileWizard extends javax.swing.JDialog {
         this.project = p;
         this.folder = f;
         initComponents();
+        locationTextField.setText((folder == null) ? "/" : folder.getFile().getPath());
         browseButton.setEnabled(allowChoose);
-        
+
         typesList.setModel(new AbstractListModel() {
 
             private static final long serialVersionUID = 1;
@@ -52,7 +54,7 @@ public final class NewFileWizard extends javax.swing.JDialog {
                 }
                 int i = 0;
                 for (String k : PineappleCore.fileTypeNames.values()) {
-                    if (index-1 == i) {
+                    if (index - 1 == i) {
                         return k;
                     }
                     i++;
@@ -60,10 +62,10 @@ public final class NewFileWizard extends javax.swing.JDialog {
                 return null;
             }
         });
-        
-        
+
+
     }
-    
+
     /**
      * Creates and shows a {@link NewFileWizard} with the default
      * selected folder as the project root, and allows you to chage
@@ -87,17 +89,17 @@ public final class NewFileWizard extends javax.swing.JDialog {
             if (text.equals(".")) {
                 text = "";
             } else {
-                text = text.substring(0, text.indexOf('.')-1);
+                text = text.substring(0, text.indexOf('.') - 1);
             }
-            
+
             final String fText = text;
-            new Thread() {
+            SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
                     fileNameTextField.setText(fText);
                 }
-            }.start();
-            
+            });
+
         }
         if (text.equals("") || text.contains("\\") || text.contains("/")) {
             finishButton.setEnabled(false);
@@ -277,8 +279,8 @@ public final class NewFileWizard extends javax.swing.JDialog {
 
         jLabel1.setText("Location:");
 
+        locationTextField.setEditable(false);
         locationTextField.setText("/");
-        locationTextField.setEnabled(false);
 
         browseButton.setText("Browse...");
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -429,11 +431,7 @@ private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
 private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
     folder = SelectFolderTree.showFolderDialog(project, this, "Select Folder");
-    if (folder == null) {
-        locationTextField.setText("/");
-    } else {
-        locationTextField.setText(folder.getFile().getPath());
-    }
+    locationTextField.setText((folder == null) ? "/" : folder.getFile().getPath());
 }//GEN-LAST:event_browseButtonActionPerformed
 
 private void fileNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameTextFieldActionPerformed
@@ -443,7 +441,6 @@ private void fileNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 private void fileNameTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_fileNameTextFieldCaretUpdate
     checkFinish();
 }//GEN-LAST:event_fileNameTextFieldCaretUpdate
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton browseButton;

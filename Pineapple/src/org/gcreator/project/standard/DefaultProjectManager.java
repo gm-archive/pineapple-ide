@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.project.standard;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,6 +44,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.gcreator.gui.CopyFileDialog;
+import org.gcreator.gui.PineappleGUI;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFolder;
@@ -68,7 +71,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class DefaultProjectManager implements ProjectManager {
 
     protected DefaultProject project;
-    public static final String[] PROJECT_TYPES = new String[] {
+    public static final String[] PROJECT_TYPES = new String[]{
         /* Pineapple Project File */
         "pmf",
     };
@@ -119,8 +122,8 @@ public class DefaultProjectManager implements ProjectManager {
      */
     public BasicFile createFile(ProjectFolder folder, String name, String type) {
         File f = new File(
-            ((folder == null) ? project.getProjectFolder() : ((FileFile)folder.getFile()).file),
-            name + "." + type);
+                ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
+                name + "." + type);
         try {
             f.createNewFile();
         } catch (IOException ex) {
@@ -138,14 +141,14 @@ public class DefaultProjectManager implements ProjectManager {
         }
         return ff;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public BasicFile createFolder(ProjectFolder folder, String name) {
         File f = new File(
-            ((folder == null) ? project.getProjectFolder() : ((FileFile)folder.getFile()).file),
-            name);
+                ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
+                name);
         f.mkdir();
         FileFile ff = new FileFile(f, project);
         if (folder == null) {
@@ -335,10 +338,79 @@ public class DefaultProjectManager implements ProjectManager {
     public void exportFile(File f) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public BasicFile moveFileToProject(File file, ProjectFolder folder, String newName) {
+        File newFile = copyFile(file, newName,
+                ((folder != null) 
+                ? ((FileFile)folder.getFile()).file
+                : project.getProjectFolder()));
+        
+        BasicFile f = new FileFile(newFile, project);
+        if (folder != null) {
+            folder.reload();
+        } else {
+            try {
+                project.add(project.createElement(f));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return f;
+    }
+
+    private File copyFile(File file, String newName, File folder) {
+        File newFile = null;
+        if (!file.exists()) {
+            System.out.println("File "+file+" does not exist");
+            return null;
+        }
+        if (file.isFile()) {
+            BufferedOutputStream out = null;
+            BufferedInputStream in = null;
+            try {
+                in = new BufferedInputStream(new FileInputStream(file));
+                newFile = new File(folder, newName);
+                if (!newFile.exists()) {
+                    newFile.createNewFile();
+                }
+                out = new BufferedOutputStream(new FileOutputStream(newFile));
+                int r;
+                while ((r = in.read()) != -1) {
+                    out.write(r);
+                }
+                PineappleGUI.tree.updateUI();
+            } catch (IOException ex) {
+                Logger.getLogger(CopyFileDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CopyFileDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else if (file.isDirectory()) {
+            newFile = new File(folder, newName);
+            if (!newFile.exists()) {
+                newFile.mkdir();
+            }
+            for (File f : file.listFiles()) {
+                copyFile(f, f.getName(), newFile);
+            }
+        }
+        return newFile;
+    }
+
     private final class ProjectXMLHandler implements ContentHandler {
 
         private Locator locator;
-        private boolean files,  settings;
+        private  boolean files, settings;
         private boolean loading;
         private DefaultProject project;
 

@@ -517,7 +517,7 @@ public class PineappleGUI implements EventHandler {
 
             @Override
             public boolean isEnabled() {
-                if (PineappleCore.getProject() == null) {
+                if (PineappleCore.getProject() == null || !super.isEnabled()) {
                     return false;
                 }
                 String[] s = PineappleCore.getProject().getManager().getImportFileTypes();
@@ -540,7 +540,7 @@ public class PineappleGUI implements EventHandler {
 
             @Override
             public boolean isEnabled() {
-                if (PineappleCore.getProject() == null) {
+                if (PineappleCore.getProject() == null || !super.isEnabled()) {
                     return false;
                 }
                 String[] s = PineappleCore.getProject().getManager().getExportFileTypes();
@@ -879,7 +879,7 @@ public class PineappleGUI implements EventHandler {
 
                     @Override
                     public boolean isEnabled() {
-                        if (PineappleCore.getProject() == null) {
+                        if (PineappleCore.getProject() == null || !super.isEnabled()) {
                             return false;
                         }
                         String[] s = PineappleCore.getProject().getManager().getImportFileTypes();
@@ -902,7 +902,7 @@ public class PineappleGUI implements EventHandler {
 
                     @Override
                     public boolean isEnabled() {
-                        if (PineappleCore.getProject() == null) {
+                        if (PineappleCore.getProject() == null || !super.isEnabled()) {
                             return false;
                         }
                         String[] s = PineappleCore.getProject().getManager().getExportFileTypes();
@@ -1125,12 +1125,10 @@ public class PineappleGUI implements EventHandler {
     //<editor-fold defaultstate="collapsed" desc="importFile()">
     /**
      * Imports a file to the PineappleCore.getProject().
+     * 
+     * TODO: RE-THINKING
      */
     public void importFile() {
-        if (PineappleCore.getProject() != null) {
-            closeProject();
-        }
-
         File f = showFileChooserSingle(createFileChooser("Select the file to import",
                 PineappleCore.getProject().getManager().getImportFileTypes(), "import-file"));
         if (f != null && f.exists()) {
@@ -1145,10 +1143,6 @@ public class PineappleGUI implements EventHandler {
      * Exports the porject to a file.
      */
     public void exportFile() {
-        if (PineappleCore.getProject() != null) {
-            closeProject();
-        }
-
         File f = showFileChooserSingle(createFileChooser("Export...", PineappleCore.getProject().getManager().getExportFileTypes(), "export-file"));
         if (f != null) {
             EventManager.fireEvent(this, PROJECT_EXPORTED, f);
@@ -1237,7 +1231,8 @@ public class PineappleGUI implements EventHandler {
                     JOptionPane.showMessageDialog(Core.getStaticContext().getMainFrame(),
                             "File " + f + "Does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                BasicFile bf;
+                BasicFile bf = null;
+                boolean fileAdded = false;
                 if (addFile) {
                     BaseTreeNode node = null;
                     for (ProjectElement e : PineappleCore.getProject().getFiles()) {
@@ -1246,42 +1241,24 @@ public class PineappleGUI implements EventHandler {
                         }
                     }
                     try {
-                        if (!f.getCanonicalPath().contains(PineappleCore.getProject().getProjectFolder().getCanonicalPath())) {
-                            int option = JOptionPane.showConfirmDialog(
-                                    Core.getStaticContext().getMainFrame(),
-                                    "<html>The given file, " + f + " is not a inside the project's directory.<br/>" +
-                                    "Do you want to copy it to a new location?</html>",
-                                    "Copy File",
-                                    JOptionPane.OK_CANCEL_OPTION);
-                            if (option != JOptionPane.OK_OPTION) {
-                                continue fileLoop;
-                            }
+                        if (!f.getCanonicalPath().startsWith(PineappleCore.getProject().getProjectFolder().getCanonicalPath())) {
 
-
-                            //TODO: change this around a bit, add some user input.
-                            File nf = new File(PineappleCore.getProject().getProjectFolder(), f.getName());
-                            int i = 0;
-                            while (nf.exists()) {
-                                nf = new File(PineappleCore.getProject().getProjectFolder(), f.getName() + i++);
+                            bf = new CopyFileDialog(Core.getStaticContext().getMainFrame(),
+                                    PineappleCore.getProject(), f, "Copy File to Project", null,  true).getCreatedFile();
+                            if (bf == null) {
+                                continue;
                             }
-                            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(nf));
-                            BufferedInputStream in = new BufferedInputStream(new FileInputStream(f));
-                            int read;
-                            while ((read = in.read()) != -1) {
-                                out.write(read);
-                            }
-                            in.close();
-                            out.close();
-                            f = nf;
+                            fileAdded = true;
                         }
                     } catch (IOException ex) {
                         Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
+                    if (bf == null) {
+                        bf = getProjectElement(f);
+                    }
 
-                    bf = getProjectElement(f);
-
-                    if (node == null) {
+                    if (node == null && !fileAdded) {
                         try {
                             ProjectElement e = PineappleCore.getProject().createElement(bf);
                             node = e.getTreeNode();
@@ -1700,7 +1677,8 @@ public class PineappleGUI implements EventHandler {
             bf = PineappleCore.getProject().getProjectType().createBasicFile(f, PineappleCore.getProject());
         } else {
             /* Shouldn't use FileFile, but will anyways. */
-            bf = new FileFile(f, null); /* NOTE:
+            bf = new FileFile(f, null); /* 
+             NOTE:
          * Can't use getPath() method
          * with null project.
          */

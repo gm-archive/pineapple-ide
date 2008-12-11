@@ -161,7 +161,7 @@ public class FileFile implements BasicFile {
      * {@inheritDoc}
      */
     public String getPath() {
-        return file.getPath().replaceAll(File.separator, "/").
+        return file.getPath().replaceAll("\\" + File.separator, "/").
                 substring(project.getProjectFolder().getPath().length());
     }
 

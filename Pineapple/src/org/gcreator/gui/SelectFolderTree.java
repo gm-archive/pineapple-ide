@@ -32,8 +32,12 @@ import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import org.gcreator.project.Project;
@@ -97,16 +101,30 @@ public final class SelectFolderTree extends JTree {
         final JDialog d = new JDialog(owner, title, ModalityType.APPLICATION_MODAL);
         d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         d.setLayout(new BorderLayout(4, 4));
-        final SelectFolderTree f = new SelectFolderTree(p);
-        d.add(new JScrollPane(f), BorderLayout.CENTER);
+        final DataStore r = new DataStore();
+        final SelectFolderTree tree = new SelectFolderTree(p);
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+
+            public void valueChanged(TreeSelectionEvent e) {
+                if (r.label != null) {
+                    r.folder = tree.getSelectedFolder();
+                    r.label.setText((r.folder != null) ? r.folder.getFile().getPath() : "/");
+                }
+            }
+        });
+        Box vbox = Box.createVerticalBox();
+        vbox.add(new JScrollPane(tree));
+        r.label = new JLabel("/");
+        r.label.setHorizontalAlignment(SwingConstants.LEFT);
+        vbox.add(r.label);
+        d.add(vbox, BorderLayout.CENTER);
         Box box = Box.createHorizontalBox();
         box.add(Box.createHorizontalGlue());
-        final Result r = new Result();
         JButton ok = new JButton("OK");
         ok.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                r.folder = f.getSelectedFolder();
+                r.folder = tree.getSelectedFolder();
                 d.dispose();
             }
         });
@@ -124,13 +142,13 @@ public final class SelectFolderTree extends JTree {
         box.add(Box.createHorizontalStrut(8));
         d.add(box, BorderLayout.SOUTH);
         d.pack();
-        d.setResizable(false);
         d.setVisible(true);
         return r.folder;
     }
     
-    private static class Result {
+    private static class DataStore {
         public ProjectFolder folder;
+        public JLabel label;
     }
     
     /* Classes */
