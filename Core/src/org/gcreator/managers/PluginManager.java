@@ -45,7 +45,7 @@ import org.gcreator.plugins.Plugin;
 public final class PluginManager {
 
     private static Vector<File> modules = new Vector<File>();
-
+    
     /** Don't allow instantation
      */
     private PluginManager() {
@@ -60,13 +60,23 @@ public final class PluginManager {
         importAppExePlugins();
         URL[] urls = new URL[modules.size()];
         int i = 0;
+        
         for (File file : modules) {
             try {
+                if (Core.DEBUG) {
+                System.out.println("Adding " + file);
+                }
                 urls[i++] = file.toURI().toURL();
             } catch (Exception e) {
             }
+        
         }
         URLClassLoader clsloader = new URLClassLoader(urls);
+        if (Core.DEBUG) {
+        for (URL l : clsloader.getURLs()) {
+            System.out.println("Loaded " + l);
+        }
+        }
         for (File file : modules) {
             String key = "plugins.enabled." + file.getPath();
             boolean enabled = !(SettingsManager.exists(key) && SettingsManager.get(key).equals(Boolean.FALSE.toString()));
@@ -82,11 +92,11 @@ public final class PluginManager {
         File f = new File(Core.getStaticContext().getApplicationDataFolder().toString() + "/Plugins/");
         System.out.println(f.toString());
         if (!f.exists()) {
-            System.out.println("Creating...");
+            System.out.println("Creating " + f);
             f.mkdir();
         }
         if (!f.isDirectory()) {
-            System.out.println("Not a directory");
+            System.out.println(f + " is Not a directory");
             return;
         }
         File[] fs = f.listFiles();
@@ -105,12 +115,12 @@ public final class PluginManager {
         File f = new File(Core.getStaticContext().getApplicationExecutableFolder().toString() + "/Plugins/");
         System.out.println(f.toString());
         if (!f.exists()) {
-            System.out.println("Creating...");
+            System.out.println("Creating "+f);
             f.mkdir();
             return;
         }
         if (!f.isDirectory()) {
-            System.out.println("Not a directory");
+            System.out.println(f + " is Not a directory");
             return;
         }
         File[] fs = f.listFiles();
@@ -131,13 +141,19 @@ public final class PluginManager {
      */
     public static void importPlugin(File f, URLClassLoader loader, boolean enabled) {
         try {
-            System.out.println("Loading plugin: " + f.toString());
             JarInputStream jaris = new JarInputStream(new FileInputStream(f));
             Manifest m = jaris.getManifest();
+            if (m == null) {
+                return;
+            }
             jaris.close();
             Attributes a = m.getMainAttributes();
             String className = a.getValue("Pineapple-EntryPoint");
-            if (className != null && className.equals("org.gcreator.game2d.GamePlugin")) {
+            if (className == null) {
+                return;
+            }
+            /*Don't load the 2D Game Plugin*/
+            if (className.equals("org.gcreator.game2d.GamePlugin")) {
                 return;
             }
             load(f, className, loader, enabled);
@@ -167,18 +183,25 @@ public final class PluginManager {
             return;
         }
         try {
-            System.out.println("Loading " + f.toString());
-
+            if (Core.DEBUG) {
+            System.out.println("Loading Plugin Class " + className + " in " + f.getName());
+            }
             Class c = loader.loadClass(className);
             Object o = c.getConstructor().newInstance();
             if (!(o instanceof Plugin)) {
                 return;
             }
             Plugin p = (Plugin) o;
+            if (Core.DEBUG) {
+            System.out.println("Installed Plugin '" + p.getName() + "'");
+            }
             p.setJar(f);
             p.setEnabled(enabled);
             Core.getStaticContext().addPlugin(p);
             if (enabled) {
+                if (Core.DEBUG) {
+                System.out.println("Initializing '" + p.getName() + "'");
+                }
                 Method d = c.getMethod("initialize");
                 d.invoke(o);
             }

@@ -46,9 +46,13 @@ public class Core {
     /* 0.97... -> Alpha
      * ...004 -> 4       */
     private static final double version = 0.97004;
-    private static boolean safe;
     private static final StaticContext staticContext = new StaticContext();
-
+    
+    /**
+     * Whether to print debuging information.
+     */
+    public static final boolean DEBUG = false;
+    
     /**
      * Don't allow instantation */
     private Core() {
@@ -56,10 +60,10 @@ public class Core {
 
     /**
      * Loads the G-Creator core, modules, and settings.
-     * @param safe If <tt>true</tt>, don't load plugins and settings.
+     * 
      * @see #unload()
      */
-    protected static void load(boolean safe) {
+    protected static void load() {
         /* Logging code for Alpha testing releases */
         try {
             DateFormat d = DateFormat.getDateInstance();
@@ -69,15 +73,11 @@ public class Core {
             e.printStackTrace();
         }
         /* End of logging code */
-        
-        Core.safe = safe;
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
 
-        if (!Core.safe) {
-            SettingsManager.load();
-            PluginManager.loadPlugins();
-        }
+        SettingsManager.load();
+        PluginManager.loadPlugins();
 
         /* Initilize the main window */
         EventManager.addEventHandler(new EventHandler() {
@@ -108,9 +108,9 @@ public class Core {
      * @see #load(boolean)
      */
     protected static void unload() {
-        if (!Core.safe) {
-            SettingsManager.unload();
-        }
+
+        SettingsManager.unload();
+
     }
 
     /**
@@ -120,14 +120,6 @@ public class Core {
      */
     public static double version() {
         return version;
-    }
-
-    /**
-     * Returns wheter or not safe mode is on.
-     * @return <tt>true</tt> if safe mode is on. Otherwise <tt>false</tt>.
-     */
-    public boolean isSafeMode() {
-        return safe;
     }
 
     /**
@@ -144,16 +136,12 @@ public class Core {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        boolean safe = false;
-
         if (args.length == 0) {
-            safe = false;
         } else if (args[0].equalsIgnoreCase("--help") || args[0].equalsIgnoreCase("-help") || args[0].equalsIgnoreCase("-h")) {
             System.out.println("G-Creator version " + Core.version());
             System.out.println("Usage: gcreator [options] [file]");
             System.out.println("-h --help          Displays this help message");
             System.out.println("-v --version       Displays the G-Creator version");
-            System.out.println("-s --safe          Doesn't load plug-ins and settings (Safe mode)");
             System.out.println("-l --license       Displays the Pineapple Core license");
             System.exit(0);
         } else if (args[0].equalsIgnoreCase("--version") || args[0].equalsIgnoreCase("-version") || args[0].equalsIgnoreCase("-v")) {
@@ -161,32 +149,30 @@ public class Core {
             System.out.println("Copyright © 2005-2008 The G-Creator Project");
             System.out.println("http://www.g-creator.org");
             System.exit(0);
-        } else if (args[0].equalsIgnoreCase("--safe") || args[0].equalsIgnoreCase("-s") || args[0].equalsIgnoreCase("-safe")) {
-            safe = true;
         } else if (args[0].equalsIgnoreCase("--license") || args[0].equalsIgnoreCase("-l")) {
             System.out.println(
-"Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>\n"+
-"Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>\n"+
-"\n"+
-"Permission is hereby granted, free of charge, to any person obtaining a copy\n"+
-"of this software and associated documentation files (the \"Software\"), to deal\n"+
-"in the Software without restriction, including without limitation the rights\n"+
-"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"+
-"copies of the Software, and to permit persons to whom the Software is\n"+
-"furnished to do so, subject to the following conditions:\n"+
-"\n"+
-"The above copyright notice and this permission notice shall be included in\n"+
-"all copies or substantial portions of the Software.\n"+
-"\n"+
-"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"+
-"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"+
-"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"+
-"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"+
-"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"+
-"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"+
-"THE SOFTWARE.");
+                    "Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>\n" +
+                    "Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>\n" +
+                    "\n" +
+                    "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
+                    "of this software and associated documentation files (the \"Software\"), to deal\n" +
+                    "in the Software without restriction, including without limitation the rights\n" +
+                    "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n" +
+                    "copies of the Software, and to permit persons to whom the Software is\n" +
+                    "furnished to do so, subject to the following conditions:\n" +
+                    "\n" +
+                    "The above copyright notice and this permission notice shall be included in\n" +
+                    "all copies or substantial portions of the Software.\n" +
+                    "\n" +
+                    "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n" +
+                    "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n" +
+                    "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n" +
+                    "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n" +
+                    "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n" +
+                    "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n" +
+                    "THE SOFTWARE.");
             System.exit(0);
         }
-        load(safe);
+        load();
     }
 }

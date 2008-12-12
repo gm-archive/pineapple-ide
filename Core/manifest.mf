@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
 X-COMMENT: Main-Class will be added automatically by build
 Main-Class: org.gcreator.core.Core
+Class-Path: Plugins/*
 

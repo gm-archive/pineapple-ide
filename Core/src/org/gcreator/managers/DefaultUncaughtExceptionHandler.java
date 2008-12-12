@@ -41,7 +41,7 @@ public class DefaultUncaughtExceptionHandler implements Thread.UncaughtException
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        Logger.getLogger(DefaultUncaughtExceptionHandler.class.getName()).log(Level.SEVERE, "Exception in thread "+t.getName()+":", e);
+        Logger.getLogger(t.getClass().getName()).log(Level.SEVERE, "Exception in thread "+t.getName()+":", e);
     }
 
 }
