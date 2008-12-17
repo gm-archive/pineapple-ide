@@ -995,38 +995,6 @@ public class PineappleGUI implements EventHandler {
 
             final ProjectTreeNode node = (ProjectTreeNode) o;
 
-            JMenuItem tfileSaveProject = new JMenuItem("Save Project") {
-
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean isEnabled() {
-                    return PineappleCore.getProject() != null &&
-                            PineappleCore.getProject().allowsSave() && super.isEnabled();
-                }
-            };
-            menu.add(tfileSaveProject);
-
-            JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
-
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean isEnabled() {
-                    return PineappleCore.getProject() != null && super.isEnabled();
-                }
-            };
-            tprojectAdd.setMnemonic('A');
-            tprojectAdd.setVisible(true);
-            tprojectAdd.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    openFile(true, true, null, false);
-                }
-            });
-            menu.add(tprojectAdd);
-
             JMenuItem newFile = new JMenuItem("New File/Folder...") {
 
                 private static final long serialVersionUID = 1;
@@ -1046,6 +1014,54 @@ public class PineappleGUI implements EventHandler {
                 }
             });
             menu.add(newFile);
+            
+            JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null && super.isEnabled();
+                }
+            };
+            tprojectAdd.setMnemonic('A');
+            tprojectAdd.setVisible(true);
+            tprojectAdd.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    openFile(true, true, null, false);
+                }
+            });
+            menu.add(tprojectAdd);
+            
+            menu.addSeparator();
+            
+            JMenuItem tfileSaveProject = new JMenuItem("Save Project") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null &&
+                            PineappleCore.getProject().allowsSave() && super.isEnabled();
+                }
+            };
+            menu.add(tfileSaveProject);
+            
+            menu.add("Rename").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String s = JOptionPane.showInputDialog(
+                            Core.getStaticContext().getMainFrame(),
+                            "New name:",
+                            PineappleCore.getProject().getName());
+                    if (s != null && !s.equals("")) {
+                        PineappleCore.getProject().setName(s);
+                    }
+                }
+            });
 
             JMenuItem tprojectRemove = new JMenuItem("Close");
             tprojectRemove.setMnemonic('C');
@@ -1061,6 +1077,7 @@ public class PineappleGUI implements EventHandler {
             });
             menu.add(tprojectRemove);
 
+            menu.addSeparator();
 
             JMenuItem tprojectImport = new JMenuItem("Import") {
 
@@ -1140,6 +1157,7 @@ public class PineappleGUI implements EventHandler {
                 });
                 openWith.add(m);
             }
+            
             JMenuItem other = new JMenuItem("Other...");
             other.setMnemonic('O');
             other.setEnabled(true);
@@ -1158,6 +1176,8 @@ public class PineappleGUI implements EventHandler {
             openWith.add(other);
 
             menu.add(openWith);
+            
+            menu.addSeparator();
 
             if (o instanceof BaseTreeNode &&
                     PineappleCore.getProject().indexOf(((BaseTreeNode) o).getElement()) != -1) {
@@ -1172,53 +1192,9 @@ public class PineappleGUI implements EventHandler {
                 });
             }
         }
-        if (o instanceof BaseTreeNode) {
-            final BaseTreeNode t = (BaseTreeNode) o;
-            menu.add("Rename").addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String s = JOptionPane.showInputDialog(
-                            Core.getStaticContext().getMainFrame(),
-                            "New name:",
-                            "Rename file",
-                            JOptionPane.QUESTION_MESSAGE);
-                    if (s != null) {
-                        try {
-                            PineappleCore.getProject().rename(t.getElement().getFile(), s);
-                        } catch (Exception ex) {
-                        }
-                    }
-                    EventManager.fireEvent(this, FILE_RENAMED, t.getElement(), s);
-                }
-            });
-        } else if (o instanceof ProjectTreeNode) {
-            menu.add("Rename").addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String s = JOptionPane.showInputDialog(
-                            Core.getStaticContext().getMainFrame(),
-                            "New name:",
-                            PineappleCore.getProject().getName());
-                    if (s != null && !s.equals("")) {
-                        PineappleCore.getProject().setName(s);
-                    }
-                }
-            });
-        }
 
         if (o instanceof FolderTreeNode) {
             final ProjectFolder f = (ProjectFolder) ((FolderTreeNode) o).getElement();
-            menu.add("Refresh").addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    f.reload();
-                    tree.updateUI();
-                }
-            });
-
             JMenuItem newFile = new JMenuItem("New File/Folder...") {
 
                 private static final long serialVersionUID = 1;
@@ -1258,6 +1234,42 @@ public class PineappleGUI implements EventHandler {
                 }
             });
             menu.add(addFile);
+            
+            menu.addSeparator();
+            
+            menu.add("Refresh").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    f.reload();
+                    tree.updateUI();
+                }
+            });
+        }
+        
+        if (o instanceof BaseTreeNode) {
+            final BaseTreeNode t = (BaseTreeNode) o;
+            
+            
+            
+            menu.add("Rename").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String s = JOptionPane.showInputDialog(
+                            Core.getStaticContext().getMainFrame(),
+                            "New name:",
+                            "Rename file",
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (s != null) {
+                        try {
+                            PineappleCore.getProject().rename(t.getElement().getFile(), s);
+                        } catch (Exception ex) {
+                        }
+                    }
+                    EventManager.fireEvent(this, FILE_RENAMED, t.getElement(), s);
+                }
+            });
         }
 
         if (o instanceof BaseTreeNode) {
@@ -1269,6 +1281,7 @@ public class PineappleGUI implements EventHandler {
                 }
             });
         }
+        
     }
     //</editor-fold>
     
