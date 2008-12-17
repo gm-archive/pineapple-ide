@@ -437,6 +437,7 @@ public class PineappleGUI implements EventHandler {
         });
         fileMenu.add(fileSave);
 
+        fileMenu.addSeparator();
 
         fileExit = new JMenuItem("Exit");
         fileExit.setMnemonic('x');
@@ -820,290 +821,11 @@ public class PineappleGUI implements EventHandler {
                 return;
             }
             JPopupMenu menu = (JPopupMenu) evt.getArguments()[0];
-            final Object o = evt.getArguments()[1];
+            Object o = evt.getArguments()[1];
 
-            //<editor-fold defaultstate="collapsed" desc="Project">
-            if (o instanceof ProjectTreeNode) {
-
-                final ProjectTreeNode node = (ProjectTreeNode) o;
-
-                JMenuItem tfileSaveProject = new JMenuItem("Save Project") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        return PineappleCore.getProject() != null &&
-                                PineappleCore.getProject().allowsSave() && super.isEnabled();
-                    }
-                };
-                menu.add(tfileSaveProject);
-
-                JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        return PineappleCore.getProject() != null && super.isEnabled();
-                    }
-                };
-                tprojectAdd.setMnemonic('A');
-                tprojectAdd.setVisible(true);
-                tprojectAdd.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        openFile(true, true, null, false);
-                    }
-                });
-                menu.add(tprojectAdd);
-
-                JMenuItem newFile = new JMenuItem("New File/Folder...") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        return PineappleCore.getProject() != null && super.isEnabled();
-                    }
-                };
-                newFile.setMnemonic('N');
-                newFile.setVisible(true);
-                newFile.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        new NewFileWizard(Core.getStaticContext().getMainFrame(), node.getProject(), null, false).setVisible(true);
-                    }
-                });
-                menu.add(newFile);
-
-                JMenuItem tprojectRemove = new JMenuItem("Close");
-                tprojectRemove.setMnemonic('C');
-                tprojectRemove.setVisible(true);
-                tprojectRemove.setEnabled(true);
-                tprojectRemove.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        closeProject();
-                        tree.updateUI();
-                    }
-                });
-                menu.add(tprojectRemove);
+            popupTreeMenu(menu, o);
 
 
-                JMenuItem tprojectImport = new JMenuItem("Import") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        if (PineappleCore.getProject() == null || !super.isEnabled()) {
-                            return false;
-                        }
-                        String[] s = PineappleCore.getProject().getManager().getImportFileTypes();
-                        return (s != null && s.length > 0);
-                    }
-                };
-                tprojectImport.setMnemonic('I');
-                tprojectImport.setVisible(true);
-                tprojectImport.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        importFile();
-                    }
-                });
-                menu.add(tprojectImport);
-
-                JMenuItem tprojectExport = new JMenuItem("Export") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        if (PineappleCore.getProject() == null || !super.isEnabled()) {
-                            return false;
-                        }
-                        String[] s = PineappleCore.getProject().getManager().getExportFileTypes();
-                        return (s != null && s.length > 0);
-                    }
-                };
-                tprojectExport.setMnemonic('E');
-                tprojectExport.setVisible(true);
-                tprojectExport.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        exportFile();
-                    }
-                });
-                menu.add(tprojectExport);
-
-            }
-            //</editor-fold>
-
-            if (o instanceof FileTreeNode) {
-                final FileTreeNode n = (FileTreeNode) o;
-                menu.add("Open...").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        openFile(n.getElement().getFile());
-                    }
-                });
-
-                JMenu openWith = new JMenu("Open With");
-                for (final FormatSupporter s : getFormatSupporters(n.getElement().getName())) {
-                    if (s == null) {
-                        continue;
-                    }
-                    JMenuItem m = new JMenuItem(s.getName());
-                    m.setEnabled(true);
-                    m.setVisible(true);
-                    m.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            s.load(n.getElement().getFile());
-                        }
-                    });
-                    openWith.add(m);
-                }
-                JMenuItem other = new JMenuItem("Other...");
-                other.setMnemonic('O');
-                other.setEnabled(true);
-                other.setVisible(true);
-                other.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        FormatSupporter s = getFormatSupporter(n.getElement().getFile(), true);
-                        if (s == null) {
-                            return;
-                        }
-                        s.load(n.getElement().getFile());
-                    }
-                });
-                openWith.add(other);
-
-                menu.add(openWith);
-
-            }
-
-
-            if (o instanceof BaseTreeNode &&
-                    PineappleCore.getProject().indexOf(((BaseTreeNode) o).getElement()) != -1) {
-                final BaseTreeNode t = (BaseTreeNode) o;
-                menu.add("Remove").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        PineappleCore.getProject().remove(t.getElement());
-                        EventManager.fireEvent(this, FILE_REMOVED, t.getElement());
-                    }
-                });
-            }
-
-            if (o instanceof BaseTreeNode) {
-                final BaseTreeNode t = (BaseTreeNode) o;
-                menu.add("Rename").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String s = JOptionPane.showInputDialog(
-                                Core.getStaticContext().getMainFrame(),
-                                "New name:",
-                                "Rename file",
-                                JOptionPane.QUESTION_MESSAGE);
-                        if (s != null) {
-                            try {
-                                PineappleCore.getProject().rename(t.getElement().getFile(), s);
-                            } catch (Exception ex) {
-                            }
-                        }
-                        EventManager.fireEvent(this, FILE_RENAMED, t.getElement(), s);
-                    }
-                });
-            } else if (o instanceof ProjectTreeNode) {
-                menu.add("Rename").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String s = JOptionPane.showInputDialog(
-                                Core.getStaticContext().getMainFrame(),
-                                "New name:",
-                                PineappleCore.getProject().getName());
-                        if (s != null && !s.equals("")) {
-                            PineappleCore.getProject().setName(s);
-                        }
-                    }
-                });
-            }
-
-            if (o instanceof FolderTreeNode) {
-                final ProjectFolder f = (ProjectFolder) ((FolderTreeNode) o).getElement();
-                menu.add("Update").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        f.reload();
-                        tree.updateUI();
-                    }
-                });
-
-                JMenuItem newFile = new JMenuItem("New File/Folder...") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        return PineappleCore.getProject() != null && super.isEnabled();
-                    }
-                };
-                newFile.setMnemonic('N');
-                newFile.setVisible(true);
-                newFile.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        new NewFileWizard(Core.getStaticContext().getMainFrame(), f.getProject(), f, false).setVisible(true);
-                    }
-                });
-                menu.add(newFile);
-                
-                JMenuItem addFile = new JMenuItem("Add File/Folder...") {
-
-                    private static final long serialVersionUID = 1;
-
-                    @Override
-                    public boolean isEnabled() {
-                        return PineappleCore.getProject() != null && super.isEnabled();
-                    }
-                };
-                addFile.setMnemonic('A');
-                addFile.setVisible(true);
-                addFile.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        openFile(true, true, f, false);
-                    }
-                });
-                menu.add(addFile);
-            }
-
-            if (o instanceof BaseTreeNode) {
-                menu.add("Delete").addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        deleteFile(((BaseTreeNode) o).getElement());
-                    }
-                });
-            }
         //</editor-fold>
         } else if (evt.getEventType().equals(PROJECT_SAVED)) {
             if (evt.getArguments().length < 1) {
@@ -1121,7 +843,7 @@ public class PineappleGUI implements EventHandler {
         }
     }
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="openFile(BaiscFile)">
+    //<editor-fold defaultstate="collapsed" desc="openFile(BasicFile)">
     /**
      * Opens a given file
      * @param f The file to open
@@ -1264,11 +986,294 @@ public class PineappleGUI implements EventHandler {
         dialog.setVisible(true);
     }
     //</editor-fold>
-    
+    //<editor-fold defaultstate="collapsed" desc="popupTreeMenu(JPopupMenu, Object)">
+    public void popupTreeMenu(JPopupMenu menu,final Object o) {
+        
+
+        //<editor-fold defaultstate="collapsed" desc="Project">
+        if (o instanceof ProjectTreeNode) {
+
+            final ProjectTreeNode node = (ProjectTreeNode) o;
+
+            JMenuItem tfileSaveProject = new JMenuItem("Save Project") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null &&
+                            PineappleCore.getProject().allowsSave() && super.isEnabled();
+                }
+            };
+            menu.add(tfileSaveProject);
+
+            JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null && super.isEnabled();
+                }
+            };
+            tprojectAdd.setMnemonic('A');
+            tprojectAdd.setVisible(true);
+            tprojectAdd.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    openFile(true, true, null, false);
+                }
+            });
+            menu.add(tprojectAdd);
+
+            JMenuItem newFile = new JMenuItem("New File/Folder...") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null && super.isEnabled();
+                }
+            };
+            newFile.setMnemonic('N');
+            newFile.setVisible(true);
+            newFile.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    new NewFileWizard(Core.getStaticContext().getMainFrame(), node.getProject(), null, false).setVisible(true);
+                }
+            });
+            menu.add(newFile);
+
+            JMenuItem tprojectRemove = new JMenuItem("Close");
+            tprojectRemove.setMnemonic('C');
+            tprojectRemove.setVisible(true);
+            tprojectRemove.setEnabled(true);
+            tprojectRemove.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    closeProject();
+                    tree.updateUI();
+                }
+            });
+            menu.add(tprojectRemove);
+
+
+            JMenuItem tprojectImport = new JMenuItem("Import") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    if (PineappleCore.getProject() == null || !super.isEnabled()) {
+                        return false;
+                    }
+                    String[] s = PineappleCore.getProject().getManager().getImportFileTypes();
+                    return (s != null && s.length > 0);
+                }
+            };
+            tprojectImport.setMnemonic('I');
+            tprojectImport.setVisible(true);
+            tprojectImport.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    importFile();
+                }
+            });
+            menu.add(tprojectImport);
+
+            JMenuItem tprojectExport = new JMenuItem("Export") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    if (PineappleCore.getProject() == null || !super.isEnabled()) {
+                        return false;
+                    }
+                    String[] s = PineappleCore.getProject().getManager().getExportFileTypes();
+                    return (s != null && s.length > 0);
+                }
+            };
+            tprojectExport.setMnemonic('E');
+            tprojectExport.setVisible(true);
+            tprojectExport.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    exportFile();
+                }
+            });
+            menu.add(tprojectExport);
+
+        }
+        //</editor-fold>
+
+        if (o instanceof FileTreeNode) {
+            final FileTreeNode n = (FileTreeNode) o;
+            menu.add("Open...").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openFile(n.getElement().getFile());
+                }
+            });
+
+            JMenu openWith = new JMenu("Open With");
+            for (final FormatSupporter s : getFormatSupporters(n.getElement().getName())) {
+                if (s == null) {
+                    continue;
+                }
+                JMenuItem m = new JMenuItem(s.getName());
+                m.setEnabled(true);
+                m.setVisible(true);
+                m.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        s.load(n.getElement().getFile());
+                    }
+                });
+                openWith.add(m);
+            }
+            JMenuItem other = new JMenuItem("Other...");
+            other.setMnemonic('O');
+            other.setEnabled(true);
+            other.setVisible(true);
+            other.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    FormatSupporter s = getFormatSupporter(n.getElement().getFile(), true);
+                    if (s == null) {
+                        return;
+                    }
+                    s.load(n.getElement().getFile());
+                }
+            });
+            openWith.add(other);
+
+            menu.add(openWith);
+
+            if (o instanceof BaseTreeNode &&
+                    PineappleCore.getProject().indexOf(((BaseTreeNode) o).getElement()) != -1) {
+                final BaseTreeNode t = (BaseTreeNode) o;
+                menu.add("Remove").addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PineappleCore.getProject().remove(t.getElement());
+                        EventManager.fireEvent(this, FILE_REMOVED, t.getElement());
+                    }
+                });
+            }
+        }
+        if (o instanceof BaseTreeNode) {
+            final BaseTreeNode t = (BaseTreeNode) o;
+            menu.add("Rename").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String s = JOptionPane.showInputDialog(
+                            Core.getStaticContext().getMainFrame(),
+                            "New name:",
+                            "Rename file",
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (s != null) {
+                        try {
+                            PineappleCore.getProject().rename(t.getElement().getFile(), s);
+                        } catch (Exception ex) {
+                        }
+                    }
+                    EventManager.fireEvent(this, FILE_RENAMED, t.getElement(), s);
+                }
+            });
+        } else if (o instanceof ProjectTreeNode) {
+            menu.add("Rename").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String s = JOptionPane.showInputDialog(
+                            Core.getStaticContext().getMainFrame(),
+                            "New name:",
+                            PineappleCore.getProject().getName());
+                    if (s != null && !s.equals("")) {
+                        PineappleCore.getProject().setName(s);
+                    }
+                }
+            });
+        }
+
+        if (o instanceof FolderTreeNode) {
+            final ProjectFolder f = (ProjectFolder) ((FolderTreeNode) o).getElement();
+            menu.add("Refresh").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    f.reload();
+                    tree.updateUI();
+                }
+            });
+
+            JMenuItem newFile = new JMenuItem("New File/Folder...") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null && super.isEnabled();
+                }
+            };
+            newFile.setMnemonic('N');
+            newFile.setVisible(true);
+            newFile.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    new NewFileWizard(Core.getStaticContext().getMainFrame(), f.getProject(), f, false).setVisible(true);
+                }
+            });
+            menu.add(newFile);
+
+            JMenuItem addFile = new JMenuItem("Add File/Folder...") {
+
+                private static final long serialVersionUID = 1;
+
+                @Override
+                public boolean isEnabled() {
+                    return PineappleCore.getProject() != null && super.isEnabled();
+                }
+            };
+            addFile.setMnemonic('A');
+            addFile.setVisible(true);
+            addFile.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    openFile(true, true, f, false);
+                }
+            });
+            menu.add(addFile);
+        }
+
+        if (o instanceof BaseTreeNode) {
+            menu.add("Delete").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    deleteFile(((BaseTreeNode) o).getElement());
+                }
+            });
+        }
+    }
+    //</editor-fold>
     
     /* Private methods 
      */
-    
     
     //<editor-fold defaultstate="collapsed" desc="openFile(boolean, boolean, ProjectFolder, boolean)">
     private void openFile(boolean addFile, boolean allowFolder, ProjectFolder defaultFolder, boolean allowBrowse) {
