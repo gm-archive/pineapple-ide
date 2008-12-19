@@ -152,10 +152,6 @@ public final class PluginManager {
             if (className == null) {
                 return;
             }
-            /*Don't load the 2D Game Plugin*/
-            if (className.equals("org.gcreator.game2d.GamePlugin")) {
-                return;
-            }
             load(f, className, loader, enabled);
         } catch (Exception e) {
             Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);

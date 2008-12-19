@@ -44,8 +44,8 @@ import org.gcreator.managers.PluginManager;
 public class Core {
 
     /* 0.97... -> Alpha
-     * ...004 -> 4       */
-    private static final double version = 0.97004;
+     * ...005 -> 5       */
+    private static final double version = 0.97005;
     private static final StaticContext staticContext = new StaticContext();
     
     /**

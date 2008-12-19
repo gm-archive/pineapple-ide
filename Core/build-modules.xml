@@ -10,7 +10,7 @@
     <ant antfile="PineDL/build-module.xml" />
     <ant antfile="PineDL Cpp Compiler/build-module.xml" />
     <ant antfile="Syntax Highlighter/build-module.xml" />
-  <!--  <ant antfile="Game Plugin 2D/build-module.xml" /> -->
+    <ant antfile="Game Plugin 2D/build-module.xml" />
     </target>
     
 </project>
