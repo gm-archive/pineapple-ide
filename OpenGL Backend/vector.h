@@ -20,6 +20,8 @@ public:
 
     virtual float getDirection() = 0;
     virtual float getSpeed() = 0;
+
+    virtual void add(Vector* v) = 0;
 };
 
 class VectorXY : public Vector
@@ -57,6 +59,12 @@ public:
     {
         return sqrt(x * x + y * y);
     }
+
+    void add(Vector* v)
+    {
+        x += v->getX();
+        y += v->getY();
+    }
 };
 
 class VectorRV : public Vector
@@ -85,6 +93,12 @@ public:
     {
         direction = atan2(getX(), y) * 180/pi;
         speed = sqrt(getX() * getX() + y * y);
+    }
+
+    void add(Vector* v)
+    {
+        setX(getX() + v->getX());
+        setY(getY() + v->getY());
     }
 };
 

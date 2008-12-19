@@ -7,10 +7,8 @@ using namespace Pineapple;
 class Ship : public Actor
 {
 public:
-    Ship(int x, int y)
+    Ship(int x, int y) : Actor(x, y)
     {
-        this->x = x;
-        this->y = y;
         setFriction(1);
         setMotionMode(MotionRV);
 
@@ -45,11 +43,9 @@ public:
 class TestScene : public Scene
 {
 public:
-    TestScene()
+    TestScene() : Scene(640, 480)
     {
         addActor(new Ship(50, 50));
-        width = 640;
-        height = 480;
     }
 };
 

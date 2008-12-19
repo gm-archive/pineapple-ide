@@ -6,12 +6,13 @@ using namespace Pineapple;
 //
 //Set actor defaults
 //
-Actor::Actor()
+Actor::Actor(float x, float y)
 {
     angle = 0;
-    x = y = 0;
+    this->x = x;
+    this->y = y;
     motion = new VectorXY(0, 0);
-    gravity = new VectorRV(0, 270);
+    gravity = new VectorRV(270, 0);
     friction = 0;
 }
 
@@ -59,7 +60,10 @@ void Actor::setMotionMode(Motion m)
 //
 void Actor::move()
 {
-    motion->setSpeed(sign(motion->getSpeed()) * min(abs(motion->getSpeed()) - friction, 8.0f));
+    if (friction != 0)
+        motion->setSpeed(sign(motion->getSpeed()) * (abs(motion->getSpeed()) - friction));
+    if (getGravity() != 0)
+        motion->add(gravity);
 
     x += motion->getX();
     y += motion->getY();

@@ -17,8 +17,14 @@ protected:
     float angle;
     float x, y;
 public:
-    Actor();
+    Actor(float x = 0, float y = 0);
     virtual ~Actor();
+
+    float getX() { return x; }
+    float getY() { return y; }
+
+    void setX(float x) { this->x = x; }
+    void setY(float y) { this->y = y; }
 
     float getHSpeed() { return motion->getX(); }
     float getVSpeed() { return motion->getY(); }

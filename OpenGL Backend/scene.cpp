@@ -10,9 +10,11 @@ using namespace Pineapple;
 //
 //Scene base constructor
 //
-Scene::Scene()
+Scene::Scene(int width, int height)
 {
     glClearColor(0, 0, 0, 1);
+    this->width = width;
+    this->height = height;
 }
 
 //
