@@ -16,13 +16,13 @@ namespace Pineapple
         }
 
         template <class T>
-        inline int max(T a, T b)
+        inline T max(T a, T b)
         {
             return (a > b) ? a : b;
         }
 
         template <class T>
-        inline int min(T a, T b)
+        inline T min(T a, T b)
         {
             return (a < b) ? a : b;
         }
