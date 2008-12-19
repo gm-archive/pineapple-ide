@@ -29,11 +29,6 @@
               <Component id="finishButton" min="-2" pref="81" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="errorLabel" pref="378" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-          </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -55,6 +50,15 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="errorLabel" pref="390" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="deleteOldFileCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="274" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -74,11 +78,13 @@
                   <Component id="locationTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="errorLabel" pref="131" max="32767" attributes="0"/>
+              <Component id="deleteOldFileCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="errorLabel" pref="103" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="finishButton" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                  <Component id="cancelButton" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                  <Component id="cancelButton" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -89,7 +95,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;strong&gt;Copy File to Project&lt;/strong&gt;&lt;/html&gt;"/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;strong&gt;Copy File&lt;/strong&gt;&lt;/html&gt;"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -149,6 +155,11 @@
     <Component class="javax.swing.JLabel" name="fileTypeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value=".bob"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="deleteOldFileCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Delete Old File"/>
       </Properties>
     </Component>
   </SubComponents>

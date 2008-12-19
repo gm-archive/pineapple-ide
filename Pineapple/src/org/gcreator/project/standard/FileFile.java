@@ -57,6 +57,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return file.getName();
     }
@@ -71,6 +72,7 @@ public class FileFile implements BasicFile {
      * 
      * @see java.io.File#length() 
      */
+    @Override
     public long getLength() {
         return file.length();
     }
@@ -79,6 +81,7 @@ public class FileFile implements BasicFile {
      * {@inheritDoc }
      * @see java.io.File#delete() 
      */
+    @Override
     public boolean delete() {
         if (file.isDirectory()) {
             recursiveDelete(file);
@@ -103,6 +106,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         return new FileInputStream(file);
     }
@@ -110,6 +114,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         return new FileOutputStream(file);
     }
@@ -117,6 +122,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isDirectory() {
         return file.isDirectory();
     }
@@ -124,6 +130,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BasicFile[] list() {
         File[] ffiles = file.listFiles();
         if (ffiles == null) {
@@ -141,6 +148,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean exists() {
         return file.exists();
     }
@@ -148,6 +156,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void rename(String newName) throws IOException {
         if (!file.renameTo(new File(newName))) {
             throw new IOException("Renaming failed for " + this.file);
@@ -160,6 +169,7 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getPath() {
         return file.getPath().replaceAll("\\" + File.separator, "/").
                 substring(project.getProjectFolder().getPath().length());
@@ -168,7 +178,16 @@ public class FileFile implements BasicFile {
     /**
      * {@inheritDoc}
      */
+    @Override
     public long lastModified() {
         return file.lastModified();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean allowsDelete() {
+        return file.canWrite();
     }
 }

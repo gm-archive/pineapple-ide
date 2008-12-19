@@ -993,8 +993,12 @@ public class PineappleGUI implements EventHandler {
         dialog.setVisible(true);
     }
     //</editor-fold>
+    
+    /* Private methods 
+     */
+    
     //<editor-fold defaultstate="collapsed" desc="popupTreeMenu(JPopupMenu, Object)">
-    public void popupTreeMenu(JPopupMenu menu,final Object o) {
+    private void popupTreeMenu(JPopupMenu menu,final Object o) {
         
 
         //<editor-fold defaultstate="collapsed" desc="Project">
@@ -1262,6 +1266,14 @@ public class PineappleGUI implements EventHandler {
                     deleteFile(((BaseTreeNode) o).getElement());
                 }
             });
+            menu.add("Move...").addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    new MoveFileDialog(Core.getStaticContext().getMainFrame(),
+           PineappleCore.getProject(), ((BaseTreeNode)o).getElement().getFile(), null, true);
+                }
+            });
         }
         
         if (o instanceof BaseTreeNode) {
@@ -1291,10 +1303,6 @@ public class PineappleGUI implements EventHandler {
         
     }
     //</editor-fold>
-    
-    /* Private methods 
-     */
-    
     //<editor-fold defaultstate="collapsed" desc="openFile(boolean, boolean, ProjectFolder, boolean)">
     private void openFile(boolean addFile, boolean allowFolder, ProjectFolder defaultFolder, boolean allowBrowse) {
         JFileChooser fc = createFileChooser("Select files to open", null, "open-file");

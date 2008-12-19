@@ -140,4 +140,9 @@ public interface BasicFile {
      *
      */
     public long lastModified();
+    
+    /**
+     * @return Whether the file is allowed to be deleted.
+     */
+    public boolean allowsDelete();
 }

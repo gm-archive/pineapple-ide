@@ -112,6 +112,7 @@ public class DefaultProjectManager implements ProjectManager {
     /**
      * Not supported.
      */
+    @Override
     public void save(File f) {
         //Save the project anyway.
         saveToManifest();
@@ -120,6 +121,7 @@ public class DefaultProjectManager implements ProjectManager {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BasicFile createFile(ProjectFolder folder, String name, String type) {
         File f = new File(
                 ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
@@ -139,12 +141,14 @@ public class DefaultProjectManager implements ProjectManager {
         } else {
             folder.reload();
         }
+        PineappleGUI.tree.updateUI();
         return ff;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public BasicFile createFolder(ProjectFolder folder, String name) {
         File f = new File(
                 ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
@@ -160,6 +164,7 @@ public class DefaultProjectManager implements ProjectManager {
         } else {
             folder.reload();
         }
+        PineappleGUI.tree.updateUI();
         return ff;
     }
 
@@ -207,6 +212,7 @@ public class DefaultProjectManager implements ProjectManager {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String[] getImportFileTypes() {
         return null; /* No Importing supported yet. */
     }
@@ -214,6 +220,7 @@ public class DefaultProjectManager implements ProjectManager {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String[] getExportFileTypes() {
         return null; /* No Exporting supported yet. */
     }
@@ -322,6 +329,10 @@ public class DefaultProjectManager implements ProjectManager {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Project getProject() {
         return project;
     }
@@ -329,24 +340,27 @@ public class DefaultProjectManager implements ProjectManager {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void importFile(File f) {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void exportFile(File f) {
     }
 
     /**
      * {@inheritDoc}
      */
-    public BasicFile moveFileToProject(File file, ProjectFolder folder, String newName) {
+    @Override
+    public BasicFile copyFileToProject(File file, ProjectFolder folder, String newName) {
         File newFile = copyFile(file, newName,
-                ((folder != null) 
-                ? ((FileFile)folder.getFile()).file
+                ((folder != null)
+                ? ((FileFile) folder.getFile()).file
                 : project.getProjectFolder()));
-        
+
         BasicFile f = new FileFile(newFile, project);
         if (folder != null) {
             folder.reload();
@@ -357,13 +371,38 @@ public class DefaultProjectManager implements ProjectManager {
                 Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        PineappleGUI.tree.updateUI();
+        return f;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BasicFile copyFile(BasicFile file, ProjectFolder folder, String newName) {
+        File newFile = copyFile(((FileFile) file).file, newName,
+                ((folder != null)
+                ? ((FileFile) folder.getFile()).file
+                : project.getProjectFolder()));
+
+        BasicFile f = new FileFile(newFile, project);
+        if (folder != null) {
+            folder.reload();
+        } else {
+            try {
+                project.add(project.createElement(f));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        PineappleGUI.tree.updateUI();
         return f;
     }
 
     private File copyFile(File file, String newName, File folder) {
         File newFile = null;
         if (!file.exists()) {
-            System.out.println("File "+file+" does not exist");
+            System.out.println("File " + file + " does not exist");
             return null;
         }
         if (file.isFile()) {
@@ -410,7 +449,7 @@ public class DefaultProjectManager implements ProjectManager {
     private final class ProjectXMLHandler implements ContentHandler {
 
         private Locator locator;
-        private  boolean files, settings;
+        private boolean files,  settings;
         private boolean loading;
         private DefaultProject project;
 
@@ -425,6 +464,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;
         }
@@ -432,6 +472,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void startDocument() throws SAXException {
             // Nothing to do here.
         }
@@ -439,6 +480,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void endDocument() throws SAXException {
             // Nothing to do here.
         }
@@ -446,6 +488,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void startPrefixMapping(String prefix, String uri) throws SAXException {
             System.out.println("Nobody cares about Namespace '" + prefix + "', Namespace URI " + uri);
         }
@@ -453,6 +496,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void endPrefixMapping(String prefix) throws SAXException {
             System.out.println("A request was made to end Namespace '" + prefix + "', but no one cares");
         }
@@ -460,6 +504,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
             if (localName.equalsIgnoreCase("pineapple-project")) {
 
@@ -512,6 +557,8 @@ public class DefaultProjectManager implements ProjectManager {
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
+                    PineappleGUI.tree.updateUI();
                 }
             } else if (settings) {
                 String key = atts.getValue("key");
@@ -532,6 +579,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if (!loading) {
                 return;
@@ -548,6 +596,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
             System.out.println("NOTE: Charachters '" + Arrays.copyOfRange(ch, start, start + length) + "'");
         }
@@ -555,6 +604,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
             System.out.println("NOTE: Ignorable Witespace '" + Arrays.copyOfRange(ch, start, start + length) + "'");
         }
@@ -562,6 +612,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void processingInstruction(String target, String data) throws SAXException {
             System.out.println("NOTE: Processing '" + target + "', data '" + data + "'");
         }
@@ -569,6 +620,7 @@ public class DefaultProjectManager implements ProjectManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void skippedEntity(String name) throws SAXException {
             System.out.println("NOTE: Skipped Entity '" + name + "'");
         }

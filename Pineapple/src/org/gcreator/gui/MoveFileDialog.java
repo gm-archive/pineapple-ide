@@ -23,7 +23,6 @@ THE SOFTWARE.
 
 package org.gcreator.gui;
 
-import java.io.File;
 import javax.swing.SwingUtilities;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
@@ -31,40 +30,40 @@ import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.io.BasicFile;
 
 /**
- * This dialog allows the user to copy a {@link  java.io.File}
- * to a folder in the project.
+ * This dialog allows the user to move/copy a file within
+ * the project.
  * 
  * @author  Serge Humphrey
  */
-public final class CopyFileDialog extends javax.swing.JDialog {
+public final class MoveFileDialog extends javax.swing.JDialog {
     
     private static final long serialVersionUID = 1L;
     private ProjectFolder folder;
     private Project project;
-    private File file;
+    private BasicFile src;
     private String type;
-    private BasicFile result;
+    private BasicFile dest;
     
-    /** 
-     * Creates and shows a new CopyFileDialog.
+    /**
+     * Creates and show a new {@link MoveFileDialog}.
      * 
-     * @param parent The parent window for the dialog.
-     * @param p The project the copy the file to.
-     * @param file The file to copy.
-     * @param title The title for the dialog.
-     * @param folder The {@link ProjectFolder} to be set as the default folder.
-     * May be <tt>null</tt>.
-     * @param allowChange Whether to allow the user to change the project folder.
+     * @param parent The parent frame for the dialog.
+     * @param p The project which the file should be copied to.
+     * @param src The source file to copy.
+     * @param folder The default {@link ProjectFolder} to be selected to
+     * move to file to, or <tt>null</tt> for the project root.
+     * @param allowChange Whether to allow the user to allow to change
      */
-    public CopyFileDialog(java.awt.Window parent, Project p, File file, String title, ProjectFolder folder, boolean allowChange) {
-        super(parent, title, ModalityType.APPLICATION_MODAL);
+    public MoveFileDialog(java.awt.Window parent, Project p, BasicFile src, ProjectFolder folder, boolean allowChange) {
+        super(parent, "Copy File", ModalityType.APPLICATION_MODAL);
         this.folder = folder;
         this.project = p;
-        this.file = file;
+        this.src = src;
         initComponents();
+        deleteOldFileCheckBox.setEnabled(src.allowsDelete());
         browseButton.setEnabled(allowChange);
         locationTextField.setText((folder == null) ? "/" : folder.getFile().getPath());
-        String name = file.getName();
+        String name = src.getName();
         
         int i = name.lastIndexOf('.');
         String fname;
@@ -90,7 +89,7 @@ public final class CopyFileDialog extends javax.swing.JDialog {
      * or <tt>null</tt> if the user canceled the action.
      */
     public BasicFile getCreatedFile() {
-        return result;
+        return dest;
     }
     
     private void checkFinish() {
@@ -167,11 +166,12 @@ public final class CopyFileDialog extends javax.swing.JDialog {
         finishButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         fileTypeLabel = new javax.swing.JLabel();
+        deleteOldFileCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html><strong>Copy File to Project</strong></html>");
+        jLabel1.setText("<html><strong>Copy File</strong></html>");
 
         jLabel2.setText("New File Name:");
 
@@ -217,20 +217,18 @@ public final class CopyFileDialog extends javax.swing.JDialog {
 
         fileTypeLabel.setText(".bob");
 
+        deleteOldFileCheckBox.setText("Delete Old File");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(220, Short.MAX_VALUE)
+                .addContainerGap(222, Short.MAX_VALUE)
                 .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(finishButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -244,11 +242,18 @@ public final class CopyFileDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                        .addComponent(fileNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                         .addGap(1, 1, 1)
                         .addComponent(fileTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(11, 11, 11)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(deleteOldFileCheckBox)
+                .addContainerGap(274, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,11 +270,13 @@ public final class CopyFileDialog extends javax.swing.JDialog {
                     .addComponent(browseButton)
                     .addComponent(locationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(deleteOldFileCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(finishButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -295,7 +302,10 @@ private void fileNameTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//G
 }//GEN-LAST:event_fileNameTextFieldCaretUpdate
 
 private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
-        result = project.getManager().copyFileToProject(file, folder, fileNameTextField.getText() + ((type != null) ? "." + type : ""));
+        dest = project.getManager().copyFile(src, folder, fileNameTextField.getText() + ((type != null) ? "." + type : ""));
+        if (deleteOldFileCheckBox.isSelected()) {
+            src.delete();
+        }
         dispose();
 }//GEN-LAST:event_finishButtonActionPerformed
 
@@ -303,6 +313,7 @@ private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JCheckBox deleteOldFileCheckBox;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField fileNameTextField;
     private javax.swing.JLabel fileTypeLabel;
