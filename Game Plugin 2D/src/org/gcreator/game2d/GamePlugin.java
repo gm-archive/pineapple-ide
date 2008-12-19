@@ -74,6 +74,11 @@ public class GamePlugin extends Plugin implements FormatSupporter{
         return "";
     }
     
+    public boolean accept(String format){
+        if(format.equals("actor")){ return true; }
+        return false;
+    }
+    
     public DocumentPane load(BasicFile f){
         String n = f.getName();
         int index = n.indexOf(".");
@@ -133,8 +138,8 @@ public class GamePlugin extends Plugin implements FormatSupporter{
             else{
                 palette.setAvailable(false);
             }
-        } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
-            PineappleCore.addProjectType(new GameProjectType());
+        //} else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
+        //    PineappleCore.addProjectType(new GameProjectType());
         } else if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
             PineappleCore.addFormatSupporter(this);
         }
