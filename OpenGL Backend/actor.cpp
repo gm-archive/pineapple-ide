@@ -8,9 +8,12 @@ using namespace Pineapple;
 //
 Actor::Actor(float x, float y)
 {
-    angle = 0;
     this->x = x;
     this->y = y;
+
+    angle = 0;
+    width = height = 1;
+
     motion = new VectorXY(0, 0);
     gravity = new VectorRV(270, 0);
     friction = 0;
@@ -74,5 +77,5 @@ void Actor::move()
 //
 void Actor::draw()
 {
-    texture->draw(x, y, angle);
+    texture->draw(x, y, width, height, angle);
 }

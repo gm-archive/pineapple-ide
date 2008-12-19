@@ -15,6 +15,7 @@ class Actor
 protected:
     Texture* texture;
     float angle;
+    float width, height;
     float x, y;
 public:
     Actor(float x = 0, float y = 0);

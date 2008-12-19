@@ -23,7 +23,8 @@ public:
     int getOriginX() { return originx; }
     int getOriginY() { return originy; }
 
-    void draw(float x, float y, float angle = 0);
+    void draw(float x, float y);
+    void draw(float x, float y, float width, float height, float angle);
 };
 
 }
