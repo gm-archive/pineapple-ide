@@ -32,6 +32,52 @@ namespace Pineapple
         {
             return (a > 0) ? a : -a;
         }
+
+	//Using inline because these functions are short and simple enough so the code bloat should actually be reduced
+        inline double sin(double angle)
+        {
+	    return ::sin(angle);
+        }
+
+        inline double cos(double angle)
+        {
+	    return ::cos(angle);
+        }
+
+        inline double tan(double angle)
+        {
+	    return ::tan(angle);
+        }
+
+        inline double asin(double x)
+        {
+	    return ::asin(x);
+        }
+
+        inline double acos(double x)
+        {
+	    return ::acos(x);
+        }
+
+        inline double atan(double x)
+        {
+	    return ::atan(x);
+        }
+
+        inline double atan(double x)
+        {
+	    return ::atan(x);
+        }
+
+	inline double pow(double base, double exponent)
+        {
+	    return ::pow(base, exponent);
+        }
+
+        inline double sqrt(double x)
+        {
+	    return ::sqrt(x);
+        }
     }
 }
 
