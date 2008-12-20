@@ -1,0 +1,27 @@
+package pineapple.testcase.sample1;
+
+import pineapple.std.Console;
+
+/*
+ * No need to put "public" before class (like in Java)
+ * And no need to put "public" after the 'extends'(like in C++)
+*/
+class X extends Y
+{
+    public static int doIt;
+
+    //Constructors are referenced as "this" rather than classname
+    //Base calls are handled just like in C++, but the super keyword
+    //Is used, just like in Java.
+    public this()// : super()
+    {
+        int name = 2;
+        pi = 3.14159;
+        int life = 4==1?3:2;
+        //Console.getOutputStream().PrintLine("The meaning of line is " + life);
+    }
+
+    public static int sum(int x, string y){
+        return x+y;
+    }
+}
