@@ -200,7 +200,8 @@ constant returns [Constant c = null]
 //Multiple operations, divided by priority levels:
 
 primitive returns [Expression e = null]
-	:	c=constant {e=c;}| r=reference {e=r;} | (LPAREN x=expression {e=x;} RPAREN);
+	:	c=constant {e=c;}| r=reference {e=r;} | (LPAREN x=expression {e=x;} RPAREN)
+		| (WORD LPAREN RPAREN);
 	
 notcastexpr returns [Expression e = null]
 @init{
@@ -208,7 +209,8 @@ TypeCast cast = null;
 }
 	:	(p=primitive {e=p;})
 		| (NOT p=notcastexpr {e=new NotOperation(p);})
-		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);});
+		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);})
+		| (notcastexpr '.' );
 		
 multop returns [Expression e = null]
 	: t=notcastexpr {e=t;} (

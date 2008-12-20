@@ -17,7 +17,7 @@ class X extends Y
     {
         int name = 2;
         pi = 3.14159;
-        int life = 4==1?3:2;
+        int life = 2+3*4;
         //Console.getOutputStream().PrintLine("The meaning of line is " + life);
     }
 
