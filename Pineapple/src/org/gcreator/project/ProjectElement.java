@@ -36,7 +36,7 @@ public abstract class ProjectElement {
     /**
      * This file's parent.
      */
-    protected ProjectElement parent;
+    protected ProjectFolder parent;
 
     /**
      * Gets the element's file.
@@ -55,10 +55,10 @@ public abstract class ProjectElement {
     /**
      * This returns the parent or null if it has not been set.
      * 
-     * @return This file's parent. This may be null and is not very reliable.
-     * @see setParent(ProjectElement e)
+     * @return This file's parent. This may be <tt>null</tt> and is not exactly reliable.
+     * @see setParent(ProjectFolder e)
      */
-    public ProjectElement getParent() {
+    public ProjectFolder getParent() {
         return parent;
     }
 
@@ -69,7 +69,7 @@ public abstract class ProjectElement {
      * 
      * @see getParent()
      */
-    public void setParent(ProjectElement e) {
+    public void setParent(ProjectFolder e) {
         this.parent = e;
     }
 

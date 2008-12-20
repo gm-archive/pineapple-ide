@@ -134,7 +134,8 @@ public class DefaultProjectManager implements ProjectManager {
         FileFile ff = new FileFile(f, project);
         if (folder == null) {
             try {
-                project.add(project.createElement(ff));
+                ProjectElement e = project.createElement(ff);
+                project.add(e);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
             }
