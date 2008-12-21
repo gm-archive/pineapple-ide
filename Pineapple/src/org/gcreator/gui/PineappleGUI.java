@@ -1424,6 +1424,8 @@ public class PineappleGUI implements EventHandler {
                     deleteFile(((BaseTreeNode) o).getElement());
                 }
             });
+            menu.add(del);
+            
             menu.add("Move...").addActionListener(new ActionListener() {
 
                 @Override
