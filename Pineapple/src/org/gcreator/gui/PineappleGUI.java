@@ -1963,7 +1963,9 @@ public class PineappleGUI implements EventHandler {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="getFormatSupporters(String)                               ">
     public FormatSupporter[] getFormatSupporters(String fname) {
-        fname = fname.toLowerCase();
+        if (fname != null) {
+            fname = fname.toLowerCase();
+        }
         String format;
         if (fname == null) {
             format = null;
@@ -1978,7 +1980,7 @@ public class PineappleGUI implements EventHandler {
         Vector<FormatSupporter> supporters = new Vector<FormatSupporter>(2);
 
         for (FormatSupporter fs : PineappleCore.getFormatSupporters()) {
-            if (fs.accept(format)) {
+            if (format == null || fs.accept(format)) {
                 supporters.add(fs);
             }
         }
