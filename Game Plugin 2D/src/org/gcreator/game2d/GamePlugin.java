@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.gcreator.editors.ActorEditor;
+import org.gcreator.editors.SceneEditor;
 import org.gcreator.editors.TextEditor;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.PineappleGUI;
@@ -87,6 +88,9 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         if (format.equals("actor")) {
             return true;
         }
+        if (format.equals("scene")) {
+            return true;
+        }
         return false;
     }
 
@@ -108,6 +112,9 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         if (format.equals("actor")) {
             return new ActorEditor(f);
         }
+        if (format.equals("scene")) {
+            return new SceneEditor(f);
+        }
 
         return new TextEditor(f);
     }
@@ -115,7 +122,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      * {@inheritDoc}
      */
     public static String[] formats = new String[]{
-        "actor"
+        "actor",
+        "scene"
     };
 
     /**
@@ -164,7 +172,9 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         PineappleCore.fileTypeNames.put("actor", "Game Actor");
         PineappleCore.fileTypeDescriptions.put("actor",
                 "Game entities associated with a position and a behavior.");
-
+        PineappleCore.fileTypeNames.put("scene", "Game Scene");
+        PineappleCore.fileTypeDescriptions.put("scene",
+                "Game space units. Containers of actors.");
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
     }
 
