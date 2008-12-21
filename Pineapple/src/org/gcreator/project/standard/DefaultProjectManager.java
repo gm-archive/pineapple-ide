@@ -131,7 +131,7 @@ public class DefaultProjectManager implements ProjectManager {
         } catch (IOException ex) {
             Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        FileFile ff = new FileFile(f, project);
+        FileFile ff = new FileFile(f, folder, project);
         if (folder == null) {
             try {
                 ProjectElement e = project.createElement(ff);
@@ -155,7 +155,7 @@ public class DefaultProjectManager implements ProjectManager {
                 ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
                 name);
         f.mkdir();
-        FileFile ff = new FileFile(f, project);
+        FileFile ff = new FileFile(f, folder, project);
         if (folder == null) {
             try {
                 project.add(project.createElement(ff));
@@ -362,7 +362,7 @@ public class DefaultProjectManager implements ProjectManager {
                 ? ((FileFile) folder.getFile()).file
                 : project.getProjectFolder()));
 
-        BasicFile f = new FileFile(newFile, project);
+        BasicFile f = new FileFile(newFile, folder, project);
         if (folder != null) {
             folder.reload();
         } else {
@@ -386,7 +386,7 @@ public class DefaultProjectManager implements ProjectManager {
                 ? ((FileFile) folder.getFile()).file
                 : project.getProjectFolder()));
 
-        BasicFile f = new FileFile(newFile, project);
+        BasicFile f = new FileFile(newFile, folder, project);
         if (folder != null) {
             folder.reload();
         } else {
@@ -554,7 +554,10 @@ public class DefaultProjectManager implements ProjectManager {
                         return;
                     }
                     try {
-                        project.add(project.createElement(new FileFile(file, project)));
+                        FileFile f = new FileFile(file, null, project);
+                        ProjectElement e = project.createElement(f);
+                        f.element = e;
+                        project.add(e);
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
                     }

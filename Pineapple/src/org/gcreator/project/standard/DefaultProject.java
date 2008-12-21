@@ -120,6 +120,7 @@ public class DefaultProject extends Project {
     @Override
     public void add(ProjectElement e) {
         files.add(e);
+        e.setParent(null);
         manager.saveToManifest();
     }
 
@@ -205,6 +206,7 @@ public class DefaultProject extends Project {
         }
         Thread t = new Thread(new Runnable() {
 
+            @Override
             public void run() {
                 if (manager != null && !managing) {
                     manager.saveToManifest();

@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.Project;
+import org.gcreator.project.ProjectElement;
 import org.gcreator.project.io.BasicFile;
 
 /**
@@ -42,16 +43,19 @@ public class FileFile implements BasicFile {
 
     protected File file;
     protected Project project;
-
+    protected ProjectElement element;
+    
     /**
      * Creates a new {@link FileFile} with a given {@link java.io.File}.
      * 
      * @param file The {@link java.io.File} to use.
+     * @param e The {@link ProjectElement} that this file belongs to.
      * @param p The {@link Project} which this file should belong to.
      */
-    public FileFile(File file, Project p) {
+    public FileFile(File file, ProjectElement e, Project p) {
         this.file = file;
         this.project = p;
+        this.element = e;
     }
 
     /**
@@ -140,7 +144,7 @@ public class FileFile implements BasicFile {
         FileFile[] files = new FileFile[ffiles.length];
         int i = 0;
         for (File f : ffiles) {
-            files[i++] = new FileFile(f, project);
+            files[i++] = new FileFile(f, element, project);
         }
         return files;
     }
@@ -189,5 +193,13 @@ public class FileFile implements BasicFile {
     @Override
     public boolean allowsDelete() {
         return file.canWrite();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ProjectElement getElement() {
+        return element;
     }
 }

@@ -19,9 +19,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
-
-
+ */
 package org.gcreator.project;
 
 import java.io.FileNotFoundException;
@@ -38,13 +36,13 @@ import org.gcreator.tree.FolderTreeNode;
  * @author Serge Humphrey
  */
 public class ProjectFolder extends ProjectElement {
-    
+
     protected Vector<ProjectElement> children;
     protected BasicFile folder;
     protected FolderTreeNode treeNode;
     protected Project project;
     protected long modified = -1L;
-    
+
     /**
      * Creates a new {@link ProjectFolder} and scans for files and adds them to its children.
      * 
@@ -57,13 +55,13 @@ public class ProjectFolder extends ProjectElement {
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("Illegal Folder: " + folder);
         }
-        
+
         this.folder = folder;
         this.children = new Vector<ProjectElement>(folder.list().length);
-        this.treeNode = new FolderTreeNode(this);
         this.project = p;
+        this.treeNode = new FolderTreeNode(this);
     }
-    
+
     /**
      * Reloads all of the files inside the folder.
      */
@@ -80,8 +78,7 @@ public class ProjectFolder extends ProjectElement {
         }
         modified = folder.lastModified();
     }
-    
-    
+
     /**
      * Returns the child at the given index.
      * 
@@ -99,7 +96,7 @@ public class ProjectFolder extends ProjectElement {
         }
         return children.get(index);
     }
-    
+
     /**
      * Return the nmber of children.
      * 
@@ -111,10 +108,11 @@ public class ProjectFolder extends ProjectElement {
         }
         return children.size();
     }
-    
+
     /**
      * {@inheritDoc }
      */
+    @Override
     public BasicFile getFile() {
         return folder;
     }
@@ -126,7 +124,7 @@ public class ProjectFolder extends ProjectElement {
     public BaseTreeNode getTreeNode() {
         return treeNode;
     }
-    
+
     /**
      * Returns the same as the folder's {@link java.io.File#getName()} method 
      * or the {@link java.lang.String} literal 'null' if the file is <tt>null</tt>.
@@ -145,7 +143,7 @@ public class ProjectFolder extends ProjectElement {
     public Project getProject() {
         return project;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -153,7 +151,7 @@ public class ProjectFolder extends ProjectElement {
     public String getName() {
         return folder.getName();
     }
-    
+
     /** 
      * @return An {@link Iterable} for cycling through 
      * the folder's children.
@@ -164,7 +162,7 @@ public class ProjectFolder extends ProjectElement {
         }
         return children;
     }
-    
+
     /**
      * Returns the index of the given element, or -1
      * if it is not a child of this folder.

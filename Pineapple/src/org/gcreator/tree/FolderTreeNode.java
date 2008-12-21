@@ -19,13 +19,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
-
+ */
 package org.gcreator.tree;
 
 import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import org.gcreator.managers.EventManager;
+import org.gcreator.plugins.Event;
+import org.gcreator.plugins.EventHandler;
+import org.gcreator.plugins.EventPriority;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFolder;
 
@@ -35,7 +39,7 @@ import org.gcreator.project.ProjectFolder;
  * 
  * @author Serge Humphrey
  */
-public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNode {
+public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNode, EventHandler {
 
     private static final long serialVersionUID = 1;
     private ProjectFolder folder;
@@ -44,11 +48,12 @@ public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNo
         this.setAllowsChildren(true);
         this.setUserObject(e);
         this.folder = e;
+        EventManager.addEventHandler(this, ProjectElement.PARENT_CHANGED, EventPriority.LOW);
     }
 
     /**
      * Returns <tt>false</tt>.
-     * @return <tt>flase</tt>.
+     * @return <tt>false</tt>.
      */
     @Override
     public boolean isLeaf() {
@@ -66,10 +71,12 @@ public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNo
 
             private int index = 0;
 
+            @Override
             public boolean hasMoreElements() {
                 return index < folder.getChildrenCount();
             }
 
+            @Override
             public Object nextElement() {
                 return folder.getChildAt(index++);
             }
@@ -86,7 +93,7 @@ public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNo
     @Override
     public int getIndex(TreeNode node) {
         if (node instanceof BaseTreeNode) {
-            return folder.indexOf(((BaseTreeNode)node).getElement());
+            return folder.indexOf(((BaseTreeNode) node).getElement());
         }
         return -1;
     }
@@ -118,5 +125,25 @@ public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNo
     @Override
     public ProjectElement getElement() {
         return folder;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getEventType().equalsIgnoreCase(ProjectElement.PARENT_CHANGED)) {
+            if (event.getArguments()[0] != folder) {
+                return;
+            }
+            if (folder.getParent() == null) {
+                this.setParent(folder.getProject().getTreeNode());
+            } else {
+                try {
+                    this.setParent((MutableTreeNode) folder.getParent().getTreeNode());
+                } catch (Exception exc) {
+                }
+            }
+        }
     }
 }

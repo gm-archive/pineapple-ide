@@ -27,6 +27,7 @@ package org.gcreator.project.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.gcreator.project.ProjectElement;
 
 /**
  * This interface provides a dynamic way to deal with
@@ -145,4 +146,11 @@ public interface BasicFile {
      * @return Whether the file is allowed to be deleted.
      */
     public boolean allowsDelete();
+    
+    /**
+     * Gets the {@link ProjectElement} that this {@link BasicFile} belongs to.
+     * @return The {@link ProjectElement} that this {@link BasicFile} belongs to,
+     * or <tt>null</tt> if it does not belong to any element.
+     */
+    public ProjectElement getElement();
 }

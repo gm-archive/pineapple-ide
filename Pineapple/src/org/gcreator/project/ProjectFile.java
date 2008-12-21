@@ -47,8 +47,8 @@ public class ProjectFile extends ProjectElement {
      */
     public ProjectFile(BasicFile file, Project p) {
         this.file = file;
-        this.treeNode = new FileTreeNode(this);
         this.project = p;
+        this.treeNode = new FileTreeNode(this);
     }
 
     /**
@@ -75,6 +75,7 @@ public class ProjectFile extends ProjectElement {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BasicFile getFile() {
         return file;
     }

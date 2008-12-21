@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.project;
 
 import javax.swing.Icon;
+import org.gcreator.managers.EventManager;
 import org.gcreator.project.io.BasicFile;
 import org.gcreator.tree.BaseTreeNode;
 
@@ -63,6 +64,18 @@ public abstract class ProjectElement {
     }
 
     /**
+     * Called when the parent of this {@link ProjectElement} is changed.
+     * 
+     * @param arg0: The {@link ProjectElement} that's parent has been changed.
+     * @param arg1: The old parent.
+     * @param arg2: The new parent.
+     * 
+     * @see #getParent()
+     * @see #setParent(org.gcreator.project.ProjectFolder) 
+     */
+    public static final String PARENT_CHANGED = "project-element-parent-changed";
+    
+    /**
      * Sets the parent of this file.
      * 
      * @param e The new parent for this file.
@@ -70,7 +83,9 @@ public abstract class ProjectElement {
      * @see getParent()
      */
     public void setParent(ProjectFolder e) {
+        ProjectFolder old = this.parent;
         this.parent = e;
+        EventManager.fireEvent(this, PARENT_CHANGED, this, old, e);
     }
 
     /**

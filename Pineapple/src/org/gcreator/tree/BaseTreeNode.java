@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 package org.gcreator.tree;
 
-import javax.swing.tree.TreeNode;
+import javax.swing.tree.MutableTreeNode;
 import org.gcreator.project.ProjectElement;
 
 /**
@@ -32,7 +32,7 @@ import org.gcreator.project.ProjectElement;
  * 
  * @author Serge Humphrey
  */
-public interface BaseTreeNode extends TreeNode {
+public interface BaseTreeNode extends MutableTreeNode {
     
     /**
      * Gets the {@link org.gcreator.project.ProjectElement} 

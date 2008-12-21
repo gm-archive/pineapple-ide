@@ -39,6 +39,7 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Project create(String name, File folder) {
         return new DefaultProject(name, folder, this, null);
     }
@@ -46,6 +47,7 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return "Default";
     }
@@ -53,6 +55,7 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription() {
         return "This project type uses the file system for storage.";
     }
@@ -60,6 +63,7 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Project load(File f, File folder) {
         return new DefaultProjectManager(f, folder, this, null).getProject();
     }
@@ -67,6 +71,7 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String[] getProjectFileTypes() {
         return DefaultProjectManager.getProjectFileTypes();
     }
@@ -74,7 +79,8 @@ public class DefaultProjectType implements ProjectType {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BasicFile createBasicFile(File f, Project p) {
-        return new FileFile(f, p);
+        return new FileFile(f, null, p);
     }
 }

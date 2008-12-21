@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.tree;
 
 import java.util.Enumeration;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import org.gcreator.project.Project;
 
@@ -31,7 +32,7 @@ import org.gcreator.project.Project;
  * 
  * @author Serge Humphrey
  */
-public final class ProjectTreeNode implements TreeNode {
+public final class ProjectTreeNode extends DefaultMutableTreeNode implements TreeNode {
 
     private static final long serialVersionUID = 1;
     private Project project;
@@ -44,6 +45,7 @@ public final class ProjectTreeNode implements TreeNode {
     public ProjectTreeNode(Project project) {
         super();
         this.project = project;
+        this.setUserObject(project);
     }
 
     /**

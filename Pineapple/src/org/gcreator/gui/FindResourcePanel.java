@@ -36,12 +36,16 @@ import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;
@@ -89,10 +93,50 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         this.add(new JScrollPane(list), BorderLayout.CENTER);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == go || e.getSource() == search) {
             search(search.getText());
         }
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
+            Object o = list.getSelectedValue();
+            if (o != null && o instanceof ProjectElement) {
+                ProjectElement el = (ProjectElement)o;
+                /* Tree Path */
+                if (el.getTreeNode() instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode n = (DefaultMutableTreeNode) el.getTreeNode();
+                    for (TreeNode node : n.getPath()) {
+                        System.out.print(((JLabel)list.getCellRenderer().getListCellRendererComponent(list, node, 0, false, false)).getText() + "/");
+                    }
+                    System.out.println();
+                    PineappleGUI.tree.setSelectionPath(new TreePath(n.getPath()));
+                }
+                
+                if (o instanceof ProjectFile) {
+                    PineappleCore.getGUI().openFile((el).getFile());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     
     private void search(String s) {
@@ -127,10 +171,12 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         
         private static final long serialVersionUID = 1L;
 
+        @Override
         public int getSize() {
             return results.size();
         }
 
+        @Override
         public Object getElementAt(int index) {
             return results.get(index);
         }
@@ -158,26 +204,5 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
             return this;
         }
         
-    }
-
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
-            Object o = list.getSelectedValue();
-            if (o != null && o instanceof ProjectFile) {
-                PineappleCore.getGUI().openFile(((ProjectElement)o).getFile());
-            }
-        }
-    }
-
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    public void mouseExited(MouseEvent e) {
     }
 }

@@ -19,12 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
-
+ */
 package org.gcreator.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import org.gcreator.managers.EventManager;
+import org.gcreator.plugins.Event;
+import org.gcreator.plugins.EventHandler;
+import org.gcreator.plugins.EventPriority;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;
 
@@ -34,11 +38,11 @@ import org.gcreator.project.ProjectFile;
  * 
  * @author Serge Humphrey
  */
-public class FileTreeNode extends DefaultMutableTreeNode implements BaseTreeNode {
+public class FileTreeNode extends DefaultMutableTreeNode implements BaseTreeNode, EventHandler {
 
     private static final long serialVersionUID = 1;
     private ProjectFile file;
-    
+
     /**
      * Creates a new file tree node.
      * 
@@ -48,6 +52,7 @@ public class FileTreeNode extends DefaultMutableTreeNode implements BaseTreeNode
         this.setAllowsChildren(false);
         this.setUserObject(e);
         this.file = e;
+        EventManager.addEventHandler(this, ProjectElement.PARENT_CHANGED, EventPriority.LOW);
     }
 
     /**
@@ -55,7 +60,29 @@ public class FileTreeNode extends DefaultMutableTreeNode implements BaseTreeNode
      * 
      * @return The {@link ProjectFile} that this node belongs to.
      */
+    @Override
     public ProjectElement getElement() {
         return file;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getEventType().equalsIgnoreCase(ProjectElement.PARENT_CHANGED)) {
+            if (event.getArguments()[0] != file) {
+                return;
+            }
+            if (file.getParent() == null) {
+                this.setParent(file.getProject().getTreeNode());
+            } else {
+                try {
+                    this.setParent((MutableTreeNode) file.getParent().getTreeNode());
+                } catch (Exception exc) {
+                    System.err.println("Exception: " + exc.getLocalizedMessage());
+                }
+            }
+        }
     }
 }
