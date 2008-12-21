@@ -179,7 +179,21 @@ block	returns [Block b = new Block()]
 stmt returns [Leaf l = null]
 	:	(e=declAssign {l=e;})
 	| (a=expression STMTEND {l=a;})
-	| (b=returnstmt {l=b;});
+	| (b=returnstmt {l=b;})
+	| (c=ifstmt {l=c;})
+	| (w=whilestmt {l=w;})
+	| (d=block {l=d;})
+	| ('break' STMTEND {l=new BreakStatement();})
+	| STMTEND;
+	
+ifstmt returns [IfStatement ifCase = new IfStatement()]
+	: 'if' LPAREN s=expression {ifCase.condition = s;} RPAREN
+		q=stmt {ifCase.then = q;}
+		('else' e=stmt {ifCase.elseCase = e;})?;
+		
+whilestmt returns [WhileStatement whileCase = new WhileStatement()]
+	: 'while' LPAREN s=expression {whileCase.condition = s;} RPAREN
+		q=stmt {whileCase.then = q;};
 	
 returnstmt returns [ReturnStatement ret = new ReturnStatement()]
 	:	'return' (r=expression {ret.value = r;})? STMTEND;

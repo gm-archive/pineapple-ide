@@ -20,45 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+
 package org.gcreator.pinedl.statements;
 
 import java.util.Vector;
 import org.gcreator.pinedl.Leaf;
 
 /**
- * Represents a group of statements
+ * Represents an while statement
  * @author Luís Reis
  */
-public class Block extends Leaf {
-
-    public Vector<Leaf> content = new Vector<Leaf>();
-
+public class WhileStatement extends Leaf{
+    public Expression condition = null;
+    public Leaf then = null;
+    
     @Override
     public Leaf optimize(){
-        if(content.isEmpty()){
-            return null;
+        if(then!=null){
+            then.optimize();
         }
-        Vector v = (Vector) content.clone();
-        content.clear();
-        for(Object leaf : v){
-            if(leaf==null){ continue; }
-            Leaf l = ((Leaf) leaf).optimize();
-            content.add(l);
+        condition = (Expression) condition.optimize();
+        if(condition instanceof BooleanConstant){
+            if(!((BooleanConstant) condition).value){
+                return null;
+            }
         }
         return this;
     }
     
     @Override
-    public String toString() {
-        String s = "[";
-        boolean first = true;
-        for (Leaf leaf : content) {
-            if (!first) {
-                s += ", ";
-            }
-            s += leaf;
-            first = false;
-        }
+    public String toString(){
+        String s = "while[" + condition.toString() + ", ";
+        
+        s += then;
+        
         return s + "]";
     }
 }

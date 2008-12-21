@@ -19,6 +19,17 @@ class X extends Y
         pi = 3.14159;
         int life = 2+3*4;
         Console.getOutputStream().PrintLine("The meaning of life is " + life);
+        if(true){
+            int life = 3;
+        }
+        else{
+            double x = .4;
+        }
+        if(x){
+            int life = 1&2;
+        }
+        while(x) break;
+        while(false) break;
     }
 
     public static int sum(int x, string y){

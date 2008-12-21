@@ -36,7 +36,7 @@ public class StringConstant extends Constant{
     
     public static StringConstant parse(String value){
         StringConstant s = new StringConstant("");
-        boolean escaping = true;
+        boolean escaping = false;
         for(int i = 1; i < value.length()-1; i++){ //Automatically crop the ""
             char c = value.charAt(i);
             if(escaping){

@@ -37,17 +37,26 @@ public class IfStatement extends Leaf{
     
     @Override
     public Leaf optimize(){
+        if(then!=null){
+            then.optimize();
+        }
+        if(elseCase!=null){
+            elseCase.optimize();
+        }
+        if(then==null&&elseCase==null){ return condition; }
         condition = (Expression) condition.optimize();
         if(condition instanceof BooleanConstant){
             if(((BooleanConstant) condition).value){
-                return then.optimize();
+                Block b = new Block();
+                b.content.add(then);
+                return b;
             }
             else{
-                return elseCase.optimize();
+                Block b = new Block();
+                b.content.add(elseCase);
+                return b;
             }
         }
-        then.optimize();
-        elseCase.optimize();
         return this;
     }
     
@@ -55,11 +64,11 @@ public class IfStatement extends Leaf{
     public String toString(){
         String s = "if[" + condition.toString() + ", ";
         
-        s += then.toString();
+        s += then;
         
         s += ", ";
         
-        s += elseCase.toString();
+        s += elseCase;
         
         return s + "]";
     }

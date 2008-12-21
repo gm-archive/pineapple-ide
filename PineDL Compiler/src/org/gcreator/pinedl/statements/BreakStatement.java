@@ -20,45 +20,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+
 package org.gcreator.pinedl.statements;
 
 import java.util.Vector;
 import org.gcreator.pinedl.Leaf;
 
 /**
- * Represents a group of statements
+ * Represents a break statement
  * @author Luís Reis
  */
-public class Block extends Leaf {
-
-    public Vector<Leaf> content = new Vector<Leaf>();
-
-    @Override
-    public Leaf optimize(){
-        if(content.isEmpty()){
-            return null;
-        }
-        Vector v = (Vector) content.clone();
-        content.clear();
-        for(Object leaf : v){
-            if(leaf==null){ continue; }
-            Leaf l = ((Leaf) leaf).optimize();
-            content.add(l);
-        }
-        return this;
-    }
+public class BreakStatement extends Leaf{
     
     @Override
-    public String toString() {
-        String s = "[";
-        boolean first = true;
-        for (Leaf leaf : content) {
-            if (!first) {
-                s += ", ";
-            }
-            s += leaf;
-            first = false;
-        }
-        return s + "]";
+    public String toString(){
+        return "break";
     }
 }
