@@ -23,6 +23,8 @@ package org.gcreator.syntax;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -113,6 +115,15 @@ public class PineDLEditor extends DocumentPane {
         this.file = file;
 
         editor.restoreDefaultSyntaxHighlightingColorScheme();
+        editor.addKeyListener(new KeyAdapter() {
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
+                    save();
+                }
+            }
+        });
         String x;
         int i = file.getName().lastIndexOf('.');
         if (i < 0 || i >= file.getName().length()) {
@@ -173,14 +184,14 @@ public class PineDLEditor extends DocumentPane {
     }
 
     /**
-     * Saves the file
-     * @return 
+     * {@inheritDoc}
      */
     @Override
     public boolean saveBackend() {
         try {
             BufferedOutputStream out = new BufferedOutputStream(file.getOutputStream());
             out.write(editor.getText().getBytes());
+            out.close();
             return true;
         } catch (Exception e) {
             return false;
