@@ -18,7 +18,7 @@ class X extends Y
         int name = 2;
         pi = 3.14159;
         int life = 2+3*4;
-        //Console.getOutputStream().PrintLine("The meaning of line is " + life);
+        Console.getOutputStream().PrintLine("The meaning of life is " + life);
     }
 
     public static int sum(int x, string y){

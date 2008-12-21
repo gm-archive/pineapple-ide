@@ -24,12 +24,23 @@ THE SOFTWARE.
 package org.gcreator.pinedl.statements;
 
 import java.util.Vector;
+import org.gcreator.pinedl.Leaf;
 
 /**
- * Represents a function call
+ * Represents an if statement
  * @author Luís Reis
  */
-public class FunctionCall extends Reference{
-    public String name = "";
-    public Vector<Expression> arguments = new Vector<Expression>();
+public class ReturnStatement extends Leaf{
+    public Expression value = null;
+    
+    @Override
+    public Leaf optimize(){
+        value = (Expression) value.optimize();
+        return this;
+    }
+    
+    @Override
+    public String toString(){
+        return "return[" + value.toString() + "]";
+    }
 }

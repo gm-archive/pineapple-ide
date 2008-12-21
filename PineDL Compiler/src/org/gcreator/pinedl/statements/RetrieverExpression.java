@@ -20,42 +20,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+
 package org.gcreator.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pinedl.Leaf;
 
 /**
- * Represents a group of statements
- * @author Luís Reis
+ * Represent an "x.y" expression
+ * @author luis
  */
-public class Block extends Leaf {
-
-    public Vector<Leaf> content = new Vector<Leaf>();
-
+public class RetrieverExpression extends Reference{
+    public Reference left = null;
+    public Reference right = null;
+    
+    public RetrieverExpression(Reference left, Reference right){
+        this.left = left;
+        this.right = right;
+    }
+    
     @Override
     public Leaf optimize(){
-        Vector v = (Vector) content.clone();
-        content.clear();
-        for(Object leaf : v){
-            if(leaf==null){ continue; }
-            Leaf l = ((Leaf) leaf).optimize();
-            content.add(l);
-        }
+        left = (Reference) left.optimize();
+        right = (Reference) right.optimize();
         return this;
     }
     
     @Override
-    public String toString() {
-        String s = "[";
-        boolean first = true;
-        for (Leaf leaf : content) {
-            if (!first) {
-                s += ", ";
-            }
-            s += leaf;
-            first = false;
-        }
-        return s + "]";
+    public String toString(){
+        return left.toString() + "." + right.toString();
     }
 }

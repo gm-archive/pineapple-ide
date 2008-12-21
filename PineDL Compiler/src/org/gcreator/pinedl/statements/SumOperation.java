@@ -48,6 +48,9 @@ public class SumOperation extends Operation{
             return new IntConstant(
                     ((IntConstant) left).value + ((IntConstant) right).value);
         }
+        if((left instanceof StringConstant) && (right instanceof Constant)){
+            return new StringConstant(left.toString() + right.toString());
+        }
         return this;
     }
     

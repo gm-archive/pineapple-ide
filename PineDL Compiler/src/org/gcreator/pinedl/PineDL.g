@@ -176,13 +176,13 @@ argument returns [Argument a = new Argument()]
 block	returns [Block b = new Block()]
 	:	(BLKBEG (s=stmt {b.content.add(s);})* BLKEND);
 	
-stmt returns [Leaf l]
-	:	e=declAssign {l=e;}
-	| (expression STMTEND)
-	| returnstmt;
+stmt returns [Leaf l = null]
+	:	(e=declAssign {l=e;})
+	| (a=expression STMTEND {l=a;})
+	| (b=returnstmt {l=b;});
 	
-returnstmt
-	:	'return' expression? STMTEND;
+returnstmt returns [ReturnStatement ret = new ReturnStatement()]
+	:	'return' (r=expression {ret.value = r;})? STMTEND;
 	
 declAssign returns [DeclAssign e = new DeclAssign()]
 	: t=type {e.type = t;} n=WORD {e.name = n.getText();} ('=' ex=expression {e.value=ex;})? STMTEND;
@@ -192,6 +192,11 @@ pkgname returns [String s = null]
 
 reference returns [Reference r = null]
 	:	ref=WORD {r = new VariableReference(ref.getText());}
+	(LPAREN {r = new FunctionReference(ref.getText());}
+		(e=expression {((FunctionReference) r).arguments.add(e);}
+			(',' e=expression {((FunctionReference) r).arguments.add(e);})*
+		)?
+	RPAREN)?
 	(LARRAY e=expression {r = new ArrayReference(r, e);} RARRAY)*;
 
 constant returns [Constant c = null]
@@ -200,8 +205,8 @@ constant returns [Constant c = null]
 //Multiple operations, divided by priority levels:
 
 primitive returns [Expression e = null]
-	:	c=constant {e=c;}| r=reference {e=r;} | (LPAREN x=expression {e=x;} RPAREN)
-		| (WORD LPAREN RPAREN);
+	:	c=constant {e=c;}| (r=reference {e=r;} ('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*)
+		| (LPAREN x=expression {e=x;} RPAREN);
 	
 notcastexpr returns [Expression e = null]
 @init{
@@ -209,8 +214,7 @@ TypeCast cast = null;
 }
 	:	(p=primitive {e=p;})
 		| (NOT p=notcastexpr {e=new NotOperation(p);})
-		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);})
-		| (notcastexpr '.' );
+		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);});
 		
 multop returns [Expression e = null]
 	: t=notcastexpr {e=t;} (
