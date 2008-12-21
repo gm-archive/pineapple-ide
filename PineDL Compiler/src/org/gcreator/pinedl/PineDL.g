@@ -153,18 +153,20 @@ method returns [Function f = new Function()]
 		LPAREN
 		l=argumentlist {f.arguments = l;}
 		RPAREN
-		b=block {f.content = b;}
-		STMTEND?; //Since it's a function, the ';' is optional
+		b=block {f.content = b;};
 	
 constructor returns [Constructor c = new Constructor()]
 	:	a=accesscontrolkeyword {c.access = a;}
 		'this'
-		//TODO: super() calls
 		LPAREN
 		l=argumentlist {c.arguments = l;}
 		RPAREN
-		b=block {c.content = b;}
-		STMTEND?; //Since it's a constructor, the ';' is optional
+		(':' 'super' {c.superArguments = new Vector<Expression>();}
+			LPAREN
+			(e=expression {c.superArguments.add(e);}
+			(',' e=expression {c.superArguments.add(e);})*)?
+			RPAREN)?
+		b=block {c.content = b;};
 
 argumentlist returns [Vector<Argument> v = new Vector<Argument>()]
 	: (a=argument {v.add(a);} (',' a=argument {v.add(a);})*)?;

@@ -25,6 +25,7 @@ package org.gcreator.pinedl;
 
 import java.util.Vector;
 import org.gcreator.pinedl.statements.Block;
+import org.gcreator.pinedl.statements.Expression;
 
 /**
  * Represents a constructor
@@ -34,6 +35,7 @@ public class Constructor {
     public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
     public Vector<Argument> arguments = new Vector<Argument>();
     public Block content = new Block();
+    public Vector<Expression> superArguments = null;
     
     @Override
     public String toString(){
