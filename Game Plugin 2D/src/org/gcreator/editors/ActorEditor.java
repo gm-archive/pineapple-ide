@@ -251,8 +251,7 @@ private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_jButton3ActionPerformed
 
 public void addTabForEvent(Event e){
-    EventPanel p = new EventPanel();
-    p.e = e;
+    EventPanel p = new EventPanel(e);
     jTabbedPane1.insertTab(e.type, null, p, "",jTabbedPane1.getComponentCount()-2);
 }
 

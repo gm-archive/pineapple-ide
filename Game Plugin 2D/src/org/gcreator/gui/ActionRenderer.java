@@ -80,13 +80,14 @@ public abstract class ActionRenderer extends JPanel{
     public void updateUI(){
         super.updateUI();
         removeAll();
-        if(getActions()==null){ return; }
+        Vector<Action> actions = getActions();
+        if(actions==null){ return; }
         setLayout(null);
         int currenty = 0;
         boolean bColor = false;
         Color usedColor = getUsedColor();
         ActionRenderer render = getParentRenderer();
-        for(Action action : getActions()){
+        for(Action action : actions){
             JPanel p = action.render(
                     bColor?
                         (usedColor==LIGHT_ORANGE?LIGHT_GREEN:LIGHT_ORANGE)

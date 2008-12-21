@@ -6,6 +6,9 @@
 
 package org.gcreator.events;
 
+import java.awt.BorderLayout;
+import org.gcreator.gui.EventActionRenderer;
+
 /**
  *
  * @author  luis
@@ -14,11 +17,20 @@ public class EventPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1;
     
-    public Event e = null;
+    private Event e = null;
     
-    /** Creates new form EventPanel */
-    public EventPanel() {
+    /**
+     * Creates new form EventPanel
+     * @param e The event that this panel should represent
+     */
+    public EventPanel(Event e) {
+        this.e = e;
         initComponents();
+        setLayout(new BorderLayout());
+        render = new EventActionRenderer(e);
+        render.setVisible(true);
+        add(render, BorderLayout.CENTER);
+        render.updateUI();
     }
 
     /** This method is called from within the constructor to
@@ -42,6 +54,7 @@ public class EventPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    public EventActionRenderer render = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

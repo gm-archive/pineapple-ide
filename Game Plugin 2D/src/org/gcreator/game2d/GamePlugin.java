@@ -29,7 +29,6 @@ import org.gcreator.editors.ActorEditor;
 import org.gcreator.editors.TextEditor;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.PineappleGUI;
-import org.gcreator.gui.TestActionRenderer;
 import org.gcreator.managers.EventManager;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.plugins.DefaultEventTypes;
@@ -138,15 +137,6 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                     ToolWindowAnchor.RIGHT);
             palette.setAvailable(false);
             EventManager.fireEvent(this, PALETTE_CREATED, palette, palettePanel);
-
-            JFrame f = new JFrame();
-            f.setLayout(new BorderLayout());
-            TestActionRenderer act = new TestActionRenderer();
-            act.setVisible(true);
-            act.updateUI();
-            f.add(act, BorderLayout.CENTER);
-            f.setSize(300, 300);
-            f.setVisible(true);
         } else if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
             DocumentPane p = PineappleGUI.dip.getSelectedDocument();
             if (p != null && p instanceof PaletteUser) {

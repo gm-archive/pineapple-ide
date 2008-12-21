@@ -29,40 +29,19 @@ import org.gcreator.actions.Action;
 import org.gcreator.actions.CodeActionType;
 import org.gcreator.actions.ElseActionType;
 import org.gcreator.actions.IfActionType;
+import org.gcreator.events.Event;
 
 /**
  *
  * @author Luís Reis
  */
-public class TestActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559862L;
-
-    private Vector<Action> va;
+public class EventActionRenderer extends ActionRenderer{
+    private static final long serialVersionUID = -2837866695562559863L;
     
-    public TestActionRenderer(){
-        va = new Vector<Action>();
-        
-        Action a = new Action(CodeActionType.ACTIONTYPE_CODE);
-        a.args = "//Sample Code";
-        va.add(a);
-        a = new Action(CodeActionType.ACTIONTYPE_CODE);
-        a.args = "//Sample Code 2";
-        va.add(a);
-        a = new Action(IfActionType.ACTIONTYPE_IF);
-        a.args = "true";
-        a.expanded = true;
-        va.add(a);
-        
-        Action b = new Action(CodeActionType.ACTIONTYPE_CODE);
-        b.args = "//Sample Code Nested";
-        a.children.add(b);
-        b = new Action(IfActionType.ACTIONTYPE_IF);
-        b.args = "false";
-        b.expanded = true;
-        a.children.add(b);
-        b = new Action(ElseActionType.ACTIONTYPE_ELSE);
-        b.expanded = true;
-        a.children.add(b);
+    private Event e = null;
+    
+    public EventActionRenderer(Event e){
+        this.e = e;
     }
     
     public Color getUsedColor(){
@@ -70,7 +49,10 @@ public class TestActionRenderer extends ActionRenderer{
     }
     
     public Vector<Action> getActions(){
-        return va;
+        if(e==null){
+            return null;
+        }
+        return e.actions;
     }
     
     public void updateUI(){
