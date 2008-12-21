@@ -1943,7 +1943,7 @@ public class PineappleGUI implements EventHandler {
         return null;
     }
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="createBasicFile(File)                                   ">
+    //<editor-fold defaultstate="collapsed" desc="createBasicFile(File)                                     ">
     private BasicFile createBasicFile(File f) {
         BasicFile bf;
         if (PineappleCore.getProject() != null) {
@@ -1983,6 +1983,9 @@ public class PineappleGUI implements EventHandler {
         return supporters.toArray(new FormatSupporter[supporters.size()]);
     }
     //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="TreeTransferHandler">
     private class TreeTransferHandler extends TransferHandler {
 
         private static final long serialVersionUID = 1;
@@ -2121,5 +2124,6 @@ public class PineappleGUI implements EventHandler {
             return true;
         }
         //</editor-fold>
-        }
+    }
+    //</editor-fold>
 }

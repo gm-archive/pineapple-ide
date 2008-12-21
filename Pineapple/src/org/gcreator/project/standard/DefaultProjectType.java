@@ -36,6 +36,16 @@ import org.gcreator.project.io.BasicFile;
  */
 public class DefaultProjectType implements ProjectType {
     
+    protected final String FILE_TYPE;
+    
+    public DefaultProjectType() {
+        FILE_TYPE = "pmf";
+    }
+    
+    public DefaultProjectType(String fileType) {
+        FILE_TYPE = fileType;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -73,7 +83,7 @@ public class DefaultProjectType implements ProjectType {
      */
     @Override
     public String[] getProjectFileTypes() {
-        return DefaultProjectManager.getProjectFileTypes();
+        return new String[]{FILE_TYPE};
     }
         
     /**

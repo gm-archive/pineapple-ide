@@ -42,85 +42,103 @@ import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 
 /**
- * The Game 2D plugin
+ * The Game 2D Plugin.
+ * Provides basic components for a 2-Dimensional game.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
-public class GamePlugin extends Plugin implements FormatSupporter{
+public class GamePlugin extends Plugin implements FormatSupporter {
 
     /**
      * Called when the palette is created
      */
     public static final String PALETTE_CREATED = "game-palette-created";
-    
     public static ToolWindow palette = null;
     public static JPanel palettePanel = null;
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "Game Plugin 2D";
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getDescription(String format){
-        if(format==null){
+    public String getDescription(String format) {
+        if (format == null) {
             return "";
         }
-        
-        if(format.equals("actor")){
+
+        if (format.equals("actor")) {
             return "Edits actors, that is, game entities with behavior.";
         }
-        
+
         return "";
     }
-    
-    public boolean accept(String format){
-        if(format.equals("actor")){ return true; }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean accept(String format) {
+        if (format.equals("actor")) {
+            return true;
+        }
         return false;
     }
-    
-    public DocumentPane load(BasicFile f){
+
+    /**
+     * {@inheritDoc}
+     */
+    public DocumentPane load(BasicFile f) {
         String n = f.getName();
         int index = n.indexOf(".");
-        if(index==-1){
+        if (index == -1) {
             return new TextEditor(f);
         }
-        //x. length=2 index=1
-        if(index==n.length()-1){
+
+        if (index == n.length() - 1) {
             return new TextEditor(f);
         }
-        
-        //x.txt index=1 n.substring(index=".txt")
-        String format = n.substring(index+1);
-        if(format.equals("actor")){
+
+        String format = n.substring(index + 1);
+        if (format.equals("actor")) {
             return new ActorEditor(f);
         }
-        
+
         return new TextEditor(f);
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public static String[] formats = new String[]{
         "actor"
     };
-    
-    public String[] getFormats(){
-        return formats;
-    }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Adds 2D game support to Pineapple";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handleEvent(Event e) {
         if (e.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
             palettePanel = new JPanel();
             palette = PineappleGUI.manager.registerToolWindow("Palette", "Palette", null, palettePanel,
-                ToolWindowAnchor.RIGHT);
+                    ToolWindowAnchor.RIGHT);
             palette.setAvailable(false);
             EventManager.fireEvent(this, PALETTE_CREATED, palette, palettePanel);
-            
+
             JFrame f = new JFrame();
             f.setLayout(new BorderLayout());
             TestActionRenderer act = new TestActionRenderer();
@@ -129,17 +147,15 @@ public class GamePlugin extends Plugin implements FormatSupporter{
             f.add(act, BorderLayout.CENTER);
             f.setSize(300, 300);
             f.setVisible(true);
-        }
-        else if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
+        } else if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
             DocumentPane p = PineappleGUI.dip.getSelectedDocument();
-            if(p!=null&&p instanceof PaletteUser){
+            if (p != null && p instanceof PaletteUser) {
                 palette.setAvailable(((PaletteUser) p).doPalette(palette, palettePanel));
-            }
-            else{
+            } else {
                 palette.setAvailable(false);
             }
-        //} else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
-        //    PineappleCore.addProjectType(new GameProjectType());
+        } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
+            PineappleCore.addProjectType(new GameProjectType());
         } else if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
             PineappleCore.addFormatSupporter(this);
         }
@@ -158,12 +174,15 @@ public class GamePlugin extends Plugin implements FormatSupporter{
         PineappleCore.fileTypeNames.put("actor", "Game Actor");
         PineappleCore.fileTypeDescriptions.put("actor",
                 "Game entities associated with a position and a behavior.");
-        
+
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getAuthor() {
-        return "Luís Reis";
+        return "Luís Reis, Serge Humphrey";
     }
 }

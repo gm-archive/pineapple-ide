@@ -71,10 +71,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class DefaultProjectManager implements ProjectManager {
 
     protected DefaultProject project;
-    public static final String[] PROJECT_TYPES = new String[]{
-        /* Pineapple Project File */
-        "pmf",
-    };
     public static final float PROJECT_VERSION = 1.05F;
 
     /**
@@ -199,15 +195,12 @@ public class DefaultProjectManager implements ProjectManager {
         }
 
         /* Pineapple Manifest File */
-        if (format.equals("pmf")) {
+        if (format.equals(t.FILE_TYPE)) {
             loadFromManifest(f, initial);
         }
 
-        return initial;
-    }
 
-    public static String[] getProjectFileTypes() {
-        return PROJECT_TYPES;
+        return initial;
     }
 
     /**
@@ -236,7 +229,7 @@ public class DefaultProjectManager implements ProjectManager {
         }
         try {
             project.managing = true;
-            File f = new File(project.getProjectFolder().getPath() + File.separator + "project.pmf");
+            File f = new File(project.getProjectFolder().getPath() + File.separator + "project." + project.getProjectType().getProjectFileTypes()[0]);
             if (!f.exists()) {
                 f.createNewFile();
             }
@@ -450,7 +443,7 @@ public class DefaultProjectManager implements ProjectManager {
     private final class ProjectXMLHandler implements ContentHandler {
 
         private Locator locator;
-        private boolean files,  settings;
+        private  boolean files,  settings;
         private boolean loading;
         private DefaultProject project;
 

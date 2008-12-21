@@ -44,8 +44,8 @@ import org.gcreator.managers.PluginManager;
 public class Core {
 
     /* 0.97... -> Alpha
-     * ...004 -> 4       */
-    private static final double version = 0.970045;
+     * ...005 -> 5       */
+    private static final double version = 0.97005;
     private static final StaticContext staticContext = new StaticContext();
     
     /**
@@ -65,6 +65,10 @@ public class Core {
      */
     protected static void load() {
         /* Logging code for Alpha testing releases */
+        
+        /* No Alpha release for a while. */
+        
+        /*
         try {
             DateFormat d = DateFormat.getDateInstance();
             System.setErr(new PrintStream(("error-log-" + d.format(Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
@@ -72,6 +76,7 @@ public class Core {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
         /* End of logging code */
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());

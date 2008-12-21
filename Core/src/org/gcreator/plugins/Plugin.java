@@ -106,6 +106,7 @@ public abstract class Plugin implements EventHandler {
     public void setJar(File f) {
         this.jar = f;
     }
+    
     /**
      * @return The jar file that this plugin was loaded from.
      */

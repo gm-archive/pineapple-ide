@@ -113,10 +113,6 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
                 /* Tree Path */
                 if (el.getTreeNode() instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode n = (DefaultMutableTreeNode) el.getTreeNode();
-                    for (TreeNode node : n.getPath()) {
-                        System.out.print(((JLabel)list.getCellRenderer().getListCellRendererComponent(list, node, 0, false, false)).getText() + "/");
-                    }
-                    System.out.println();
                     PineappleGUI.tree.setSelectionPath(new TreePath(n.getPath()));
                 }
                 
