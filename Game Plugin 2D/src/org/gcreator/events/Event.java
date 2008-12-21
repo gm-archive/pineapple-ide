@@ -35,7 +35,17 @@ public class Event {
      * The Create event.
      * Called when the instance is created.
      */
-    public static final String TYPE_CREATE = "create";
+    public static final String TYPE_CREATE = "Create Event";
+    /**
+     * The Update event.
+     * Called when the instance is updated.
+     */
+    public static final String TYPE_UPDATE = "Update Event";
+    /**
+     * The Draw event.
+     * Called when the instance is drawed.
+     */
+    public static final String TYPE_DRAW = "Draw Event";
     
     /**
      * The event type

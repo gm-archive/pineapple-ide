@@ -28,7 +28,6 @@ import java.util.Vector;
 import org.gcreator.actions.Action;
 import org.gcreator.actions.ActionType;
 import org.gcreator.events.Event;
-import org.gcreator.managers.PluginManager;
 import org.gcreator.project.io.BasicFile;
 import org.gcreator.xml.Node;
 import org.gcreator.xml.SAXImporter;
@@ -40,8 +39,22 @@ import org.xml.sax.SAXException;
  */
 public class Actor {
 
+    public class Variable{
+        public String type = "int";
+        public String name = "lives";
+        public boolean isStatic = false;
+    }
+    
     public Vector<Event> events = new Vector<Event>();
+    public Vector<Variable> vars = new Vector<Variable>();
 
+    /**
+     * Creates a new actor
+     */
+    public Actor(){
+        
+    }
+    
     /**
      * Loads an actor stored in a file.
      * 
@@ -60,11 +73,31 @@ public class Actor {
         if (d == Double.NaN) {
             throw new SAXException("Error retrieving actor version");
         }
-        if (d != 1.0) {
+        if (d < 1.0 || d >= 2) {
+            //Version is 1.0, but 1.x should be backwards-compatible
             throw new SAXException("Unrecognized actor version");
         }
 
         for (Node child : root.getChildren()) {
+            if (child.getName().equals("vars")) {
+                for (Node n : child.getChildren()) {
+                    if(n.getName().equals("var")){
+                        Variable v = new Variable();
+                        v.name = n.getContent();
+                        v.type = n.getAttributeValue("type");
+                        if(v.type==null){
+                            throw new SAXException("Variable type not specified");
+                        }
+                        String sta = n.getAttributeValue("static");
+                        if(sta==null){
+                            throw new SAXException("Did not specify whether variable is static or not");
+                        }
+                        if(sta.toLowerCase().equals("true")){
+                            v.isStatic = true;
+                        }
+                    }
+                }
+            }
             if (child.getName().equals("event")) {
                 String type = child.getAttributeValue("type");
                 if(type==null||type.length()==0){
@@ -75,6 +108,8 @@ public class Actor {
                 e.actions = parseActions(child);
                 events.add(e);
             }
+            //Don't complain if different tag is found
+            //in order to make forward-compatibility easier
         }
     }
 
