@@ -184,6 +184,7 @@ stmt returns [Leaf l = null]
 	| (b=returnstmt {l=b;})
 	| (c=ifstmt {l=c;})
 	| (w=whilestmt {l=w;})
+	| (f=forstmt {l=f;})
 	| (d=block {l=d;})
 	| ('break' STMTEND {l=new BreakStatement();})
 	| ('continue' STMTEND {l=new ContinueStatement();})
@@ -197,6 +198,12 @@ ifstmt returns [IfStatement ifCase = new IfStatement()]
 whilestmt returns [WhileStatement whileCase = new WhileStatement()]
 	: 'while' LPAREN s=expression {whileCase.condition = s;} RPAREN
 		q=stmt {whileCase.then = q;};
+		
+forstmt returns [ForStatement forCase = new ForStatement()]
+	: 'for' LPAREN ((a=expression {forCase.firstStatement = a;} STMTEND)|b=declAssign {forCase.firstStatement = b;}|STMTEND)
+		(s=expression {forCase.condition = s;}) STMTEND
+		(d=expression {forCase.loopStatement = d;}) RPAREN
+		q=stmt {forCase.then = q;};
 	
 returnstmt returns [ReturnStatement ret = new ReturnStatement()]
 	:	'return' (r=expression {ret.value = r;})? STMTEND;

@@ -16,9 +16,7 @@ class X extends Y
     public this() : super(15)
     {
         X a = new X();
-        while(true){
-            if(a.tick()) continue;
-            else break;
+        for(int i = 0; i<10 ; i+=1){
         }
     }
 
