@@ -72,7 +72,7 @@ public class Type {
                 return "~INVALID~";
             }
             String s = type[0];
-            for(int i = 0; i < type.length; i++){
+            for(int i = 1; i < type.length; i++){
                 s += "." + type[i];
             }
             return s;

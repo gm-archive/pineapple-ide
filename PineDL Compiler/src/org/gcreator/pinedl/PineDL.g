@@ -205,7 +205,7 @@ pkgname returns [String s = null]
 	:	(c=WORD {s = c.getText();} ('.' t=WORD {s += "." + t.getText();})*);
 
 reference returns [Reference r = null]
-	:	ref=WORD {r = new VariableReference(ref.getText());}
+	:	ref=(WORD|'this'|'super') {r = new VariableReference(ref.getText());}
 	(LPAREN {r = new FunctionReference(ref.getText());}
 		(e=expression {((FunctionReference) r).arguments.add(e);}
 			(',' e=expression {((FunctionReference) r).arguments.add(e);})*
@@ -220,7 +220,11 @@ constant returns [Constant c = null]
 
 primitive returns [Expression e = null]
 	:	c=constant {e=c;}| (r=reference {e=r;} ('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*)
-		| (LPAREN x=expression {e=x;} RPAREN);
+		| (LPAREN x=expression {e=x;} RPAREN)|('new' t=clstype {e=new NewCall(t);}
+		LPAREN
+		(ex=expression {((NewCall) e).arguments.add(ex);}
+			(',' ex=expression {((NewCall) e).arguments.add(ex);})*
+		)? RPAREN);
 	
 notcastexpr returns [Expression e = null]
 @init{

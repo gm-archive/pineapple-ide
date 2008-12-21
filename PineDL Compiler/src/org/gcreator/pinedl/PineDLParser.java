@@ -1,4 +1,4 @@
-// $ANTLR 3.1 /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g 2008-12-21 00:33:30
+// $ANTLR 3.1 /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g 2008-12-21 00:54:54
 
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.HashMap;
 public class PineDLParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PLUS", "MINUS", "MULT", "DIV", "MOD", "DOT", "RSHIFT", "LSHIFT", "NOT", "EQUAL", "LESS", "MORE", "LESSEQ", "MOREEQ", "EQUALS", "NEQUAL", "STMTEND", "BITWISEAND", "BITWISEOR", "BITWISEXOR", "LOGAND", "LOGOR", "BLKBEG", "BLKEND", "LPAREN", "RPAREN", "LARRAY", "RARRAY", "WORD", "STRINGCONST_PRIVATE", "DOUBLECONST_PRIVATE", "DIGIT", "INTCONST_PRIVATE", "ALPHA", "SLCOMMENT", "MLCOMMENT", "WHITESPACE", "'package'", "'import'", "'class'", "'extends'", "'static'", "'this'", "','", "'break'", "'if'", "'else'", "'while'", "'return'", "'?'", "':'", "'+='", "'-='", "'*='", "'/='", "'%='", "'&='", "'|='", "'^='", "'<<='", "'>>='", "'true'", "'false'", "'int'", "'uint'", "'float'", "'ufloat'", "'double'", "'udouble'", "'char'", "'uchar'", "'bool'", "'string'", "'public'", "'private'", "'protected'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PLUS", "MINUS", "MULT", "DIV", "MOD", "DOT", "RSHIFT", "LSHIFT", "NOT", "EQUAL", "LESS", "MORE", "LESSEQ", "MOREEQ", "EQUALS", "NEQUAL", "STMTEND", "BITWISEAND", "BITWISEOR", "BITWISEXOR", "LOGAND", "LOGOR", "BLKBEG", "BLKEND", "LPAREN", "RPAREN", "LARRAY", "RARRAY", "WORD", "STRINGCONST_PRIVATE", "DOUBLECONST_PRIVATE", "DIGIT", "INTCONST_PRIVATE", "ALPHA", "SLCOMMENT", "MLCOMMENT", "WHITESPACE", "'package'", "'import'", "'class'", "'extends'", "'static'", "'this'", "','", "'break'", "'if'", "'else'", "'while'", "'return'", "'super'", "'new'", "'?'", "':'", "'+='", "'-='", "'*='", "'/='", "'%='", "'&='", "'|='", "'^='", "'<<='", "'>>='", "'true'", "'false'", "'int'", "'uint'", "'float'", "'ufloat'", "'double'", "'udouble'", "'char'", "'uchar'", "'bool'", "'string'", "'public'", "'private'", "'protected'"
     };
     public static final int T__68=68;
     public static final int T__69=69;
@@ -90,6 +90,8 @@ public class PineDLParser extends Parser {
     public static final int NEQUAL=19;
     public static final int T__41=41;
     public static final int T__46=46;
+    public static final int T__80=80;
+    public static final int T__81=81;
     public static final int T__47=47;
     public static final int T__44=44;
     public static final int T__45=45;
@@ -689,7 +691,7 @@ public class PineDLParser extends Parser {
             int alt10=2;
             int LA10_0 = input.LA(1);
 
-            if ( (LA10_0==WORD||(LA10_0>=67 && LA10_0<=76)) ) {
+            if ( (LA10_0==WORD||(LA10_0>=69 && LA10_0<=78)) ) {
                 alt10=1;
             }
             switch (alt10) {
@@ -820,7 +822,7 @@ public class PineDLParser extends Parser {
                 int alt11=2;
                 int LA11_0 = input.LA(1);
 
-                if ( (LA11_0==NOT||LA11_0==STMTEND||LA11_0==BLKBEG||LA11_0==LPAREN||(LA11_0>=WORD && LA11_0<=DOUBLECONST_PRIVATE)||LA11_0==INTCONST_PRIVATE||(LA11_0>=48 && LA11_0<=49)||(LA11_0>=51 && LA11_0<=52)||(LA11_0>=65 && LA11_0<=76)) ) {
+                if ( (LA11_0==NOT||LA11_0==STMTEND||LA11_0==BLKBEG||LA11_0==LPAREN||(LA11_0>=WORD && LA11_0<=DOUBLECONST_PRIVATE)||LA11_0==INTCONST_PRIVATE||LA11_0==46||(LA11_0>=48 && LA11_0<=49)||(LA11_0>=51 && LA11_0<=54)||(LA11_0>=67 && LA11_0<=78)) ) {
                     alt11=1;
                 }
 
@@ -1192,7 +1194,7 @@ public class PineDLParser extends Parser {
             int alt14=2;
             int LA14_0 = input.LA(1);
 
-            if ( (LA14_0==NOT||LA14_0==LPAREN||(LA14_0>=WORD && LA14_0<=DOUBLECONST_PRIVATE)||LA14_0==INTCONST_PRIVATE||(LA14_0>=65 && LA14_0<=66)) ) {
+            if ( (LA14_0==NOT||LA14_0==LPAREN||(LA14_0>=WORD && LA14_0<=DOUBLECONST_PRIVATE)||LA14_0==INTCONST_PRIVATE||LA14_0==46||(LA14_0>=53 && LA14_0<=54)||(LA14_0>=67 && LA14_0<=68)) ) {
                 alt14=1;
             }
             switch (alt14) {
@@ -1365,7 +1367,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "reference"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:207:1: reference returns [Reference r = null] : ref= WORD ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )* ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:207:1: reference returns [Reference r = null] : ref= ( WORD | 'this' | 'super' ) ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )* ;
     public final Reference reference() throws RecognitionException {
         Reference r =  null;
 
@@ -1374,10 +1376,20 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:208:2: (ref= WORD ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:208:4: ref= WORD ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:208:2: (ref= ( WORD | 'this' | 'super' ) ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:208:4: ref= ( WORD | 'this' | 'super' ) ( LPAREN (e= expression ( ',' e= expression )* )? RPAREN )? ( LARRAY e= expression RARRAY )*
             {
-            ref=(Token)match(input,WORD,FOLLOW_WORD_in_reference926); if (state.failed) return r;
+            ref=(Token)input.LT(1);
+            if ( input.LA(1)==WORD||input.LA(1)==46||input.LA(1)==53 ) {
+                input.consume();
+                state.errorRecovery=false;state.failed=false;
+            }
+            else {
+                if (state.backtracking>0) {state.failed=true; return r;}
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                throw mse;
+            }
+
             if ( state.backtracking==0 ) {
               r = new VariableReference(ref.getText());
             }
@@ -1392,7 +1404,7 @@ public class PineDLParser extends Parser {
                 case 1 :
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:209:3: LPAREN (e= expression ( ',' e= expression )* )? RPAREN
                     {
-                    match(input,LPAREN,FOLLOW_LPAREN_in_reference932); if (state.failed) return r;
+                    match(input,LPAREN,FOLLOW_LPAREN_in_reference938); if (state.failed) return r;
                     if ( state.backtracking==0 ) {
                       r = new FunctionReference(ref.getText());
                     }
@@ -1400,14 +1412,14 @@ public class PineDLParser extends Parser {
                     int alt18=2;
                     int LA18_0 = input.LA(1);
 
-                    if ( (LA18_0==NOT||LA18_0==LPAREN||(LA18_0>=WORD && LA18_0<=DOUBLECONST_PRIVATE)||LA18_0==INTCONST_PRIVATE||(LA18_0>=65 && LA18_0<=66)) ) {
+                    if ( (LA18_0==NOT||LA18_0==LPAREN||(LA18_0>=WORD && LA18_0<=DOUBLECONST_PRIVATE)||LA18_0==INTCONST_PRIVATE||LA18_0==46||(LA18_0>=53 && LA18_0<=54)||(LA18_0>=67 && LA18_0<=68)) ) {
                         alt18=1;
                     }
                     switch (alt18) {
                         case 1 :
                             // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:210:4: e= expression ( ',' e= expression )*
                             {
-                            pushFollow(FOLLOW_expression_in_reference941);
+                            pushFollow(FOLLOW_expression_in_reference947);
                             e=expression();
 
                             state._fsp--;
@@ -1430,8 +1442,8 @@ public class PineDLParser extends Parser {
                             	case 1 :
                             	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:211:5: ',' e= expression
                             	    {
-                            	    match(input,47,FOLLOW_47_in_reference949); if (state.failed) return r;
-                            	    pushFollow(FOLLOW_expression_in_reference953);
+                            	    match(input,47,FOLLOW_47_in_reference955); if (state.failed) return r;
+                            	    pushFollow(FOLLOW_expression_in_reference959);
                             	    e=expression();
 
                             	    state._fsp--;
@@ -1454,7 +1466,7 @@ public class PineDLParser extends Parser {
 
                     }
 
-                    match(input,RPAREN,FOLLOW_RPAREN_in_reference965); if (state.failed) return r;
+                    match(input,RPAREN,FOLLOW_RPAREN_in_reference971); if (state.failed) return r;
 
                     }
                     break;
@@ -1476,8 +1488,8 @@ public class PineDLParser extends Parser {
             	case 1 :
             	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:214:3: LARRAY e= expression RARRAY
             	    {
-            	    match(input,LARRAY,FOLLOW_LARRAY_in_reference971); if (state.failed) return r;
-            	    pushFollow(FOLLOW_expression_in_reference975);
+            	    match(input,LARRAY,FOLLOW_LARRAY_in_reference977); if (state.failed) return r;
+            	    pushFollow(FOLLOW_expression_in_reference981);
             	    e=expression();
 
             	    state._fsp--;
@@ -1485,7 +1497,7 @@ public class PineDLParser extends Parser {
             	    if ( state.backtracking==0 ) {
             	      r = new ArrayReference(r, e);
             	    }
-            	    match(input,RARRAY,FOLLOW_RARRAY_in_reference979); if (state.failed) return r;
+            	    match(input,RARRAY,FOLLOW_RARRAY_in_reference985); if (state.failed) return r;
 
             	    }
             	    break;
@@ -1538,8 +1550,8 @@ public class PineDLParser extends Parser {
                 alt21=2;
                 }
                 break;
-            case 65:
-            case 66:
+            case 67:
+            case 68:
                 {
                 alt21=3;
                 }
@@ -1564,7 +1576,7 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:4: (i= intconst )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:5: i= intconst
                     {
-                    pushFollow(FOLLOW_intconst_in_constant997);
+                    pushFollow(FOLLOW_intconst_in_constant1003);
                     i=intconst();
 
                     state._fsp--;
@@ -1584,7 +1596,7 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:24: (d= doubleconst )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:25: d= doubleconst
                     {
-                    pushFollow(FOLLOW_doubleconst_in_constant1005);
+                    pushFollow(FOLLOW_doubleconst_in_constant1011);
                     d=doubleconst();
 
                     state._fsp--;
@@ -1604,7 +1616,7 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:47: (b= boolconst )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:48: b= boolconst
                     {
-                    pushFollow(FOLLOW_boolconst_in_constant1013);
+                    pushFollow(FOLLOW_boolconst_in_constant1019);
                     b=boolconst();
 
                     state._fsp--;
@@ -1624,7 +1636,7 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:68: (s= stringconst )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:217:69: s= stringconst
                     {
-                    pushFollow(FOLLOW_stringconst_in_constant1021);
+                    pushFollow(FOLLOW_stringconst_in_constant1027);
                     s=stringconst();
 
                     state._fsp--;
@@ -1653,7 +1665,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "primitive"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:221:1: primitive returns [Expression e = null] : (c= constant | (r= reference ( '.' b= reference )* ) | ( LPAREN x= expression RPAREN ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:221:1: primitive returns [Expression e = null] : (c= constant | (r= reference ( '.' b= reference )* ) | ( LPAREN x= expression RPAREN ) | ( 'new' t= clstype LPAREN (ex= expression ( ',' ex= expression )* )? RPAREN ) );
     public final Expression primitive() throws RecognitionException {
         Expression e =  null;
 
@@ -1665,43 +1677,54 @@ public class PineDLParser extends Parser {
 
         Expression x = null;
 
+        Type t = null;
+
+        Expression ex = null;
+
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:2: (c= constant | (r= reference ( '.' b= reference )* ) | ( LPAREN x= expression RPAREN ) )
-            int alt23=3;
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:2: (c= constant | (r= reference ( '.' b= reference )* ) | ( LPAREN x= expression RPAREN ) | ( 'new' t= clstype LPAREN (ex= expression ( ',' ex= expression )* )? RPAREN ) )
+            int alt25=4;
             switch ( input.LA(1) ) {
             case STRINGCONST_PRIVATE:
             case DOUBLECONST_PRIVATE:
             case INTCONST_PRIVATE:
-            case 65:
-            case 66:
+            case 67:
+            case 68:
                 {
-                alt23=1;
+                alt25=1;
                 }
                 break;
             case WORD:
+            case 46:
+            case 53:
                 {
-                alt23=2;
+                alt25=2;
                 }
                 break;
             case LPAREN:
                 {
-                alt23=3;
+                alt25=3;
+                }
+                break;
+            case 54:
+                {
+                alt25=4;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return e;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 23, 0, input);
+                    new NoViableAltException("", 25, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt23) {
+            switch (alt25) {
                 case 1 :
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:4: c= constant
                     {
-                    pushFollow(FOLLOW_constant_in_primitive1041);
+                    pushFollow(FOLLOW_constant_in_primitive1047);
                     c=constant();
 
                     state._fsp--;
@@ -1718,7 +1741,7 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:23: (r= reference ( '.' b= reference )* )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:24: r= reference ( '.' b= reference )*
                     {
-                    pushFollow(FOLLOW_reference_in_primitive1049);
+                    pushFollow(FOLLOW_reference_in_primitive1055);
                     r=reference();
 
                     state._fsp--;
@@ -1741,8 +1764,8 @@ public class PineDLParser extends Parser {
                     	case 1 :
                     	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:222:44: '.' b= reference
                     	    {
-                    	    match(input,DOT,FOLLOW_DOT_in_primitive1054); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_reference_in_primitive1058);
+                    	    match(input,DOT,FOLLOW_DOT_in_primitive1060); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_reference_in_primitive1064);
                     	    b=reference();
 
                     	    state._fsp--;
@@ -1771,8 +1794,8 @@ public class PineDLParser extends Parser {
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:223:5: ( LPAREN x= expression RPAREN )
                     // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:223:6: LPAREN x= expression RPAREN
                     {
-                    match(input,LPAREN,FOLLOW_LPAREN_in_primitive1070); if (state.failed) return e;
-                    pushFollow(FOLLOW_expression_in_primitive1074);
+                    match(input,LPAREN,FOLLOW_LPAREN_in_primitive1076); if (state.failed) return e;
+                    pushFollow(FOLLOW_expression_in_primitive1080);
                     x=expression();
 
                     state._fsp--;
@@ -1780,7 +1803,88 @@ public class PineDLParser extends Parser {
                     if ( state.backtracking==0 ) {
                       e=x;
                     }
-                    match(input,RPAREN,FOLLOW_RPAREN_in_primitive1078); if (state.failed) return e;
+                    match(input,RPAREN,FOLLOW_RPAREN_in_primitive1084); if (state.failed) return e;
+
+                    }
+
+
+                    }
+                    break;
+                case 4 :
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:223:41: ( 'new' t= clstype LPAREN (ex= expression ( ',' ex= expression )* )? RPAREN )
+                    {
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:223:41: ( 'new' t= clstype LPAREN (ex= expression ( ',' ex= expression )* )? RPAREN )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:223:42: 'new' t= clstype LPAREN (ex= expression ( ',' ex= expression )* )? RPAREN
+                    {
+                    match(input,54,FOLLOW_54_in_primitive1088); if (state.failed) return e;
+                    pushFollow(FOLLOW_clstype_in_primitive1092);
+                    t=clstype();
+
+                    state._fsp--;
+                    if (state.failed) return e;
+                    if ( state.backtracking==0 ) {
+                      e=new NewCall(t);
+                    }
+                    match(input,LPAREN,FOLLOW_LPAREN_in_primitive1098); if (state.failed) return e;
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:225:3: (ex= expression ( ',' ex= expression )* )?
+                    int alt24=2;
+                    int LA24_0 = input.LA(1);
+
+                    if ( (LA24_0==NOT||LA24_0==LPAREN||(LA24_0>=WORD && LA24_0<=DOUBLECONST_PRIVATE)||LA24_0==INTCONST_PRIVATE||LA24_0==46||(LA24_0>=53 && LA24_0<=54)||(LA24_0>=67 && LA24_0<=68)) ) {
+                        alt24=1;
+                    }
+                    switch (alt24) {
+                        case 1 :
+                            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:225:4: ex= expression ( ',' ex= expression )*
+                            {
+                            pushFollow(FOLLOW_expression_in_primitive1105);
+                            ex=expression();
+
+                            state._fsp--;
+                            if (state.failed) return e;
+                            if ( state.backtracking==0 ) {
+                              ((NewCall) e).arguments.add(ex);
+                            }
+                            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:226:4: ( ',' ex= expression )*
+                            loop23:
+                            do {
+                                int alt23=2;
+                                int LA23_0 = input.LA(1);
+
+                                if ( (LA23_0==47) ) {
+                                    alt23=1;
+                                }
+
+
+                                switch (alt23) {
+                            	case 1 :
+                            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:226:5: ',' ex= expression
+                            	    {
+                            	    match(input,47,FOLLOW_47_in_primitive1113); if (state.failed) return e;
+                            	    pushFollow(FOLLOW_expression_in_primitive1117);
+                            	    ex=expression();
+
+                            	    state._fsp--;
+                            	    if (state.failed) return e;
+                            	    if ( state.backtracking==0 ) {
+                            	      ((NewCall) e).arguments.add(ex);
+                            	    }
+
+                            	    }
+                            	    break;
+
+                            	default :
+                            	    break loop23;
+                                }
+                            } while (true);
+
+
+                            }
+                            break;
+
+                    }
+
+                    match(input,RPAREN,FOLLOW_RPAREN_in_primitive1128); if (state.failed) return e;
 
                     }
 
@@ -1802,7 +1906,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "notcastexpr"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:225:1: notcastexpr returns [Expression e = null] : ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:229:1: notcastexpr returns [Expression e = null] : ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) );
     public final Expression notcastexpr() throws RecognitionException {
         Expression e =  null;
 
@@ -1815,17 +1919,17 @@ public class PineDLParser extends Parser {
         TypeCast cast = null;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:229:2: ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) )
-            int alt24=3;
-            alt24 = dfa24.predict(input);
-            switch (alt24) {
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:233:2: ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) )
+            int alt26=3;
+            alt26 = dfa26.predict(input);
+            switch (alt26) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:229:4: (p= primitive )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:233:4: (p= primitive )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:229:4: (p= primitive )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:229:5: p= primitive
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:233:4: (p= primitive )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:233:5: p= primitive
                     {
-                    pushFollow(FOLLOW_primitive_in_notcastexpr1100);
+                    pushFollow(FOLLOW_primitive_in_notcastexpr1150);
                     p=primitive();
 
                     state._fsp--;
@@ -1840,13 +1944,13 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:230:5: ( NOT p= notcastexpr )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:5: ( NOT p= notcastexpr )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:230:5: ( NOT p= notcastexpr )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:230:6: NOT p= notcastexpr
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:5: ( NOT p= notcastexpr )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:6: NOT p= notcastexpr
                     {
-                    match(input,NOT,FOLLOW_NOT_in_notcastexpr1110); if (state.failed) return e;
-                    pushFollow(FOLLOW_notcastexpr_in_notcastexpr1114);
+                    match(input,NOT,FOLLOW_NOT_in_notcastexpr1160); if (state.failed) return e;
+                    pushFollow(FOLLOW_notcastexpr_in_notcastexpr1164);
                     p=notcastexpr();
 
                     state._fsp--;
@@ -1861,19 +1965,19 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:231:5: ( LPAREN t= type RPAREN p= notcastexpr )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:5: ( LPAREN t= type RPAREN p= notcastexpr )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:231:5: ( LPAREN t= type RPAREN p= notcastexpr )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:231:6: LPAREN t= type RPAREN p= notcastexpr
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:5: ( LPAREN t= type RPAREN p= notcastexpr )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:6: LPAREN t= type RPAREN p= notcastexpr
                     {
-                    match(input,LPAREN,FOLLOW_LPAREN_in_notcastexpr1124); if (state.failed) return e;
-                    pushFollow(FOLLOW_type_in_notcastexpr1128);
+                    match(input,LPAREN,FOLLOW_LPAREN_in_notcastexpr1174); if (state.failed) return e;
+                    pushFollow(FOLLOW_type_in_notcastexpr1178);
                     t=type();
 
                     state._fsp--;
                     if (state.failed) return e;
-                    match(input,RPAREN,FOLLOW_RPAREN_in_notcastexpr1130); if (state.failed) return e;
-                    pushFollow(FOLLOW_notcastexpr_in_notcastexpr1134);
+                    match(input,RPAREN,FOLLOW_RPAREN_in_notcastexpr1180); if (state.failed) return e;
+                    pushFollow(FOLLOW_notcastexpr_in_notcastexpr1184);
                     p=notcastexpr();
 
                     state._fsp--;
@@ -1902,7 +2006,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "multop"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:233:1: multop returns [Expression e = null] : t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )* ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:237:1: multop returns [Expression e = null] : t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )* ;
     public final Expression multop() throws RecognitionException {
         Expression e =  null;
 
@@ -1912,10 +2016,10 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:2: (t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:4: t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:238:2: (t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:238:4: t= notcastexpr ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )*
             {
-            pushFollow(FOLLOW_notcastexpr_in_multop1154);
+            pushFollow(FOLLOW_notcastexpr_in_multop1204);
             t=notcastexpr();
 
             state._fsp--;
@@ -1923,53 +2027,53 @@ public class PineDLParser extends Parser {
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:234:25: ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )*
-            loop26:
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:238:25: ( ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr ) )*
+            loop28:
             do {
-                int alt26=2;
-                int LA26_0 = input.LA(1);
+                int alt28=2;
+                int LA28_0 = input.LA(1);
 
-                if ( ((LA26_0>=MULT && LA26_0<=MOD)) ) {
-                    alt26=1;
+                if ( ((LA28_0>=MULT && LA28_0<=MOD)) ) {
+                    alt28=1;
                 }
 
 
-                switch (alt26) {
+                switch (alt28) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:2: ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:239:2: ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:2: ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr )
-            	    int alt25=3;
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:239:2: ( MULT q= notcastexpr | DIV q= notcastexpr | MOD q= notcastexpr )
+            	    int alt27=3;
             	    switch ( input.LA(1) ) {
             	    case MULT:
             	        {
-            	        alt25=1;
+            	        alt27=1;
             	        }
             	        break;
             	    case DIV:
             	        {
-            	        alt25=2;
+            	        alt27=2;
             	        }
             	        break;
             	    case MOD:
             	        {
-            	        alt25=3;
+            	        alt27=3;
             	        }
             	        break;
             	    default:
             	        if (state.backtracking>0) {state.failed=true; return e;}
             	        NoViableAltException nvae =
-            	            new NoViableAltException("", 25, 0, input);
+            	            new NoViableAltException("", 27, 0, input);
 
             	        throw nvae;
             	    }
 
-            	    switch (alt25) {
+            	    switch (alt27) {
             	        case 1 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:235:3: MULT q= notcastexpr
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:239:3: MULT q= notcastexpr
             	            {
-            	            match(input,MULT,FOLLOW_MULT_in_multop1162); if (state.failed) return e;
-            	            pushFollow(FOLLOW_notcastexpr_in_multop1166);
+            	            match(input,MULT,FOLLOW_MULT_in_multop1212); if (state.failed) return e;
+            	            pushFollow(FOLLOW_notcastexpr_in_multop1216);
             	            q=notcastexpr();
 
             	            state._fsp--;
@@ -1981,10 +2085,10 @@ public class PineDLParser extends Parser {
             	            }
             	            break;
             	        case 2 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:236:3: DIV q= notcastexpr
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:240:3: DIV q= notcastexpr
             	            {
-            	            match(input,DIV,FOLLOW_DIV_in_multop1172); if (state.failed) return e;
-            	            pushFollow(FOLLOW_notcastexpr_in_multop1176);
+            	            match(input,DIV,FOLLOW_DIV_in_multop1222); if (state.failed) return e;
+            	            pushFollow(FOLLOW_notcastexpr_in_multop1226);
             	            q=notcastexpr();
 
             	            state._fsp--;
@@ -1996,128 +2100,16 @@ public class PineDLParser extends Parser {
             	            }
             	            break;
             	        case 3 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:237:3: MOD q= notcastexpr
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:241:3: MOD q= notcastexpr
             	            {
-            	            match(input,MOD,FOLLOW_MOD_in_multop1182); if (state.failed) return e;
-            	            pushFollow(FOLLOW_notcastexpr_in_multop1186);
+            	            match(input,MOD,FOLLOW_MOD_in_multop1232); if (state.failed) return e;
+            	            pushFollow(FOLLOW_notcastexpr_in_multop1236);
             	            q=notcastexpr();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
             	              e=new ModOperation(e, q);
-            	            }
-
-            	            }
-            	            break;
-
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop26;
-                }
-            } while (true);
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-        }
-        return e;
-    }
-    // $ANTLR end "multop"
-
-
-    // $ANTLR start "sumop"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:240:1: sumop returns [Expression e = null] : t= multop ( ( PLUS q= multop | MINUS q= multop ) )* ;
-    public final Expression sumop() throws RecognitionException {
-        Expression e =  null;
-
-        Expression t = null;
-
-        Expression q = null;
-
-
-        try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:241:2: (t= multop ( ( PLUS q= multop | MINUS q= multop ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:241:4: t= multop ( ( PLUS q= multop | MINUS q= multop ) )*
-            {
-            pushFollow(FOLLOW_multop_in_sumop1208);
-            t=multop();
-
-            state._fsp--;
-            if (state.failed) return e;
-            if ( state.backtracking==0 ) {
-              e=t;
-            }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:241:20: ( ( PLUS q= multop | MINUS q= multop ) )*
-            loop28:
-            do {
-                int alt28=2;
-                int LA28_0 = input.LA(1);
-
-                if ( ((LA28_0>=PLUS && LA28_0<=MINUS)) ) {
-                    alt28=1;
-                }
-
-
-                switch (alt28) {
-            	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:242:2: ( PLUS q= multop | MINUS q= multop )
-            	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:242:2: ( PLUS q= multop | MINUS q= multop )
-            	    int alt27=2;
-            	    int LA27_0 = input.LA(1);
-
-            	    if ( (LA27_0==PLUS) ) {
-            	        alt27=1;
-            	    }
-            	    else if ( (LA27_0==MINUS) ) {
-            	        alt27=2;
-            	    }
-            	    else {
-            	        if (state.backtracking>0) {state.failed=true; return e;}
-            	        NoViableAltException nvae =
-            	            new NoViableAltException("", 27, 0, input);
-
-            	        throw nvae;
-            	    }
-            	    switch (alt27) {
-            	        case 1 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:242:3: PLUS q= multop
-            	            {
-            	            match(input,PLUS,FOLLOW_PLUS_in_sumop1216); if (state.failed) return e;
-            	            pushFollow(FOLLOW_multop_in_sumop1220);
-            	            q=multop();
-
-            	            state._fsp--;
-            	            if (state.failed) return e;
-            	            if ( state.backtracking==0 ) {
-            	              e=new SumOperation(e, q);
-            	            }
-
-            	            }
-            	            break;
-            	        case 2 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:243:3: MINUS q= multop
-            	            {
-            	            match(input,MINUS,FOLLOW_MINUS_in_sumop1226); if (state.failed) return e;
-            	            pushFollow(FOLLOW_multop_in_sumop1230);
-            	            q=multop();
-
-            	            state._fsp--;
-            	            if (state.failed) return e;
-            	            if ( state.backtracking==0 ) {
-            	              e=new SubtractionOperation(e, q);
             	            }
 
             	            }
@@ -2146,12 +2138,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "sumop"
+    // $ANTLR end "multop"
 
 
-    // $ANTLR start "shiftop"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:246:1: shiftop returns [Expression e = null] : t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )* ;
-    public final Expression shiftop() throws RecognitionException {
+    // $ANTLR start "sumop"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:244:1: sumop returns [Expression e = null] : t= multop ( ( PLUS q= multop | MINUS q= multop ) )* ;
+    public final Expression sumop() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2160,40 +2152,40 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:247:2: (t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:247:4: t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:245:2: (t= multop ( ( PLUS q= multop | MINUS q= multop ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:245:4: t= multop ( ( PLUS q= multop | MINUS q= multop ) )*
             {
-            pushFollow(FOLLOW_sumop_in_shiftop1252);
-            t=sumop();
+            pushFollow(FOLLOW_multop_in_sumop1258);
+            t=multop();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:247:19: ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:245:20: ( ( PLUS q= multop | MINUS q= multop ) )*
             loop30:
             do {
                 int alt30=2;
                 int LA30_0 = input.LA(1);
 
-                if ( ((LA30_0>=RSHIFT && LA30_0<=LSHIFT)) ) {
+                if ( ((LA30_0>=PLUS && LA30_0<=MINUS)) ) {
                     alt30=1;
                 }
 
 
                 switch (alt30) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:248:2: ( RSHIFT q= sumop | LSHIFT q= sumop )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:246:2: ( PLUS q= multop | MINUS q= multop )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:248:2: ( RSHIFT q= sumop | LSHIFT q= sumop )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:246:2: ( PLUS q= multop | MINUS q= multop )
             	    int alt29=2;
             	    int LA29_0 = input.LA(1);
 
-            	    if ( (LA29_0==RSHIFT) ) {
+            	    if ( (LA29_0==PLUS) ) {
             	        alt29=1;
             	    }
-            	    else if ( (LA29_0==LSHIFT) ) {
+            	    else if ( (LA29_0==MINUS) ) {
             	        alt29=2;
             	    }
             	    else {
@@ -2205,31 +2197,31 @@ public class PineDLParser extends Parser {
             	    }
             	    switch (alt29) {
             	        case 1 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:248:3: RSHIFT q= sumop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:246:3: PLUS q= multop
             	            {
-            	            match(input,RSHIFT,FOLLOW_RSHIFT_in_shiftop1260); if (state.failed) return e;
-            	            pushFollow(FOLLOW_sumop_in_shiftop1264);
-            	            q=sumop();
+            	            match(input,PLUS,FOLLOW_PLUS_in_sumop1266); if (state.failed) return e;
+            	            pushFollow(FOLLOW_multop_in_sumop1270);
+            	            q=multop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new RShiftOperation(e, q);
+            	              e=new SumOperation(e, q);
             	            }
 
             	            }
             	            break;
             	        case 2 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:249:3: LSHIFT q= sumop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:247:3: MINUS q= multop
             	            {
-            	            match(input,LSHIFT,FOLLOW_LSHIFT_in_shiftop1270); if (state.failed) return e;
-            	            pushFollow(FOLLOW_sumop_in_shiftop1274);
-            	            q=sumop();
+            	            match(input,MINUS,FOLLOW_MINUS_in_sumop1276); if (state.failed) return e;
+            	            pushFollow(FOLLOW_multop_in_sumop1280);
+            	            q=multop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new LShiftOperation(e, q);
+            	              e=new SubtractionOperation(e, q);
             	            }
 
             	            }
@@ -2258,12 +2250,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "shiftop"
+    // $ANTLR end "sumop"
 
 
-    // $ANTLR start "compop"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:252:1: compop returns [Expression e = null] : t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )* ;
-    public final Expression compop() throws RecognitionException {
+    // $ANTLR start "shiftop"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:250:1: shiftop returns [Expression e = null] : t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )* ;
+    public final Expression shiftop() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2272,120 +2264,76 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:253:2: (t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:253:4: t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:251:2: (t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:251:4: t= sumop ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )*
             {
-            pushFollow(FOLLOW_shiftop_in_compop1297);
-            t=shiftop();
+            pushFollow(FOLLOW_sumop_in_shiftop1302);
+            t=sumop();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:253:21: ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:251:19: ( ( RSHIFT q= sumop | LSHIFT q= sumop ) )*
             loop32:
             do {
                 int alt32=2;
                 int LA32_0 = input.LA(1);
 
-                if ( ((LA32_0>=LESS && LA32_0<=MOREEQ)) ) {
+                if ( ((LA32_0>=RSHIFT && LA32_0<=LSHIFT)) ) {
                     alt32=1;
                 }
 
 
                 switch (alt32) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:254:2: ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:252:2: ( RSHIFT q= sumop | LSHIFT q= sumop )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:254:2: ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop )
-            	    int alt31=4;
-            	    switch ( input.LA(1) ) {
-            	    case LESS:
-            	        {
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:252:2: ( RSHIFT q= sumop | LSHIFT q= sumop )
+            	    int alt31=2;
+            	    int LA31_0 = input.LA(1);
+
+            	    if ( (LA31_0==RSHIFT) ) {
             	        alt31=1;
-            	        }
-            	        break;
-            	    case MORE:
-            	        {
+            	    }
+            	    else if ( (LA31_0==LSHIFT) ) {
             	        alt31=2;
-            	        }
-            	        break;
-            	    case LESSEQ:
-            	        {
-            	        alt31=3;
-            	        }
-            	        break;
-            	    case MOREEQ:
-            	        {
-            	        alt31=4;
-            	        }
-            	        break;
-            	    default:
+            	    }
+            	    else {
             	        if (state.backtracking>0) {state.failed=true; return e;}
             	        NoViableAltException nvae =
             	            new NoViableAltException("", 31, 0, input);
 
             	        throw nvae;
             	    }
-
             	    switch (alt31) {
             	        case 1 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:254:3: LESS q= shiftop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:252:3: RSHIFT q= sumop
             	            {
-            	            match(input,LESS,FOLLOW_LESS_in_compop1305); if (state.failed) return e;
-            	            pushFollow(FOLLOW_shiftop_in_compop1309);
-            	            q=shiftop();
+            	            match(input,RSHIFT,FOLLOW_RSHIFT_in_shiftop1310); if (state.failed) return e;
+            	            pushFollow(FOLLOW_sumop_in_shiftop1314);
+            	            q=sumop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new LessOperation(e, q);
+            	              e=new RShiftOperation(e, q);
             	            }
 
             	            }
             	            break;
             	        case 2 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:255:3: MORE q= shiftop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:253:3: LSHIFT q= sumop
             	            {
-            	            match(input,MORE,FOLLOW_MORE_in_compop1315); if (state.failed) return e;
-            	            pushFollow(FOLLOW_shiftop_in_compop1319);
-            	            q=shiftop();
+            	            match(input,LSHIFT,FOLLOW_LSHIFT_in_shiftop1320); if (state.failed) return e;
+            	            pushFollow(FOLLOW_sumop_in_shiftop1324);
+            	            q=sumop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new MoreOperation(e, q);
-            	            }
-
-            	            }
-            	            break;
-            	        case 3 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:256:3: LESSEQ q= shiftop
-            	            {
-            	            match(input,LESSEQ,FOLLOW_LESSEQ_in_compop1325); if (state.failed) return e;
-            	            pushFollow(FOLLOW_shiftop_in_compop1329);
-            	            q=shiftop();
-
-            	            state._fsp--;
-            	            if (state.failed) return e;
-            	            if ( state.backtracking==0 ) {
-            	              e=new LessEqualOperation(e, q);
-            	            }
-
-            	            }
-            	            break;
-            	        case 4 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:257:3: MOREEQ q= shiftop
-            	            {
-            	            match(input,MOREEQ,FOLLOW_MOREEQ_in_compop1335); if (state.failed) return e;
-            	            pushFollow(FOLLOW_shiftop_in_compop1339);
-            	            q=shiftop();
-
-            	            state._fsp--;
-            	            if (state.failed) return e;
-            	            if ( state.backtracking==0 ) {
-            	              e=new MoreEqualOperation(e, q);
+            	              e=new LShiftOperation(e, q);
             	            }
 
             	            }
@@ -2414,12 +2362,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "compop"
+    // $ANTLR end "shiftop"
 
 
-    // $ANTLR start "comp2op"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:260:1: comp2op returns [Expression e = null] : t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )* ;
-    public final Expression comp2op() throws RecognitionException {
+    // $ANTLR start "compop"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:256:1: compop returns [Expression e = null] : t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )* ;
+    public final Expression compop() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2428,76 +2376,120 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:261:2: (t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:261:4: t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:257:2: (t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:257:4: t= shiftop ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )*
             {
-            pushFollow(FOLLOW_compop_in_comp2op1362);
-            t=compop();
+            pushFollow(FOLLOW_shiftop_in_compop1347);
+            t=shiftop();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:261:20: ( ( EQUALS q= compop | NEQUAL q= compop ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:257:21: ( ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop ) )*
             loop34:
             do {
                 int alt34=2;
                 int LA34_0 = input.LA(1);
 
-                if ( ((LA34_0>=EQUALS && LA34_0<=NEQUAL)) ) {
+                if ( ((LA34_0>=LESS && LA34_0<=MOREEQ)) ) {
                     alt34=1;
                 }
 
 
                 switch (alt34) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:262:2: ( EQUALS q= compop | NEQUAL q= compop )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:258:2: ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:262:2: ( EQUALS q= compop | NEQUAL q= compop )
-            	    int alt33=2;
-            	    int LA33_0 = input.LA(1);
-
-            	    if ( (LA33_0==EQUALS) ) {
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:258:2: ( LESS q= shiftop | MORE q= shiftop | LESSEQ q= shiftop | MOREEQ q= shiftop )
+            	    int alt33=4;
+            	    switch ( input.LA(1) ) {
+            	    case LESS:
+            	        {
             	        alt33=1;
-            	    }
-            	    else if ( (LA33_0==NEQUAL) ) {
+            	        }
+            	        break;
+            	    case MORE:
+            	        {
             	        alt33=2;
-            	    }
-            	    else {
+            	        }
+            	        break;
+            	    case LESSEQ:
+            	        {
+            	        alt33=3;
+            	        }
+            	        break;
+            	    case MOREEQ:
+            	        {
+            	        alt33=4;
+            	        }
+            	        break;
+            	    default:
             	        if (state.backtracking>0) {state.failed=true; return e;}
             	        NoViableAltException nvae =
             	            new NoViableAltException("", 33, 0, input);
 
             	        throw nvae;
             	    }
+
             	    switch (alt33) {
             	        case 1 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:262:3: EQUALS q= compop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:258:3: LESS q= shiftop
             	            {
-            	            match(input,EQUALS,FOLLOW_EQUALS_in_comp2op1370); if (state.failed) return e;
-            	            pushFollow(FOLLOW_compop_in_comp2op1374);
-            	            q=compop();
+            	            match(input,LESS,FOLLOW_LESS_in_compop1355); if (state.failed) return e;
+            	            pushFollow(FOLLOW_shiftop_in_compop1359);
+            	            q=shiftop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new EqualsOperation(e, q);
+            	              e=new LessOperation(e, q);
             	            }
 
             	            }
             	            break;
             	        case 2 :
-            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:263:3: NEQUAL q= compop
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:259:3: MORE q= shiftop
             	            {
-            	            match(input,NEQUAL,FOLLOW_NEQUAL_in_comp2op1380); if (state.failed) return e;
-            	            pushFollow(FOLLOW_compop_in_comp2op1384);
-            	            q=compop();
+            	            match(input,MORE,FOLLOW_MORE_in_compop1365); if (state.failed) return e;
+            	            pushFollow(FOLLOW_shiftop_in_compop1369);
+            	            q=shiftop();
 
             	            state._fsp--;
             	            if (state.failed) return e;
             	            if ( state.backtracking==0 ) {
-            	              e=new NequalOperation(e, q);
+            	              e=new MoreOperation(e, q);
+            	            }
+
+            	            }
+            	            break;
+            	        case 3 :
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:260:3: LESSEQ q= shiftop
+            	            {
+            	            match(input,LESSEQ,FOLLOW_LESSEQ_in_compop1375); if (state.failed) return e;
+            	            pushFollow(FOLLOW_shiftop_in_compop1379);
+            	            q=shiftop();
+
+            	            state._fsp--;
+            	            if (state.failed) return e;
+            	            if ( state.backtracking==0 ) {
+            	              e=new LessEqualOperation(e, q);
+            	            }
+
+            	            }
+            	            break;
+            	        case 4 :
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:261:3: MOREEQ q= shiftop
+            	            {
+            	            match(input,MOREEQ,FOLLOW_MOREEQ_in_compop1385); if (state.failed) return e;
+            	            pushFollow(FOLLOW_shiftop_in_compop1389);
+            	            q=shiftop();
+
+            	            state._fsp--;
+            	            if (state.failed) return e;
+            	            if ( state.backtracking==0 ) {
+            	              e=new MoreEqualOperation(e, q);
             	            }
 
             	            }
@@ -2526,12 +2518,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "comp2op"
+    // $ANTLR end "compop"
 
 
-    // $ANTLR start "bitwiseand"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:266:1: bitwiseand returns [Expression e = null] : t= comp2op ( ( BITWISEAND q= comp2op ) )* ;
-    public final Expression bitwiseand() throws RecognitionException {
+    // $ANTLR start "comp2op"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:264:1: comp2op returns [Expression e = null] : t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )* ;
+    public final Expression comp2op() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2540,120 +2532,80 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:267:2: (t= comp2op ( ( BITWISEAND q= comp2op ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:267:4: t= comp2op ( ( BITWISEAND q= comp2op ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:265:2: (t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:265:4: t= compop ( ( EQUALS q= compop | NEQUAL q= compop ) )*
             {
-            pushFollow(FOLLOW_comp2op_in_bitwiseand1406);
-            t=comp2op();
+            pushFollow(FOLLOW_compop_in_comp2op1412);
+            t=compop();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:267:21: ( ( BITWISEAND q= comp2op ) )*
-            loop35:
-            do {
-                int alt35=2;
-                int LA35_0 = input.LA(1);
-
-                if ( (LA35_0==BITWISEAND) ) {
-                    alt35=1;
-                }
-
-
-                switch (alt35) {
-            	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:268:2: ( BITWISEAND q= comp2op )
-            	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:268:2: ( BITWISEAND q= comp2op )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:268:3: BITWISEAND q= comp2op
-            	    {
-            	    match(input,BITWISEAND,FOLLOW_BITWISEAND_in_bitwiseand1414); if (state.failed) return e;
-            	    pushFollow(FOLLOW_comp2op_in_bitwiseand1418);
-            	    q=comp2op();
-
-            	    state._fsp--;
-            	    if (state.failed) return e;
-            	    if ( state.backtracking==0 ) {
-            	      e=new BitwiseAndOperation(e, q);
-            	    }
-
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop35;
-                }
-            } while (true);
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-        }
-        return e;
-    }
-    // $ANTLR end "bitwiseand"
-
-
-    // $ANTLR start "bitwiseor"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:271:1: bitwiseor returns [Expression e = null] : t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )* ;
-    public final Expression bitwiseor() throws RecognitionException {
-        Expression e =  null;
-
-        Expression t = null;
-
-        Expression q = null;
-
-
-        try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:2: (t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:4: t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )*
-            {
-            pushFollow(FOLLOW_bitwiseand_in_bitwiseor1440);
-            t=bitwiseand();
-
-            state._fsp--;
-            if (state.failed) return e;
-            if ( state.backtracking==0 ) {
-              e=t;
-            }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:24: ( ( BITWISEOR q= bitwiseand ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:265:20: ( ( EQUALS q= compop | NEQUAL q= compop ) )*
             loop36:
             do {
                 int alt36=2;
                 int LA36_0 = input.LA(1);
 
-                if ( (LA36_0==BITWISEOR) ) {
+                if ( ((LA36_0>=EQUALS && LA36_0<=NEQUAL)) ) {
                     alt36=1;
                 }
 
 
                 switch (alt36) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:273:2: ( BITWISEOR q= bitwiseand )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:266:2: ( EQUALS q= compop | NEQUAL q= compop )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:273:2: ( BITWISEOR q= bitwiseand )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:273:3: BITWISEOR q= bitwiseand
-            	    {
-            	    match(input,BITWISEOR,FOLLOW_BITWISEOR_in_bitwiseor1448); if (state.failed) return e;
-            	    pushFollow(FOLLOW_bitwiseand_in_bitwiseor1452);
-            	    q=bitwiseand();
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:266:2: ( EQUALS q= compop | NEQUAL q= compop )
+            	    int alt35=2;
+            	    int LA35_0 = input.LA(1);
 
-            	    state._fsp--;
-            	    if (state.failed) return e;
-            	    if ( state.backtracking==0 ) {
-            	      e=new BitwiseOrOperation(e, q);
+            	    if ( (LA35_0==EQUALS) ) {
+            	        alt35=1;
             	    }
+            	    else if ( (LA35_0==NEQUAL) ) {
+            	        alt35=2;
+            	    }
+            	    else {
+            	        if (state.backtracking>0) {state.failed=true; return e;}
+            	        NoViableAltException nvae =
+            	            new NoViableAltException("", 35, 0, input);
+
+            	        throw nvae;
+            	    }
+            	    switch (alt35) {
+            	        case 1 :
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:266:3: EQUALS q= compop
+            	            {
+            	            match(input,EQUALS,FOLLOW_EQUALS_in_comp2op1420); if (state.failed) return e;
+            	            pushFollow(FOLLOW_compop_in_comp2op1424);
+            	            q=compop();
+
+            	            state._fsp--;
+            	            if (state.failed) return e;
+            	            if ( state.backtracking==0 ) {
+            	              e=new EqualsOperation(e, q);
+            	            }
+
+            	            }
+            	            break;
+            	        case 2 :
+            	            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:267:3: NEQUAL q= compop
+            	            {
+            	            match(input,NEQUAL,FOLLOW_NEQUAL_in_comp2op1430); if (state.failed) return e;
+            	            pushFollow(FOLLOW_compop_in_comp2op1434);
+            	            q=compop();
+
+            	            state._fsp--;
+            	            if (state.failed) return e;
+            	            if ( state.backtracking==0 ) {
+            	              e=new NequalOperation(e, q);
+            	            }
+
+            	            }
+            	            break;
 
             	    }
 
@@ -2678,12 +2630,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "bitwiseor"
+    // $ANTLR end "comp2op"
 
 
-    // $ANTLR start "bitwisexor"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:276:1: bitwisexor returns [Expression e = null] : t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )* ;
-    public final Expression bitwisexor() throws RecognitionException {
+    // $ANTLR start "bitwiseand"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:270:1: bitwiseand returns [Expression e = null] : t= comp2op ( ( BITWISEAND q= comp2op ) )* ;
+    public final Expression bitwiseand() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2692,43 +2644,43 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:2: (t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:4: t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:271:2: (t= comp2op ( ( BITWISEAND q= comp2op ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:271:4: t= comp2op ( ( BITWISEAND q= comp2op ) )*
             {
-            pushFollow(FOLLOW_bitwiseor_in_bitwisexor1475);
-            t=bitwiseor();
+            pushFollow(FOLLOW_comp2op_in_bitwiseand1456);
+            t=comp2op();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:23: ( ( BITWISEXOR q= bitwiseor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:271:21: ( ( BITWISEAND q= comp2op ) )*
             loop37:
             do {
                 int alt37=2;
                 int LA37_0 = input.LA(1);
 
-                if ( (LA37_0==BITWISEXOR) ) {
+                if ( (LA37_0==BITWISEAND) ) {
                     alt37=1;
                 }
 
 
                 switch (alt37) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:278:2: ( BITWISEXOR q= bitwiseor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:2: ( BITWISEAND q= comp2op )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:278:2: ( BITWISEXOR q= bitwiseor )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:278:3: BITWISEXOR q= bitwiseor
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:2: ( BITWISEAND q= comp2op )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:272:3: BITWISEAND q= comp2op
             	    {
-            	    match(input,BITWISEXOR,FOLLOW_BITWISEXOR_in_bitwisexor1483); if (state.failed) return e;
-            	    pushFollow(FOLLOW_bitwiseor_in_bitwisexor1487);
-            	    q=bitwiseor();
+            	    match(input,BITWISEAND,FOLLOW_BITWISEAND_in_bitwiseand1464); if (state.failed) return e;
+            	    pushFollow(FOLLOW_comp2op_in_bitwiseand1468);
+            	    q=comp2op();
 
             	    state._fsp--;
             	    if (state.failed) return e;
             	    if ( state.backtracking==0 ) {
-            	      e=new BitwiseXorOperation(e, q);
+            	      e=new BitwiseAndOperation(e, q);
             	    }
 
             	    }
@@ -2754,12 +2706,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "bitwisexor"
+    // $ANTLR end "bitwiseand"
 
 
-    // $ANTLR start "logicaland"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:281:1: logicaland returns [Expression e = null] : t= bitwisexor ( ( LOGAND q= bitwisexor ) )* ;
-    public final Expression logicaland() throws RecognitionException {
+    // $ANTLR start "bitwiseor"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:275:1: bitwiseor returns [Expression e = null] : t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )* ;
+    public final Expression bitwiseor() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2768,43 +2720,43 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:2: (t= bitwisexor ( ( LOGAND q= bitwisexor ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:4: t= bitwisexor ( ( LOGAND q= bitwisexor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:276:2: (t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:276:4: t= bitwiseand ( ( BITWISEOR q= bitwiseand ) )*
             {
-            pushFollow(FOLLOW_bitwisexor_in_logicaland1509);
-            t=bitwisexor();
+            pushFollow(FOLLOW_bitwiseand_in_bitwiseor1490);
+            t=bitwiseand();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:24: ( ( LOGAND q= bitwisexor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:276:24: ( ( BITWISEOR q= bitwiseand ) )*
             loop38:
             do {
                 int alt38=2;
                 int LA38_0 = input.LA(1);
 
-                if ( (LA38_0==LOGAND) ) {
+                if ( (LA38_0==BITWISEOR) ) {
                     alt38=1;
                 }
 
 
                 switch (alt38) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:283:2: ( LOGAND q= bitwisexor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:2: ( BITWISEOR q= bitwiseand )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:283:2: ( LOGAND q= bitwisexor )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:283:3: LOGAND q= bitwisexor
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:2: ( BITWISEOR q= bitwiseand )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:277:3: BITWISEOR q= bitwiseand
             	    {
-            	    match(input,LOGAND,FOLLOW_LOGAND_in_logicaland1517); if (state.failed) return e;
-            	    pushFollow(FOLLOW_bitwisexor_in_logicaland1521);
-            	    q=bitwisexor();
+            	    match(input,BITWISEOR,FOLLOW_BITWISEOR_in_bitwiseor1498); if (state.failed) return e;
+            	    pushFollow(FOLLOW_bitwiseand_in_bitwiseor1502);
+            	    q=bitwiseand();
 
             	    state._fsp--;
             	    if (state.failed) return e;
             	    if ( state.backtracking==0 ) {
-            	      e=new LogicalAndOperation(e, q);
+            	      e=new BitwiseOrOperation(e, q);
             	    }
 
             	    }
@@ -2830,12 +2782,12 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "logicaland"
+    // $ANTLR end "bitwiseor"
 
 
-    // $ANTLR start "logicalor"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:286:1: logicalor returns [Expression e = null] : t= logicaland ( ( LOGOR q= logicaland ) )* ;
-    public final Expression logicalor() throws RecognitionException {
+    // $ANTLR start "bitwisexor"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:280:1: bitwisexor returns [Expression e = null] : t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )* ;
+    public final Expression bitwisexor() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
@@ -2844,43 +2796,43 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:2: (t= logicaland ( ( LOGOR q= logicaland ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:4: t= logicaland ( ( LOGOR q= logicaland ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:281:2: (t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:281:4: t= bitwiseor ( ( BITWISEXOR q= bitwiseor ) )*
             {
-            pushFollow(FOLLOW_logicaland_in_logicalor1543);
-            t=logicaland();
+            pushFollow(FOLLOW_bitwiseor_in_bitwisexor1525);
+            t=bitwiseor();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:24: ( ( LOGOR q= logicaland ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:281:23: ( ( BITWISEXOR q= bitwiseor ) )*
             loop39:
             do {
                 int alt39=2;
                 int LA39_0 = input.LA(1);
 
-                if ( (LA39_0==LOGOR) ) {
+                if ( (LA39_0==BITWISEXOR) ) {
                     alt39=1;
                 }
 
 
                 switch (alt39) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:288:2: ( LOGOR q= logicaland )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:2: ( BITWISEXOR q= bitwiseor )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:288:2: ( LOGOR q= logicaland )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:288:3: LOGOR q= logicaland
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:2: ( BITWISEXOR q= bitwiseor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:282:3: BITWISEXOR q= bitwiseor
             	    {
-            	    match(input,LOGOR,FOLLOW_LOGOR_in_logicalor1551); if (state.failed) return e;
-            	    pushFollow(FOLLOW_logicaland_in_logicalor1555);
-            	    q=logicaland();
+            	    match(input,BITWISEXOR,FOLLOW_BITWISEXOR_in_bitwisexor1533); if (state.failed) return e;
+            	    pushFollow(FOLLOW_bitwiseor_in_bitwisexor1537);
+            	    q=bitwiseor();
 
             	    state._fsp--;
             	    if (state.failed) return e;
             	    if ( state.backtracking==0 ) {
-            	      e=new LogicalOrOperation(e, q);
+            	      e=new BitwiseXorOperation(e, q);
             	    }
 
             	    }
@@ -2906,65 +2858,57 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
-    // $ANTLR end "logicalor"
+    // $ANTLR end "bitwisexor"
 
 
-    // $ANTLR start "ternary"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:291:1: ternary returns [Expression e = null] : t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )* ;
-    public final Expression ternary() throws RecognitionException {
+    // $ANTLR start "logicaland"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:285:1: logicaland returns [Expression e = null] : t= bitwisexor ( ( LOGAND q= bitwisexor ) )* ;
+    public final Expression logicaland() throws RecognitionException {
         Expression e =  null;
 
         Expression t = null;
-
-        Expression p = null;
 
         Expression q = null;
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:2: (t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:4: t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:286:2: (t= bitwisexor ( ( LOGAND q= bitwisexor ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:286:4: t= bitwisexor ( ( LOGAND q= bitwisexor ) )*
             {
-            pushFollow(FOLLOW_logicalor_in_ternary1578);
-            t=logicalor();
+            pushFollow(FOLLOW_bitwisexor_in_logicaland1559);
+            t=bitwisexor();
 
             state._fsp--;
             if (state.failed) return e;
             if ( state.backtracking==0 ) {
               e=t;
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:23: ( ( '?' p= logicalor ':' q= logicalor ) )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:286:24: ( ( LOGAND q= bitwisexor ) )*
             loop40:
             do {
                 int alt40=2;
                 int LA40_0 = input.LA(1);
 
-                if ( (LA40_0==53) ) {
+                if ( (LA40_0==LOGAND) ) {
                     alt40=1;
                 }
 
 
                 switch (alt40) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:293:2: ( '?' p= logicalor ':' q= logicalor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:2: ( LOGAND q= bitwisexor )
             	    {
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:293:2: ( '?' p= logicalor ':' q= logicalor )
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:293:3: '?' p= logicalor ':' q= logicalor
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:2: ( LOGAND q= bitwisexor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:287:3: LOGAND q= bitwisexor
             	    {
-            	    match(input,53,FOLLOW_53_in_ternary1586); if (state.failed) return e;
-            	    pushFollow(FOLLOW_logicalor_in_ternary1590);
-            	    p=logicalor();
-
-            	    state._fsp--;
-            	    if (state.failed) return e;
-            	    match(input,54,FOLLOW_54_in_ternary1592); if (state.failed) return e;
-            	    pushFollow(FOLLOW_logicalor_in_ternary1596);
-            	    q=logicalor();
+            	    match(input,LOGAND,FOLLOW_LOGAND_in_logicaland1567); if (state.failed) return e;
+            	    pushFollow(FOLLOW_bitwisexor_in_logicaland1571);
+            	    q=bitwisexor();
 
             	    state._fsp--;
             	    if (state.failed) return e;
             	    if ( state.backtracking==0 ) {
-            	      e=new TernaryConditional(e, p, q);
+            	      e=new LogicalAndOperation(e, q);
             	    }
 
             	    }
@@ -2990,11 +2934,171 @@ public class PineDLParser extends Parser {
         }
         return e;
     }
+    // $ANTLR end "logicaland"
+
+
+    // $ANTLR start "logicalor"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:290:1: logicalor returns [Expression e = null] : t= logicaland ( ( LOGOR q= logicaland ) )* ;
+    public final Expression logicalor() throws RecognitionException {
+        Expression e =  null;
+
+        Expression t = null;
+
+        Expression q = null;
+
+
+        try {
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:291:2: (t= logicaland ( ( LOGOR q= logicaland ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:291:4: t= logicaland ( ( LOGOR q= logicaland ) )*
+            {
+            pushFollow(FOLLOW_logicaland_in_logicalor1593);
+            t=logicaland();
+
+            state._fsp--;
+            if (state.failed) return e;
+            if ( state.backtracking==0 ) {
+              e=t;
+            }
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:291:24: ( ( LOGOR q= logicaland ) )*
+            loop41:
+            do {
+                int alt41=2;
+                int LA41_0 = input.LA(1);
+
+                if ( (LA41_0==LOGOR) ) {
+                    alt41=1;
+                }
+
+
+                switch (alt41) {
+            	case 1 :
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:2: ( LOGOR q= logicaland )
+            	    {
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:2: ( LOGOR q= logicaland )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:292:3: LOGOR q= logicaland
+            	    {
+            	    match(input,LOGOR,FOLLOW_LOGOR_in_logicalor1601); if (state.failed) return e;
+            	    pushFollow(FOLLOW_logicaland_in_logicalor1605);
+            	    q=logicaland();
+
+            	    state._fsp--;
+            	    if (state.failed) return e;
+            	    if ( state.backtracking==0 ) {
+            	      e=new LogicalOrOperation(e, q);
+            	    }
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop41;
+                }
+            } while (true);
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return e;
+    }
+    // $ANTLR end "logicalor"
+
+
+    // $ANTLR start "ternary"
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:295:1: ternary returns [Expression e = null] : t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )* ;
+    public final Expression ternary() throws RecognitionException {
+        Expression e =  null;
+
+        Expression t = null;
+
+        Expression p = null;
+
+        Expression q = null;
+
+
+        try {
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:296:2: (t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:296:4: t= logicalor ( ( '?' p= logicalor ':' q= logicalor ) )*
+            {
+            pushFollow(FOLLOW_logicalor_in_ternary1628);
+            t=logicalor();
+
+            state._fsp--;
+            if (state.failed) return e;
+            if ( state.backtracking==0 ) {
+              e=t;
+            }
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:296:23: ( ( '?' p= logicalor ':' q= logicalor ) )*
+            loop42:
+            do {
+                int alt42=2;
+                int LA42_0 = input.LA(1);
+
+                if ( (LA42_0==55) ) {
+                    alt42=1;
+                }
+
+
+                switch (alt42) {
+            	case 1 :
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:2: ( '?' p= logicalor ':' q= logicalor )
+            	    {
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:2: ( '?' p= logicalor ':' q= logicalor )
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:3: '?' p= logicalor ':' q= logicalor
+            	    {
+            	    match(input,55,FOLLOW_55_in_ternary1636); if (state.failed) return e;
+            	    pushFollow(FOLLOW_logicalor_in_ternary1640);
+            	    p=logicalor();
+
+            	    state._fsp--;
+            	    if (state.failed) return e;
+            	    match(input,56,FOLLOW_56_in_ternary1642); if (state.failed) return e;
+            	    pushFollow(FOLLOW_logicalor_in_ternary1646);
+            	    q=logicalor();
+
+            	    state._fsp--;
+            	    if (state.failed) return e;
+            	    if ( state.backtracking==0 ) {
+            	      e=new TernaryConditional(e, p, q);
+            	    }
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop42;
+                }
+            } while (true);
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return e;
+    }
     // $ANTLR end "ternary"
 
 
     // $ANTLR start "expression"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:296:1: expression returns [Expression e = null] : ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:1: expression returns [Expression e = null] : ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) );
     public final Expression expression() throws RecognitionException {
         Expression e =  null;
 
@@ -3006,17 +3110,17 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:2: ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) )
-            int alt42=2;
-            alt42 = dfa42.predict(input);
-            switch (alt42) {
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:2: ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) )
+            int alt44=2;
+            alt44 = dfa44.predict(input);
+            switch (alt44) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:4: (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:4: (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:5: r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )*
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:5: r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )*
                     {
-                    pushFollow(FOLLOW_ternary_in_expression1620);
+                    pushFollow(FOLLOW_ternary_in_expression1670);
                     r=ternary();
 
                     state._fsp--;
@@ -3024,78 +3128,78 @@ public class PineDLParser extends Parser {
                     if ( state.backtracking==0 ) {
                       e=r;
                     }
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:22: ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )*
-                    loop41:
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:22: ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )*
+                    loop43:
                     do {
-                        int alt41=12;
+                        int alt43=12;
                         switch ( input.LA(1) ) {
                         case EQUAL:
                             {
-                            alt41=1;
-                            }
-                            break;
-                        case 55:
-                            {
-                            alt41=2;
-                            }
-                            break;
-                        case 56:
-                            {
-                            alt41=3;
+                            alt43=1;
                             }
                             break;
                         case 57:
                             {
-                            alt41=4;
+                            alt43=2;
                             }
                             break;
                         case 58:
                             {
-                            alt41=5;
+                            alt43=3;
                             }
                             break;
                         case 59:
                             {
-                            alt41=6;
+                            alt43=4;
                             }
                             break;
                         case 60:
                             {
-                            alt41=7;
+                            alt43=5;
                             }
                             break;
                         case 61:
                             {
-                            alt41=8;
+                            alt43=6;
                             }
                             break;
                         case 62:
                             {
-                            alt41=9;
+                            alt43=7;
                             }
                             break;
                         case 63:
                             {
-                            alt41=10;
+                            alt43=8;
                             }
                             break;
                         case 64:
                             {
-                            alt41=11;
+                            alt43=9;
+                            }
+                            break;
+                        case 65:
+                            {
+                            alt43=10;
+                            }
+                            break;
+                        case 66:
+                            {
+                            alt43=11;
                             }
                             break;
 
                         }
 
-                        switch (alt41) {
+                        switch (alt43) {
                     	case 1 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:2: ( EQUAL q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:2: ( EQUAL q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:2: ( EQUAL q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:3: EQUAL q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:2: ( EQUAL q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: EQUAL q= ternary
                     	    {
-                    	    match(input,EQUAL,FOLLOW_EQUAL_in_expression1628); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1632);
+                    	    match(input,EQUAL,FOLLOW_EQUAL_in_expression1678); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1682);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3110,13 +3214,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:3: ( '+=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '+=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:3: ( '+=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:4: '+=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '+=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:4: '+=' q= ternary
                     	    {
-                    	    match(input,55,FOLLOW_55_in_expression1640); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1644);
+                    	    match(input,57,FOLLOW_57_in_expression1690); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1694);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3131,13 +3235,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:3: ( '-=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '-=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:3: ( '-=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:4: '-=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '-=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:4: '-=' q= ternary
                     	    {
-                    	    match(input,56,FOLLOW_56_in_expression1652); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1656);
+                    	    match(input,58,FOLLOW_58_in_expression1702); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1706);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3152,13 +3256,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 4 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:3: ( '*=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '*=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:3: ( '*=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: '*=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '*=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:4: '*=' q= ternary
                     	    {
-                    	    match(input,57,FOLLOW_57_in_expression1664); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1668);
+                    	    match(input,59,FOLLOW_59_in_expression1714); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1718);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3173,13 +3277,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 5 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: ( '/=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '/=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: ( '/=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:4: '/=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '/=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:4: '/=' q= ternary
                     	    {
-                    	    match(input,58,FOLLOW_58_in_expression1676); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1680);
+                    	    match(input,60,FOLLOW_60_in_expression1726); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1730);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3194,13 +3298,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 6 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '%=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '%=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '%=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:4: '%=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '%=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:4: '%=' q= ternary
                     	    {
-                    	    match(input,59,FOLLOW_59_in_expression1688); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1692);
+                    	    match(input,61,FOLLOW_61_in_expression1738); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1742);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3215,13 +3319,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 7 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '&=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '&=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '&=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:4: '&=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '&=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:4: '&=' q= ternary
                     	    {
-                    	    match(input,60,FOLLOW_60_in_expression1700); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1704);
+                    	    match(input,62,FOLLOW_62_in_expression1750); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1754);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3236,13 +3340,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 8 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '|=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:3: ( '|=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '|=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:4: '|=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:3: ( '|=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:4: '|=' q= ternary
                     	    {
-                    	    match(input,61,FOLLOW_61_in_expression1712); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1716);
+                    	    match(input,63,FOLLOW_63_in_expression1762); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1766);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3257,13 +3361,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 9 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '^=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:3: ( '^=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '^=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:4: '^=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:3: ( '^=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:4: '^=' q= ternary
                     	    {
-                    	    match(input,62,FOLLOW_62_in_expression1724); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1728);
+                    	    match(input,64,FOLLOW_64_in_expression1774); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1778);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3278,13 +3382,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 10 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '<<=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:3: ( '<<=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '<<=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:4: '<<=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:3: ( '<<=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:4: '<<=' q= ternary
                     	    {
-                    	    match(input,63,FOLLOW_63_in_expression1736); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1740);
+                    	    match(input,65,FOLLOW_65_in_expression1786); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1790);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3299,13 +3403,13 @@ public class PineDLParser extends Parser {
                     	    }
                     	    break;
                     	case 11 :
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '>>=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:3: ( '>>=' q= ternary )
                     	    {
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '>>=' q= ternary )
-                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:4: '>>=' q= ternary
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:3: ( '>>=' q= ternary )
+                    	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:4: '>>=' q= ternary
                     	    {
-                    	    match(input,64,FOLLOW_64_in_expression1748); if (state.failed) return e;
-                    	    pushFollow(FOLLOW_ternary_in_expression1752);
+                    	    match(input,66,FOLLOW_66_in_expression1798); if (state.failed) return e;
+                    	    pushFollow(FOLLOW_ternary_in_expression1802);
                     	    q=ternary();
 
                     	    state._fsp--;
@@ -3321,7 +3425,7 @@ public class PineDLParser extends Parser {
                     	    break;
 
                     	default :
-                    	    break loop41;
+                    	    break loop43;
                         }
                     } while (true);
 
@@ -3332,12 +3436,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:8: (t= ternary )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:313:8: (t= ternary )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:8: (t= ternary )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:9: t= ternary
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:313:8: (t= ternary )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:313:9: t= ternary
                     {
-                    pushFollow(FOLLOW_ternary_in_expression1767);
+                    pushFollow(FOLLOW_ternary_in_expression1817);
                     t=ternary();
 
                     state._fsp--;
@@ -3366,17 +3470,17 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "stringconst"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:313:1: stringconst returns [StringConstant s = null] : v= STRINGCONST_PRIVATE ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:317:1: stringconst returns [StringConstant s = null] : v= STRINGCONST_PRIVATE ;
     public final StringConstant stringconst() throws RecognitionException {
         StringConstant s =  null;
 
         Token v=null;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:314:2: (v= STRINGCONST_PRIVATE )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:314:4: v= STRINGCONST_PRIVATE
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:318:2: (v= STRINGCONST_PRIVATE )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:318:4: v= STRINGCONST_PRIVATE
             {
-            v=(Token)match(input,STRINGCONST_PRIVATE,FOLLOW_STRINGCONST_PRIVATE_in_stringconst1787); if (state.failed) return s;
+            v=(Token)match(input,STRINGCONST_PRIVATE,FOLLOW_STRINGCONST_PRIVATE_in_stringconst1837); if (state.failed) return s;
             if ( state.backtracking==0 ) {
               s=StringConstant.parse(v.getText());
             }
@@ -3396,17 +3500,17 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "doubleconst"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:322:1: doubleconst returns [DoubleConstant d = null] : v= DOUBLECONST_PRIVATE ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:326:1: doubleconst returns [DoubleConstant d = null] : v= DOUBLECONST_PRIVATE ;
     public final DoubleConstant doubleconst() throws RecognitionException {
         DoubleConstant d =  null;
 
         Token v=null;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:323:2: (v= DOUBLECONST_PRIVATE )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:323:4: v= DOUBLECONST_PRIVATE
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:327:2: (v= DOUBLECONST_PRIVATE )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:327:4: v= DOUBLECONST_PRIVATE
             {
-            v=(Token)match(input,DOUBLECONST_PRIVATE,FOLLOW_DOUBLECONST_PRIVATE_in_doubleconst1843); if (state.failed) return d;
+            v=(Token)match(input,DOUBLECONST_PRIVATE,FOLLOW_DOUBLECONST_PRIVATE_in_doubleconst1893); if (state.failed) return d;
             if ( state.backtracking==0 ) {
               d=new DoubleConstant(v.getText());
             }
@@ -3426,17 +3530,17 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "intconst"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:328:1: intconst returns [IntConstant i = null] : v= INTCONST_PRIVATE ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:332:1: intconst returns [IntConstant i = null] : v= INTCONST_PRIVATE ;
     public final IntConstant intconst() throws RecognitionException {
         IntConstant i =  null;
 
         Token v=null;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:329:2: (v= INTCONST_PRIVATE )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:329:4: v= INTCONST_PRIVATE
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:333:2: (v= INTCONST_PRIVATE )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:333:4: v= INTCONST_PRIVATE
             {
-            v=(Token)match(input,INTCONST_PRIVATE,FOLLOW_INTCONST_PRIVATE_in_intconst1881); if (state.failed) return i;
+            v=(Token)match(input,INTCONST_PRIVATE,FOLLOW_INTCONST_PRIVATE_in_intconst1931); if (state.failed) return i;
             if ( state.backtracking==0 ) {
               i = new IntConstant(v.getText());
             }
@@ -3456,36 +3560,36 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "boolconst"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:337:1: boolconst returns [BooleanConstant b = new BooleanConstant(false)] : ( ( 'true' ) | 'false' );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:1: boolconst returns [BooleanConstant b = new BooleanConstant(false)] : ( ( 'true' ) | 'false' );
     public final BooleanConstant boolconst() throws RecognitionException {
         BooleanConstant b =  new BooleanConstant(false);
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:338:2: ( ( 'true' ) | 'false' )
-            int alt43=2;
-            int LA43_0 = input.LA(1);
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:342:2: ( ( 'true' ) | 'false' )
+            int alt45=2;
+            int LA45_0 = input.LA(1);
 
-            if ( (LA43_0==65) ) {
-                alt43=1;
+            if ( (LA45_0==67) ) {
+                alt45=1;
             }
-            else if ( (LA43_0==66) ) {
-                alt43=2;
+            else if ( (LA45_0==68) ) {
+                alt45=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return b;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 43, 0, input);
+                    new NoViableAltException("", 45, 0, input);
 
                 throw nvae;
             }
-            switch (alt43) {
+            switch (alt45) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:338:4: ( 'true' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:342:4: ( 'true' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:338:4: ( 'true' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:338:5: 'true'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:342:4: ( 'true' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:342:5: 'true'
                     {
-                    match(input,65,FOLLOW_65_in_boolconst1956); if (state.failed) return b;
+                    match(input,67,FOLLOW_67_in_boolconst2006); if (state.failed) return b;
                     if ( state.backtracking==0 ) {
                       b.value = true;
                     }
@@ -3496,9 +3600,9 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:338:31: 'false'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:342:31: 'false'
                     {
-                    match(input,66,FOLLOW_66_in_boolconst1961); if (state.failed) return b;
+                    match(input,68,FOLLOW_68_in_boolconst2011); if (state.failed) return b;
 
                     }
                     break;
@@ -3517,7 +3621,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "type"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:340:1: type returns [Type type = new Type()] : ( (i= nativetype ) | (t= clstype ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:344:1: type returns [Type type = new Type()] : ( (i= nativetype ) | (t= clstype ) );
     public final Type type() throws RecognitionException {
         Type type =  new Type();
 
@@ -3527,31 +3631,31 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:2: ( (i= nativetype ) | (t= clstype ) )
-            int alt44=2;
-            int LA44_0 = input.LA(1);
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:2: ( (i= nativetype ) | (t= clstype ) )
+            int alt46=2;
+            int LA46_0 = input.LA(1);
 
-            if ( ((LA44_0>=67 && LA44_0<=76)) ) {
-                alt44=1;
+            if ( ((LA46_0>=69 && LA46_0<=78)) ) {
+                alt46=1;
             }
-            else if ( (LA44_0==WORD) ) {
-                alt44=2;
+            else if ( (LA46_0==WORD) ) {
+                alt46=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return type;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 44, 0, input);
+                    new NoViableAltException("", 46, 0, input);
 
                 throw nvae;
             }
-            switch (alt44) {
+            switch (alt46) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:4: (i= nativetype )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:4: (i= nativetype )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:4: (i= nativetype )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:5: i= nativetype
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:4: (i= nativetype )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:5: i= nativetype
                     {
-                    pushFollow(FOLLOW_nativetype_in_type1977);
+                    pushFollow(FOLLOW_nativetype_in_type2027);
                     i=nativetype();
 
                     state._fsp--;
@@ -3566,12 +3670,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:29: (t= clstype )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:29: (t= clstype )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:29: (t= clstype )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:341:30: t= clstype
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:29: (t= clstype )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:345:30: t= clstype
                     {
-                    pushFollow(FOLLOW_clstype_in_type1985);
+                    pushFollow(FOLLOW_clstype_in_type2035);
                     t=clstype();
 
                     state._fsp--;
@@ -3600,7 +3704,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "clstype"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:343:1: clstype returns [Type type = new Type()] : (c= WORD ( '.' t= WORD )* ) ;
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:347:1: clstype returns [Type type = new Type()] : (c= WORD ( '.' t= WORD )* ) ;
     public final Type clstype() throws RecognitionException {
         Type type =  new Type();
 
@@ -3612,33 +3716,33 @@ public class PineDLParser extends Parser {
         	String s = "";
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:2: ( (c= WORD ( '.' t= WORD )* ) )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:4: (c= WORD ( '.' t= WORD )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:2: ( (c= WORD ( '.' t= WORD )* ) )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:4: (c= WORD ( '.' t= WORD )* )
             {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:4: (c= WORD ( '.' t= WORD )* )
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:5: c= WORD ( '.' t= WORD )*
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:4: (c= WORD ( '.' t= WORD )* )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:5: c= WORD ( '.' t= WORD )*
             {
-            c=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2008); if (state.failed) return type;
+            c=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2058); if (state.failed) return type;
             if ( state.backtracking==0 ) {
               s += c.getText();
             }
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:32: ( '.' t= WORD )*
-            loop45:
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:32: ( '.' t= WORD )*
+            loop47:
             do {
-                int alt45=2;
-                int LA45_0 = input.LA(1);
+                int alt47=2;
+                int LA47_0 = input.LA(1);
 
-                if ( (LA45_0==DOT) ) {
-                    alt45=1;
+                if ( (LA47_0==DOT) ) {
+                    alt47=1;
                 }
 
 
-                switch (alt45) {
+                switch (alt47) {
             	case 1 :
-            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:348:33: '.' t= WORD
+            	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:352:33: '.' t= WORD
             	    {
-            	    match(input,DOT,FOLLOW_DOT_in_clstype2013); if (state.failed) return type;
-            	    t=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2017); if (state.failed) return type;
+            	    match(input,DOT,FOLLOW_DOT_in_clstype2063); if (state.failed) return type;
+            	    t=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2067); if (state.failed) return type;
             	    if ( state.backtracking==0 ) {
             	      s += "." + t.getText();
             	    }
@@ -3647,7 +3751,7 @@ public class PineDLParser extends Parser {
             	    break;
 
             	default :
-            	    break loop45;
+            	    break loop47;
                 }
             } while (true);
 
@@ -3673,7 +3777,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "nativetype"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:350:1: nativetype returns [Type type = new Type()] : ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:354:1: nativetype returns [Type type = new Type()] : ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) );
     public final Type nativetype() throws RecognitionException {
         Type type =  new Type();
 
@@ -3681,75 +3785,75 @@ public class PineDLParser extends Parser {
         	type.typeCategory = TypeCategory.NATIVE;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:353:3: ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) )
-            int alt46=10;
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:3: ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) )
+            int alt48=10;
             switch ( input.LA(1) ) {
-            case 67:
-                {
-                alt46=1;
-                }
-                break;
-            case 68:
-                {
-                alt46=2;
-                }
-                break;
             case 69:
                 {
-                alt46=3;
+                alt48=1;
                 }
                 break;
             case 70:
                 {
-                alt46=4;
+                alt48=2;
                 }
                 break;
             case 71:
                 {
-                alt46=5;
+                alt48=3;
                 }
                 break;
             case 72:
                 {
-                alt46=6;
+                alt48=4;
                 }
                 break;
             case 73:
                 {
-                alt46=7;
+                alt48=5;
                 }
                 break;
             case 74:
                 {
-                alt46=8;
+                alt48=6;
                 }
                 break;
             case 75:
                 {
-                alt46=9;
+                alt48=7;
                 }
                 break;
             case 76:
                 {
-                alt46=10;
+                alt48=8;
+                }
+                break;
+            case 77:
+                {
+                alt48=9;
+                }
+                break;
+            case 78:
+                {
+                alt48=10;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return type;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 46, 0, input);
+                    new NoViableAltException("", 48, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt46) {
+            switch (alt48) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:353:5: ( 'int' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:5: ( 'int' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:353:5: ( 'int' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:353:6: 'int'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:5: ( 'int' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:6: 'int'
                     {
-                    match(input,67,FOLLOW_67_in_nativetype2041); if (state.failed) return type;
+                    match(input,69,FOLLOW_69_in_nativetype2091); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.INT;
                     }
@@ -3760,12 +3864,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:354:2: ( 'uint' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:2: ( 'uint' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:354:2: ( 'uint' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:354:3: 'uint'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:2: ( 'uint' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:3: 'uint'
                     {
-                    match(input,68,FOLLOW_68_in_nativetype2049); if (state.failed) return type;
+                    match(input,70,FOLLOW_70_in_nativetype2099); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.UINT;
                     }
@@ -3776,12 +3880,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:355:2: ( 'float' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:2: ( 'float' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:355:2: ( 'float' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:355:3: 'float'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:2: ( 'float' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:3: 'float'
                     {
-                    match(input,69,FOLLOW_69_in_nativetype2057); if (state.failed) return type;
+                    match(input,71,FOLLOW_71_in_nativetype2107); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.FLOAT;
                     }
@@ -3792,12 +3896,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:356:2: ( 'ufloat' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:2: ( 'ufloat' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:356:2: ( 'ufloat' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:356:3: 'ufloat'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:2: ( 'ufloat' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:3: 'ufloat'
                     {
-                    match(input,70,FOLLOW_70_in_nativetype2065); if (state.failed) return type;
+                    match(input,72,FOLLOW_72_in_nativetype2115); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.UFLOAT;
                     }
@@ -3808,12 +3912,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:2: ( 'double' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:2: ( 'double' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:2: ( 'double' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:357:3: 'double'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:2: ( 'double' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:3: 'double'
                     {
-                    match(input,71,FOLLOW_71_in_nativetype2073); if (state.failed) return type;
+                    match(input,73,FOLLOW_73_in_nativetype2123); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.DOUBLE;
                     }
@@ -3824,12 +3928,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:2: ( 'udouble' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:2: ( 'udouble' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:2: ( 'udouble' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:358:3: 'udouble'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:2: ( 'udouble' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:3: 'udouble'
                     {
-                    match(input,72,FOLLOW_72_in_nativetype2081); if (state.failed) return type;
+                    match(input,74,FOLLOW_74_in_nativetype2131); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.UDOUBLE;
                     }
@@ -3840,12 +3944,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:2: ( 'char' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:363:2: ( 'char' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:2: ( 'char' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:359:3: 'char'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:363:2: ( 'char' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:363:3: 'char'
                     {
-                    match(input,73,FOLLOW_73_in_nativetype2089); if (state.failed) return type;
+                    match(input,75,FOLLOW_75_in_nativetype2139); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.CHAR;
                     }
@@ -3856,12 +3960,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:2: ( 'uchar' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:364:2: ( 'uchar' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:2: ( 'uchar' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:360:3: 'uchar'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:364:2: ( 'uchar' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:364:3: 'uchar'
                     {
-                    match(input,74,FOLLOW_74_in_nativetype2097); if (state.failed) return type;
+                    match(input,76,FOLLOW_76_in_nativetype2147); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.UCHAR;
                     }
@@ -3872,12 +3976,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 9 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:2: ( 'bool' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:2: ( 'bool' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:2: ( 'bool' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:361:3: 'bool'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:2: ( 'bool' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:3: 'bool'
                     {
-                    match(input,75,FOLLOW_75_in_nativetype2105); if (state.failed) return type;
+                    match(input,77,FOLLOW_77_in_nativetype2155); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.BOOL;
                     }
@@ -3888,12 +3992,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 10 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:2: ( 'string' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:366:2: ( 'string' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:2: ( 'string' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:362:3: 'string'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:366:2: ( 'string' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:366:3: 'string'
                     {
-                    match(input,76,FOLLOW_76_in_nativetype2113); if (state.failed) return type;
+                    match(input,78,FOLLOW_78_in_nativetype2163); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.nativeType = NativeType.STRING;
                     }
@@ -3918,52 +4022,52 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "accesscontrolkeyword"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:364:1: accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC] : ( 'public' | ( 'private' ) | ( 'protected' ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:368:1: accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC] : ( 'public' | ( 'private' ) | ( 'protected' ) );
     public final AccessControlKeyword accesscontrolkeyword() throws RecognitionException {
         AccessControlKeyword a =  AccessControlKeyword.PUBLIC;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:2: ( 'public' | ( 'private' ) | ( 'protected' ) )
-            int alt47=3;
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:2: ( 'public' | ( 'private' ) | ( 'protected' ) )
+            int alt49=3;
             switch ( input.LA(1) ) {
-            case 77:
-                {
-                alt47=1;
-                }
-                break;
-            case 78:
-                {
-                alt47=2;
-                }
-                break;
             case 79:
                 {
-                alt47=3;
+                alt49=1;
+                }
+                break;
+            case 80:
+                {
+                alt49=2;
+                }
+                break;
+            case 81:
+                {
+                alt49=3;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return a;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 47, 0, input);
+                    new NoViableAltException("", 49, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt47) {
+            switch (alt49) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:4: 'public'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:4: 'public'
                     {
-                    match(input,77,FOLLOW_77_in_accesscontrolkeyword2130); if (state.failed) return a;
+                    match(input,79,FOLLOW_79_in_accesscontrolkeyword2180); if (state.failed) return a;
 
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:15: ( 'private' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:15: ( 'private' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:15: ( 'private' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:16: 'private'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:15: ( 'private' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:16: 'private'
                     {
-                    match(input,78,FOLLOW_78_in_accesscontrolkeyword2135); if (state.failed) return a;
+                    match(input,80,FOLLOW_80_in_accesscontrolkeyword2185); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PRIVATE;
                     }
@@ -3974,12 +4078,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:65: ( 'protected' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:65: ( 'protected' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:65: ( 'protected' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:365:66: 'protected'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:65: ( 'protected' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:369:66: 'protected'
                     {
-                    match(input,79,FOLLOW_79_in_accesscontrolkeyword2143); if (state.failed) return a;
+                    match(input,81,FOLLOW_81_in_accesscontrolkeyword2193); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PROTECTED;
                     }
@@ -4018,91 +4122,91 @@ public class PineDLParser extends Parser {
     }
     // $ANTLR end synpred21_PineDL
 
-    // $ANTLR start synpred67_PineDL
-    public final void synpred67_PineDL_fragment() throws RecognitionException {   
-        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:4: ( ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* ) )
-        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:4: ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* )
+    // $ANTLR start synpred72_PineDL
+    public final void synpred72_PineDL_fragment() throws RecognitionException {   
+        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: ( ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* ) )
+        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* )
         {
-        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:4: ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* )
-        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:5: ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )*
+        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: ( ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )* )
+        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:5: ternary ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )*
         {
-        pushFollow(FOLLOW_ternary_in_synpred67_PineDL1620);
+        pushFollow(FOLLOW_ternary_in_synpred72_PineDL1670);
         ternary();
 
         state._fsp--;
         if (state.failed) return ;
-        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:297:22: ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )*
-        loop58:
+        // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:22: ( ( EQUAL ternary ) | ( '+=' ternary ) | ( '-=' ternary ) | ( '*=' ternary ) | ( '/=' ternary ) | ( '%=' ternary ) | ( '&=' ternary ) | ( '|=' ternary ) | ( '^=' ternary ) | ( '<<=' ternary ) | ( '>>=' ternary ) )*
+        loop61:
         do {
-            int alt58=12;
+            int alt61=12;
             switch ( input.LA(1) ) {
             case EQUAL:
                 {
-                alt58=1;
-                }
-                break;
-            case 55:
-                {
-                alt58=2;
-                }
-                break;
-            case 56:
-                {
-                alt58=3;
+                alt61=1;
                 }
                 break;
             case 57:
                 {
-                alt58=4;
+                alt61=2;
                 }
                 break;
             case 58:
                 {
-                alt58=5;
+                alt61=3;
                 }
                 break;
             case 59:
                 {
-                alt58=6;
+                alt61=4;
                 }
                 break;
             case 60:
                 {
-                alt58=7;
+                alt61=5;
                 }
                 break;
             case 61:
                 {
-                alt58=8;
+                alt61=6;
                 }
                 break;
             case 62:
                 {
-                alt58=9;
+                alt61=7;
                 }
                 break;
             case 63:
                 {
-                alt58=10;
+                alt61=8;
                 }
                 break;
             case 64:
                 {
-                alt58=11;
+                alt61=9;
+                }
+                break;
+            case 65:
+                {
+                alt61=10;
+                }
+                break;
+            case 66:
+                {
+                alt61=11;
                 }
                 break;
 
             }
 
-            switch (alt58) {
+            switch (alt61) {
         	case 1 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:2: ( EQUAL ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:2: ( EQUAL ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:2: ( EQUAL ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:298:3: EQUAL ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:2: ( EQUAL ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: EQUAL ternary
         	    {
-        	    match(input,EQUAL,FOLLOW_EQUAL_in_synpred67_PineDL1628); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1632);
+        	    match(input,EQUAL,FOLLOW_EQUAL_in_synpred72_PineDL1678); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1682);
         	    ternary();
 
         	    state._fsp--;
@@ -4114,13 +4218,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 2 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:3: ( '+=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '+=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:3: ( '+=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:299:4: '+=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '+=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:4: '+=' ternary
         	    {
-        	    match(input,55,FOLLOW_55_in_synpred67_PineDL1640); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1644);
+        	    match(input,57,FOLLOW_57_in_synpred72_PineDL1690); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1694);
         	    ternary();
 
         	    state._fsp--;
@@ -4132,13 +4236,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 3 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:3: ( '-=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '-=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:3: ( '-=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:300:4: '-=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '-=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:4: '-=' ternary
         	    {
-        	    match(input,56,FOLLOW_56_in_synpred67_PineDL1652); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1656);
+        	    match(input,58,FOLLOW_58_in_synpred72_PineDL1702); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1706);
         	    ternary();
 
         	    state._fsp--;
@@ -4150,13 +4254,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 4 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:3: ( '*=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '*=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:3: ( '*=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:301:4: '*=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '*=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:4: '*=' ternary
         	    {
-        	    match(input,57,FOLLOW_57_in_synpred67_PineDL1664); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1668);
+        	    match(input,59,FOLLOW_59_in_synpred72_PineDL1714); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1718);
         	    ternary();
 
         	    state._fsp--;
@@ -4168,13 +4272,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 5 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: ( '/=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '/=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:3: ( '/=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:302:4: '/=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '/=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:4: '/=' ternary
         	    {
-        	    match(input,58,FOLLOW_58_in_synpred67_PineDL1676); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1680);
+        	    match(input,60,FOLLOW_60_in_synpred72_PineDL1726); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1730);
         	    ternary();
 
         	    state._fsp--;
@@ -4186,13 +4290,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 6 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '%=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '%=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:3: ( '%=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:303:4: '%=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '%=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:4: '%=' ternary
         	    {
-        	    match(input,59,FOLLOW_59_in_synpred67_PineDL1688); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1692);
+        	    match(input,61,FOLLOW_61_in_synpred72_PineDL1738); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1742);
         	    ternary();
 
         	    state._fsp--;
@@ -4204,13 +4308,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 7 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '&=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '&=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:3: ( '&=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:304:4: '&=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '&=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:4: '&=' ternary
         	    {
-        	    match(input,60,FOLLOW_60_in_synpred67_PineDL1700); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1704);
+        	    match(input,62,FOLLOW_62_in_synpred72_PineDL1750); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1754);
         	    ternary();
 
         	    state._fsp--;
@@ -4222,13 +4326,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 8 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '|=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:3: ( '|=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:3: ( '|=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:305:4: '|=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:3: ( '|=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:309:4: '|=' ternary
         	    {
-        	    match(input,61,FOLLOW_61_in_synpred67_PineDL1712); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1716);
+        	    match(input,63,FOLLOW_63_in_synpred72_PineDL1762); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1766);
         	    ternary();
 
         	    state._fsp--;
@@ -4240,13 +4344,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 9 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '^=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:3: ( '^=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:3: ( '^=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:306:4: '^=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:3: ( '^=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:310:4: '^=' ternary
         	    {
-        	    match(input,62,FOLLOW_62_in_synpred67_PineDL1724); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1728);
+        	    match(input,64,FOLLOW_64_in_synpred72_PineDL1774); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1778);
         	    ternary();
 
         	    state._fsp--;
@@ -4258,13 +4362,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 10 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '<<=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:3: ( '<<=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:3: ( '<<=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:307:4: '<<=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:3: ( '<<=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:311:4: '<<=' ternary
         	    {
-        	    match(input,63,FOLLOW_63_in_synpred67_PineDL1736); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1740);
+        	    match(input,65,FOLLOW_65_in_synpred72_PineDL1786); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1790);
         	    ternary();
 
         	    state._fsp--;
@@ -4276,13 +4380,13 @@ public class PineDLParser extends Parser {
         	    }
         	    break;
         	case 11 :
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '>>=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:3: ( '>>=' ternary )
         	    {
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:3: ( '>>=' ternary )
-        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:308:4: '>>=' ternary
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:3: ( '>>=' ternary )
+        	    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:312:4: '>>=' ternary
         	    {
-        	    match(input,64,FOLLOW_64_in_synpred67_PineDL1748); if (state.failed) return ;
-        	    pushFollow(FOLLOW_ternary_in_synpred67_PineDL1752);
+        	    match(input,66,FOLLOW_66_in_synpred72_PineDL1798); if (state.failed) return ;
+        	    pushFollow(FOLLOW_ternary_in_synpred72_PineDL1802);
         	    ternary();
 
         	    state._fsp--;
@@ -4295,7 +4399,7 @@ public class PineDLParser extends Parser {
         	    break;
 
         	default :
-        	    break loop58;
+        	    break loop61;
             }
         } while (true);
 
@@ -4305,15 +4409,15 @@ public class PineDLParser extends Parser {
 
         }
     }
-    // $ANTLR end synpred67_PineDL
+    // $ANTLR end synpred72_PineDL
 
     // Delegated rules
 
-    public final boolean synpred67_PineDL() {
+    public final boolean synpred72_PineDL() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred67_PineDL_fragment(); // can never throw exception
+            synpred72_PineDL_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -4341,8 +4445,8 @@ public class PineDLParser extends Parser {
 
     protected DFA3 dfa3 = new DFA3(this);
     protected DFA12 dfa12 = new DFA12(this);
-    protected DFA24 dfa24 = new DFA24(this);
-    protected DFA42 dfa42 = new DFA42(this);
+    protected DFA26 dfa26 = new DFA26(this);
+    protected DFA44 dfa44 = new DFA44(this);
     static final String DFA3_eotS =
         "\27\uffff";
     static final String DFA3_eofS =
@@ -4350,21 +4454,21 @@ public class PineDLParser extends Parser {
     static final String DFA3_minS =
         "\1\33\1\uffff\16\40\1\11\1\uffff\1\24\1\40\2\uffff\1\11";
     static final String DFA3_maxS =
-        "\1\117\1\uffff\4\114\13\40\1\uffff\1\34\1\40\2\uffff\1\40";
+        "\1\121\1\uffff\4\116\13\40\1\uffff\1\34\1\40\2\uffff\1\40";
     static final String DFA3_acceptS =
-        "\1\uffff\1\4\17\uffff\1\3\2\uffff\1\1\1\2\1\uffff";
+        "\1\uffff\1\4\17\uffff\1\3\2\uffff\1\2\1\1\1\uffff";
     static final String DFA3_specialS =
         "\27\uffff}>";
     static final String[] DFA3_transitionS = {
-            "\1\1\61\uffff\1\2\1\3\1\4",
+            "\1\1\63\uffff\1\2\1\3\1\4",
             "",
-            "\1\20\14\uffff\1\5\1\21\24\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\20\14\uffff\1\5\1\21\26\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
             "\1\14\1\15\1\16\1\17",
-            "\1\20\14\uffff\1\5\1\21\24\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\20\14\uffff\1\5\1\21\26\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
             "\1\14\1\15\1\16\1\17",
-            "\1\20\14\uffff\1\5\1\21\24\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\20\14\uffff\1\5\1\21\26\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
             "\1\14\1\15\1\16\1\17",
-            "\1\20\42\uffff\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1"+
+            "\1\20\44\uffff\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1"+
             "\17",
             "\1\22",
             "\1\22",
@@ -4378,7 +4482,7 @@ public class PineDLParser extends Parser {
             "\1\22",
             "\1\23\26\uffff\1\22",
             "",
-            "\1\24\7\uffff\1\25",
+            "\1\25\7\uffff\1\24",
             "\1\26",
             "",
             "",
@@ -4425,18 +4529,18 @@ public class PineDLParser extends Parser {
     static final String DFA12_minS =
         "\1\14\1\uffff\1\4\7\uffff\1\40\1\4";
     static final String DFA12_maxS =
-        "\1\114\1\uffff\1\100\7\uffff\1\40\1\100";
+        "\1\116\1\uffff\1\102\7\uffff\1\65\1\102";
     static final String DFA12_acceptS =
         "\1\uffff\1\1\1\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\2\uffff";
     static final String DFA12_specialS =
         "\14\uffff}>";
     static final String[] DFA12_transitionS = {
             "\1\3\7\uffff\1\11\5\uffff\1\7\1\uffff\1\3\3\uffff\1\2\2\3\1"+
-            "\uffff\1\3\13\uffff\1\10\1\5\1\uffff\1\6\1\4\14\uffff\2\3\12"+
-            "\1",
+            "\uffff\1\3\11\uffff\1\3\1\uffff\1\10\1\5\1\uffff\1\6\1\4\2\3"+
+            "\14\uffff\2\3\12\1",
             "",
             "\5\3\1\12\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\3\1\uffff"+
-            "\1\1\24\uffff\1\3\1\uffff\12\3",
+            "\1\1\26\uffff\1\3\1\uffff\12\3",
             "",
             "",
             "",
@@ -4444,9 +4548,9 @@ public class PineDLParser extends Parser {
             "",
             "",
             "",
-            "\1\13",
+            "\1\13\15\uffff\1\3\6\uffff\1\3",
             "\5\3\1\12\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\3\1\uffff"+
-            "\1\1\24\uffff\1\3\1\uffff\12\3"
+            "\1\1\26\uffff\1\3\1\uffff\12\3"
     };
 
     static final short[] DFA12_eot = DFA.unpackEncodedString(DFA12_eotS);
@@ -4482,82 +4586,84 @@ public class PineDLParser extends Parser {
             return "179:1: stmt returns [Leaf l = null] : ( (e= declAssign ) | (a= expression STMTEND ) | (b= returnstmt ) | (c= ifstmt ) | (w= whilestmt ) | (d= block ) | ( 'break' STMTEND ) | STMTEND );";
         }
     }
-    static final String DFA24_eotS =
+    static final String DFA26_eotS =
         "\11\uffff";
-    static final String DFA24_eofS =
+    static final String DFA26_eofS =
         "\7\uffff\1\1\1\uffff";
-    static final String DFA24_minS =
-        "\1\14\1\uffff\1\14\1\uffff\1\4\1\uffff\1\40\2\4";
-    static final String DFA24_maxS =
-        "\1\102\1\uffff\1\114\1\uffff\1\100\1\uffff\1\40\1\102\1\100";
-    static final String DFA24_acceptS =
-        "\1\uffff\1\1\1\uffff\1\2\1\uffff\1\3\3\uffff";
-    static final String DFA24_specialS =
+    static final String DFA26_minS =
+        "\1\14\1\uffff\1\14\2\uffff\1\4\1\40\2\4";
+    static final String DFA26_maxS =
+        "\1\104\1\uffff\1\116\2\uffff\1\102\1\65\1\104\1\102";
+    static final String DFA26_acceptS =
+        "\1\uffff\1\1\1\uffff\1\2\1\3\4\uffff";
+    static final String DFA26_specialS =
         "\11\uffff}>";
-    static final String[] DFA24_transitionS = {
-            "\1\3\17\uffff\1\2\3\uffff\3\1\1\uffff\1\1\34\uffff\2\1",
+    static final String[] DFA26_transitionS = {
+            "\1\3\17\uffff\1\2\3\uffff\3\1\1\uffff\1\1\11\uffff\1\1\6\uffff"+
+            "\2\1\14\uffff\2\1",
             "",
-            "\1\1\17\uffff\1\1\3\uffff\1\4\2\1\1\uffff\1\1\34\uffff\2\1"+
-            "\12\5",
+            "\1\1\17\uffff\1\1\3\uffff\1\5\2\1\1\uffff\1\1\11\uffff\1\1"+
+            "\6\uffff\2\1\14\uffff\2\1\12\4",
             "",
-            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\7\1\1\26"+
+            "",
+            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\7\1\1\30"+
             "\uffff\1\1\1\uffff\12\1",
-            "",
-            "\1\10",
-            "\5\1\1\uffff\2\1\1\5\15\1\2\uffff\1\5\1\1\1\uffff\1\1\3\5\1"+
-            "\uffff\1\5\12\uffff\1\1\5\uffff\14\1\2\5",
-            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\7\1\1\26"+
+            "\1\10\15\uffff\1\1\6\uffff\1\1",
+            "\5\1\1\uffff\2\1\1\4\15\1\2\uffff\1\4\1\1\1\uffff\1\1\3\4\1"+
+            "\uffff\1\4\11\uffff\1\4\1\1\5\uffff\2\4\14\1\2\4",
+            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\7\1\1\30"+
             "\uffff\1\1\1\uffff\12\1"
     };
 
-    static final short[] DFA24_eot = DFA.unpackEncodedString(DFA24_eotS);
-    static final short[] DFA24_eof = DFA.unpackEncodedString(DFA24_eofS);
-    static final char[] DFA24_min = DFA.unpackEncodedStringToUnsignedChars(DFA24_minS);
-    static final char[] DFA24_max = DFA.unpackEncodedStringToUnsignedChars(DFA24_maxS);
-    static final short[] DFA24_accept = DFA.unpackEncodedString(DFA24_acceptS);
-    static final short[] DFA24_special = DFA.unpackEncodedString(DFA24_specialS);
-    static final short[][] DFA24_transition;
+    static final short[] DFA26_eot = DFA.unpackEncodedString(DFA26_eotS);
+    static final short[] DFA26_eof = DFA.unpackEncodedString(DFA26_eofS);
+    static final char[] DFA26_min = DFA.unpackEncodedStringToUnsignedChars(DFA26_minS);
+    static final char[] DFA26_max = DFA.unpackEncodedStringToUnsignedChars(DFA26_maxS);
+    static final short[] DFA26_accept = DFA.unpackEncodedString(DFA26_acceptS);
+    static final short[] DFA26_special = DFA.unpackEncodedString(DFA26_specialS);
+    static final short[][] DFA26_transition;
 
     static {
-        int numStates = DFA24_transitionS.length;
-        DFA24_transition = new short[numStates][];
+        int numStates = DFA26_transitionS.length;
+        DFA26_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA24_transition[i] = DFA.unpackEncodedString(DFA24_transitionS[i]);
+            DFA26_transition[i] = DFA.unpackEncodedString(DFA26_transitionS[i]);
         }
     }
 
-    class DFA24 extends DFA {
+    class DFA26 extends DFA {
 
-        public DFA24(BaseRecognizer recognizer) {
+        public DFA26(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 24;
-            this.eot = DFA24_eot;
-            this.eof = DFA24_eof;
-            this.min = DFA24_min;
-            this.max = DFA24_max;
-            this.accept = DFA24_accept;
-            this.special = DFA24_special;
-            this.transition = DFA24_transition;
+            this.decisionNumber = 26;
+            this.eot = DFA26_eot;
+            this.eof = DFA26_eof;
+            this.min = DFA26_min;
+            this.max = DFA26_max;
+            this.accept = DFA26_accept;
+            this.special = DFA26_special;
+            this.transition = DFA26_transition;
         }
         public String getDescription() {
-            return "225:1: notcastexpr returns [Expression e = null] : ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) );";
+            return "229:1: notcastexpr returns [Expression e = null] : ( (p= primitive ) | ( NOT p= notcastexpr ) | ( LPAREN t= type RPAREN p= notcastexpr ) );";
         }
     }
-    static final String DFA42_eotS =
-        "\13\uffff";
-    static final String DFA42_eofS =
-        "\13\uffff";
-    static final String DFA42_minS =
-        "\1\14\10\0\2\uffff";
-    static final String DFA42_maxS =
-        "\1\102\10\0\2\uffff";
-    static final String DFA42_acceptS =
-        "\11\uffff\1\1\1\2";
-    static final String DFA42_specialS =
-        "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\2\uffff}>";
-    static final String[] DFA42_transitionS = {
-            "\1\10\17\uffff\1\7\3\uffff\1\6\1\5\1\2\1\uffff\1\1\34\uffff"+
-            "\1\3\1\4",
+    static final String DFA44_eotS =
+        "\14\uffff";
+    static final String DFA44_eofS =
+        "\14\uffff";
+    static final String DFA44_minS =
+        "\1\14\11\0\2\uffff";
+    static final String DFA44_maxS =
+        "\1\104\11\0\2\uffff";
+    static final String DFA44_acceptS =
+        "\12\uffff\1\1\1\2";
+    static final String DFA44_specialS =
+        "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\2\uffff}>";
+    static final String[] DFA44_transitionS = {
+            "\1\11\17\uffff\1\7\3\uffff\1\6\1\5\1\2\1\uffff\1\1\11\uffff"+
+            "\1\6\6\uffff\1\6\1\10\14\uffff\1\3\1\4",
+            "\1\uffff",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -4570,166 +4676,181 @@ public class PineDLParser extends Parser {
             ""
     };
 
-    static final short[] DFA42_eot = DFA.unpackEncodedString(DFA42_eotS);
-    static final short[] DFA42_eof = DFA.unpackEncodedString(DFA42_eofS);
-    static final char[] DFA42_min = DFA.unpackEncodedStringToUnsignedChars(DFA42_minS);
-    static final char[] DFA42_max = DFA.unpackEncodedStringToUnsignedChars(DFA42_maxS);
-    static final short[] DFA42_accept = DFA.unpackEncodedString(DFA42_acceptS);
-    static final short[] DFA42_special = DFA.unpackEncodedString(DFA42_specialS);
-    static final short[][] DFA42_transition;
+    static final short[] DFA44_eot = DFA.unpackEncodedString(DFA44_eotS);
+    static final short[] DFA44_eof = DFA.unpackEncodedString(DFA44_eofS);
+    static final char[] DFA44_min = DFA.unpackEncodedStringToUnsignedChars(DFA44_minS);
+    static final char[] DFA44_max = DFA.unpackEncodedStringToUnsignedChars(DFA44_maxS);
+    static final short[] DFA44_accept = DFA.unpackEncodedString(DFA44_acceptS);
+    static final short[] DFA44_special = DFA.unpackEncodedString(DFA44_specialS);
+    static final short[][] DFA44_transition;
 
     static {
-        int numStates = DFA42_transitionS.length;
-        DFA42_transition = new short[numStates][];
+        int numStates = DFA44_transitionS.length;
+        DFA44_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA42_transition[i] = DFA.unpackEncodedString(DFA42_transitionS[i]);
+            DFA44_transition[i] = DFA.unpackEncodedString(DFA44_transitionS[i]);
         }
     }
 
-    class DFA42 extends DFA {
+    class DFA44 extends DFA {
 
-        public DFA42(BaseRecognizer recognizer) {
+        public DFA44(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 42;
-            this.eot = DFA42_eot;
-            this.eof = DFA42_eof;
-            this.min = DFA42_min;
-            this.max = DFA42_max;
-            this.accept = DFA42_accept;
-            this.special = DFA42_special;
-            this.transition = DFA42_transition;
+            this.decisionNumber = 44;
+            this.eot = DFA44_eot;
+            this.eof = DFA44_eof;
+            this.min = DFA44_min;
+            this.max = DFA44_max;
+            this.accept = DFA44_accept;
+            this.special = DFA44_special;
+            this.transition = DFA44_transition;
         }
         public String getDescription() {
-            return "296:1: expression returns [Expression e = null] : ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) );";
+            return "300:1: expression returns [Expression e = null] : ( (r= ternary ( ( EQUAL q= ternary ) | ( '+=' q= ternary ) | ( '-=' q= ternary ) | ( '*=' q= ternary ) | ( '/=' q= ternary ) | ( '%=' q= ternary ) | ( '&=' q= ternary ) | ( '|=' q= ternary ) | ( '^=' q= ternary ) | ( '<<=' q= ternary ) | ( '>>=' q= ternary ) )* ) | (t= ternary ) );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA42_1 = input.LA(1);
+                        int LA44_1 = input.LA(1);
 
                          
-                        int index42_1 = input.index();
+                        int index44_1 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_1);
+                        input.seek(index44_1);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA42_2 = input.LA(1);
+                        int LA44_2 = input.LA(1);
 
                          
-                        int index42_2 = input.index();
+                        int index44_2 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_2);
+                        input.seek(index44_2);
                         if ( s>=0 ) return s;
                         break;
                     case 2 : 
-                        int LA42_3 = input.LA(1);
+                        int LA44_3 = input.LA(1);
 
                          
-                        int index42_3 = input.index();
+                        int index44_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_3);
+                        input.seek(index44_3);
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
-                        int LA42_4 = input.LA(1);
+                        int LA44_4 = input.LA(1);
 
                          
-                        int index42_4 = input.index();
+                        int index44_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_4);
+                        input.seek(index44_4);
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 
-                        int LA42_5 = input.LA(1);
+                        int LA44_5 = input.LA(1);
 
                          
-                        int index42_5 = input.index();
+                        int index44_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_5);
+                        input.seek(index44_5);
                         if ( s>=0 ) return s;
                         break;
                     case 5 : 
-                        int LA42_6 = input.LA(1);
+                        int LA44_6 = input.LA(1);
 
                          
-                        int index42_6 = input.index();
+                        int index44_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_6);
+                        input.seek(index44_6);
                         if ( s>=0 ) return s;
                         break;
                     case 6 : 
-                        int LA42_7 = input.LA(1);
+                        int LA44_7 = input.LA(1);
 
                          
-                        int index42_7 = input.index();
+                        int index44_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_7);
+                        input.seek(index44_7);
                         if ( s>=0 ) return s;
                         break;
                     case 7 : 
-                        int LA42_8 = input.LA(1);
+                        int LA44_8 = input.LA(1);
 
                          
-                        int index42_8 = input.index();
+                        int index44_8 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred67_PineDL()) ) {s = 9;}
+                        if ( (synpred72_PineDL()) ) {s = 10;}
 
-                        else if ( (true) ) {s = 10;}
+                        else if ( (true) ) {s = 11;}
 
                          
-                        input.seek(index42_8);
+                        input.seek(index44_8);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 8 : 
+                        int LA44_9 = input.LA(1);
+
+                         
+                        int index44_9 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred72_PineDL()) ) {s = 10;}
+
+                        else if ( (true) ) {s = 11;}
+
+                         
+                        input.seek(index44_9);
                         if ( s>=0 ) return s;
                         break;
             }
             if (state.backtracking>0) {state.failed=true; return -1;}
             NoViableAltException nvae =
-                new NoViableAltException(getDescription(), 42, _s, input);
+                new NoViableAltException(getDescription(), 44, _s, input);
             error(nvae);
             throw nvae;
         }
@@ -4749,40 +4870,40 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_WORD_in_clsdecl340 = new BitSet(new long[]{0x0000100004000000L});
     public static final BitSet FOLLOW_44_in_clsdecl345 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_clstype_in_clsdecl349 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_BLKBEG_in_clsdecl357 = new BitSet(new long[]{0x0000000008000000L,0x000000000000E000L});
-    public static final BitSet FOLLOW_field_in_clsdecl364 = new BitSet(new long[]{0x0000000008000000L,0x000000000000E000L});
-    public static final BitSet FOLLOW_method_in_clsdecl373 = new BitSet(new long[]{0x0000000008000000L,0x000000000000E000L});
-    public static final BitSet FOLLOW_constructor_in_clsdecl379 = new BitSet(new long[]{0x0000000008000000L,0x000000000000E000L});
+    public static final BitSet FOLLOW_BLKBEG_in_clsdecl357 = new BitSet(new long[]{0x0000000008000000L,0x0000000000038000L});
+    public static final BitSet FOLLOW_field_in_clsdecl364 = new BitSet(new long[]{0x0000000008000000L,0x0000000000038000L});
+    public static final BitSet FOLLOW_method_in_clsdecl373 = new BitSet(new long[]{0x0000000008000000L,0x0000000000038000L});
+    public static final BitSet FOLLOW_constructor_in_clsdecl379 = new BitSet(new long[]{0x0000000008000000L,0x0000000000038000L});
     public static final BitSet FOLLOW_BLKEND_in_clsdecl387 = new BitSet(new long[]{0x0000000000100002L});
     public static final BitSet FOLLOW_STMTEND_in_clsdecl389 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_accesscontrolkeyword_in_field406 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
-    public static final BitSet FOLLOW_45_in_field413 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
+    public static final BitSet FOLLOW_accesscontrolkeyword_in_field406 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
+    public static final BitSet FOLLOW_45_in_field413 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
     public static final BitSet FOLLOW_type_in_field423 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_field431 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_field437 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_accesscontrolkeyword_in_method454 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
-    public static final BitSet FOLLOW_45_in_method461 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
+    public static final BitSet FOLLOW_accesscontrolkeyword_in_method454 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
+    public static final BitSet FOLLOW_45_in_method461 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
     public static final BitSet FOLLOW_type_in_method471 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_method479 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_method485 = new BitSet(new long[]{0x0000200120000000L,0x0000000000001FF8L});
+    public static final BitSet FOLLOW_LPAREN_in_method485 = new BitSet(new long[]{0x0000200120000000L,0x0000000000007FE0L});
     public static final BitSet FOLLOW_argumentlist_in_method491 = new BitSet(new long[]{0x0000000020000000L});
     public static final BitSet FOLLOW_RPAREN_in_method497 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_block_in_method503 = new BitSet(new long[]{0x0000000000100002L});
     public static final BitSet FOLLOW_STMTEND_in_method509 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_accesscontrolkeyword_in_constructor527 = new BitSet(new long[]{0x0000400000000000L});
     public static final BitSet FOLLOW_46_in_constructor533 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_constructor540 = new BitSet(new long[]{0x0000200120000000L,0x0000000000001FF8L});
+    public static final BitSet FOLLOW_LPAREN_in_constructor540 = new BitSet(new long[]{0x0000200120000000L,0x0000000000007FE0L});
     public static final BitSet FOLLOW_argumentlist_in_constructor546 = new BitSet(new long[]{0x0000000020000000L});
     public static final BitSet FOLLOW_RPAREN_in_constructor552 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_block_in_constructor558 = new BitSet(new long[]{0x0000000000100002L});
     public static final BitSet FOLLOW_STMTEND_in_constructor564 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_argument_in_argumentlist582 = new BitSet(new long[]{0x0000800000000002L});
-    public static final BitSet FOLLOW_47_in_argumentlist587 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
+    public static final BitSet FOLLOW_47_in_argumentlist587 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
     public static final BitSet FOLLOW_argument_in_argumentlist591 = new BitSet(new long[]{0x0000800000000002L});
     public static final BitSet FOLLOW_type_in_argument613 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_argument620 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BLKBEG_in_block636 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
-    public static final BitSet FOLLOW_stmt_in_block641 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
+    public static final BitSet FOLLOW_BLKBEG_in_block636 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
+    public static final BitSet FOLLOW_stmt_in_block641 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
     public static final BitSet FOLLOW_BLKEND_in_block647 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_declAssign_in_stmt665 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_expression_in_stmt676 = new BitSet(new long[]{0x0000000000100000L});
@@ -4795,177 +4916,184 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_STMTEND_in_stmt733 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_STMTEND_in_stmt741 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_49_in_ifstmt755 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_ifstmt757 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
+    public static final BitSet FOLLOW_LPAREN_in_ifstmt757 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
     public static final BitSet FOLLOW_expression_in_ifstmt761 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_ifstmt765 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
+    public static final BitSet FOLLOW_RPAREN_in_ifstmt765 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
     public static final BitSet FOLLOW_stmt_in_ifstmt771 = new BitSet(new long[]{0x0004000000000002L});
-    public static final BitSet FOLLOW_50_in_ifstmt778 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
+    public static final BitSet FOLLOW_50_in_ifstmt778 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
     public static final BitSet FOLLOW_stmt_in_ifstmt782 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_51_in_whilestmt801 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_whilestmt803 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
+    public static final BitSet FOLLOW_LPAREN_in_whilestmt803 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
     public static final BitSet FOLLOW_expression_in_whilestmt807 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_whilestmt811 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
+    public static final BitSet FOLLOW_RPAREN_in_whilestmt811 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
     public static final BitSet FOLLOW_stmt_in_whilestmt817 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_52_in_returnstmt833 = new BitSet(new long[]{0x0000001710101000L,0x0000000000000006L});
+    public static final BitSet FOLLOW_52_in_returnstmt833 = new BitSet(new long[]{0x0060401710101000L,0x0000000000000018L});
     public static final BitSet FOLLOW_expression_in_returnstmt838 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_returnstmt844 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_type_in_declAssign860 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_declAssign866 = new BitSet(new long[]{0x0000000000102000L});
-    public static final BitSet FOLLOW_EQUAL_in_declAssign871 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
+    public static final BitSet FOLLOW_EQUAL_in_declAssign871 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
     public static final BitSet FOLLOW_expression_in_declAssign875 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_declAssign881 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_WORD_in_pkgname897 = new BitSet(new long[]{0x0000000000000202L});
     public static final BitSet FOLLOW_DOT_in_pkgname902 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_pkgname906 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_WORD_in_reference926 = new BitSet(new long[]{0x0000000050000002L});
-    public static final BitSet FOLLOW_LPAREN_in_reference932 = new BitSet(new long[]{0x0000001730001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_expression_in_reference941 = new BitSet(new long[]{0x0000800020000000L});
-    public static final BitSet FOLLOW_47_in_reference949 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_expression_in_reference953 = new BitSet(new long[]{0x0000800020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_reference965 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_LARRAY_in_reference971 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_expression_in_reference975 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_RARRAY_in_reference979 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_intconst_in_constant997 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_doubleconst_in_constant1005 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_boolconst_in_constant1013 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stringconst_in_constant1021 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constant_in_primitive1041 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_reference_in_primitive1049 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_DOT_in_primitive1054 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_reference_in_primitive1058 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_LPAREN_in_primitive1070 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_expression_in_primitive1074 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_primitive1078 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_primitive_in_notcastexpr1100 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NOT_in_notcastexpr1110 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1114 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_LPAREN_in_notcastexpr1124 = new BitSet(new long[]{0x0000200100000000L,0x0000000000001FF8L});
-    public static final BitSet FOLLOW_type_in_notcastexpr1128 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_notcastexpr1130 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1134 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_notcastexpr_in_multop1154 = new BitSet(new long[]{0x00000000000001C2L});
-    public static final BitSet FOLLOW_MULT_in_multop1162 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_notcastexpr_in_multop1166 = new BitSet(new long[]{0x00000000000001C2L});
-    public static final BitSet FOLLOW_DIV_in_multop1172 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_notcastexpr_in_multop1176 = new BitSet(new long[]{0x00000000000001C2L});
-    public static final BitSet FOLLOW_MOD_in_multop1182 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_notcastexpr_in_multop1186 = new BitSet(new long[]{0x00000000000001C2L});
-    public static final BitSet FOLLOW_multop_in_sumop1208 = new BitSet(new long[]{0x0000000000000032L});
-    public static final BitSet FOLLOW_PLUS_in_sumop1216 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_multop_in_sumop1220 = new BitSet(new long[]{0x0000000000000032L});
-    public static final BitSet FOLLOW_MINUS_in_sumop1226 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_multop_in_sumop1230 = new BitSet(new long[]{0x0000000000000032L});
-    public static final BitSet FOLLOW_sumop_in_shiftop1252 = new BitSet(new long[]{0x0000000000000C02L});
-    public static final BitSet FOLLOW_RSHIFT_in_shiftop1260 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_sumop_in_shiftop1264 = new BitSet(new long[]{0x0000000000000C02L});
-    public static final BitSet FOLLOW_LSHIFT_in_shiftop1270 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_sumop_in_shiftop1274 = new BitSet(new long[]{0x0000000000000C02L});
-    public static final BitSet FOLLOW_shiftop_in_compop1297 = new BitSet(new long[]{0x000000000003C002L});
-    public static final BitSet FOLLOW_LESS_in_compop1305 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_shiftop_in_compop1309 = new BitSet(new long[]{0x000000000003C002L});
-    public static final BitSet FOLLOW_MORE_in_compop1315 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_shiftop_in_compop1319 = new BitSet(new long[]{0x000000000003C002L});
-    public static final BitSet FOLLOW_LESSEQ_in_compop1325 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_shiftop_in_compop1329 = new BitSet(new long[]{0x000000000003C002L});
-    public static final BitSet FOLLOW_MOREEQ_in_compop1335 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_shiftop_in_compop1339 = new BitSet(new long[]{0x000000000003C002L});
-    public static final BitSet FOLLOW_compop_in_comp2op1362 = new BitSet(new long[]{0x00000000000C0002L});
-    public static final BitSet FOLLOW_EQUALS_in_comp2op1370 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_compop_in_comp2op1374 = new BitSet(new long[]{0x00000000000C0002L});
-    public static final BitSet FOLLOW_NEQUAL_in_comp2op1380 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_compop_in_comp2op1384 = new BitSet(new long[]{0x00000000000C0002L});
-    public static final BitSet FOLLOW_comp2op_in_bitwiseand1406 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_BITWISEAND_in_bitwiseand1414 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_comp2op_in_bitwiseand1418 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_bitwiseand_in_bitwiseor1440 = new BitSet(new long[]{0x0000000000400002L});
-    public static final BitSet FOLLOW_BITWISEOR_in_bitwiseor1448 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_bitwiseand_in_bitwiseor1452 = new BitSet(new long[]{0x0000000000400002L});
-    public static final BitSet FOLLOW_bitwiseor_in_bitwisexor1475 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_BITWISEXOR_in_bitwisexor1483 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_bitwiseor_in_bitwisexor1487 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_bitwisexor_in_logicaland1509 = new BitSet(new long[]{0x0000000001000002L});
-    public static final BitSet FOLLOW_LOGAND_in_logicaland1517 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_bitwisexor_in_logicaland1521 = new BitSet(new long[]{0x0000000001000002L});
-    public static final BitSet FOLLOW_logicaland_in_logicalor1543 = new BitSet(new long[]{0x0000000002000002L});
-    public static final BitSet FOLLOW_LOGOR_in_logicalor1551 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_logicaland_in_logicalor1555 = new BitSet(new long[]{0x0000000002000002L});
-    public static final BitSet FOLLOW_logicalor_in_ternary1578 = new BitSet(new long[]{0x0020000000000002L});
-    public static final BitSet FOLLOW_53_in_ternary1586 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_logicalor_in_ternary1590 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_54_in_ternary1592 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_logicalor_in_ternary1596 = new BitSet(new long[]{0x0020000000000002L});
-    public static final BitSet FOLLOW_ternary_in_expression1620 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_EQUAL_in_expression1628 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1632 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_55_in_expression1640 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1644 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_56_in_expression1652 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1656 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_57_in_expression1664 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1668 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_58_in_expression1676 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1680 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_59_in_expression1688 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1692 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_60_in_expression1700 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1704 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_61_in_expression1712 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1716 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_62_in_expression1724 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1728 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_63_in_expression1736 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1740 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_64_in_expression1748 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_expression1752 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_ternary_in_expression1767 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRINGCONST_PRIVATE_in_stringconst1787 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_DOUBLECONST_PRIVATE_in_doubleconst1843 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_INTCONST_PRIVATE_in_intconst1881 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_65_in_boolconst1956 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_66_in_boolconst1961 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_nativetype_in_type1977 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_clstype_in_type1985 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_WORD_in_clstype2008 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_DOT_in_clstype2013 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_WORD_in_clstype2017 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_67_in_nativetype2041 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_68_in_nativetype2049 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_69_in_nativetype2057 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_70_in_nativetype2065 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_71_in_nativetype2073 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_72_in_nativetype2081 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_73_in_nativetype2089 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_74_in_nativetype2097 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_75_in_nativetype2105 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_76_in_nativetype2113 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_77_in_accesscontrolkeyword2130 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_78_in_accesscontrolkeyword2135 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_79_in_accesscontrolkeyword2143 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_synpred21_PineDL778 = new BitSet(new long[]{0x001B20171C101000L,0x0000000000001FFEL});
+    public static final BitSet FOLLOW_set_in_reference926 = new BitSet(new long[]{0x0000000050000002L});
+    public static final BitSet FOLLOW_LPAREN_in_reference938 = new BitSet(new long[]{0x0060401730001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_reference947 = new BitSet(new long[]{0x0000800020000000L});
+    public static final BitSet FOLLOW_47_in_reference955 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_reference959 = new BitSet(new long[]{0x0000800020000000L});
+    public static final BitSet FOLLOW_RPAREN_in_reference971 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_LARRAY_in_reference977 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_reference981 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_RARRAY_in_reference985 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_intconst_in_constant1003 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_doubleconst_in_constant1011 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_boolconst_in_constant1019 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stringconst_in_constant1027 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constant_in_primitive1047 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_reference_in_primitive1055 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_DOT_in_primitive1060 = new BitSet(new long[]{0x0020400100000000L});
+    public static final BitSet FOLLOW_reference_in_primitive1064 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_LPAREN_in_primitive1076 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_primitive1080 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_RPAREN_in_primitive1084 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_54_in_primitive1088 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
+    public static final BitSet FOLLOW_clstype_in_primitive1092 = new BitSet(new long[]{0x0000000010000000L});
+    public static final BitSet FOLLOW_LPAREN_in_primitive1098 = new BitSet(new long[]{0x0060401730001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_primitive1105 = new BitSet(new long[]{0x0000800020000000L});
+    public static final BitSet FOLLOW_47_in_primitive1113 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_expression_in_primitive1117 = new BitSet(new long[]{0x0000800020000000L});
+    public static final BitSet FOLLOW_RPAREN_in_primitive1128 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_primitive_in_notcastexpr1150 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NOT_in_notcastexpr1160 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1164 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_LPAREN_in_notcastexpr1174 = new BitSet(new long[]{0x0000200100000000L,0x0000000000007FE0L});
+    public static final BitSet FOLLOW_type_in_notcastexpr1178 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_RPAREN_in_notcastexpr1180 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1184 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_notcastexpr_in_multop1204 = new BitSet(new long[]{0x00000000000001C2L});
+    public static final BitSet FOLLOW_MULT_in_multop1212 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_notcastexpr_in_multop1216 = new BitSet(new long[]{0x00000000000001C2L});
+    public static final BitSet FOLLOW_DIV_in_multop1222 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_notcastexpr_in_multop1226 = new BitSet(new long[]{0x00000000000001C2L});
+    public static final BitSet FOLLOW_MOD_in_multop1232 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_notcastexpr_in_multop1236 = new BitSet(new long[]{0x00000000000001C2L});
+    public static final BitSet FOLLOW_multop_in_sumop1258 = new BitSet(new long[]{0x0000000000000032L});
+    public static final BitSet FOLLOW_PLUS_in_sumop1266 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_multop_in_sumop1270 = new BitSet(new long[]{0x0000000000000032L});
+    public static final BitSet FOLLOW_MINUS_in_sumop1276 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_multop_in_sumop1280 = new BitSet(new long[]{0x0000000000000032L});
+    public static final BitSet FOLLOW_sumop_in_shiftop1302 = new BitSet(new long[]{0x0000000000000C02L});
+    public static final BitSet FOLLOW_RSHIFT_in_shiftop1310 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_sumop_in_shiftop1314 = new BitSet(new long[]{0x0000000000000C02L});
+    public static final BitSet FOLLOW_LSHIFT_in_shiftop1320 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_sumop_in_shiftop1324 = new BitSet(new long[]{0x0000000000000C02L});
+    public static final BitSet FOLLOW_shiftop_in_compop1347 = new BitSet(new long[]{0x000000000003C002L});
+    public static final BitSet FOLLOW_LESS_in_compop1355 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_shiftop_in_compop1359 = new BitSet(new long[]{0x000000000003C002L});
+    public static final BitSet FOLLOW_MORE_in_compop1365 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_shiftop_in_compop1369 = new BitSet(new long[]{0x000000000003C002L});
+    public static final BitSet FOLLOW_LESSEQ_in_compop1375 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_shiftop_in_compop1379 = new BitSet(new long[]{0x000000000003C002L});
+    public static final BitSet FOLLOW_MOREEQ_in_compop1385 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_shiftop_in_compop1389 = new BitSet(new long[]{0x000000000003C002L});
+    public static final BitSet FOLLOW_compop_in_comp2op1412 = new BitSet(new long[]{0x00000000000C0002L});
+    public static final BitSet FOLLOW_EQUALS_in_comp2op1420 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_compop_in_comp2op1424 = new BitSet(new long[]{0x00000000000C0002L});
+    public static final BitSet FOLLOW_NEQUAL_in_comp2op1430 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_compop_in_comp2op1434 = new BitSet(new long[]{0x00000000000C0002L});
+    public static final BitSet FOLLOW_comp2op_in_bitwiseand1456 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_BITWISEAND_in_bitwiseand1464 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_comp2op_in_bitwiseand1468 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_bitwiseand_in_bitwiseor1490 = new BitSet(new long[]{0x0000000000400002L});
+    public static final BitSet FOLLOW_BITWISEOR_in_bitwiseor1498 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_bitwiseand_in_bitwiseor1502 = new BitSet(new long[]{0x0000000000400002L});
+    public static final BitSet FOLLOW_bitwiseor_in_bitwisexor1525 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_BITWISEXOR_in_bitwisexor1533 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_bitwiseor_in_bitwisexor1537 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_bitwisexor_in_logicaland1559 = new BitSet(new long[]{0x0000000001000002L});
+    public static final BitSet FOLLOW_LOGAND_in_logicaland1567 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_bitwisexor_in_logicaland1571 = new BitSet(new long[]{0x0000000001000002L});
+    public static final BitSet FOLLOW_logicaland_in_logicalor1593 = new BitSet(new long[]{0x0000000002000002L});
+    public static final BitSet FOLLOW_LOGOR_in_logicalor1601 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_logicaland_in_logicalor1605 = new BitSet(new long[]{0x0000000002000002L});
+    public static final BitSet FOLLOW_logicalor_in_ternary1628 = new BitSet(new long[]{0x0080000000000002L});
+    public static final BitSet FOLLOW_55_in_ternary1636 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_logicalor_in_ternary1640 = new BitSet(new long[]{0x0100000000000000L});
+    public static final BitSet FOLLOW_56_in_ternary1642 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_logicalor_in_ternary1646 = new BitSet(new long[]{0x0080000000000002L});
+    public static final BitSet FOLLOW_ternary_in_expression1670 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_EQUAL_in_expression1678 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1682 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_57_in_expression1690 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1694 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_58_in_expression1702 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1706 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_59_in_expression1714 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1718 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_60_in_expression1726 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1730 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_61_in_expression1738 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1742 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_62_in_expression1750 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1754 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_63_in_expression1762 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1766 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_64_in_expression1774 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1778 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_65_in_expression1786 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1790 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_66_in_expression1798 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_expression1802 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_ternary_in_expression1817 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRINGCONST_PRIVATE_in_stringconst1837 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOUBLECONST_PRIVATE_in_doubleconst1893 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTCONST_PRIVATE_in_intconst1931 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_67_in_boolconst2006 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_68_in_boolconst2011 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_nativetype_in_type2027 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_clstype_in_type2035 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_WORD_in_clstype2058 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_DOT_in_clstype2063 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_WORD_in_clstype2067 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_69_in_nativetype2091 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_70_in_nativetype2099 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_71_in_nativetype2107 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_72_in_nativetype2115 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_73_in_nativetype2123 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_74_in_nativetype2131 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_75_in_nativetype2139 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_76_in_nativetype2147 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_77_in_nativetype2155 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_78_in_nativetype2163 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_79_in_accesscontrolkeyword2180 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_80_in_accesscontrolkeyword2185 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_81_in_accesscontrolkeyword2193 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_50_in_synpred21_PineDL778 = new BitSet(new long[]{0x007B60171C101000L,0x0000000000007FF8L});
     public static final BitSet FOLLOW_stmt_in_synpred21_PineDL782 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1620 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_EQUAL_in_synpred67_PineDL1628 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1632 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_55_in_synpred67_PineDL1640 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1644 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_56_in_synpred67_PineDL1652 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1656 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_57_in_synpred67_PineDL1664 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1668 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_58_in_synpred67_PineDL1676 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1680 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_59_in_synpred67_PineDL1688 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1692 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_60_in_synpred67_PineDL1700 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1704 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_61_in_synpred67_PineDL1712 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1716 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_62_in_synpred67_PineDL1724 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1728 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_63_in_synpred67_PineDL1736 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1740 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
-    public static final BitSet FOLLOW_64_in_synpred67_PineDL1748 = new BitSet(new long[]{0x0000001710001000L,0x0000000000000006L});
-    public static final BitSet FOLLOW_ternary_in_synpred67_PineDL1752 = new BitSet(new long[]{0xFF80000000002002L,0x0000000000000001L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1670 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_EQUAL_in_synpred72_PineDL1678 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1682 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_57_in_synpred72_PineDL1690 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1694 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_58_in_synpred72_PineDL1702 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1706 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_59_in_synpred72_PineDL1714 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1718 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_60_in_synpred72_PineDL1726 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1730 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_61_in_synpred72_PineDL1738 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1742 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_62_in_synpred72_PineDL1750 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1754 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_63_in_synpred72_PineDL1762 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1766 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_64_in_synpred72_PineDL1774 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1778 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_65_in_synpred72_PineDL1786 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1790 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
+    public static final BitSet FOLLOW_66_in_synpred72_PineDL1798 = new BitSet(new long[]{0x0060401710001000L,0x0000000000000018L});
+    public static final BitSet FOLLOW_ternary_in_synpred72_PineDL1802 = new BitSet(new long[]{0xFE00000000002002L,0x0000000000000007L});
 
 }
