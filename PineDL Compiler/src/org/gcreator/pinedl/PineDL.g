@@ -184,6 +184,7 @@ stmt returns [Leaf l = null]
 	| (w=whilestmt {l=w;})
 	| (d=block {l=d;})
 	| ('break' STMTEND {l=new BreakStatement();})
+	| ('continue' STMTEND {l=new ContinueStatement();})
 	| STMTEND;
 	
 ifstmt returns [IfStatement ifCase = new IfStatement()]

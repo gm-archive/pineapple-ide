@@ -16,6 +16,10 @@ class X extends Y
     public this()// : super()
     {
         X a = new X();
+        while(true){
+            if(a.tick()) continue;
+            else break;
+        }
     }
 
     public static int sum(int x, string y){
