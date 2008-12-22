@@ -66,4 +66,15 @@ public final class Action {
         if(type==null){ return null; }
         return type.render(this, bgColor, actRender);
     }
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object clone(){
+        Action a = new Action(type);
+        a.args = args;
+        a.children = (Vector<Action>) children.clone();
+        a.expanded = expanded;
+        a.parent = parent;
+        return a;
+    }
 }

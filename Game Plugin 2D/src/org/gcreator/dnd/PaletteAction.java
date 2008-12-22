@@ -21,40 +21,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-package org.gcreator.gui;
+package org.gcreator.dnd;
 
 import java.awt.Color;
-import java.util.Vector;
-import org.gcreator.actions.Action;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.TransferHandler;
+import org.gcreator.actions.ActionType;
 
 /**
- *
+ * A palette action to drag
  * @author Luís Reis
  */
-public class EmbedActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559862L;
-    public Action arg;
-    private Color usedColor;
-    private ActionRenderer actRender;
-
-    public EmbedActionRenderer(Action arg, Color usedColor, ActionRenderer actRender){
-        this.arg = arg;
-        this.usedColor = usedColor;
-        this.actRender = actRender;
-        updateUI();
+public class PaletteAction extends JLabel{
+    private static final long serialVersionUID = -3838618778031658987L;
+    public ActionType type;
+    
+    public PaletteAction(ActionType type){
+        this.type = type;
+        this.setText(type.getName());
+        setTransferHandler(new ActionTransferHandler());
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent evt){
+                getTransferHandler().exportAsDrag(
+                        PaletteAction.this, evt, TransferHandler.COPY);
+            }
+        });
+        setOpaque(true);
+        setBackground(Color.WHITE);
     }
     
     @Override
-    public ActionRenderer getParentRenderer(){
-        return actRender;
-    }
-    
-    public Color getUsedColor(){
-        return usedColor;
-    }
-    
-    public Vector<Action> getActions(){
-        if(arg==null){ return null; }
-        return arg.children;
+    public Dimension getMaximumSize(){
+        Dimension d = new Dimension(getParent().getWidth(), super.getPreferredSize().height);
+        System.out.println("pa w:" + d);
+        return d;
     }
 }

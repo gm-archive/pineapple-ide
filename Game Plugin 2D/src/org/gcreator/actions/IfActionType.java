@@ -27,6 +27,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.gcreator.gui.ActionRenderer;
@@ -56,6 +59,9 @@ public class IfActionType extends ActionType{
             return null;
         }
         
+        if(action.children==null){
+            action.children = new Vector<Action>();
+        }
         CodePanel p = new CodePanel(action, bgColor, actRender);
         p.setBackground(bgColor);
         
@@ -68,7 +74,7 @@ public class IfActionType extends ActionType{
         public Action action;
         public EmbedActionRenderer ear;
         
-        public CodePanel(Action action, Color bgColor, ActionRenderer actRender){
+        public CodePanel(Action action, Color bgColor, final ActionRenderer actRender){
             setLayout(null);
             addComponentListener(new ComponentAdapter() {
                 @Override
@@ -80,11 +86,21 @@ public class IfActionType extends ActionType{
                 }
             });
             this.action = action;
-            label = new JLabel("If " + action.args.toString());
+            label = new JLabel("["+(action.expanded?"-":"+")+"] If");
             label.setVisible(true);
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent evt){
+                    CodePanel.this.action.expanded = !CodePanel.this.action.expanded;
+                    label.setText("["+(CodePanel.this.action.expanded?"-":"+")+"] If");
+                    actRender.updateUI();
+                }
+            });
             add(label);
             label.setLocation(0, 10);
             label.setSize(getWidth(), 15);
+            label.setVisible(true);
+            add(label);
             if(action.expanded){
                 ear = new EmbedActionRenderer(action, bgColor, actRender);
                 ear.setVisible(true);
@@ -104,5 +120,10 @@ public class IfActionType extends ActionType{
             d.width = getWidth();
             return d;
         }
+    }
+    
+    @Override
+    public String getName(){
+        return "If";
     }
 }

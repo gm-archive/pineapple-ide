@@ -78,4 +78,12 @@ public class ActionType {
     public void load(Action action, String args){
         action.args = args;
     }
+    
+    /**
+     * Gets the name of the action, as displayed in the palette
+     * @return
+     */
+    public String getName(){
+        return "[UNDEFINED: "+getClass().getName()+"]";
+    }
 }

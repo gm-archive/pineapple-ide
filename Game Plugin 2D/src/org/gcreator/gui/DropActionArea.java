@@ -25,8 +25,15 @@ package org.gcreator.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
+import org.gcreator.actions.Action;
 
 /**
  *
@@ -36,18 +43,57 @@ public class DropActionArea extends JPanel {
 
     private static final long serialVersionUID = -4072377202027738156L;
     public JLabel label;
+    public ActionRenderer renderer;
 
-    public DropActionArea() {
+    public DropActionArea(ActionRenderer renderer) {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         label = new JLabel("(Drop here)");
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setVisible(true);
         add(label, BorderLayout.CENTER);
+        this.renderer = renderer;
+        new ActionDropTargetListener();
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(getWidth(), label.getPreferredSize().height+20);
+        return new Dimension(getWidth(), label.getPreferredSize().height + 20);
+    }
+
+    class ActionDropTargetListener extends DropTargetAdapter {
+
+        private DropTarget dropTarget;
+
+        public ActionDropTargetListener() {
+            dropTarget = new DropTarget(DropActionArea.this, this);
+        }
+
+        public void drop(DropTargetDropEvent event) {
+            try {
+                Transferable tr = event.getTransferable();
+                Action action = (Action) tr.getTransferData(new DataFlavor(Action.class, "Action"));
+                if(event.getDropAction()==TransferHandler.COPY){
+                    action = (Action) action.clone();
+                }
+                if (event.isDataFlavorSupported(new DataFlavor(Action.class, "Action"))) {
+                    event.acceptDrop(event.getDropAction());
+                    if(renderer instanceof EmbedActionRenderer){
+                        action.parent = ((EmbedActionRenderer) renderer).arg;
+                    }
+                    else{
+                        action.parent = null;
+                    }
+                    renderer.getActions().add(action);
+                    event.dropComplete(true);
+                    renderer.updateSizes();
+                    renderer.updateUI();
+                    return;
+                }
+                event.rejectDrop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

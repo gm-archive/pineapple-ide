@@ -26,9 +26,6 @@ package org.gcreator.gui;
 import java.awt.Color;
 import java.util.Vector;
 import org.gcreator.actions.Action;
-import org.gcreator.actions.CodeActionType;
-import org.gcreator.actions.ElseActionType;
-import org.gcreator.actions.IfActionType;
 import org.gcreator.events.Event;
 
 /**
@@ -53,10 +50,5 @@ public class EventActionRenderer extends ActionRenderer{
             return null;
         }
         return e.actions;
-    }
-    
-    public void updateUI(){
-        System.out.println("PARENT UPDATED");
-        super.updateUI();
     }
 }

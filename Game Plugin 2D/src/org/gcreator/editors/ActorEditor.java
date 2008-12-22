@@ -23,9 +23,13 @@ THE SOFTWARE.
 
 package org.gcreator.editors;
 
-import javax.swing.JOptionPane;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import org.gcreator.actions.ActionType;
+import org.gcreator.dnd.PaletteAction;
 import org.gcreator.events.Event;
 import org.gcreator.events.EventPanel;
 import org.gcreator.formats.Actor;
@@ -66,6 +70,16 @@ public class ActorEditor extends DocumentPane implements PaletteUser{
      * {@inheritDoc}
      */
     public boolean doPalette(ToolWindow palette, JPanel palettePanel){
+        palettePanel.removeAll();
+        GridLayout gb = new GridLayout(0, 1);
+        palettePanel.setLayout(gb);
+        
+        for(ActionType type : ActionType.actionTypes){
+            PaletteAction act = new PaletteAction(type);
+            palettePanel.add(act);
+            act.setVisible(true);
+        }
+        
         return true;
     }
 

@@ -101,7 +101,7 @@ public abstract class ActionRenderer extends JPanel{
             currenty+=h;
             bColor = !bColor;
         }
-        DropActionArea daa = new DropActionArea();
+        DropActionArea daa = new DropActionArea(this);
         daa.setVisible(true);
         add(daa);
         int h = daa.getPreferredSize().height;

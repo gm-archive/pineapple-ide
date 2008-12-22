@@ -89,7 +89,7 @@ public class CodeActionType extends ActionType {
             scroll.setVisible(true);
             editor.setVisible(true);
             editor.setFocusable(true);
-            editor.setText(CodePanel.this.action.args.toString());
+            editor.setText(CodePanel.this.action.args == null ? "" : CodePanel.this.action.args.toString());
             scroll.setFocusable(false);
             add(scroll, BorderLayout.CENTER);
             editor.getDocument().addDocumentListener(new DocumentListener() {
@@ -105,27 +105,27 @@ public class CodeActionType extends ActionType {
                 public void changedUpdate(DocumentEvent e) {
                     update(e);
                 }
-                
-                public void update(DocumentEvent e){
+
+                public void update(DocumentEvent e) {
                     CodePanel.this.action.args = editor.getText();
                 }
             });
-            //        label.setVisible(false);
+        //        label.setVisible(false);
                     /*editor.addKeyListener(new KeyAdapter() {
-            
-            @Override
-            public void keyPressed(KeyEvent e) {
-            if(e.getKeyChar()=='\n'){
-            CodePanel.this.action.args = editor.getText();
-            label.setText(CodePanel.this.action.args.toString());
-            CodePanel.this.remove(scroll);
-            label.setVisible(true);
-            }
-            }
-            });*/
-            //    }
-            //});
-            //add(label, BorderLayout.CENTER);
+        
+        @Override
+        public void keyPressed(KeyEvent e) {
+        if(e.getKeyChar()=='\n'){
+        CodePanel.this.action.args = editor.getText();
+        label.setText(CodePanel.this.action.args.toString());
+        CodePanel.this.remove(scroll);
+        label.setVisible(true);
+        }
+        }
+        });*/
+        //    }
+        //});
+        //add(label, BorderLayout.CENTER);
         }
 
         @Override
@@ -135,5 +135,10 @@ public class CodeActionType extends ActionType {
             d.width = getWidth();
             return d;
         }
+    }
+
+    @Override
+    public String getName() {
+        return "Code";
     }
 }

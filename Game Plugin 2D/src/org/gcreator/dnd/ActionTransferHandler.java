@@ -21,40 +21,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-package org.gcreator.gui;
+package org.gcreator.dnd;
 
-import java.awt.Color;
-import java.util.Vector;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import javax.swing.JComponent;
+import javax.swing.TransferHandler;
 import org.gcreator.actions.Action;
+import org.gcreator.actions.ActionType;
 
 /**
- *
+ * A class that deals with data transference from action drag&drop
  * @author Luís Reis
+ * @see ActionTransferable
  */
-public class EmbedActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559862L;
-    public Action arg;
-    private Color usedColor;
-    private ActionRenderer actRender;
+public class ActionTransferHandler extends TransferHandler{
+    private static final long serialVersionUID = 8941610639649161438L;
 
-    public EmbedActionRenderer(Action arg, Color usedColor, ActionRenderer actRender){
-        this.arg = arg;
-        this.usedColor = usedColor;
-        this.actRender = actRender;
-        updateUI();
+    @Override
+    public int getSourceActions(JComponent c) {
+        return COPY_OR_MOVE;
     }
     
     @Override
-    public ActionRenderer getParentRenderer(){
-        return actRender;
+    public Transferable createTransferable(JComponent c) {
+        if(c instanceof PaletteAction){
+            ActionType t = ((PaletteAction) c).type;
+            Action a = new Action(t);
+            return new ActionTransferable(a);
+        }
+        return null;
     }
     
-    public Color getUsedColor(){
-        return usedColor;
-    }
-    
-    public Vector<Action> getActions(){
-        if(arg==null){ return null; }
-        return arg.children;
+    public void exportDone(JComponent c, Transferable t, int action) {
+        if(action==MOVE){
+            try{
+                Action a = (Action) t.getTransferData(new DataFlavor(Action.class, "Action"));
+                a.parent.children.remove(a);
+            }
+            catch(Exception e){
+                
+            }
+        }
     }
 }

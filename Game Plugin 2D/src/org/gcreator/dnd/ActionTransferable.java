@@ -21,40 +21,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-package org.gcreator.gui;
+package org.gcreator.dnd;
 
-import java.awt.Color;
-import java.util.Vector;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import org.gcreator.actions.Action;
 
+
 /**
- *
+ * A Drag&Drop object that contains an action
  * @author Luís Reis
  */
-public class EmbedActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559862L;
-    public Action arg;
-    private Color usedColor;
-    private ActionRenderer actRender;
-
-    public EmbedActionRenderer(Action arg, Color usedColor, ActionRenderer actRender){
-        this.arg = arg;
-        this.usedColor = usedColor;
-        this.actRender = actRender;
-        updateUI();
+public class ActionTransferable implements Transferable{
+    public Action a = null;
+    
+    public ActionTransferable(Action a){
+        this.a = a;
     }
     
-    @Override
-    public ActionRenderer getParentRenderer(){
-        return actRender;
+    public Object getTransferData(DataFlavor flavor){
+        return a;
     }
     
-    public Color getUsedColor(){
-        return usedColor;
+    public boolean isDataFlavorSupported(DataFlavor flavor){
+        return flavor.getRepresentationClass()==Action.class;
     }
     
-    public Vector<Action> getActions(){
-        if(arg==null){ return null; }
-        return arg.children;
+    public DataFlavor[] getTransferDataFlavors(){
+        return new DataFlavor[]{ new DataFlavor(Action.class, "Action") };
     }
 }
