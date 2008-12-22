@@ -63,7 +63,7 @@ public class Actor {
     /**
      * A simplex class that stores all of the data for a field.
      */
-    public class Field {
+    public static class Field {
 
         protected String type;
         protected String name;

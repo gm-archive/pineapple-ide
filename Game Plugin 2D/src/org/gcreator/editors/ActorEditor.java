@@ -23,10 +23,14 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.GridLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.gcreator.actions.ActionType;
 import org.gcreator.dnd.PaletteAction;
 import org.gcreator.events.Event;
@@ -46,8 +50,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
-    private TableModel fieldsTableModel;
-    
+
     /**
      * Creates a new ActorEditor
      * @param f The actor file
@@ -59,101 +62,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         } catch (Exception e) {
             actor = new Actor();
         }
-        
-        fieldsTableModel = new AbstractTableModel() {
-            
-            private static final long serialVersionUID = 1;
-            
-            public int getRowCount() {
-                return actor.fields.size();
-            }
 
-            public int getColumnCount() {
-                /* Name | Type | Static | Final | Defualt Value*/
-                return 5;
-            }
-
-            @Override
-            public String getColumnName(int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return "Name";
-                    case 1:
-                        return "Type";
-                    case 2:
-                        return "Static";
-                    case 3:
-                        return "Final";
-                    case 4:
-                        return "Default Value";
-                    default:
-                        return "Column " + columnIndex;
-                }
-            }
-
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return String.class;
-                    case 1:
-                        return String.class;
-                    case 2:
-                        return Boolean.class;
-                    case 3:
-                        return Boolean.class;
-                    case 4:
-                        return String.class;
-                    default:
-                        return String.class;
-                }
-            }
-
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return true;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return actor.fields.get(rowIndex).getName();
-                    case 1:
-                        return actor.fields.get(rowIndex).getType();
-                    case 2:
-                        return actor.fields.get(rowIndex).isStatic();
-                    case 3:
-                        return actor.fields.get(rowIndex).isFinal();
-                    case 4:
-                        return actor.fields.get(rowIndex).getDefaultValue();
-                    default:
-                        return String.class;
-                }
-            }
-
-            @Override
-            public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        actor.fields.get(rowIndex).setName((String) aValue);
-                        return;
-                    case 1:
-                        actor.fields.get(rowIndex).setType((String) aValue);
-                        return;
-                    case 2:
-                        actor.fields.get(rowIndex).setStatic((Boolean) aValue);
-                        return;
-                    case 3:
-                        actor.fields.get(rowIndex).setFinal((Boolean) aValue);
-                        return;
-                    case 4:
-                        actor.fields.get(rowIndex).setDefaultValue((String) aValue);
-                        return;
-                }
-            }
-        };
-        
         initComponents();
         for (Event e : actor.events) {
             this.addTabForEvent(e);
@@ -163,24 +72,141 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public boolean save() {
+        boolean saved = false;
+        try {
+            actor.save(file);
+            saved = true;
+        } catch (IOException ex) {
+            Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return saved;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean doPalette(ToolWindow palette, JPanel palettePanel) {
         palettePanel.removeAll();
         GridLayout gb = new GridLayout(0, 1);
         palettePanel.setLayout(gb);
-        
-        for(ActionType type : ActionType.actionTypes){
+
+        for (ActionType type : ActionType.actionTypes) {
             PaletteAction act = new PaletteAction(type);
             palettePanel.add(act);
             act.setVisible(true);
         }
-        
+
         return true;
     }
-    
+
     private void addTabForEvent(Event e) {
         EventPanel p = new EventPanel(e);
         tabPane.insertTab(e.type, null, p, "", tabPane.getComponentCount() - 2);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="class FieldsTableModel">
+    private class FieldsTableModel extends AbstractTableModel {
+
+        private static final long serialVersionUID = 1;
+
+        public int getRowCount() {
+            return actor.fields.size();
+        }
+
+        public int getColumnCount() {
+            /* Name | Type | Static | Final | Defualt Value*/
+            return 5;
+        }
+
+        @Override
+        public String getColumnName(int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return "Name";
+                case 1:
+                    return "Type";
+                case 2:
+                    return "Static";
+                case 3:
+                    return "Final";
+                case 4:
+                    return "Default Value";
+                default:
+                    return "Column " + columnIndex;
+            }
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return String.class;
+                case 1:
+                    return String.class;
+                case 2:
+                    return Boolean.class;
+                case 3:
+                    return Boolean.class;
+                case 4:
+                    return String.class;
+                default:
+                    return String.class;
+            }
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return actor.fields.get(rowIndex).getName();
+                case 1:
+                    return actor.fields.get(rowIndex).getType();
+                case 2:
+                    return actor.fields.get(rowIndex).isStatic();
+                case 3:
+                    return actor.fields.get(rowIndex).isFinal();
+                case 4:
+                    return actor.fields.get(rowIndex).getDefaultValue();
+                default:
+                    return String.class;
+            }
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    actor.fields.get(rowIndex).setName((String) aValue);
+                    return;
+                case 1:
+                    actor.fields.get(rowIndex).setType((String) aValue);
+                    return;
+                case 2:
+                    actor.fields.get(rowIndex).setStatic((Boolean) aValue);
+                    return;
+                case 3:
+                    actor.fields.get(rowIndex).setFinal((Boolean) aValue);
+                    return;
+                case 4:
+                    actor.fields.get(rowIndex).setDefaultValue((String) aValue);
+                    return;
+            }
+        }
+    }
+    //</editor-fold>
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -191,37 +217,42 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        splitter = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         tabPane = new javax.swing.JTabbedPane();
-        jPanel4 = new javax.swing.JPanel();
+        eventsTab = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         eventList = new javax.swing.JList();
         newEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descriptionTextPane = new javax.swing.JTextPane();
+        fieldsTab = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         addFieldButton = new javax.swing.JButton();
         removeFieldButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         fieldsTable = new javax.swing.JTable();
 
-        setLayout(new java.awt.BorderLayout());
-
-        jSplitPane1.setDividerLocation(15);
+        splitter.setDividerLocation(80);
+        splitter.setDividerSize(8);
+        splitter.setResizeWeight(0.4);
+        splitter.setName("Divider"); // NOI18N
+        splitter.setOneTouchExpandable(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 15, Short.MAX_VALUE)
+            .addGap(0, 89, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 336, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        splitter.setLeftComponent(jPanel1);
 
         eventList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Create Event", "Update Event", "Draw Event" };
@@ -247,33 +278,50 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         deleteEventButton.setText("Delete");
         deleteEventButton.setEnabled(false);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel1.setText("Description:");
+
+        descriptionTextPane.setContentType("text/html");
+        descriptionTextPane.setEditable(false);
+        descriptionTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n    <p style=\"margin-top: 20\">\n      <img src=\"http://www.bobtheblueberry.com/unrelated/markov.jpg\" />\n      <br/><span style=\"font-weight: bold; font-align: center;\">Mark Overmars</span>\n    </p>\n  </body>\n</html>\n");
+        jScrollPane3.setViewportView(descriptionTextPane);
+
+        javax.swing.GroupLayout eventsTabLayout = new javax.swing.GroupLayout(eventsTab);
+        eventsTab.setLayout(eventsTabLayout);
+        eventsTabLayout.setHorizontalGroup(
+            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventsTabLayout.createSequentialGroup()
+                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(eventsTabLayout.createSequentialGroup()
                         .addComponent(newEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteEventButton)
-                    .addComponent(newEventButton))
+        eventsTabLayout.setVerticalGroup(
+            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventsTabLayout.createSequentialGroup()
+                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(eventsTabLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newEventButton)
+                    .addComponent(deleteEventButton))
                 .addContainerGap())
         );
 
-        tabPane.addTab("New Event", jPanel4);
+        tabPane.addTab("Events", eventsTab);
 
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        fieldsTab.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setPreferredSize(new java.awt.Dimension(100, 32));
 
@@ -296,8 +344,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(284, Short.MAX_VALUE)
-                .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(203, Short.MAX_VALUE)
+                .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeFieldButton))
         );
@@ -310,34 +358,52 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
+        fieldsTab.add(jPanel3, java.awt.BorderLayout.PAGE_START);
 
-        fieldsTable.setModel(fieldsTableModel);
+        fieldsTable.setModel(new ActorEditor.FieldsTableModel());
         jScrollPane1.setViewportView(fieldsTable);
 
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        fieldsTab.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        tabPane.addTab("Fields", jPanel2);
+        tabPane.addTab("Fields", fieldsTab);
 
-        jSplitPane1.setRightComponent(tabPane);
+        splitter.setRightComponent(tabPane);
 
-        add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(splitter, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(splitter, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
-    DefaultTableModel model = (DefaultTableModel) fieldsTable.getModel();
-    model.addRow(new Object[]{false, "int", "lives"});
+    actor.fields.add(new Actor.Field("newField", "int"));
+    fieldsTable.updateUI();
 }//GEN-LAST:event_addFieldButtonActionPerformed
 
 private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
-    DefaultTableModel model = (DefaultTableModel) fieldsTable.getModel();
     for (int row : fieldsTable.getSelectedRows()) {
-        model.removeRow(row);
+        actor.fields.remove(row);
     }
+    fieldsTable.updateUI();
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
+private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
+Event e = new Event();
+    e.type = eventList.getSelectedValue().toString();
+    actor.events.add(e);
+    addTabForEvent(e);
+    eventList.setSelectedIndex(-1);
+    newEventButton.setEnabled(false);
+}//GEN-LAST:event_newEventButtonActionPerformed
+
 private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
-    if (actor != null && eventList.getSelectedIndex() != -1) {
+if (actor != null && eventList.getSelectedIndex() != -1) {
         for (Event e : actor.events) {
             if (e.type.equals(eventList.getSelectedValue().toString())) {
                 newEventButton.setEnabled(false);
@@ -348,30 +414,23 @@ private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
     }
 }//GEN-LAST:event_eventListValueChanged
 
-private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
-    Event e = new Event();
-    e.type = eventList.getSelectedValue().toString();
-    actor.events.add(e);
-    addTabForEvent(e);
-    eventList.setSelectedIndex(-1);
-    newEventButton.setEnabled(false);
-}//GEN-LAST:event_newEventButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFieldButton;
     private javax.swing.JButton deleteEventButton;
+    private javax.swing.JTextPane descriptionTextPane;
     private javax.swing.JList eventList;
+    private javax.swing.JPanel eventsTab;
+    private javax.swing.JPanel fieldsTab;
     private javax.swing.JTable fieldsTable;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton newEventButton;
     private javax.swing.JButton removeFieldButton;
+    private javax.swing.JSplitPane splitter;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables
-
 }
