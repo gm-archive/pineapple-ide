@@ -96,14 +96,17 @@ public class TextEditor extends DocumentPane {
         }
         editor.getDocument().addDocumentListener(new DocumentListener() {
 
+            @Override
             public void insertUpdate(DocumentEvent evt) {
                 setModified(true);
             }
 
+            @Override
             public void removeUpdate(DocumentEvent evt) {
                 setModified(true);
             }
 
+            @Override
             public void changedUpdate(DocumentEvent evt) {
                 setModified(true);
             }
@@ -146,6 +149,7 @@ public class TextEditor extends DocumentPane {
         undoItem.setVisible(true);
         undoItem.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 undo.undo();
             }
@@ -158,6 +162,7 @@ public class TextEditor extends DocumentPane {
         redoItem.setVisible(true);
         redoItem.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 undo.redo();
             }
@@ -172,6 +177,7 @@ public class TextEditor extends DocumentPane {
         cut.setVisible(true);
         cut.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 editor.cut();
             }
@@ -182,6 +188,7 @@ public class TextEditor extends DocumentPane {
         copy.setVisible(true);
         copy.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 editor.copy();
             }
@@ -192,6 +199,7 @@ public class TextEditor extends DocumentPane {
         paste.setVisible(true);
         paste.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 editor.paste();
             }
@@ -202,6 +210,7 @@ public class TextEditor extends DocumentPane {
         selall.setVisible(true);
         selall.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 editor.selectAll();
             }

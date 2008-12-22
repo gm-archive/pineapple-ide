@@ -363,7 +363,7 @@ public class Actor {
                 if (version == null) {
                     System.err.println("FATAL ERROR: No actor version.");
                     parsing = false;
-                } else if (Double.valueOf(version) != Double.valueOf(VERSION)) {
+                } else if (!Double.valueOf(version).equals(Double.valueOf(VERSION))) {
                     System.err.println("FATAL ERROR: Invalid actor version: " + version + ", current: " + VERSION);
                     parsing = false;
                 } else {

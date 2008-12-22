@@ -100,7 +100,7 @@ public abstract class DocumentPane extends JPanel {
     /**
      * @return Whether or not the file was modified.
      */
-    public boolean isModified() {
+    public final boolean isModified() {
         return modified;
     }
 

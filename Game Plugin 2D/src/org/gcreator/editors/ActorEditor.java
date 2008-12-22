@@ -68,6 +68,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         for (Event e : actor.events) {
             this.addTabForEvent(e);
         }
+        this.setModified(true);
     }
 
     /**
@@ -89,6 +90,14 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
             Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
         return saved;
+    }
+    
+    /**
+     * Saves the file
+     */
+    @Override
+    public boolean saveBackend() {
+        return save();
     }
     
     /**
@@ -240,7 +249,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jScrollPane1 = new javax.swing.JScrollPane();
         fieldsTable = new javax.swing.JTable();
 
-        splitter.setDividerLocation(80);
+        splitter.setDividerLocation(0);
         splitter.setDividerSize(8);
         splitter.setResizeWeight(0.4);
         splitter.setName("Divider"); // NOI18N
@@ -250,7 +259,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,6 +291,11 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
         deleteEventButton.setText("Delete");
         deleteEventButton.setEnabled(false);
+        deleteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEventButtonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         jLabel1.setText("Description:");
@@ -300,12 +314,12 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(eventsTabLayout.createSequentialGroup()
                         .addComponent(newEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(deleteEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
                 .addContainerGap())
         );
         eventsTabLayout.setVerticalGroup(
@@ -315,12 +329,12 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                     .addGroup(eventsTabLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(newEventButton)
-                    .addComponent(deleteEventButton))
+                    .addComponent(deleteEventButton)
+                    .addComponent(newEventButton))
                 .addContainerGap())
         );
 
@@ -349,7 +363,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(220, Short.MAX_VALUE)
+                .addContainerGap(292, Short.MAX_VALUE)
                 .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeFieldButton))
@@ -389,6 +403,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
     actor.fields.add(new Actor.Field("newField", "int"));
     fieldsTable.updateUI();
+    this.setModified(true);
 }//GEN-LAST:event_addFieldButtonActionPerformed
 
 private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
@@ -396,15 +411,17 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         actor.fields.remove(row);
     }
     fieldsTable.updateUI();
+    this.setModified(true);
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
 private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
-Event e = new Event();
+    Event e = new Event();
     e.type = eventList.getSelectedValue().toString();
     actor.events.add(e);
     addTabForEvent(e);
     eventList.setSelectedIndex(-1);
     newEventButton.setEnabled(false);
+    this.setModified(true);
 }//GEN-LAST:event_newEventButtonActionPerformed
 
 private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
@@ -418,6 +435,18 @@ if (actor != null && eventList.getSelectedIndex() != -1) {
         newEventButton.setEnabled(true);
     }
 }//GEN-LAST:event_eventListValueChanged
+
+private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
+    if (eventList.getSelectedIndex() < 0) {
+        return;
+    }
+    actor.events.remove(eventList.getSelectedIndex());
+    if (eventList.getSelectedIndex() > actor.events.size()) {
+        eventList.setSelectedIndex(actor.events.size()-1);
+    }
+    eventList.updateUI();
+    this.setModified(true);
+}//GEN-LAST:event_deleteEventButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFieldButton;
