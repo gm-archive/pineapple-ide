@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import org.gcreator.actions.Action;
 import org.gcreator.actions.ActionType;
+import org.gcreator.gui.ActionRenderer;
 
 /**
  * A class that deals with data transference from action drag&drop
@@ -54,10 +55,12 @@ public class ActionTransferHandler extends TransferHandler{
     }
     
     public void exportDone(JComponent c, Transferable t, int action) {
-        if(action==MOVE){
+        if(action==MOVE&&c instanceof ActionRenderer){
             try{
+                
                 Action a = (Action) t.getTransferData(new DataFlavor(Action.class, "Action"));
-                a.parent.children.remove(a);
+                Action b = ((ActionRenderer) c).getContainerAction();
+                if(b!=null){ b.removeAction(a); }
             }
             catch(Exception e){
                 

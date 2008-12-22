@@ -54,15 +54,12 @@ public class IfActionType extends ActionType{
      * {@inheritDoc}
      */
     @Override
-    public JPanel render(Action action, Color bgColor, ActionRenderer actRender){
+    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender){
         if(action==null||action.getType()!=this){
             return null;
         }
         
-        if(action.children==null){
-            action.children = new Vector<Action>();
-        }
-        CodePanel p = new CodePanel(action, bgColor, actRender);
+        CodePanel p = new CodePanel(action, bgColor, colorIndex, actRender);
         p.setBackground(bgColor);
         
         return p;
@@ -74,7 +71,7 @@ public class IfActionType extends ActionType{
         public Action action;
         public EmbedActionRenderer ear;
         
-        public CodePanel(Action action, Color bgColor, final ActionRenderer actRender){
+        public CodePanel(Action action, Color bgColor, int colorIndex, final ActionRenderer actRender){
             setLayout(null);
             addComponentListener(new ComponentAdapter() {
                 @Override
@@ -102,11 +99,12 @@ public class IfActionType extends ActionType{
             label.setVisible(true);
             add(label);
             if(action.expanded){
-                ear = new EmbedActionRenderer(action, bgColor, actRender);
+                ear = new EmbedActionRenderer(action, actRender, colorIndex);
                 ear.setVisible(true);
                 add(ear);
                 ear.setLocation(10, 40);
                 ear.setSize(getWidth()-10, ear.getPreferredSize().height);
+                ear.updateUI();
             }
         }
         

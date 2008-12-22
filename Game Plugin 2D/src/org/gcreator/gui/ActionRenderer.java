@@ -25,94 +25,95 @@ package org.gcreator.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Vector;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import org.gcreator.actions.Action;
 
 /**
- * Renders actions
+ * A panel that renders the actions
  * @author Luís Reis
  */
 public abstract class ActionRenderer extends JPanel{
+    private static final long serialVersionUID = -3361547867564590437L;
+    private DropActionArea area;
+    
+    public static final Color[] colors = new Color[]{
+        new Color(100, 255, 100),
+        new Color(100, 100, 255),
+        new Color(255, 200, 50)
+    };
+
     public ActionRenderer(){
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent evt){
-                updateSizes();
-            }
-        });
         setDoubleBuffered(true);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        area = new DropActionArea(this);
+    }
+    
+    /*@Override
+    public void updateUI(){
+        render();
+        super.updateUI();
+    }*/
+    
+    public void render(){
+        System.out.println("Rendering " + getClass().getCanonicalName());
+        removeAll();
+        Component[] cl = getComponentList();
+        for(Component c : cl){
+            if(c!=null){
+                System.out.println("Rendering panel " + c.getClass().getCanonicalName());
+                c.setVisible(true);
+                add(c);
+            }
+        }
+        updateUI();
+    }
+    
+    public Component retrieveComponent(int n){
+        int cc = getActionCount()+1;
+        if(n>=cc){
+            throw new IndexOutOfBoundsException();
+        }
+        if(n==cc-1){
+            return area;
+        }
+        int ci = getColorFor(n);
+        return getActions().get(n).render(colors[ci], ci, this);
+    }
+    
+    public int getColorFor(int n){
+        int u = getUsedColor();
+        return n%2==0?(u==0?2:0):(u==1?2:1);
+    }
+    
+    public int getUsedColor(){
+        return 0; 
+    }
+    
+    public Component[] getComponentList(){
+        Component[] c = new Component[getActionCount()+1];
+        
+        for(int i = 0; i < c.length; i++){
+            c[i] = retrieveComponent(i);
+        }
+        
+        return c;
+    }
+    
+    public int getActionCount(){
+        Vector<Action> a = getActions();
+        if(a==null){
+            return 0;
+        }
+        return a.size();
     }
     
     public abstract Vector<Action> getActions();
     
-    public ActionRenderer getParentRenderer(){
+    public abstract void addAction(Action a);
+    
+    public Action getContainerAction(){
         return null;
-    }
-    
-    public void updateSizes(){
-        super.updateUI();
-        int w = getWidth();
-        for(Component c : getComponents()){
-            c.setSize(w, c.getHeight());
-            if(c instanceof ActionRenderer){
-                ((ActionRenderer) c).updateSizes();
-            }
-        }
-    }
-    
-    /**
-     * Gets the used action color, so that it won't be repeated
-     * @return A Color that won't be used as background of inner actions
-     */
-    public abstract Color getUsedColor();
-    
-    public static final Color LIGHT_ORANGE = new Color(255, 170, 40);
-    public static final Color LIGHT_BLUE = new Color(170, 220, 255);
-    public static final Color LIGHT_GREEN = new Color(170, 255, 170);
-    
-    public int lh = 35;
-    
-    @Override
-    public void updateUI(){
-        super.updateUI();
-        removeAll();
-        Vector<Action> actions = getActions();
-        if(actions==null){ return; }
-        setLayout(null);
-        int currenty = 0;
-        boolean bColor = false;
-        Color usedColor = getUsedColor();
-        ActionRenderer render = getParentRenderer();
-        for(Action action : actions){
-            JPanel p = action.render(
-                    bColor?
-                        (usedColor==LIGHT_ORANGE?LIGHT_GREEN:LIGHT_ORANGE)
-                        :(usedColor==LIGHT_BLUE?LIGHT_GREEN:LIGHT_BLUE),
-                        render==null?this:render);
-            p.setVisible(true);
-            int h = p.getPreferredSize().height;
-            add(p);
-            p.setSize(getWidth(), h);
-            p.setLocation(0, currenty);
-            currenty+=h;
-            bColor = !bColor;
-        }
-        DropActionArea daa = new DropActionArea(this);
-        daa.setVisible(true);
-        add(daa);
-        int h = daa.getPreferredSize().height;
-        daa.setSize(getWidth(), h);
-        daa.setLocation(0, currenty);
-        currenty+=h;
-        lh = currenty;
-    }
-    
-    @Override
-    public Dimension getPreferredSize(){
-        return new Dimension(1, lh);
     }
 }

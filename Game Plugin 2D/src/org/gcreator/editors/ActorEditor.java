@@ -26,6 +26,7 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.ParserConfigurationException;
@@ -98,6 +99,10 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         GridLayout gb = new GridLayout(0, 1);
         palettePanel.setLayout(gb);
 
+        JLabel l = new JLabel("<html><b>Actions:</b></html>");
+        l.setVisible(true);
+        palettePanel.add(l);
+        
         for (ActionType type : ActionType.actionTypes) {
             PaletteAction act = new PaletteAction(type);
             palettePanel.add(act);
@@ -245,7 +250,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 89, Short.MAX_VALUE)
+            .addGap(0, 80, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,12 +283,12 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         deleteEventButton.setText("Delete");
         deleteEventButton.setEnabled(false);
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         jLabel1.setText("Description:");
 
         descriptionTextPane.setContentType("text/html");
         descriptionTextPane.setEditable(false);
-        descriptionTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n    <p style=\"margin-top: 20\">\n      <img src=\"http://www.bobtheblueberry.com/unrelated/markov.jpg\" />\n      <br/><span style=\"font-weight: bold; font-align: center;\">Mark Overmars</span>\n    </p>\n  </body>\n</html>\n");
+        descriptionTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n\n  </body>\n</html>\n");
         jScrollPane3.setViewportView(descriptionTextPane);
 
         javax.swing.GroupLayout eventsTabLayout = new javax.swing.GroupLayout(eventsTab);
@@ -300,7 +305,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
                 .addContainerGap())
         );
         eventsTabLayout.setVerticalGroup(
@@ -310,8 +315,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                     .addGroup(eventsTabLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newEventButton)
@@ -344,7 +349,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(203, Short.MAX_VALUE)
+                .addContainerGap(220, Short.MAX_VALUE)
                 .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeFieldButton))

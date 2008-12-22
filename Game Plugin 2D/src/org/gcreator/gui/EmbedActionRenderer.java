@@ -26,35 +26,46 @@ package org.gcreator.gui;
 import java.awt.Color;
 import java.util.Vector;
 import org.gcreator.actions.Action;
+import org.gcreator.events.Event;
 
 /**
- *
+ * An embedded action renderer
  * @author Luís Reis
  */
 public class EmbedActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559862L;
-    public Action arg;
-    private Color usedColor;
-    private ActionRenderer actRender;
-
-    public EmbedActionRenderer(Action arg, Color usedColor, ActionRenderer actRender){
-        this.arg = arg;
-        this.usedColor = usedColor;
-        this.actRender = actRender;
-        updateUI();
+    private static final long serialVersionUID = 3663775814144928683L;
+    public Action a = null;
+    private ActionRenderer renderer = null;
+    private int c = 0;
+    
+    public EmbedActionRenderer(Action a, ActionRenderer parent, int usedColor){
+        this.a = a;
+        renderer = parent;
+        c = usedColor;
+        setOpaque(false);
+        render();
     }
     
     @Override
-    public ActionRenderer getParentRenderer(){
-        return actRender;
-    }
-    
-    public Color getUsedColor(){
-        return usedColor;
+    public int getUsedColor(){
+        return c;
     }
     
     public Vector<Action> getActions(){
-        if(arg==null){ return null; }
-        return arg.children;
+        if(a==null){
+            return null;
+        }
+        return a.getChildren();
+    }
+    
+    @Override
+    public Action getContainerAction(){
+        return a;
+    }
+    
+    public void addAction(Action act){
+        if(a!=null){
+            a.addAction(act);
+        }
     }
 }

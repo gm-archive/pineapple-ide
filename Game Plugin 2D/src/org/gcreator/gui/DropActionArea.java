@@ -57,8 +57,13 @@ public class DropActionArea extends JPanel {
     }
 
     @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(getWidth(), label.getPreferredSize().height + 20);
+    public Dimension getMinimumSize() {
+        Dimension d = label.getPreferredSize();
+        
+        d.width += 10;
+        d.height *= 2;
+        
+        return d;
     }
 
     class ActionDropTargetListener extends DropTargetAdapter {
@@ -78,16 +83,10 @@ public class DropActionArea extends JPanel {
                 }
                 if (event.isDataFlavorSupported(new DataFlavor(Action.class, "Action"))) {
                     event.acceptDrop(event.getDropAction());
-                    if(renderer instanceof EmbedActionRenderer){
-                        action.parent = ((EmbedActionRenderer) renderer).arg;
-                    }
-                    else{
-                        action.parent = null;
-                    }
-                    renderer.getActions().add(action);
+                    action.parent = renderer.getContainerAction();
+                    renderer.addAction(action);
                     event.dropComplete(true);
-                    renderer.updateSizes();
-                    renderer.updateUI();
+                    renderer.render();
                     return;
                 }
                 event.rejectDrop();

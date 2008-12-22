@@ -52,7 +52,7 @@ public class ActionType {
      * @param actRender The Action Renderer, for updateUI() reasons
      * @return The rendered panel, or null if an error occurred.
      */
-    public JPanel render(Action action, Color bgColor, ActionRenderer actRender){
+    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender){
         if(action.getType()!=this){
             return null;
         }

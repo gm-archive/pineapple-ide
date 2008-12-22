@@ -33,6 +33,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.gcreator.gui.ActionRenderer;
+//import org.gcreator.gui.EmbedActionRenderer;
 import org.gcreator.gui.EmbedActionRenderer;
 
 /**
@@ -54,13 +55,13 @@ public class ElseActionType extends ActionType{
      * {@inheritDoc}
      */
     @Override
-    public JPanel render(Action action, Color bgColor, ActionRenderer actRender){
+    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender){
         if(action==null||action.getType()!=this){
             return null;
         }
         
         System.out.println("Parent="+actRender.getClass());
-        CodePanel p = new CodePanel(action, bgColor, actRender);
+        CodePanel p = new CodePanel(action, bgColor, actRender, colorIndex);
         p.setBackground(bgColor);
         
         return p;
@@ -73,7 +74,7 @@ public class ElseActionType extends ActionType{
         public EmbedActionRenderer ear;
         public ActionRenderer renderer;
         
-        public CodePanel(Action action, Color bgColor, ActionRenderer actRender){
+        public CodePanel(Action action, Color bgColor, ActionRenderer actRender, int colorIndex){
             setLayout(null);
             addComponentListener(new ComponentAdapter() {
                 @Override
@@ -102,7 +103,7 @@ public class ElseActionType extends ActionType{
             label.setLocation(0, 10);
             label.setSize(getWidth(), 15);
             if(action.expanded){
-                ear = new EmbedActionRenderer(action, bgColor, actRender);
+                ear = new EmbedActionRenderer(action, actRender, colorIndex);
                 ear.setVisible(true);
                 add(ear);
                 ear.setLocation(10, 40);
@@ -115,7 +116,7 @@ public class ElseActionType extends ActionType{
             Dimension d = new Dimension(label.getPreferredSize());
             d.height += 20;
             if(action.expanded){
-                d.height += ear.getPreferredSize().height + 10;
+                //d.height += ear.getPreferredSize().height + 10;
             }
             d.width = getWidth();
             return d;

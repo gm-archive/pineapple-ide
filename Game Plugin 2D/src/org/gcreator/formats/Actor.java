@@ -321,7 +321,7 @@ public class Actor {
     }
 
     private void saveAction(Action a, Element e, Document doc) {
-        for (Action child : a.children) {
+        for (Action child : a.getChildren()) {
             Element action = doc.createElement("action");
             action.setAttribute("type", child.getType().save(child));
             e.appendChild(action);
@@ -435,7 +435,7 @@ public class Actor {
                 } else {
                     Action a = new Action(type);
                     a.parent = curAction;
-                    curAction.children.add(a);
+                    curAction.addAction(a);
                     curAction = a;
                 }
             }

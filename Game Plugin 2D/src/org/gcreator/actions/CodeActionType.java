@@ -52,7 +52,7 @@ public class CodeActionType extends ActionType {
      * {@inheritDoc}
      */
     @Override
-    public JPanel render(Action action, Color bgColor, ActionRenderer actRender) {
+    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender) {
         if (action == null || action.getType() != this) {
             return null;
         }

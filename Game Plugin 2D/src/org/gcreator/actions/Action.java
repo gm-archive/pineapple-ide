@@ -36,7 +36,7 @@ import org.gcreator.gui.ActionRenderer;
 public final class Action {
     private ActionType type = null;
     public Object args = null;
-    public Vector<Action> children = new Vector<Action>();
+    private Vector<Action> children = new Vector<Action>();
     public boolean expanded = true;
     public Action parent = null;
     
@@ -46,6 +46,30 @@ public final class Action {
      */
     public Action(ActionType type){
         this.type = type;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Vector<Action> getChildren(){
+        return (Vector<Action>) children.clone();
+    }
+    
+    /**
+     * Do not use unless you really need to
+     * @param children The new action vector
+     * @see #addAction(Action)
+     */
+    public void setChildren(Vector<Action> children){
+        this.children = children;
+    }
+    
+    public void addAction(Action action){
+        System.out.println("addAction: " + action.type);
+        children.add(action);
+    }
+    
+    public void removeAction(Action action){
+        System.out.println("removeAction: " + action.type);
+        children.remove(action);
     }
     
     /**
@@ -62,9 +86,9 @@ public final class Action {
      * @param actRender The action renderer, for updateUI() purposes
      * @return The rendered panel, or null if an error occurred.
      */
-    public JPanel render(Color bgColor, ActionRenderer actRender){
+    public JPanel render(Color bgColor, int colorIndex, ActionRenderer actRender){
         if(type==null){ return null; }
-        return type.render(this, bgColor, actRender);
+        return type.render(this, bgColor, colorIndex, actRender);
     }
     
     @Override

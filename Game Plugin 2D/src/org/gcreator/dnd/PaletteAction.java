@@ -57,7 +57,6 @@ public class PaletteAction extends JLabel{
     @Override
     public Dimension getMaximumSize(){
         Dimension d = new Dimension(getParent().getWidth(), super.getPreferredSize().height);
-        System.out.println("pa w:" + d);
         return d;
     }
 }

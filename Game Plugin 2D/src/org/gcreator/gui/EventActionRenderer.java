@@ -23,26 +23,21 @@ THE SOFTWARE.
 
 package org.gcreator.gui;
 
-import java.awt.Color;
 import java.util.Vector;
 import org.gcreator.actions.Action;
 import org.gcreator.events.Event;
 
 /**
- *
+ * An event action renderer
  * @author Luís Reis
  */
 public class EventActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = -2837866695562559863L;
-    
-    private Event e = null;
+    private static final long serialVersionUID = 3663775814144928683L;
+    public Event e = null;
     
     public EventActionRenderer(Event e){
         this.e = e;
-    }
-    
-    public Color getUsedColor(){
-        return LIGHT_GREEN;
+        updateUI();
     }
     
     public Vector<Action> getActions(){
@@ -50,5 +45,11 @@ public class EventActionRenderer extends ActionRenderer{
             return null;
         }
         return e.actions;
+    }
+    
+    public void addAction(Action a){
+        if(e!=null){
+            e.actions.add(a);
+        }
     }
 }
