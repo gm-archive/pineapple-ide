@@ -8,23 +8,14 @@ import pineapple.std.Console;
 */
 class X extends Y
 {
-    public static int doIt;
+    public static string x;
 
     //Constructors are referenced as "this" rather than classname
     //Base calls are handled just like in C++, but the super keyword
     //Is used, just like in Java.
     public this() : super(15)
     {
-        X a = new X();
-        for(int i = 0; i<10 ; i+=1){
-        }
+        x = "I said \"Hello World\"\n";
+        x += "\\But you didn't reply...";
     }
-
-    public static int sum(int x, string y){
-        return x+y;
-    }
-
-    public static int sum(int x, int y){
-        return this.sum(x,0)+y;
-    }
-}; //This last ; is optional
+}

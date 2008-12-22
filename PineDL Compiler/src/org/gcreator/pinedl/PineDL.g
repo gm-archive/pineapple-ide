@@ -224,7 +224,7 @@ reference returns [Reference r = null]
 	(LARRAY e=expression {r = new ArrayReference(r, e);} RARRAY)*;
 
 constant returns [Constant c = null]
-	: (i=intconst {c=i;})|(d=doubleconst {c=d;})|(b=boolconst {c=b;})|(s=stringconst {c=s;});
+	: (i=intconst {c=i;})|(d=doubleconst {c=d;})|(b=boolconst {c=b;})|(s=stringconst {c=s;})|(n=nullconst {c=n;});
 
 //Multiple operations, divided by priority levels:
 
@@ -347,7 +347,10 @@ INTCONST_PRIVATE
 	:	('-'?
 		(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
 		);
-		
+
+nullconst returns [NullConstant n = new NullConstant()]
+	: 'null';
+
 boolconst returns [BooleanConstant b = new BooleanConstant(false)]
 	:	('true' {b.value = true;})|'false';
 

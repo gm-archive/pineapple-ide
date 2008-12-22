@@ -67,6 +67,16 @@ public class StringConstant extends Constant{
     
     @Override
     public String toString(){
-        return ""+value;
+        try{
+            return "\""+
+                value
+                .replaceAll("\\\\", "\\\\\\\\")
+                .replaceAll("\"", "\\\\\"")
+                .replaceAll("\n", "\\\\n")
+                +"\"";
+        }
+        catch(Exception e){
+            return "\"\"";
+        }
     }
 }
