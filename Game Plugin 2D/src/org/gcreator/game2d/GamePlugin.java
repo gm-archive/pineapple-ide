@@ -22,8 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.game2d;
 
-import java.awt.BorderLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.gcreator.editors.ActorEditor;
 import org.gcreator.editors.SceneEditor;
@@ -31,6 +29,7 @@ import org.gcreator.editors.TextEditor;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.PineappleGUI;
 import org.gcreator.managers.EventManager;
+import org.gcreator.managers.SettingsManager;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.plugins.DefaultEventTypes;
 import org.gcreator.plugins.Event;
@@ -85,11 +84,10 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      * {@inheritDoc}
      */
     public boolean accept(String format) {
-        if (format.equals("actor")) {
-            return true;
-        }
-        if (format.equals("scene")) {
-            return true;
+        for (String f : formats) {
+            if (format.equalsIgnoreCase(f)) {
+                return true;
+            }
         }
         return false;
     }
@@ -118,10 +116,11 @@ public class GamePlugin extends Plugin implements FormatSupporter {
 
         return new TextEditor(f);
     }
+    
     /**
-     * {@inheritDoc}
+     * An array of the formats supported by the 2D Game Plug-in.
      */
-    public static String[] formats = new String[]{
+    public static final String[] formats = new String[] {
         "actor",
         "scene"
     };
@@ -156,12 +155,17 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             PineappleCore.addProjectType(new GameProjectType());
         } else if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
             PineappleCore.addFormatSupporter(this);
+            /* Set the default FormatSupporters for certain types. */
+            String base = "files.formats.formatsupporter.remember.";
+            String fs   = this.getClass().getCanonicalName();
+            for (String format : formats) {
+                SettingsManager.set(base + format, fs);
+            }
         }
     }
 
     /**
-     * 
-     * Initializes the plugin(Registers the event handlers)
+     * Initializes the plugin and registers the event handlers.
      */
     @Override
     public void initialize() {
@@ -175,7 +179,6 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         PineappleCore.fileTypeNames.put("scene", "Game Scene");
         PineappleCore.fileTypeDescriptions.put("scene",
                 "Game space units. Containers of actors.");
-        EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
     }
 
     /**

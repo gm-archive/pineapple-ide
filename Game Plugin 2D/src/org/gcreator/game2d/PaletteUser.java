@@ -27,14 +27,17 @@ import javax.swing.JPanel;
 import org.noos.xing.mydoggy.ToolWindow;
 
 /**
- * A DocumentPane is a PaletteUser if it uses the palette
+ * A DocumentPane is a PaletteUser if it uses the palette.
+ * 
  * @author Luís Reis
  */
 public interface PaletteUser {
     /**
-     * Creates the palette
+     * Creates the palette.
+     * 
      * @param palette The palette window
      * @param palettePanel The palette panel
+     * 
      * @return True if the palette should be displayed, false otherwise
      */
     public boolean doPalette(ToolWindow palette, JPanel palettePanel);

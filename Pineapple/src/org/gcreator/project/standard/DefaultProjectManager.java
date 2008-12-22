@@ -453,6 +453,7 @@ public class DefaultProjectManager implements ProjectManager {
             r.setContentHandler(this);
             InputStream in = new BufferedInputStream(new FileInputStream(f));
             r.parse(new InputSource(in));
+            in.close();
         }
 
         /**
