@@ -57,6 +57,15 @@ public class ActionType {
     }
     
     /**
+     * Renders the action's properties
+     * @param action The action to render
+     * @param panel The panel to output to
+     */
+    public void makeActionPanel(Action action, JPanel panel){
+        panel.removeAll();
+    }
+    
+    /**
      * Saves the arguments
      * @param action The action to save
      * @return The string version of the file

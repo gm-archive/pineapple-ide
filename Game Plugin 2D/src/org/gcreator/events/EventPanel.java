@@ -9,6 +9,7 @@ package org.gcreator.events;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.TransferHandler;
+import org.gcreator.actions.Action;
 import org.gcreator.dnd.ActionTransferHandler;
 import org.gcreator.gui.ActionCellRenderer;
 import org.gcreator.gui.ActionListModel;
@@ -64,11 +65,27 @@ public class EventPanel extends javax.swing.JPanel {
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.setDragEnabled(true);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         add(jScrollPane1);
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
+
+private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+    Object o = jList1.getSelectedValue();
+    if(o==null){
+        jPanel1.removeAll();
+    }
+    else{
+        ((Action) o).getType().makeActionPanel((Action) o, jPanel1);
+        jPanel1.updateUI();
+    }
+}//GEN-LAST:event_jList1ValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;

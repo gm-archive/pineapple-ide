@@ -22,6 +22,13 @@ THE SOFTWARE.
  */
 package org.gcreator.actions;
 
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 /**
  * An Action Type representing code
  * @author Luís Reis
@@ -40,5 +47,33 @@ public class CodeActionType extends ActionType {
     @Override
     public String getName() {
         return "Code";
+    }
+    
+    @Override
+    public void makeActionPanel(final Action a, JPanel panel){
+        panel.removeAll();
+        panel.setLayout(new BorderLayout());
+        
+        final RSyntaxTextArea editor = new RSyntaxTextArea();
+        editor.restoreDefaultSyntaxHighlightingColorScheme();
+        editor.setText(a.args==null?"":a.args.toString());
+        editor.getDocument().addDocumentListener(new DocumentListener(){
+            public void insertUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void changedUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void removeUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void update(DocumentEvent evt){
+                a.args = editor.getText();
+            }
+        });
+        RTextScrollPane scroll = new RTextScrollPane(panel.getWidth(),
+                panel.getHeight(), editor, true);
+        panel.add(scroll, BorderLayout.CENTER);
+        editor.setSyntaxEditingStyle(RSyntaxTextArea.PINEDL_SYNTAX_STYLE);
     }
 }
