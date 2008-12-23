@@ -25,11 +25,14 @@ package org.gcreator.dnd;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.util.Vector;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.TransferHandler;
 import org.gcreator.actions.Action;
 import org.gcreator.actions.ActionType;
-import org.gcreator.gui.ActionRenderer;
+import org.gcreator.events.Event;
+import org.gcreator.gui.ActionListModel;
 
 /**
  * A class that deals with data transference from action drag&drop
@@ -38,6 +41,7 @@ import org.gcreator.gui.ActionRenderer;
  */
 public class ActionTransferHandler extends TransferHandler{
     private static final long serialVersionUID = 8941610639649161438L;
+    public static DataFlavor actionFlavor = new DataFlavor(Action.class, "Action");
 
     @Override
     public int getSourceActions(JComponent c) {
@@ -55,16 +59,70 @@ public class ActionTransferHandler extends TransferHandler{
     }
     
     public void exportDone(JComponent c, Transferable t, int action) {
-        if(action==MOVE&&c instanceof ActionRenderer){
+        if(action==MOVE&&c instanceof JList){
             try{
                 
-                Action a = (Action) t.getTransferData(new DataFlavor(Action.class, "Action"));
-                Action b = ((ActionRenderer) c).getContainerAction();
-                if(b!=null){ b.removeAction(a); }
+                JList list = (JList) c;
+                Action a = (Action) t.getTransferData(actionFlavor);
+                Action b = (Action) list.getSelectedValue();
+                if(b!=null){
+                    Event e = ((ActionListModel) list.getModel()).getEvent();
+                    e.actions.remove(b);
+                    e.actions.trimToSize();
+                    list.updateUI();
+                }
             }
             catch(Exception e){
                 
             }
         }
     }
+    
+    @Override
+    public boolean canImport(TransferHandler.TransferSupport ts){
+        if(!(ts.getComponent() instanceof JList)){
+            return false;
+        }
+        for(DataFlavor df : ts.getDataFlavors()){
+            if(df.getRepresentationClass()==Action.class){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean importData(TransferHandler.TransferSupport ts){
+        if(!(ts.getComponent() instanceof JList)){
+            return false;
+        }
+        for(DataFlavor df : ts.getDataFlavors()){
+            if(df.getRepresentationClass()==Action.class){
+                try{
+                    JList list = (JList) ts.getComponent();
+                    ActionListModel alm = (ActionListModel) list.getModel();
+                    int index = list.getDropLocation().getIndex();//ts.getDropLocation().getDropPoint());
+                    Vector<Action> actions = alm.getEvent().actions;
+                    if(actions.size()<=index||index==-1){
+                        actions.add((Action) ts.getTransferable().getTransferData(actionFlavor));
+                    }
+                    else{
+                        actions.ensureCapacity(index+1);
+                        actions.insertElementAt(
+                            (Action) ts.getTransferable().getTransferData(actionFlavor), index);
+                    }
+                    list.updateUI();
+                    System.out.println("Lets return true");
+                    return true;
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
 }

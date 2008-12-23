@@ -23,19 +23,6 @@ THE SOFTWARE.
 
 package org.gcreator.actions;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import org.gcreator.gui.ActionRenderer;
-//import org.gcreator.gui.EmbedActionRenderer;
-import org.gcreator.gui.EmbedActionRenderer;
-
 /**
  * An Action Type representing code
  * @author Luís Reis
@@ -49,78 +36,6 @@ public class ElseActionType extends ActionType{
     
     protected ElseActionType(){
         
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender){
-        if(action==null||action.getType()!=this){
-            return null;
-        }
-        
-        System.out.println("Parent="+actRender.getClass());
-        CodePanel p = new CodePanel(action, bgColor, actRender, colorIndex);
-        p.setBackground(bgColor);
-        
-        return p;
-    }
-    
-    private class CodePanel extends JPanel{
-        private static final long serialVersionUID = 1594450534973488561L;
-        public JLabel label;
-        public Action action;
-        public EmbedActionRenderer ear;
-        public ActionRenderer renderer;
-        
-        public CodePanel(Action action, Color bgColor, ActionRenderer actRender, int colorIndex){
-            setLayout(null);
-            addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e){
-                    label.setSize(getWidth(), 15);
-                    if(CodePanel.this.action.expanded){
-                        ear.setSize(getWidth()-10, ear.getPreferredSize().height);
-                    }
-                }
-            });
-            renderer = actRender;
-            this.action = action;
-            label = new JLabel("["+(action.expanded?"-":"+")+"] Else");
-            label.setVisible(true);
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent evt){
-                    CodePanel.this.action.expanded = !CodePanel.this.action.expanded;
-                    label.setText("["+(CodePanel.this.action.expanded?"-":"+")+"] Else");
-                    System.out.println("Time to update:");
-                    renderer.updateUI();
-                    System.out.println("Finished updating");
-                }
-            });
-            add(label);
-            label.setLocation(0, 10);
-            label.setSize(getWidth(), 15);
-            if(action.expanded){
-                ear = new EmbedActionRenderer(action, actRender, colorIndex);
-                ear.setVisible(true);
-                add(ear);
-                ear.setLocation(10, 40);
-                ear.setSize(getWidth()-10, ear.getPreferredSize().height);
-            }
-        }
-        
-        @Override
-        public Dimension getPreferredSize(){
-            Dimension d = new Dimension(label.getPreferredSize());
-            d.height += 20;
-            if(action.expanded){
-                //d.height += ear.getPreferredSize().height + 10;
-            }
-            d.width = getWidth();
-            return d;
-        }
     }
     
     @Override

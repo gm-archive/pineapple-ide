@@ -23,33 +23,34 @@ THE SOFTWARE.
 
 package org.gcreator.gui;
 
-import java.util.Vector;
-import org.gcreator.actions.Action;
+import javax.swing.AbstractListModel;
 import org.gcreator.events.Event;
 
 /**
- * An event action renderer
+ * Gets the actions of an event
  * @author Luís Reis
  */
-public class EventActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = 3663775814144928683L;
-    public Event e = null;
+public class ActionListModel extends AbstractListModel{
+    private static final long serialVersionUID = -8127125127364832011L;
+    private Event e = null;
     
-    public EventActionRenderer(Event e){
+    /**
+     * Creates a new ActionListModel instance.
+     * @param e The event
+     */
+    public ActionListModel(Event e){
         this.e = e;
-        updateUI();
     }
     
-    public Vector<Action> getActions(){
-        if(e==null){
-            return null;
-        }
-        return e.actions;
+    public Object getElementAt(int index){
+        return e.actions.get(index);
     }
     
-    public void addAction(Action a){
-        if(e!=null){
-            e.actions.add(a);
-        }
+    public int getSize(){
+        return e.actions.size();
+    }
+    
+    public Event getEvent(){
+        return e;
     }
 }

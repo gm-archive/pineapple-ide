@@ -48,6 +48,6 @@ public class ActionTransferable implements Transferable{
     }
     
     public DataFlavor[] getTransferDataFlavors(){
-        return new DataFlavor[]{ new DataFlavor(Action.class, "Action") };
+        return new DataFlavor[]{ ActionTransferHandler.actionFlavor };
     }
 }

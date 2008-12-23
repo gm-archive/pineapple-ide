@@ -299,7 +299,6 @@ public class Actor {
             for (Action a : e.actions) {
                 Element action = doc.createElement("action");
                 action.setAttribute("type", a.getType().save(a));
-                saveAction(a, action, doc);
             }
             events.appendChild(event);
         }
@@ -318,15 +317,6 @@ public class Actor {
         xformer = TransformerFactory.newInstance().newTransformer();
         xformer.transform(source, result);
         out.close();
-    }
-
-    private void saveAction(Action a, Element e, Document doc) {
-        for (Action child : a.getChildren()) {
-            Element action = doc.createElement("action");
-            action.setAttribute("type", child.getType().save(child));
-            e.appendChild(action);
-            saveAction(child, action, doc);
-        }
     }
     //</editor-fold>
     
@@ -434,8 +424,8 @@ public class Actor {
                     curAction = baseAction;
                 } else {
                     Action a = new Action(type);
-                    a.parent = curAction;
-                    curAction.addAction(a);
+                    //a.parent = curAction;
+                    //curAction.addAction(a);
                     curAction = a;
                 }
             }
@@ -459,12 +449,12 @@ public class Actor {
                 actor.events.add(curEvent);
                 curEvent = null;
             } else if (parsingAction && localName.equalsIgnoreCase("action")) {
-                if (curAction.parent == null || curAction.parent == baseAction) {
+                //if (curAction.parent == null || curAction.parent == baseAction) {
                     baseAction = null;
                     curAction = null;
                     parsingAction = false;
-                }
-                curAction = curAction.parent;
+                //}
+                //curAction = curAction.parent;
             }
         }
 

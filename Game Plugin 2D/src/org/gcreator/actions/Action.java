@@ -26,7 +26,6 @@ package org.gcreator.actions;
 import java.awt.Color;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.gcreator.gui.ActionRenderer;
 
 /**
  * The behavior unit of actors.
@@ -36,9 +35,7 @@ import org.gcreator.gui.ActionRenderer;
 public final class Action {
     private ActionType type = null;
     public Object args = null;
-    private Vector<Action> children = new Vector<Action>();
     public boolean expanded = true;
-    public Action parent = null;
     
     /**
      * Creates an action with a given type
@@ -46,30 +43,6 @@ public final class Action {
      */
     public Action(ActionType type){
         this.type = type;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Vector<Action> getChildren(){
-        return (Vector<Action>) children.clone();
-    }
-    
-    /**
-     * Do not use unless you really need to
-     * @param children The new action vector
-     * @see #addAction(Action)
-     */
-    public void setChildren(Vector<Action> children){
-        this.children = children;
-    }
-    
-    public void addAction(Action action){
-        System.out.println("addAction: " + action.type);
-        children.add(action);
-    }
-    
-    public void removeAction(Action action){
-        System.out.println("removeAction: " + action.type);
-        children.remove(action);
     }
     
     /**
@@ -80,25 +53,12 @@ public final class Action {
         return type;
     }
     
-    /**
-     * Renders the action
-     * @param bgColor The background color of the panel
-     * @param actRender The action renderer, for updateUI() purposes
-     * @return The rendered panel, or null if an error occurred.
-     */
-    public JPanel render(Color bgColor, int colorIndex, ActionRenderer actRender){
-        if(type==null){ return null; }
-        return type.render(this, bgColor, colorIndex, actRender);
-    }
-    
     @Override
     @SuppressWarnings("unchecked")
     public Object clone(){
         Action a = new Action(type);
         a.args = args;
-        a.children = (Vector<Action>) children.clone();
         a.expanded = expanded;
-        a.parent = parent;
         return a;
     }
 }

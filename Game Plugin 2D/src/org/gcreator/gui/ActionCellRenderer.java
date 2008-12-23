@@ -23,49 +23,30 @@ THE SOFTWARE.
 
 package org.gcreator.gui;
 
-import java.awt.Color;
-import java.util.Vector;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import org.gcreator.actions.Action;
-import org.gcreator.events.Event;
 
 /**
- * An embedded action renderer
+ * Renders an action in a JList
  * @author Luís Reis
  */
-public class EmbedActionRenderer extends ActionRenderer{
-    private static final long serialVersionUID = 3663775814144928683L;
-    public Action a = null;
-    private ActionRenderer renderer = null;
-    private int c = 0;
-    
-    public EmbedActionRenderer(Action a, ActionRenderer parent, int usedColor){
-        this.a = a;
-        renderer = parent;
-        c = usedColor;
-        setOpaque(false);
-        render();
-    }
-    
+public class ActionCellRenderer extends DefaultListCellRenderer{
+    private static final long serialVersionUID = 4882722181342781430L;
+
     @Override
-    public int getUsedColor(){
-        return c;
-    }
-    
-    public Vector<Action> getActions(){
-        if(a==null){
-            return null;
+    public Component getListCellRendererComponent(JList list,
+            Object value, int index, boolean isSelected, boolean cellHasFocus){
+        
+        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        
+        if(value instanceof Action){
+            Action a = (Action) value;
+            
+            setText(a.getType().getText(a));
         }
-        return a.getChildren();
-    }
-    
-    @Override
-    public Action getContainerAction(){
-        return a;
-    }
-    
-    public void addAction(Action act){
-        if(a!=null){
-            a.addAction(act);
-        }
+        
+        return this;
     }
 }

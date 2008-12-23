@@ -6,7 +6,12 @@
 
 package org.gcreator.events;
 
-import org.gcreator.gui.EventActionRenderer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.TransferHandler;
+import org.gcreator.dnd.ActionTransferHandler;
+import org.gcreator.gui.ActionCellRenderer;
+import org.gcreator.gui.ActionListModel;
 
 /**
  *
@@ -25,10 +30,21 @@ public class EventPanel extends javax.swing.JPanel {
     public EventPanel(Event e) {
         this.e = e;
         initComponents();
-        render = new EventActionRenderer(e);
-        render.setVisible(true);
-        jScrollPane1.setViewportView(render);
-        render.render();
+        jList1.setModel(new ActionListModel(e));
+        jList1.setCellRenderer(new ActionCellRenderer());
+        jList1.setTransferHandler(new ActionTransferHandler());
+        jList1.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent evt){
+                TransferHandler th = jList1.getTransferHandler();
+                if(th==null){
+                    System.out.println("th is null");
+                    return;
+                }
+                jList1.getTransferHandler().exportAsDrag(
+                        jList1, evt, TransferHandler.COPY);
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -41,14 +57,22 @@ public class EventPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jPanel1 = new javax.swing.JPanel();
 
-        setLayout(new java.awt.BorderLayout());
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        setLayout(new java.awt.GridLayout(1, 0));
+
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setDragEnabled(true);
+        jScrollPane1.setViewportView(jList1);
+
+        add(jScrollPane1);
+        add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    public EventActionRenderer render = null;
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList jList1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 

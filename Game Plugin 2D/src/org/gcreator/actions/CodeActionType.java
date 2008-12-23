@@ -22,17 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.actions;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
-import org.gcreator.gui.ActionRenderer;
-
 /**
  * An Action Type representing code
  * @author Luís Reis
@@ -46,95 +35,6 @@ public class CodeActionType extends ActionType {
     public static final CodeActionType ACTIONTYPE_CODE = new CodeActionType();
 
     protected CodeActionType() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender) {
-        if (action == null || action.getType() != this) {
-            return null;
-        }
-
-        CodePanel p = new CodePanel(action, actRender);
-        p.setBackground(bgColor);
-
-        return p;
-    }
-
-    private class CodePanel extends JPanel {
-
-        private static final long serialVersionUID = 1594450534973488561L;
-        public JLabel label;
-        public Action action;
-        RSyntaxTextArea editor = null;
-        RTextScrollPane scroll = null;
-
-        public CodePanel(Action action, final ActionRenderer actRender) {
-            setLayout(new BorderLayout());
-            this.action = action;
-            //label = new JLabel(action.args.toString());
-            //label.setVisible(true);
-            //label.addMouseListener(new MouseAdapter() {
-
-            //    @Override
-            //    public void mouseClicked(MouseEvent e) {
-            editor = new RSyntaxTextArea();
-            editor.restoreDefaultSyntaxHighlightingColorScheme();
-            editor.setSyntaxEditingStyle(RSyntaxTextArea.PINEDL_SYNTAX_STYLE);
-            scroll =
-                    new RTextScrollPane(getWidth(),
-                    getHeight(), editor, false);
-            scroll.setVisible(true);
-            editor.setVisible(true);
-            editor.setFocusable(true);
-            editor.setText(CodePanel.this.action.args == null ? "" : CodePanel.this.action.args.toString());
-            scroll.setFocusable(false);
-            add(scroll, BorderLayout.CENTER);
-            editor.getDocument().addDocumentListener(new DocumentListener() {
-
-                public void insertUpdate(DocumentEvent e) {
-                    update(e);
-                }
-
-                public void removeUpdate(DocumentEvent e) {
-                    update(e);
-                }
-
-                public void changedUpdate(DocumentEvent e) {
-                    update(e);
-                }
-
-                public void update(DocumentEvent e) {
-                    CodePanel.this.action.args = editor.getText();
-                }
-            });
-        //        label.setVisible(false);
-                    /*editor.addKeyListener(new KeyAdapter() {
-        
-        @Override
-        public void keyPressed(KeyEvent e) {
-        if(e.getKeyChar()=='\n'){
-        CodePanel.this.action.args = editor.getText();
-        label.setText(CodePanel.this.action.args.toString());
-        CodePanel.this.remove(scroll);
-        label.setVisible(true);
-        }
-        }
-        });*/
-        //    }
-        //});
-        //add(label, BorderLayout.CENTER);
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension d = new Dimension();
-            d.height = 60;
-            d.width = getWidth();
-            return d;
-        }
     }
 
     @Override

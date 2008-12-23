@@ -26,7 +26,6 @@ package org.gcreator.actions;
 import java.awt.Color;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.gcreator.gui.ActionRenderer;
 
 /**
  * 
@@ -48,17 +47,13 @@ public class ActionType {
     /**
      * Renders the action
      * @param action The action to render
-     * @param bgColor The background color of the panel
-     * @param actRender The Action Renderer, for updateUI() reasons
-     * @return The rendered panel, or null if an error occurred.
+     * @return The text to 
      */
-    public JPanel render(Action action, Color bgColor, int colorIndex, ActionRenderer actRender){
+    public String getText(Action action){
         if(action.getType()!=this){
             return null;
         }
-        JPanel p = new JPanel();
-        p.setBackground(bgColor);
-        return p;
+        return getName();
     }
     
     /**
