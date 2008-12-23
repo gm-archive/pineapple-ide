@@ -39,6 +39,7 @@ import org.gcreator.events.EventPanel;
 import org.gcreator.formats.Actor;
 import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.DocumentPane;
+import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
 
@@ -69,6 +70,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
             this.addTabForEvent(e);
         }
         this.setModified(true);
+        resourcePicker1.setResourceValidator(new ImageValidator());
     }
 
     /**
@@ -248,6 +250,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         removeFieldButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         fieldsTable = new javax.swing.JTable();
+        resourcePicker1 = new org.gcreator.gui.ResourcePicker();
 
         splitter.setDividerLocation(0);
         splitter.setDividerSize(8);
@@ -319,7 +322,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
                 .addContainerGap())
         );
         eventsTabLayout.setVerticalGroup(
@@ -329,8 +332,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                     .addGroup(eventsTabLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteEventButton)
@@ -363,7 +366,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(292, Short.MAX_VALUE)
+                .addContainerGap(210, Short.MAX_VALUE)
                 .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeFieldButton))
@@ -387,6 +390,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         tabPane.addTab("Fields", fieldsTab);
 
         splitter.setRightComponent(tabPane);
+        splitter.setLeftComponent(resourcePicker1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -464,6 +468,7 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton newEventButton;
     private javax.swing.JButton removeFieldButton;
+    private org.gcreator.gui.ResourcePicker resourcePicker1;
     private javax.swing.JSplitPane splitter;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables

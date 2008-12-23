@@ -33,8 +33,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import org.gcreator.gui.validators.UniversalValidator;
 import org.gcreator.pineapple.PineappleCore;
-import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;
 import org.gcreator.project.ProjectFolder;
@@ -51,12 +51,7 @@ public class ResourcePicker extends JPanel {
     private BasicFile selectedFile = null;
     private Vector<ActionListener> listeners = new Vector<ActionListener>();
     private static int curId = 1;
-    private ResourceValidator validator = new ResourceValidator() {
-
-        public boolean isValid(ProjectFile file) {
-            return true;
-        }
-    };
+    private ResourceValidator validator = new UniversalValidator();
 
     public ResourcePicker() {
         label = new JLabel();
@@ -107,7 +102,12 @@ public class ResourcePicker extends JPanel {
                 listener.actionPerformed(e);
             }
         }
-        label.setText(file.getName());
+        if(file==null){
+            label.setText("<none>");
+        }
+        else{
+            label.setText(file.getName());
+        }
     }
 
     /**
