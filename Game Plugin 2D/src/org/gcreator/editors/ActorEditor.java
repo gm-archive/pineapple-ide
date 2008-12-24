@@ -26,6 +26,7 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -41,6 +42,7 @@ import org.gcreator.events.EventPanel;
 import org.gcreator.formats.Actor;
 import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.DocumentPane;
+import org.gcreator.gui.EventCellRenderer;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -80,6 +82,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 actor.z = (Float) jSpinner1.getValue();
             }
         });
+        eventList.setCellRenderer(new EventCellRenderer());
     }
 
     /**
@@ -134,7 +137,20 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
     private void addTabForEvent(Event e) {
         EventPanel p = new EventPanel(e);
-        tabPane.insertTab(e.type, null, p, "", tabPane.getComponentCount() - 2);
+        ImageIcon i = null;
+        if(e.type.equals("Create Event")){
+            i = EventCellRenderer.CREATE_IMAGE;
+        }
+        else if(e.type.equals("Destroy Event")){
+            i = EventCellRenderer.DESTROY_IMAGE;
+        }
+        else if(e.type.equals("Draw Event")){
+            i = EventCellRenderer.DRAW_IMAGE;
+        }
+        else if(e.type.equals("Update Event")){
+            i = EventCellRenderer.UPDATE_IMAGE;
+        }
+        tabPane.insertTab(e.type, i, p, "", tabPane.getComponentCount() - 2);
     }
 
     //<editor-fold defaultstate="collapsed" desc="class FieldsTableModel">
@@ -270,7 +286,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         splitter.setOneTouchExpandable(true);
 
         eventList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Create Event", "Update Event", "Draw Event" };
+            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
