@@ -1,7 +1,5 @@
-#include "actor.h"
-#include "keyboard.h"
-#include "application.h"
-#include "window.h"
+#include "pineapple.h"
+
 using namespace Pineapple;
 
 class Ship : public Actor

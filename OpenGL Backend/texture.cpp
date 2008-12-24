@@ -43,33 +43,6 @@ Texture::~Texture()
     glDeleteTextures(1, &textureid);
 }
 
-void Texture::draw(float x, float y)
-{
-    //use this texture
-    glBindTexture(GL_TEXTURE_2D, this->textureid);
-
-    //enable alpha blending
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    //translate/rotate, then draw a quad with the texture
-    glTranslatef(x, y, 0);
-    glBegin(GL_QUADS);
-        glTexCoord2i(0, 0);
-        glVertex3f(-this->originx, -this->originy, 0);
-
-        glTexCoord2i(0, 1);
-        glVertex3f(-this->originx, this->height - this->originy, 0);
-
-        glTexCoord2i(1, 1);
-        glVertex3f(this->width - this->originx, this->height - this->originy, 0);
-
-        glTexCoord2i(1, 0);
-        glVertex3f(this->width - this->originx, -this->originy, 0);
-    glEnd();
-    glLoadIdentity();
-}
-
 void Texture::draw(float x, float y, float width, float height, float angle)
 {
     //use this texture
