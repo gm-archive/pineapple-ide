@@ -234,6 +234,11 @@ public class Actor {
     public Vector<Field> fields = new Vector<Field>();
 
     /**
+     * The actor's z coordinate
+     */
+    public float z = 0;
+    
+    /**
      * Creates a new actor
      */
     public Actor() {
@@ -276,6 +281,7 @@ public class Actor {
         doc.setXmlVersion("1.0");
         Element root = doc.createElement("actor");
         root.setAttribute("version", Double.toString(VERSION));
+        root.setAttribute("z", Float.toString(z));
 
         /* Fields */
         Element fields = doc.createElement("fields");
@@ -359,6 +365,7 @@ public class Actor {
                 } else {
                     parsing = true;
                 }
+                z = Float.valueOf(atts.getValue("z"));
                 return;
             }
 

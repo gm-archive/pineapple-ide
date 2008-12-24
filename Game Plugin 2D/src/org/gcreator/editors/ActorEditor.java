@@ -28,6 +28,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -71,6 +73,13 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         }
         this.setModified(true);
         resourcePicker1.setResourceValidator(new ImageValidator());
+        jSpinner1.setValue(actor.z);
+        jSpinner1.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                actor.z = (Float) jSpinner1.getValue();
+            }
+        });
     }
 
     /**
@@ -234,7 +243,6 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     private void initComponents() {
 
         splitter = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
         tabPane = new javax.swing.JTabbedPane();
         eventsTab = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -250,26 +258,16 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         removeFieldButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         fieldsTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
         resourcePicker1 = new org.gcreator.gui.ResourcePicker();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
 
-        splitter.setDividerLocation(0);
         splitter.setDividerSize(8);
         splitter.setResizeWeight(0.4);
         splitter.setName("Divider"); // NOI18N
         splitter.setOneTouchExpandable(true);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 336, Short.MAX_VALUE)
-        );
-
-        splitter.setLeftComponent(jPanel1);
 
         eventList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Create Event", "Update Event", "Draw Event" };
@@ -322,7 +320,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
                 .addContainerGap())
         );
         eventsTabLayout.setVerticalGroup(
@@ -366,7 +364,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(210, Short.MAX_VALUE)
+                .addContainerGap(208, Short.MAX_VALUE)
                 .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeFieldButton))
@@ -390,7 +388,41 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         tabPane.addTab("Fields", fieldsTab);
 
         splitter.setRightComponent(tabPane);
-        splitter.setLeftComponent(resourcePicker1);
+
+        jLabel2.setText("Image:");
+
+        jLabel3.setText("Z:");
+
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), null, null, Float.valueOf(1.0f)));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addContainerGap())
+            .addComponent(resourcePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resourcePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(208, Short.MAX_VALUE))
+        );
+
+        splitter.setLeftComponent(jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -461,11 +493,14 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     private javax.swing.JPanel fieldsTab;
     private javax.swing.JTable fieldsTable;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JButton newEventButton;
     private javax.swing.JButton removeFieldButton;
     private org.gcreator.gui.ResourcePicker resourcePicker1;
