@@ -30,9 +30,11 @@ import java.awt.event.MouseEvent;
 import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.MenuElement;
 import org.gcreator.gui.validators.UniversalValidator;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.ProjectElement;
@@ -102,10 +104,9 @@ public class ResourcePicker extends JPanel {
                 listener.actionPerformed(e);
             }
         }
-        if(file==null){
+        if (file == null) {
             label.setText("<none>");
-        }
-        else{
+        } else {
             label.setText(file.getName());
         }
     }
@@ -131,7 +132,33 @@ public class ResourcePicker extends JPanel {
                 }
             } else if (elem instanceof ProjectFolder) {
                 ProjectFolder f = (ProjectFolder) elem;
-                JPopupMenu subMenu = new JPopupMenu(f.getName());
+                JMenu subMenu = new JMenu(f.getName());
+                boolean isEmpty = popupMenu(subMenu, f.getChildren());
+
+                if (!isEmpty) {
+                    subMenu.setVisible(true);
+                    menu.add(subMenu);
+                    isThisEmpty = false;
+                }
+            }
+        }
+        return isThisEmpty;
+    }
+
+    public boolean popupMenu(JMenu menu, Iterable<ProjectElement> files) {
+
+        boolean isThisEmpty = true;
+        for (ProjectElement elem : files) {
+            if (elem instanceof ProjectFile) {
+                if (validator.isValid((ProjectFile) elem)) {
+                    JMenuItem i = new FileMenuItem((ProjectFile) elem);
+                    i.setVisible(true);
+                    menu.add(i);
+                    isThisEmpty = false;
+                }
+            } else if (elem instanceof ProjectFolder) {
+                ProjectFolder f = (ProjectFolder) elem;
+                JMenu subMenu = new JMenu(f.getName());
                 boolean isEmpty = popupMenu(subMenu, f.getChildren());
 
                 if (!isEmpty) {
@@ -142,7 +169,7 @@ public class ResourcePicker extends JPanel {
             }
         }
 
-        
+
         return isThisEmpty;
     }
 
