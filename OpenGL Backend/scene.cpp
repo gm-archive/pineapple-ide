@@ -15,6 +15,7 @@ Scene::Scene(int width, int height)
     glClearColor(0, 0, 0, 1);
     this->width = width;
     this->height = height;
+    bgColor = Color::BLACK;
 }
 
 //
@@ -55,7 +56,7 @@ void Scene::draw()
     if (views.size() == 0)
     {
         static View* v = new View();
-        v->set();
+        v->set(bgColor);
         drawActors();
     }
     else
@@ -63,7 +64,7 @@ void Scene::draw()
         for (unsigned int i = 0; i < views.size(); i++)
         {
             View* v = views[i];
-            v->set();
+            v->set(bgColor);
             drawActors();
         }
     }

@@ -13,6 +13,7 @@ class Scene
 protected:
     std::vector<Actor*> actors;
     std::vector<View*> views;
+    Color* bgColor;
 
     int width;
     int height;
@@ -21,6 +22,9 @@ protected:
 public:
     Scene(int width, int height);
     virtual ~Scene();
+
+    Color* getBackground(){ return bgColor; }
+    void setBackground(Color* bgColor){ this->bgColor = bgColor; }
 
     virtual void update();
     virtual void draw();

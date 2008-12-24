@@ -19,7 +19,7 @@ View::View(int swidth, int sheight, int pwidth, int pheight,
     this->sheight = sheight;
 }
 
-void View::set()
+void View::set(const Color* bgColor)
 {
     //viewport
     int width = pwidth;
@@ -58,4 +58,6 @@ void View::set()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    //TODO: Implement background color painting
 }

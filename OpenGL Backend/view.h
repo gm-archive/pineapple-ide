@@ -1,6 +1,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+#include "color.h"
+
 namespace Pineapple {
 
 class View
@@ -22,7 +24,7 @@ public:
          int sy = 0,
          int px = 0,
          int py = 0);
-    void set();
+    void set(const Color* bgColor = Color::BLACK);
 };
 
 }
