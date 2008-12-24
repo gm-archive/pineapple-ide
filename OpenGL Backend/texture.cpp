@@ -10,7 +10,7 @@ Texture::Texture(const std::string file, int originx, int originy)
     //load the image
     SDL_Surface* surface = IMG_Load(file.c_str());
     if (surface == NULL)
-        throw "Could not load image";
+        throw new IOException("Could not load image");
     GLuint texture;
 
     //set up a gl texture
