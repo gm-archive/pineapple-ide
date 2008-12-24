@@ -76,4 +76,9 @@ public class CodeActionType extends ActionType {
         panel.add(scroll, BorderLayout.CENTER);
         editor.setSyntaxEditingStyle(RSyntaxTextArea.PINEDL_SYNTAX_STYLE);
     }
+    
+    @Override
+    public String toPineDL(Action a){
+        return a.args==null?"":a.args.toString();
+    }
 }

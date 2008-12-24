@@ -24,27 +24,27 @@ THE SOFTWARE.
 package org.gcreator.actions;
 
 /**
- * An Action Type representing code
+ * An Action Type representing a block begin
  * @author Luís Reis
  */
-public class ElseActionType extends ActionType{
+public class EndBlockActionType extends ActionType{
     /**
-     * The Else Action type, provided as a static variable to make
+     * The End Block Action type, provided as a static variable to make
      * sure it is only initialized once.
      */
-    public static final ElseActionType ACTIONTYPE_ELSE = new ElseActionType();
+    public static final EndBlockActionType ACTIONTYPE_ENDBLOCK = new EndBlockActionType();
     
-    protected ElseActionType(){
+    protected EndBlockActionType(){
         
     }
     
     @Override
     public String getName(){
-        return "Else";
+        return "End Block";
     }
     
     @Override
     public String toPineDL(Action a){
-        return "else";
+        return "}";
     }
 }

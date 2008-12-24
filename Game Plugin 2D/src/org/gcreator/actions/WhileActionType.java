@@ -23,28 +23,41 @@ THE SOFTWARE.
 
 package org.gcreator.actions;
 
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import org.gcreator.actions.panels.ConditionalPanel;
+
 /**
- * An Action Type representing code
+ * An Action Type representing a while statement
  * @author Luís Reis
  */
-public class ElseActionType extends ActionType{
+public class WhileActionType extends ActionType{
     /**
-     * The Else Action type, provided as a static variable to make
+     * The While Action type, provided as a static variable to make
      * sure it is only initialized once.
      */
-    public static final ElseActionType ACTIONTYPE_ELSE = new ElseActionType();
+    public static final WhileActionType ACTIONTYPE_WHILE = new WhileActionType();
     
-    protected ElseActionType(){
+    protected WhileActionType(){
         
     }
     
     @Override
+    public void makeActionPanel(final Action a, JPanel panel){
+        panel.removeAll();
+        panel.setLayout(new BorderLayout());
+        ConditionalPanel p = new ConditionalPanel(a);
+        p.setVisible(true);
+        panel.add(p, BorderLayout.CENTER);
+    }
+    
+    @Override
     public String getName(){
-        return "Else";
+        return "While";
     }
     
     @Override
     public String toPineDL(Action a){
-        return "else";
+        return "while(" + (a.args==null?"":a.args.toString()) + ")";
     }
 }

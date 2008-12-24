@@ -23,8 +23,12 @@ THE SOFTWARE.
 
 package org.gcreator.actions;
 
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import org.gcreator.actions.panels.ConditionalPanel;
+
 /**
- * An Action Type representing code
+ * An Action Type representing an if statement
  * @author Luís Reis
  */
 public class IfActionType extends ActionType{
@@ -39,7 +43,21 @@ public class IfActionType extends ActionType{
     }
     
     @Override
+    public void makeActionPanel(final Action a, JPanel panel){
+        panel.removeAll();
+        panel.setLayout(new BorderLayout());
+        ConditionalPanel p = new ConditionalPanel(a);
+        p.setVisible(true);
+        panel.add(p, BorderLayout.CENTER);
+    }
+    
+    @Override
     public String getName(){
         return "If";
+    }
+    
+    @Override
+    public String toPineDL(Action a){
+        return "if(" + (a.args==null?"":a.args.toString()) + ")";
     }
 }

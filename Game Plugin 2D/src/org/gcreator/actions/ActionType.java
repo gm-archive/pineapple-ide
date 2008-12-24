@@ -36,8 +36,11 @@ public class ActionType {
     public static Vector<ActionType> actionTypes = new Vector<ActionType>();
     static{
         actionTypes.add(IfActionType.ACTIONTYPE_IF);
-        actionTypes.add(CodeActionType.ACTIONTYPE_CODE);
         actionTypes.add(ElseActionType.ACTIONTYPE_ELSE);
+        actionTypes.add(CodeActionType.ACTIONTYPE_CODE);
+        actionTypes.add(WhileActionType.ACTIONTYPE_WHILE);
+        actionTypes.add(BeginBlockActionType.ACTIONTYPE_BEGINBLOCK);
+        actionTypes.add(EndBlockActionType.ACTIONTYPE_ENDBLOCK);
     }
     
     protected ActionType(){
@@ -89,5 +92,14 @@ public class ActionType {
      */
     public String getName(){
         return "[UNDEFINED: "+getClass().getName()+"]";
+    }
+    
+    /**
+     * Generates PineDL code
+     * @param a The action to generate code from
+     * @return The PineDL code
+     */
+    public String toPineDL(Action a){
+        return "";
     }
 }
