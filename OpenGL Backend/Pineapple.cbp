@@ -41,6 +41,7 @@
 		<Unit filename="actor.h" />
 		<Unit filename="application.cpp" />
 		<Unit filename="application.h" />
+		<Unit filename="color.cpp" />
 		<Unit filename="exceptions.h" />
 		<Unit filename="io.cpp" />
 		<Unit filename="io.h" />

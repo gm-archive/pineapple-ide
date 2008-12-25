@@ -59,5 +59,6 @@ void View::set(const Color* bgColor)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    //TODO: Implement background color painting
+    glClearColor(bgColor->getRed(), bgColor->getGreen(), bgColor->getBlue(), 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
