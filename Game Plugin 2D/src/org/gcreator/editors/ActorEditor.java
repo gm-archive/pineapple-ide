@@ -43,6 +43,8 @@ import org.gcreator.formats.Actor;
 import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.EventCellRenderer;
+import org.gcreator.gui.EventTabRenderer;
+import org.gcreator.gui.TabRenderer;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -138,20 +140,9 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
     private void addTabForEvent(Event e) {
         EventPanel p = new EventPanel(e);
-        ImageIcon i = null;
-        if(e.type.equals("Create Event")){
-            i = EventCellRenderer.CREATE_IMAGE;
-        }
-        else if(e.type.equals("Destroy Event")){
-            i = EventCellRenderer.DESTROY_IMAGE;
-        }
-        else if(e.type.equals("Draw Event")){
-            i = EventCellRenderer.DRAW_IMAGE;
-        }
-        else if(e.type.equals("Update Event")){
-            i = EventCellRenderer.UPDATE_IMAGE;
-        }
-        tabPane.insertTab(e.type, i, p, "", tabPane.getComponentCount() - 2);
+        int i = tabPane.getComponentCount() - 2;
+        tabPane.insertTab(e.type, null, p, "", i);
+        tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
     }
 
     //<editor-fold defaultstate="collapsed" desc="class FieldsTableModel">
