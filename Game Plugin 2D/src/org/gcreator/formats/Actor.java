@@ -304,7 +304,9 @@ public class Actor {
             event.setAttribute("type", e.type);
             for (Action a : e.actions) {
                 Element action = doc.createElement("action");
-                action.setAttribute("type", a.getType().save(a));
+                action.setAttribute("type", a.getType().getClass().getName());
+                action.setTextContent(a.getType().save(a));
+                event.appendChild(action);
             }
             events.appendChild(event);
         }
@@ -344,14 +346,15 @@ public class Actor {
         private boolean parsingEvent;
         private boolean parsingAction;
         private Event curEvent;
-        private Actor actor;
-        private Action baseAction;
         private Action curAction;
-
+        private Actor actor;
+        
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;
         }
 
+        
+        
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
             if (localName.equalsIgnoreCase("actor")) {
@@ -426,15 +429,9 @@ public class Actor {
                     System.err.println("ERROR: Unknown action for class " + className + ".");
                     return;
                 }
-                if (baseAction == null) {
-                    baseAction = new Action(type);
-                    curAction = baseAction;
-                } else {
-                    Action a = new Action(type);
-                    //a.parent = curAction;
-                    //curAction.addAction(a);
-                    curAction = a;
-                }
+                
+                curAction = new Action(type);
+                curEvent.actions.add(curAction);
             }
         }
 
@@ -457,8 +454,6 @@ public class Actor {
                 curEvent = null;
             } else if (parsingAction && localName.equalsIgnoreCase("action")) {
                 //if (curAction.parent == null || curAction.parent == baseAction) {
-                    baseAction = null;
-                    curAction = null;
                     parsingAction = false;
                 //}
                 //curAction = curAction.parent;
@@ -482,7 +477,14 @@ public class Actor {
         }
 
         public void characters(char[] ch, int start, int length) throws SAXException {
-            /* No one cares. */
+            if(parsingAction){
+                String s = "";
+                for(int i = 0; i < length; i++){
+                    s += ch[i+start];
+                }
+                curAction.getType().load(curAction, s);
+            }
+            /**else=No one cares*/
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {

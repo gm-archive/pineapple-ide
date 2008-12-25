@@ -66,13 +66,17 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         try {
             actor = new Actor(f);
         } catch (Exception e) {
+            System.out.println(e.toString());
             actor = new Actor();
         }
 
         initComponents();
+        System.out.println("Event parse");
         for (Event e : actor.events) {
+            System.out.println("Parsing event " + e.toString());
             this.addTabForEvent(e);
         }
+        System.out.println("End event parse");
         this.setModified(true);
         resourcePicker1.setResourceValidator(new ImageValidator());
         jSpinner1.setValue(actor.z);
