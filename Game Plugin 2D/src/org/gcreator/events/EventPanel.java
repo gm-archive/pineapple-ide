@@ -6,6 +6,7 @@
 
 package org.gcreator.events;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.TransferHandler;
@@ -70,6 +71,11 @@ public class EventPanel extends javax.swing.JPanel {
                 jList1ValueChanged(evt);
             }
         });
+        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jList1KeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         add(jScrollPane1);
@@ -86,6 +92,16 @@ private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN
         jPanel1.updateUI();
     }
 }//GEN-LAST:event_jList1ValueChanged
+
+private void jList1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyTyped
+    if(evt.getKeyChar()==KeyEvent.VK_DELETE){
+        Object o = jList1.getSelectedValue();
+        if(o != null){
+            e.actions.remove(o);
+            jList1.updateUI();
+        }
+    }
+}//GEN-LAST:event_jList1KeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
