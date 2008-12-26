@@ -5,6 +5,12 @@
 <project name="BuildModules" default="default" basedir="..">
     <description>Runs all of the build-module scripts</description>
     
+    <target name="run">
+        <subant target="run">
+            <fileset dir="Core" includes="xbuild.xml"/>
+        </subant>
+    </target> 
+    
    <target name="clean">
         <subant target="clean">
             <fileset dir="Core" includes="xbuild.xml"/>
@@ -17,10 +23,10 @@
         <ant antfile="Syntax Highlighter/build.xml" target="clean"/>
         <ant antfile="Game Plugin 2D/build.xml" target="clean"/>
         
-        <ant antfile="Core/build.xml" target="compile"/>
-        <ant antfile="Pineapple/build.xml" target="compile"/>
-        <ant antfile="Syntax Highlighter/build.xml" target="compile"/>
-        <ant antfile="Game Plugin 2D/build.xml" target="compile"/>
+        <ant antfile="Core/build.xml" target="jar"/>
+        <ant antfile="Pineapple/build.xml" target="jar"/>
+        <ant antfile="Syntax Highlighter/build.xml" target="jar"/>
+        <ant antfile="Game Plugin 2D/build.xml" target="jar"/>
     </target>
     
     <target name="javadoc">

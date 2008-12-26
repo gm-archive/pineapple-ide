@@ -40,6 +40,7 @@ import org.gcreator.events.Event;
 import org.gcreator.events.EventPanel;
 import org.gcreator.formats.Actor;
 import org.gcreator.game2d.PaletteUser;
+import org.gcreator.gui.BehaviorPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.EventCellRenderer;
 import org.gcreator.gui.EventTabRenderer;
@@ -58,6 +59,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
     private boolean toggled;
+    private BehaviorPanel behavior;
     
     /**
      * Creates a new ActorEditor
@@ -73,9 +75,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         }
 
         initComponents();
-        for (Event e : actor.events) {
-            this.addTabForEvent(e);
-        }
+        behavior = new BehaviorPanel(actor, this);
+        behavior.setVisible(true);
         this.setModified(true);
         spriteChooser.setResourceValidator(new ImageValidator());
         depthSpinner.setValue(actor.z);
@@ -85,8 +86,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 actor.z = (Integer) depthSpinner.getValue();
             }
         });
-        eventList.setCellRenderer(new EventCellRenderer());
         hackAsplit.setDividerLocation(1.0D);
+        hackAsplit.setRightComponent(behavior);
     }
 
     /**
@@ -139,108 +140,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         return true;
     }
 
-    private void addTabForEvent(Event e) {
-        EventPanel p = new EventPanel(e);
-        int i = tabPane.getComponentCount() - 2;
-        tabPane.insertTab(e.type, null, p, "", i);
-        tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
-    }
 
-    //<editor-fold defaultstate="collapsed" desc="class FieldsTableModel">
-    private class FieldsTableModel extends AbstractTableModel {
-
-        private static final long serialVersionUID = 1;
-
-        public int getRowCount() {
-            return actor.fields.size();
-        }
-
-        public int getColumnCount() {
-            /* Name | Type | Static | Final | Defualt Value*/
-            return 5;
-        }
-
-        @Override
-        public String getColumnName(int columnIndex) {
-            switch (columnIndex) {
-                case 0:
-                    return "Name";
-                case 1:
-                    return "Type";
-                case 2:
-                    return "Static";
-                case 3:
-                    return "Final";
-                case 4:
-                    return "Default Value";
-                default:
-                    return "Column " + columnIndex;
-            }
-        }
-
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            switch (columnIndex) {
-                case 0:
-                    return String.class;
-                case 1:
-                    return String.class;
-                case 2:
-                    return Boolean.class;
-                case 3:
-                    return Boolean.class;
-                case 4:
-                    return String.class;
-                default:
-                    return String.class;
-            }
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return true;
-        }
-
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            switch (columnIndex) {
-                case 0:
-                    return actor.fields.get(rowIndex).getName();
-                case 1:
-                    return actor.fields.get(rowIndex).getType();
-                case 2:
-                    return actor.fields.get(rowIndex).isStatic();
-                case 3:
-                    return actor.fields.get(rowIndex).isFinal();
-                case 4:
-                    return actor.fields.get(rowIndex).getDefaultValue();
-                default:
-                    return String.class;
-            }
-        }
-
-        @Override
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            switch (columnIndex) {
-                case 0:
-                    actor.fields.get(rowIndex).setName((String) aValue);
-                    return;
-                case 1:
-                    actor.fields.get(rowIndex).setType((String) aValue);
-                    return;
-                case 2:
-                    actor.fields.get(rowIndex).setStatic((Boolean) aValue);
-                    return;
-                case 3:
-                    actor.fields.get(rowIndex).setFinal((Boolean) aValue);
-                    return;
-                case 4:
-                    actor.fields.get(rowIndex).setDefaultValue((String) aValue);
-                    return;
-            }
-        }
-    }
-    //</editor-fold>
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -267,19 +167,6 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         parentChooser = new org.gcreator.gui.ResourceChooser();
         parentLabel = new javax.swing.JLabel();
         isClassFinalCheckBox = new javax.swing.JCheckBox();
-        tabPane = new javax.swing.JTabbedPane();
-        eventsTab = new javax.swing.JPanel();
-        eventListScrollPane = new javax.swing.JScrollPane();
-        eventList = new javax.swing.JList();
-        eventButtonsPanel = new javax.swing.JPanel();
-        newEventButton = new javax.swing.JButton();
-        deleteEventButton = new javax.swing.JButton();
-        fieldsTab = new javax.swing.JPanel();
-        fieldButtonsPanel = new javax.swing.JPanel();
-        addFieldButton = new javax.swing.JButton();
-        removeFieldButton = new javax.swing.JButton();
-        fieldsTabelScrollPane = new javax.swing.JScrollPane();
-        fieldsTable = new javax.swing.JTable();
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -395,149 +282,26 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(polymorhpismPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         hackAsplit.setLeftComponent(propertiesPanel);
-
-        eventsTab.setLayout(new java.awt.BorderLayout());
-
-        eventList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        eventList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        eventList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                eventListValueChanged(evt);
-            }
-        });
-        eventListScrollPane.setViewportView(eventList);
-
-        eventsTab.add(eventListScrollPane, java.awt.BorderLayout.CENTER);
-
-        eventButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
-
-        newEventButton.setText("New...");
-        newEventButton.setEnabled(false);
-        newEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newEventButtonActionPerformed(evt);
-            }
-        });
-        eventButtonsPanel.add(newEventButton);
-
-        deleteEventButton.setText("Delete");
-        deleteEventButton.setEnabled(false);
-        deleteEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteEventButtonActionPerformed(evt);
-            }
-        });
-        eventButtonsPanel.add(deleteEventButton);
-
-        eventsTab.add(eventButtonsPanel, java.awt.BorderLayout.SOUTH);
-
-        tabPane.addTab("Events", eventsTab);
-
-        fieldsTab.setLayout(new java.awt.BorderLayout());
-
-        fieldButtonsPanel.setPreferredSize(new java.awt.Dimension(100, 32));
-        fieldButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
-
-        addFieldButton.setText("Add");
-        addFieldButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addFieldButtonActionPerformed(evt);
-            }
-        });
-        fieldButtonsPanel.add(addFieldButton);
-
-        removeFieldButton.setText("Remove");
-        removeFieldButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeFieldButtonActionPerformed(evt);
-            }
-        });
-        fieldButtonsPanel.add(removeFieldButton);
-
-        fieldsTab.add(fieldButtonsPanel, java.awt.BorderLayout.SOUTH);
-
-        fieldsTable.setModel(new ActorEditor.FieldsTableModel());
-        fieldsTabelScrollPane.setViewportView(fieldsTable);
-
-        fieldsTab.add(fieldsTabelScrollPane, java.awt.BorderLayout.CENTER);
-
-        tabPane.addTab("Fields", fieldsTab);
-
-        hackAsplit.setRightComponent(tabPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(hackAsplit, 0, 0, Short.MAX_VALUE)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hackAsplit, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                .addComponent(hackAsplit, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
-    actor.fields.add(new Actor.Field("newField", "int"));
-    fieldsTable.updateUI();
-    this.setModified(true);
-}//GEN-LAST:event_addFieldButtonActionPerformed
-
-private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
-    int[] rows = fieldsTable.getSelectedRows();
-    for (int row = rows.length-1; row >= 0; row--) {
-        actor.fields.remove(row);
-    }
-    fieldsTable.getSelectionModel().setSelectionInterval(-1, -1);
-    fieldsTable.updateUI();
-    this.setModified(true);
-}//GEN-LAST:event_removeFieldButtonActionPerformed
-
-private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
-    Event e = new Event();
-    e.type = eventList.getSelectedValue().toString();
-    actor.events.add(e);
-    addTabForEvent(e);
-    eventList.setSelectedIndex(-1);
-    newEventButton.setEnabled(false);
-    this.setModified(true);
-}//GEN-LAST:event_newEventButtonActionPerformed
-
-private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
-if (actor != null && eventList.getSelectedIndex() != -1) {
-        for (Event e : actor.events) {
-            if (e.type.equals(eventList.getSelectedValue().toString())) {
-                newEventButton.setEnabled(false);
-                return;
-            }
-        }
-        newEventButton.setEnabled(true);
-    }
-}//GEN-LAST:event_eventListValueChanged
-
-private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
-    if (eventList.getSelectedIndex() < 0) {
-        return;
-    }
-    actor.events.remove(eventList.getSelectedIndex());
-    if (eventList.getSelectedIndex() > actor.events.size()) {
-        eventList.setSelectedIndex(actor.events.size()-1);
-    }
-    eventList.updateUI();
-    this.setModified(true);
-}//GEN-LAST:event_deleteEventButtonActionPerformed
 
 private void propertiesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_propertiesToggleActionPerformed
     hackAsplit.setDividerLocation(1.0D);
@@ -548,33 +312,20 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_membersToggleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addFieldButton;
-    private javax.swing.JButton deleteEventButton;
     private javax.swing.JLabel depthLabel;
     private javax.swing.JSpinner depthSpinner;
-    private javax.swing.JPanel eventButtonsPanel;
-    private javax.swing.JList eventList;
-    private javax.swing.JScrollPane eventListScrollPane;
-    private javax.swing.JPanel eventsTab;
-    private javax.swing.JPanel fieldButtonsPanel;
-    private javax.swing.JPanel fieldsTab;
-    private javax.swing.JScrollPane fieldsTabelScrollPane;
-    private javax.swing.JTable fieldsTable;
     private javax.swing.JSplitPane hackAsplit;
     private javax.swing.JPanel inGameRenderingPanel;
     private javax.swing.JCheckBox isClassFinalCheckBox;
     private javax.swing.JToggleButton membersToggle;
-    private javax.swing.JButton newEventButton;
     private org.gcreator.gui.ResourceChooser parentChooser;
     private javax.swing.JLabel parentLabel;
     private javax.swing.JPanel polymorhpismPanel;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JToggleButton propertiesToggle;
-    private javax.swing.JButton removeFieldButton;
     private javax.swing.JCheckBox renderSpriteCheckBox;
     private org.gcreator.gui.ResourceChooser spriteChooser;
     private javax.swing.JLabel spriteLabel;
-    private javax.swing.JTabbedPane tabPane;
     private javax.swing.ButtonGroup toggles;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
