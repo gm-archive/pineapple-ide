@@ -20,12 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.actions;
-
-import java.awt.Color;
-import java.util.Vector;
-import javax.swing.JPanel;
 
 /**
  * The behavior unit of actors.
@@ -33,29 +28,30 @@ import javax.swing.JPanel;
  * @author Luís Reis
  */
 public final class Action {
+
     private ActionType type = null;
     public Object args = null;
     public boolean expanded = true;
-    
+
     /**
      * Creates an action with a given type
      * @param type The action type
      */
-    public Action(ActionType type){
+    public Action(ActionType type) {
         this.type = type;
     }
-    
+
     /**
      * Gets the type of the action
      * @return The Action type
      */
-    public ActionType getType(){
+    public ActionType getType() {
         return type;
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
-    public Object clone(){
+    public Object clone() {
         Action a = new Action(type);
         a.args = args;
         a.expanded = expanded;

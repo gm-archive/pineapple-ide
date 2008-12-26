@@ -22,19 +22,16 @@ THE SOFTWARE.
  */
 package org.gcreator.gui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.MenuElement;
 import org.gcreator.gui.validators.UniversalValidator;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.ProjectElement;
@@ -43,10 +40,12 @@ import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.io.BasicFile;
 
 /**
- * Allows the user to pick a specific resource
+ * Allows the user to choose a specific resource
+ * using a filter.
+ * 
  * @author Luís Reis
  */
-public class ResourcePicker extends JPanel {
+public class ResourceChooser extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JLabel label;
@@ -55,7 +54,7 @@ public class ResourcePicker extends JPanel {
     private static int curId = 1;
     private ResourceValidator validator = new UniversalValidator();
 
-    public ResourcePicker() {
+    public ResourceChooser() {
         label = new JLabel();
 
         label.setText("<none>");

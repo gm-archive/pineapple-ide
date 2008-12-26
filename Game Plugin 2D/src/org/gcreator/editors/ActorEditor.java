@@ -26,7 +26,6 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -44,7 +43,6 @@ import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.EventCellRenderer;
 import org.gcreator.gui.EventTabRenderer;
-import org.gcreator.gui.TabRenderer;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -53,12 +51,14 @@ import org.noos.xing.mydoggy.ToolWindow;
  * A very nice editor for an actor.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
 public final class ActorEditor extends DocumentPane implements PaletteUser {
 
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
-
+    private boolean toggled;
+    
     /**
      * Creates a new ActorEditor
      * @param f The actor file
@@ -77,15 +77,16 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
             this.addTabForEvent(e);
         }
         this.setModified(true);
-        resourcePicker1.setResourceValidator(new ImageValidator());
-        jSpinner1.setValue(actor.z);
-        jSpinner1.addChangeListener(new ChangeListener() {
+        spriteChooser.setResourceValidator(new ImageValidator());
+        depthSpinner.setValue(actor.z);
+        depthSpinner.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
-                actor.z = (Float) jSpinner1.getValue();
+                actor.z = (Integer) depthSpinner.getValue();
             }
         });
         eventList.setCellRenderer(new EventCellRenderer());
+        hackAsplit.setDividerLocation(1.0D);
     }
 
     /**
@@ -250,32 +251,156 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        splitter = new javax.swing.JSplitPane();
+        toggles = new javax.swing.ButtonGroup();
+        toolBar = new javax.swing.JToolBar();
+        propertiesToggle = new javax.swing.JToggleButton();
+        membersToggle = new javax.swing.JToggleButton();
+        hackAsplit = new javax.swing.JSplitPane();
+        propertiesPanel = new javax.swing.JPanel();
+        inGameRenderingPanel = new javax.swing.JPanel();
+        depthSpinner = new javax.swing.JSpinner();
+        depthLabel = new javax.swing.JLabel();
+        renderSpriteCheckBox = new javax.swing.JCheckBox();
+        spriteChooser = new org.gcreator.gui.ResourceChooser();
+        spriteLabel = new javax.swing.JLabel();
+        polymorhpismPanel = new javax.swing.JPanel();
+        parentChooser = new org.gcreator.gui.ResourceChooser();
+        parentLabel = new javax.swing.JLabel();
+        isClassFinalCheckBox = new javax.swing.JCheckBox();
         tabPane = new javax.swing.JTabbedPane();
         eventsTab = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        eventListScrollPane = new javax.swing.JScrollPane();
         eventList = new javax.swing.JList();
+        eventButtonsPanel = new javax.swing.JPanel();
         newEventButton = new javax.swing.JButton();
         deleteEventButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        descriptionTextPane = new javax.swing.JTextPane();
         fieldsTab = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        fieldButtonsPanel = new javax.swing.JPanel();
         addFieldButton = new javax.swing.JButton();
         removeFieldButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        fieldsTabelScrollPane = new javax.swing.JScrollPane();
         fieldsTable = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        resourcePicker1 = new org.gcreator.gui.ResourcePicker();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
 
-        splitter.setDividerSize(8);
-        splitter.setResizeWeight(0.4);
-        splitter.setName("Divider"); // NOI18N
-        splitter.setOneTouchExpandable(true);
+        toolBar.setFloatable(false);
+        toolBar.setRollover(true);
+
+        toggles.add(propertiesToggle);
+        propertiesToggle.setSelected(true);
+        propertiesToggle.setText("Properties");
+        propertiesToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                propertiesToggleActionPerformed(evt);
+            }
+        });
+        toolBar.add(propertiesToggle);
+
+        toggles.add(membersToggle);
+        membersToggle.setText("Members");
+        membersToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                membersToggleActionPerformed(evt);
+            }
+        });
+        toolBar.add(membersToggle);
+
+        hackAsplit.setDividerLocation(90);
+        hackAsplit.setEnabled(false);
+
+        inGameRenderingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("In-Game Rendering"));
+
+        depthSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), null, null, Integer.valueOf(5)));
+
+        depthLabel.setText("Depth (z):");
+
+        renderSpriteCheckBox.setSelected(true);
+        renderSpriteCheckBox.setText("Render sprite automatically");
+
+        spriteLabel.setText("Sprite:");
+
+        javax.swing.GroupLayout inGameRenderingPanelLayout = new javax.swing.GroupLayout(inGameRenderingPanel);
+        inGameRenderingPanel.setLayout(inGameRenderingPanelLayout);
+        inGameRenderingPanelLayout.setHorizontalGroup(
+            inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                        .addComponent(spriteLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                        .addComponent(depthLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(renderSpriteCheckBox))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        inGameRenderingPanelLayout.setVerticalGroup(
+            inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(depthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(renderSpriteCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        polymorhpismPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Polymorhpism"));
+
+        parentLabel.setText("Parent:");
+
+        isClassFinalCheckBox.setText("Disable inhertance of this class");
+
+        javax.swing.GroupLayout polymorhpismPanelLayout = new javax.swing.GroupLayout(polymorhpismPanel);
+        polymorhpismPanel.setLayout(polymorhpismPanelLayout);
+        polymorhpismPanelLayout.setHorizontalGroup(
+            polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(polymorhpismPanelLayout.createSequentialGroup()
+                .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(isClassFinalCheckBox)
+                    .addGroup(polymorhpismPanelLayout.createSequentialGroup()
+                        .addComponent(parentLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        polymorhpismPanelLayout.setVerticalGroup(
+            polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(polymorhpismPanelLayout.createSequentialGroup()
+                .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(parentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(parentChooser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(isClassFinalCheckBox)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
+        propertiesPanel.setLayout(propertiesPanelLayout);
+        propertiesPanelLayout.setHorizontalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(polymorhpismPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        propertiesPanelLayout.setVerticalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
+                .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(polymorhpismPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        hackAsplit.setLeftComponent(propertiesPanel);
+
+        eventsTab.setLayout(new java.awt.BorderLayout());
 
         eventList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event" };
@@ -288,7 +413,11 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 eventListValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(eventList);
+        eventListScrollPane.setViewportView(eventList);
+
+        eventsTab.add(eventListScrollPane, java.awt.BorderLayout.CENTER);
+
+        eventButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         newEventButton.setText("New...");
         newEventButton.setEnabled(false);
@@ -297,6 +426,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 newEventButtonActionPerformed(evt);
             }
         });
+        eventButtonsPanel.add(newEventButton);
 
         deleteEventButton.setText("Delete");
         deleteEventButton.setEnabled(false);
@@ -305,53 +435,16 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 deleteEventButtonActionPerformed(evt);
             }
         });
+        eventButtonsPanel.add(deleteEventButton);
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
-        jLabel1.setText("Description:");
-
-        descriptionTextPane.setContentType("text/html");
-        descriptionTextPane.setEditable(false);
-        descriptionTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n\n  </body>\n</html>\n");
-        jScrollPane3.setViewportView(descriptionTextPane);
-
-        javax.swing.GroupLayout eventsTabLayout = new javax.swing.GroupLayout(eventsTab);
-        eventsTab.setLayout(eventsTabLayout);
-        eventsTabLayout.setHorizontalGroup(
-            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsTabLayout.createSequentialGroup()
-                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(eventsTabLayout.createSequentialGroup()
-                        .addComponent(newEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteEventButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        eventsTabLayout.setVerticalGroup(
-            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(eventsTabLayout.createSequentialGroup()
-                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(eventsTabLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteEventButton)
-                    .addComponent(newEventButton))
-                .addContainerGap())
-        );
+        eventsTab.add(eventButtonsPanel, java.awt.BorderLayout.SOUTH);
 
         tabPane.addTab("Events", eventsTab);
 
         fieldsTab.setLayout(new java.awt.BorderLayout());
 
-        jPanel3.setPreferredSize(new java.awt.Dimension(100, 32));
+        fieldButtonsPanel.setPreferredSize(new java.awt.Dimension(100, 32));
+        fieldButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         addFieldButton.setText("Add");
         addFieldButton.addActionListener(new java.awt.event.ActionListener() {
@@ -359,6 +452,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 addFieldButtonActionPerformed(evt);
             }
         });
+        fieldButtonsPanel.add(addFieldButton);
 
         removeFieldButton.setText("Remove");
         removeFieldButton.addActionListener(new java.awt.event.ActionListener() {
@@ -366,81 +460,32 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 removeFieldButtonActionPerformed(evt);
             }
         });
+        fieldButtonsPanel.add(removeFieldButton);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(198, Short.MAX_VALUE)
-                .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(removeFieldButton))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(removeFieldButton)
-                    .addComponent(addFieldButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        fieldsTab.add(jPanel3, java.awt.BorderLayout.PAGE_START);
+        fieldsTab.add(fieldButtonsPanel, java.awt.BorderLayout.SOUTH);
 
         fieldsTable.setModel(new ActorEditor.FieldsTableModel());
-        jScrollPane1.setViewportView(fieldsTable);
+        fieldsTabelScrollPane.setViewportView(fieldsTable);
 
-        fieldsTab.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        fieldsTab.add(fieldsTabelScrollPane, java.awt.BorderLayout.CENTER);
 
         tabPane.addTab("Fields", fieldsTab);
 
-        splitter.setRightComponent(tabPane);
-
-        jLabel2.setText("Image:");
-
-        jLabel3.setText("Z:");
-
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), null, null, Float.valueOf(1.0f)));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addContainerGap())
-            .addComponent(resourcePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(resourcePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(223, Short.MAX_VALUE))
-        );
-
-        splitter.setLeftComponent(jPanel2);
+        hackAsplit.setRightComponent(tabPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitter, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+            .addComponent(hackAsplit, 0, 0, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitter, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hackAsplit, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -451,9 +496,11 @@ private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_addFieldButtonActionPerformed
 
 private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
-    for (int row : fieldsTable.getSelectedRows()) {
+    int[] rows = fieldsTable.getSelectedRows();
+    for (int row = rows.length-1; row >= 0; row--) {
         actor.fields.remove(row);
     }
+    fieldsTable.getSelectionModel().setSelectionInterval(-1, -1);
     fieldsTable.updateUI();
     this.setModified(true);
 }//GEN-LAST:event_removeFieldButtonActionPerformed
@@ -492,27 +539,43 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     this.setModified(true);
 }//GEN-LAST:event_deleteEventButtonActionPerformed
 
+private void propertiesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_propertiesToggleActionPerformed
+    hackAsplit.setDividerLocation(1.0D);
+}//GEN-LAST:event_propertiesToggleActionPerformed
+
+private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membersToggleActionPerformed
+    hackAsplit.setDividerLocation(0.0D);
+}//GEN-LAST:event_membersToggleActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFieldButton;
     private javax.swing.JButton deleteEventButton;
-    private javax.swing.JTextPane descriptionTextPane;
+    private javax.swing.JLabel depthLabel;
+    private javax.swing.JSpinner depthSpinner;
+    private javax.swing.JPanel eventButtonsPanel;
     private javax.swing.JList eventList;
+    private javax.swing.JScrollPane eventListScrollPane;
     private javax.swing.JPanel eventsTab;
+    private javax.swing.JPanel fieldButtonsPanel;
     private javax.swing.JPanel fieldsTab;
+    private javax.swing.JScrollPane fieldsTabelScrollPane;
     private javax.swing.JTable fieldsTable;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSplitPane hackAsplit;
+    private javax.swing.JPanel inGameRenderingPanel;
+    private javax.swing.JCheckBox isClassFinalCheckBox;
+    private javax.swing.JToggleButton membersToggle;
     private javax.swing.JButton newEventButton;
+    private org.gcreator.gui.ResourceChooser parentChooser;
+    private javax.swing.JLabel parentLabel;
+    private javax.swing.JPanel polymorhpismPanel;
+    private javax.swing.JPanel propertiesPanel;
+    private javax.swing.JToggleButton propertiesToggle;
     private javax.swing.JButton removeFieldButton;
-    private org.gcreator.gui.ResourcePicker resourcePicker1;
-    private javax.swing.JSplitPane splitter;
+    private javax.swing.JCheckBox renderSpriteCheckBox;
+    private org.gcreator.gui.ResourceChooser spriteChooser;
+    private javax.swing.JLabel spriteLabel;
     private javax.swing.JTabbedPane tabPane;
+    private javax.swing.ButtonGroup toggles;
+    private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 }
