@@ -44,6 +44,7 @@ public class SceneEditorArea extends JPanel {
     private static final long serialVersionUID = -5905569070386863865L;
     public static final int MODE_ADD = 0;
     public static final int MODE_EDIT = 1;
+    public static final int MODE_DELETE = 2;
     public int mode = MODE_ADD;
     public SceneEditor sceneEditor = null;
     public Scene.ActorInScene selection = null;
@@ -52,7 +53,7 @@ public class SceneEditorArea extends JPanel {
         addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseClicked(MouseEvent evt) {
+            public void mousePressed(MouseEvent evt) {
                 if (mode == MODE_ADD) {
                     BasicFile f = sceneEditor.actorChooser.getSelectedFile();
                     if (f != null) {
@@ -62,10 +63,11 @@ public class SceneEditorArea extends JPanel {
                         a.x = evt.getX();
                         a.y = evt.getY();
                         s.actors.add(a);
+                        selection = a;
                         repaint();
                     }
                 }
-                if (mode == MODE_EDIT) {
+                else if (mode == MODE_EDIT) {
                     if (sceneEditor == null || sceneEditor.s == null) {
                         return;
                     }
@@ -95,6 +97,42 @@ public class SceneEditorArea extends JPanel {
                         repaint();
                         sceneEditor.jPanel1.repaint();
                     }
+                }
+                else if(mode==MODE_DELETE){
+                    if (sceneEditor == null || sceneEditor.s == null) {
+                        return;
+                    }
+                    Scene s = sceneEditor.s;
+                    Scene.ActorInScene chosen = null;
+                    for (Scene.ActorInScene actor : s.actors) {
+                        BufferedImage i = actor.getImage();
+                        if(i==null){ continue; }
+                        int x = evt.getX();
+                        int y = evt.getY();
+                        if(x<actor.x){ continue; }
+                        if(y<actor.y){ continue; }
+                        if(x<actor.x+i.getWidth()&&y<actor.y+i.getHeight()){
+                            chosen = actor;
+                        }
+                    }
+                    s.actors.remove(chosen);
+                    if(selection==chosen){
+                        selection = null;
+                        sceneEditor.jPanel1.removeAll();
+                        sceneEditor.jPanel1.add(sceneEditor.sp, BorderLayout.CENTER);
+                        sceneEditor.jPanel1.repaint();
+                    }
+                    repaint();
+                }
+            }
+        });
+        addMouseMotionListener(new MouseAdapter(){
+            @Override
+            public void mouseDragged(MouseEvent e){
+                if(selection!=null){
+                    selection.x = e.getX();
+                    selection.y = e.getY();
+                    repaint();
                 }
             }
         });
