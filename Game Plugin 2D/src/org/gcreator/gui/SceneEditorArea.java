@@ -21,48 +21,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-package org.gcreator.formats;
+package org.gcreator.gui;
 
-import java.util.Vector;
-import org.gcreator.project.io.BasicFile;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import org.gcreator.editors.SceneEditor;
+import org.gcreator.formats.Scene;
 
 /**
- * Core class for scene handling
+ * Draws the actors(and tiles, in the future)
  * @author Luís Reis
  */
-public class Scene extends BehaviorObject{
-    public int width = 640;
-    public int height = 480;
+public class SceneEditorArea extends JPanel{
+    private static final long serialVersionUID = -5905569070386863865L;
     
-    public Vector<ActorInScene> actors = new Vector<ActorInScene>();
+    public static final int MODE_ADD = 0;
     
-    public class ActorInScene implements Comparable<ActorInScene>{
-        public BasicFile bf = null;
-        public int x = 0;
-        public int y = 0;
-        
-        public int compareTo(ActorInScene other){
-            
-            float z = 0;
-            float oz = 0;
-            
-            try{
-                Actor a = new Actor(bf);
-                z = a.z;
-            }
-            catch(Exception e){}
-            
-            try{
-                Actor a = new Actor(other.bf);
-                oz = a.z;
-            }
-            catch(Exception e){}
-            
-            if(z==oz){
-                return 0;
-            }
-            
-            return z<oz?-1:1;
+    public int mode = MODE_ADD;
+    public SceneEditor sceneEditor = null;
+    
+    @Override
+    public Dimension getPreferredSize(){
+        if(sceneEditor==null){
+            return new Dimension(1,1);
         }
+        Scene scene = sceneEditor.s;
+        return new Dimension(scene.width, scene.height);
     }
+    
 }

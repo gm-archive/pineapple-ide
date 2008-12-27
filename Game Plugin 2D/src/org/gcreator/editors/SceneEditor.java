@@ -5,6 +5,7 @@
  */
 package org.gcreator.editors;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.BehaviorPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.ResourceChooser;
+import org.gcreator.gui.SceneEditorArea;
+import org.gcreator.gui.SceneProperties;
 import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -27,10 +30,12 @@ import org.noos.xing.mydoggy.ToolWindow;
 public class SceneEditor extends DocumentPane implements PaletteUser {
 
     private static final long serialVersionUID = 1L;
-    private Scene s = null;
+    public Scene s = null;
     private BehaviorPanel panel = null;
     private JPanel palette = null;
     private ResourceChooser actorChooser = new ResourceChooser();
+    public SceneProperties sp = null;
+    public SceneEditorArea sea = null;
 
     /** Creates new form SceneEditor */
     public SceneEditor(BasicFile f) {
@@ -47,6 +52,13 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         updatePaletteContent();
         actorChooser.setResourceValidator(new ActorValidator());
         actorChooser.setVisible(true);
+        sp = new SceneProperties(this);
+        jPanel1.add(sp, BorderLayout.CENTER);
+        sea = new SceneEditorArea();
+        sea.setVisible(true);
+        sea.sceneEditor = this;
+        sea.updateUI();
+        jScrollPane1.setViewportView(sea);
     }
 
     public void updatePaletteContent() {
@@ -85,6 +97,11 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -93,6 +110,21 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
                 jTabbedPane1StateChanged(evt);
             }
         });
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setLeftComponent(jPanel1);
+
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jButton1.setText("Add");
+        jButton1.setSelected(true);
+        jPanel3.add(jButton1);
+
+        jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
+        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jSplitPane1.setRightComponent(jPanel2);
+
         jTabbedPane1.addTab("Environment", jSplitPane1);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
@@ -102,6 +134,11 @@ private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-
     updatePaletteContent();
 }//GEN-LAST:event_jTabbedPane1StateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    public javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
