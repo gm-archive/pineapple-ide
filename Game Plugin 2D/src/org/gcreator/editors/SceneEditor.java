@@ -15,6 +15,8 @@ import org.gcreator.formats.Scene;
 import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.BehaviorPanel;
 import org.gcreator.gui.DocumentPane;
+import org.gcreator.gui.ResourceChooser;
+import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
 
@@ -28,6 +30,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
     private Scene s = null;
     private BehaviorPanel panel = null;
     private JPanel palette = null;
+    private ResourceChooser actorChooser = new ResourceChooser();
 
     /** Creates new form SceneEditor */
     public SceneEditor(BasicFile f) {
@@ -40,13 +43,15 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         panel.setVisible(true);
         jTabbedPane1.add(panel, "Behavior");
         palette.setVisible(true);
+        palette.setLayout(new GridLayout(0, 1));
         updatePaletteContent();
+        actorChooser.setResourceValidator(new ActorValidator());
+        actorChooser.setVisible(true);
     }
 
     public void updatePaletteContent() {
         palette.removeAll();
         if (jTabbedPane1.getSelectedComponent() == panel) {
-            palette.setLayout(new GridLayout(0, 1));
             JLabel l = new JLabel("<html><b>Actions:</b></html>");
             l.setVisible(true);
             palette.add(l);
@@ -58,7 +63,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
             }
         }
         else{
-            palette.setLayout(new FlowLayout());
+            palette.add(actorChooser);
         }
     }
 
@@ -79,7 +84,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -88,19 +93,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
                 jTabbedPane1StateChanged(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 546, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 379, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Environment", jPanel1);
+        jTabbedPane1.addTab("Environment", jSplitPane1);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -109,7 +102,7 @@ private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-
     updatePaletteContent();
 }//GEN-LAST:event_jTabbedPane1StateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }
