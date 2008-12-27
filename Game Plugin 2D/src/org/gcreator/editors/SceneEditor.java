@@ -3,12 +3,17 @@
  *
  * Created on 21 de Dezembro de 2008, 20:19
  */
-
 package org.gcreator.editors;
 
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.gcreator.actions.ActionType;
+import org.gcreator.dnd.PaletteAction;
 import org.gcreator.formats.Scene;
 import org.gcreator.game2d.PaletteUser;
+import org.gcreator.gui.BehaviorPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -17,20 +22,51 @@ import org.noos.xing.mydoggy.ToolWindow;
  * The editor of game scenes
  * @author Luís Reis
  */
-public class SceneEditor extends DocumentPane implements PaletteUser{
+public class SceneEditor extends DocumentPane implements PaletteUser {
+
     private static final long serialVersionUID = 1L;
-    
     private Scene s = null;
-    
+    private BehaviorPanel panel = null;
+    private JPanel palette = null;
+
     /** Creates new form SceneEditor */
     public SceneEditor(BasicFile f) {
         super(f);
+        palette = new JPanel();
         initComponents();
         s = new Scene();
+        setModified(true);
+        panel = new BehaviorPanel(s, this);
+        panel.setVisible(true);
+        jTabbedPane1.add(panel, "Behavior");
+        palette.setVisible(true);
+        updatePaletteContent();
     }
-    
-    public boolean doPalette(ToolWindow window, JPanel panel){
-        return false;
+
+    public void updatePaletteContent() {
+        palette.removeAll();
+        if (jTabbedPane1.getSelectedComponent() == panel) {
+            palette.setLayout(new GridLayout(0, 1));
+            JLabel l = new JLabel("<html><b>Actions:</b></html>");
+            l.setVisible(true);
+            palette.add(l);
+
+            for (ActionType type : ActionType.actionTypes) {
+                PaletteAction act = new PaletteAction(type);
+                palette.add(act);
+                act.setVisible(true);
+            }
+        }
+        else{
+            palette.setLayout(new FlowLayout());
+        }
+    }
+
+    public boolean doPalette(ToolWindow window, JPanel panel) {
+        panel.removeAll();
+        panel.setLayout(new FlowLayout());
+        panel.add(palette);
+        return true;
     }
 
     /** This method is called from within the constructor to
@@ -44,9 +80,14 @@ public class SceneEditor extends DocumentPane implements PaletteUser{
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -61,27 +102,14 @@ public class SceneEditor extends DocumentPane implements PaletteUser{
 
         jTabbedPane1.addTab("Environment", jPanel1);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 546, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 379, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Behavior", jPanel2);
-
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-
+private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+    updatePaletteContent();
+}//GEN-LAST:event_jTabbedPane1StateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
-
 }
