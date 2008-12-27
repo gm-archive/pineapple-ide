@@ -8,6 +8,9 @@ package org.gcreator.editors;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.gcreator.actions.ActionType;
@@ -59,8 +62,26 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         sea.sceneEditor = this;
         sea.updateUI();
         jScrollPane1.setViewportView(sea);
+        setModified(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean save() {
+        s.save(file);
+        return true;
+    }
+    
+    /**
+     * Saves the file
+     */
+    @Override
+    public boolean saveBackend() {
+        return save();
+    }
+    
     public void updatePaletteContent() {
         palette.removeAll();
         if (jTabbedPane1.getSelectedComponent() == panel) {

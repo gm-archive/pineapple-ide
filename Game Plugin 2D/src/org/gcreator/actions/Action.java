@@ -31,7 +31,6 @@ public final class Action {
 
     private ActionType type = null;
     public Object args = null;
-    public boolean expanded = true;
 
     /**
      * Creates an action with a given type
@@ -54,7 +53,6 @@ public final class Action {
     public Object clone() {
         Action a = new Action(type);
         a.args = args;
-        a.expanded = expanded;
         return a;
     }
 }
