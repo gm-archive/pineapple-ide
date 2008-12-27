@@ -20,9 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
@@ -38,21 +39,23 @@ import org.gcreator.project.io.BasicFile;
  * Draws the actors(and tiles, in the future)
  * @author Luís Reis
  */
-public class SceneEditorArea extends JPanel{
+public class SceneEditorArea extends JPanel {
+
     private static final long serialVersionUID = -5905569070386863865L;
-    
     public static final int MODE_ADD = 0;
-    
+    public static final int MODE_EDIT = 1;
     public int mode = MODE_ADD;
     public SceneEditor sceneEditor = null;
-    
-    public SceneEditorArea(){
+    public Scene.ActorInScene selection = null;
+
+    public SceneEditorArea() {
         addMouseListener(new MouseAdapter() {
+
             @Override
-            public void mouseClicked(MouseEvent evt){
-                if(mode==MODE_ADD){
+            public void mouseClicked(MouseEvent evt) {
+                if (mode == MODE_ADD) {
                     BasicFile f = sceneEditor.actorChooser.getSelectedFile();
-                    if(f!=null){
+                    if (f != null) {
                         Scene s = sceneEditor.s;
                         Scene.ActorInScene a = new Scene.ActorInScene();
                         a.bf = f;
@@ -62,35 +65,69 @@ public class SceneEditorArea extends JPanel{
                         repaint();
                     }
                 }
+                if (mode == MODE_EDIT) {
+                    if (sceneEditor == null || sceneEditor.s == null) {
+                        return;
+                    }
+                    Scene s = sceneEditor.s;
+                    Scene.ActorInScene oldSelection = selection;
+                    selection = null;
+                    for (Scene.ActorInScene actor : s.actors) {
+                        BufferedImage i = actor.getImage();
+                        if(i==null){ continue; }
+                        int x = evt.getX();
+                        int y = evt.getY();
+                        if(x<actor.x){ continue; }
+                        if(y<actor.y){ continue; }
+                        if(x<actor.x+i.getWidth()&&y<actor.y+i.getHeight()){
+                            selection = actor;
+                        }
+                    }
+                    if(oldSelection!=selection){
+                        sceneEditor.jPanel1.removeAll();
+                        if(selection==null){
+                            sceneEditor.jPanel1.add(sceneEditor.sp, BorderLayout.CENTER);
+                        }
+                        else{
+                            ActorProperties ap = new ActorProperties(selection, SceneEditorArea.this);
+                            sceneEditor.jPanel1.add(ap, BorderLayout.CENTER);
+                        }
+                        repaint();
+                        sceneEditor.jPanel1.repaint();
+                    }
+                }
             }
         });
     }
-    
+
     @Override
-    public Dimension getPreferredSize(){
-        if(sceneEditor==null){
-            return new Dimension(1,1);
+    public Dimension getPreferredSize() {
+        if (sceneEditor == null) {
+            return new Dimension(1, 1);
         }
         Scene scene = sceneEditor.s;
         return new Dimension(scene.width, scene.height);
     }
-    
+
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         super.paint(g);
-        if(sceneEditor==null||sceneEditor.s==null){
+        if (sceneEditor == null || sceneEditor.s == null) {
             return;
         }
         Scene s = sceneEditor.s;
         g.setColor(s.bgColor);
         g.fillRect(0, 0, s.width, s.height);
         Collections.sort(s.actors);
-        for(Scene.ActorInScene actor : s.actors){
+        for (Scene.ActorInScene actor : s.actors) {
             BufferedImage i = actor.getImage();
-            if(i!=null){
+            if (i != null) {
                 g.drawImage(i, actor.x, actor.y, null);
+            }
+            if (actor == selection && mode == MODE_EDIT) {
+                g.setColor(Color.YELLOW);
+                g.drawRect(actor.x, actor.y, i.getWidth(), i.getHeight());
             }
         }
     }
-    
 }

@@ -95,12 +95,14 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setLayout(new java.awt.BorderLayout());
@@ -118,7 +120,20 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
 
         jButton1.setText("Add");
         jButton1.setSelected(true);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel3.add(jButton1);
+
+        jButton2.setText("Edit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton2);
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -133,9 +148,26 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
 private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
     updatePaletteContent();
 }//GEN-LAST:event_jTabbedPane1StateChanged
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    jButton1.setSelected(true);
+    jButton2.setSelected(false);
+    sea.mode = SceneEditorArea.MODE_ADD;
+    sea.repaint();
+}//GEN-LAST:event_jButton1ActionPerformed
+
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    jButton1.setSelected(false);
+    jButton2.setSelected(true);
+    sea.mode = SceneEditorArea.MODE_EDIT;
+    sea.repaint();
+}//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton jButton2;
+    public javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     public javax.swing.JScrollPane jScrollPane1;
