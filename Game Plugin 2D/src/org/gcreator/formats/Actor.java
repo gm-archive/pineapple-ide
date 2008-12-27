@@ -24,6 +24,7 @@ package org.gcreator.formats;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
@@ -41,7 +42,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.gcreator.actions.Action;
 import org.gcreator.actions.ActionType;
 import org.gcreator.events.Event;
+import org.gcreator.pineapple.PineappleCore;
+import org.gcreator.project.Project;
+import org.gcreator.project.ProjectElement;
+import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.io.BasicFile;
+import org.gcreator.project.standard.FileFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -57,20 +63,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * 
  * @author Luís Reis
  */
-public class Actor extends BehaviorObject{
+public class Actor extends BehaviorObject {
 
-
-    
     /**
      * The actor version.
      */
-    public static final double VERSION = 1.002D;
-
+    public static final double VERSION = 1.003D;
     /**
      * The actor's z coordinate
      */
     public float z = 0;
-    
+    public BasicFile image = null;
+
     /**
      * Creates a new actor
      */
@@ -130,6 +134,16 @@ public class Actor extends BehaviorObject{
         }
         root.appendChild(fields);
 
+        Element img = doc.createElement("image");
+
+        if (image != null) {
+            img.setTextContent(image.getPath());
+        } else {
+            img.setTextContent("");
+        }
+
+        root.appendChild(img);
+
         /* Events */
         Element events = doc.createElement("events");
         for (Event e : this.events) {
@@ -160,7 +174,6 @@ public class Actor extends BehaviorObject{
         out.close();
     }
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="ActorImporter">
     private final class ActorImporter implements ContentHandler {
 
@@ -178,16 +191,15 @@ public class Actor extends BehaviorObject{
         private boolean parsingEvents;
         private boolean parsingEvent;
         private boolean parsingAction;
+        private boolean parsingImage;
         private Event curEvent;
         private Action curAction;
         private Actor actor;
-        
+
         public void setDocumentLocator(Locator locator) {
             this.locator = locator;
         }
 
-        
-        
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
             if (localName.equalsIgnoreCase("actor")) {
@@ -217,16 +229,19 @@ public class Actor extends BehaviorObject{
                 parsingEvent = true;
             } else if (localName.equalsIgnoreCase("action")) {
                 parsingAction = true;
+            } else if (localName.equalsIgnoreCase("image")) {
+                parsingImage = true;
             }
 
-            if (parsingFields && localName.equalsIgnoreCase("field")) {
+            if (parsingImage) {
+            } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
                 name = atts.getValue("name");
                 type = atts.getValue("type");
                 defaultValue = atts.getValue("default-value");
                 isStatic = atts.getValue("static");
                 isFinal = atts.getValue("final");
-                
+
                 Field f = new Field();
                 f.name = name;
                 f.type = type;
@@ -262,7 +277,7 @@ public class Actor extends BehaviorObject{
                     System.err.println("ERROR: Unknown action for class " + className + ".");
                     return;
                 }
-                
+
                 curAction = new Action(type);
                 curEvent.actions.add(curAction);
             }
@@ -287,9 +302,9 @@ public class Actor extends BehaviorObject{
                 curEvent = null;
             } else if (parsingAction && localName.equalsIgnoreCase("action")) {
                 //if (curAction.parent == null || curAction.parent == baseAction) {
-                    parsingAction = false;
-                //}
-                //curAction = curAction.parent;
+                parsingAction = false;
+            //}
+            //curAction = curAction.parent;
             }
         }
 
@@ -310,14 +325,44 @@ public class Actor extends BehaviorObject{
         }
 
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if(parsingAction){
+            if (parsingAction) {
                 String s = "";
-                for(int i = 0; i < length; i++){
-                    s += ch[i+start];
+                for (int i = 0; i < length; i++) {
+                    s += ch[i + start];
                 }
                 curAction.getType().load(curAction, s);
+            } else if (parsingImage) {
+                String s = "";
+                for (int i = 0; i < length; i++) {
+                    s += ch[i + start];
+                }
+                setImage(s, PineappleCore.getProject());
             }
-            /**else=No one cares*/
+        /**else=No one cares*/
+        }
+
+        private void setImage(String s, Project p) {
+            for (ProjectElement e : p.getFiles()) {
+                if(e instanceof ProjectFolder){
+                    setImage(s, (ProjectFolder) e);
+                }
+                else if (e.getFile().getPath().equals(s)) {
+                    image = e.getFile();
+                    break;
+                }
+            }
+        }
+        
+        private void setImage(String s, ProjectFolder p) {
+            for (ProjectElement e : p.getChildren()) {
+                if(e instanceof ProjectFolder){
+                    setImage(s, (ProjectFolder) e);
+                }
+                else if (e.getFile().getPath().equals(s)) {
+                    image = e.getFile();
+                    break;
+                }
+            }
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {

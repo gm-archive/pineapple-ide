@@ -24,9 +24,15 @@ THE SOFTWARE.
 package org.gcreator.gui;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Collections;
 import javax.swing.JPanel;
 import org.gcreator.editors.SceneEditor;
 import org.gcreator.formats.Scene;
+import org.gcreator.project.io.BasicFile;
 
 /**
  * Draws the actors(and tiles, in the future)
@@ -40,6 +46,26 @@ public class SceneEditorArea extends JPanel{
     public int mode = MODE_ADD;
     public SceneEditor sceneEditor = null;
     
+    public SceneEditorArea(){
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt){
+                if(mode==MODE_ADD){
+                    BasicFile f = sceneEditor.actorChooser.getSelectedFile();
+                    if(f!=null){
+                        Scene s = sceneEditor.s;
+                        Scene.ActorInScene a = new Scene.ActorInScene();
+                        a.bf = f;
+                        a.x = evt.getX();
+                        a.y = evt.getY();
+                        s.actors.add(a);
+                        repaint();
+                    }
+                }
+            }
+        });
+    }
+    
     @Override
     public Dimension getPreferredSize(){
         if(sceneEditor==null){
@@ -47,6 +73,24 @@ public class SceneEditorArea extends JPanel{
         }
         Scene scene = sceneEditor.s;
         return new Dimension(scene.width, scene.height);
+    }
+    
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        if(sceneEditor==null||sceneEditor.s==null){
+            return;
+        }
+        Scene s = sceneEditor.s;
+        g.setColor(s.bgColor);
+        g.fillRect(0, 0, s.width, s.height);
+        Collections.sort(s.actors);
+        for(Scene.ActorInScene actor : s.actors){
+            BufferedImage i = actor.getImage();
+            if(i!=null){
+                g.drawImage(i, actor.x, actor.y, null);
+            }
+        }
     }
     
 }

@@ -97,16 +97,18 @@ public class ResourceChooser extends JPanel {
     }
 
     public void setSelectedFile(BasicFile file) {
-        if (file != selectedFile) {
-            ActionEvent e = new ActionEvent(this, curId++, "change-selected-file");
-            for (ActionListener listener : listeners) {
-                listener.actionPerformed(e);
-            }
-        }
+        BasicFile oldFile = selectedFile;
+        selectedFile = file;
         if (file == null) {
             label.setText("<none>");
         } else {
             label.setText(file.getName());
+        }
+        if (oldFile != file) {
+            ActionEvent e = new ActionEvent(this, curId++, "change-selected-file");
+            for (ActionListener listener : listeners) {
+                listener.actionPerformed(e);
+            }
         }
     }
 

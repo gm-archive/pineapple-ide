@@ -23,6 +23,8 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,6 +90,14 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         });
         hackAsplit.setDividerLocation(1.0D);
         hackAsplit.setRightComponent(behavior);
+        spriteChooser.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Changed image");
+                actor.image = spriteChooser.getSelectedFile();
+            }
+        });
+        spriteChooser.setSelectedFile(actor.image);
     }
 
     /**

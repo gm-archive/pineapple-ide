@@ -33,7 +33,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
     public Scene s = null;
     private BehaviorPanel panel = null;
     private JPanel palette = null;
-    private ResourceChooser actorChooser = new ResourceChooser();
+    public ResourceChooser actorChooser = new ResourceChooser();
     public SceneProperties sp = null;
     public SceneEditorArea sea = null;
 

@@ -23,7 +23,11 @@ THE SOFTWARE.
 
 package org.gcreator.formats;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Vector;
+import javax.imageio.ImageIO;
 import org.gcreator.project.io.BasicFile;
 
 /**
@@ -33,10 +37,11 @@ import org.gcreator.project.io.BasicFile;
 public class Scene extends BehaviorObject{
     public int width = 640;
     public int height = 480;
+    public Color bgColor = Color.BLACK;
     
     public Vector<ActorInScene> actors = new Vector<ActorInScene>();
     
-    public class ActorInScene implements Comparable<ActorInScene>{
+    public static class ActorInScene implements Comparable<ActorInScene>{
         public BasicFile bf = null;
         public int x = 0;
         public int y = 0;
@@ -63,6 +68,19 @@ public class Scene extends BehaviorObject{
             }
             
             return z<oz?-1:1;
+        }
+        
+        public BufferedImage getImage(){
+            if(bf==null){
+                return null;
+            }
+            try{
+                Actor a = new Actor(bf);
+                return ImageIO.read(a.image.getInputStream());
+            }
+            catch(Exception e){
+                return null;
+            }
         }
     }
 }
