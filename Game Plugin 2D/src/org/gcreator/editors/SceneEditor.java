@@ -42,7 +42,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         super(f);
         palette = new JPanel();
         initComponents();
-        s = new Scene();
+        s = new Scene(f);
         setModified(true);
         panel = new BehaviorPanel(s, this);
         panel.setVisible(true);

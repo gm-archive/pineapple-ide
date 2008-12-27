@@ -69,6 +69,12 @@ public class Actor extends BehaviorObject {
      * The actor version.
      */
     public static final double VERSION = 1.003D;
+    public static final double MINVERSION = VERSION;
+    /**
+     * Defines the maximum extent of forward compatibility
+     */
+    public static final double MAXVERSION = 2.0D; //The first non-accepted version
+    
     /**
      * The actor's z coordinate
      */
@@ -204,10 +210,11 @@ public class Actor extends BehaviorObject {
 
             if (localName.equalsIgnoreCase("actor")) {
                 String version = atts.getValue("version");
+                double v = Double.valueOf(version);
                 if (version == null) {
                     System.err.println("FATAL ERROR: No actor version.");
                     parsing = false;
-                } else if (!Double.valueOf(version).equals(Double.valueOf(VERSION))) {
+                } else if (v<MINVERSION||v>=MAXVERSION) {
                     System.err.println("FATAL ERROR: Invalid actor version: " + version + ", current: " + VERSION);
                     parsing = false;
                 } else {
@@ -257,6 +264,7 @@ public class Actor extends BehaviorObject {
                     return;
                 }
                 curEvent = new Event();
+                curEvent.type = type;
                 parsingEvent = true;
             } else if (parsingEvent && parsingAction && localName.equalsIgnoreCase("action")) {
                 String className = atts.getValue("type");
