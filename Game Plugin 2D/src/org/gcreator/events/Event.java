@@ -46,6 +46,21 @@ public class Event {
      * Called when the instance is drawed.
      */
     public static final String TYPE_DRAW = "Draw Event";
+    /**
+     * The Destroy event.
+     * Called when the instance is destroyed.
+     */
+    public static final String TYPE_DESTROY = "Destroy Event";
+    /**
+     * The KeyPress event.
+     * Called when a key is pressed.
+     */
+    public static final String TYPE_KEYPRESS = "Key Press Event";
+    /**
+     * The KeyRelease event.
+     * Called when a key is released.
+     */
+    public static final String TYPE_KEYRELEASE = "Key Release Event";
     
     /**
      * The event type

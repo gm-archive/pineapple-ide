@@ -66,6 +66,10 @@ public class EventTabRenderer extends JPanel {
                 return EventCellRenderer.DRAW_IMAGE;
             } else if (s.equals("Update Event")) {
                 return EventCellRenderer.UPDATE_IMAGE;
+            } else if (s.equals("Key Press Event")) {
+                return EventCellRenderer.KEY_IMAGE;
+            } else if (s.equals("Key Release Event")) {
+                return EventCellRenderer.KEY_IMAGE;
             }
             return null;
         }

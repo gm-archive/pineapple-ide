@@ -39,6 +39,7 @@ public class EventCellRenderer extends DefaultListCellRenderer{
     public static ImageIcon DESTROY_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/destroy.png"));
     public static ImageIcon DRAW_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/draw.png"));
     public static ImageIcon UPDATE_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/update.png"));
+    public static ImageIcon KEY_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/key.png"));
     
     @Override
     public Component getListCellRendererComponent(JList list,
@@ -57,6 +58,12 @@ public class EventCellRenderer extends DefaultListCellRenderer{
         }
         else if(value.toString().equals("Update Event")){
             this.setIcon(UPDATE_IMAGE);
+        }
+        else if(value.toString().equals("Key Press Event")){
+            this.setIcon(KEY_IMAGE);
+        }
+        else if(value.toString().equals("Key Release Event")){
+            this.setIcon(KEY_IMAGE);
         }
         else{
             this.setIcon(null);

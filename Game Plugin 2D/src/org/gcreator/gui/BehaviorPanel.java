@@ -62,7 +62,7 @@ public class BehaviorPanel extends javax.swing.JPanel {
         eventsTab.setLayout(new java.awt.BorderLayout());
 
         eventList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event" };
+            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event", "Key Press Event", "Key Release Event" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -76,7 +76,7 @@ public class BehaviorPanel extends javax.swing.JPanel {
 
         eventsTab.add(eventListScrollPane, java.awt.BorderLayout.CENTER);
 
-        eventButtonsPanel.setLayout(new java.awt.GridLayout());
+        eventButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         newEventButton.setText("New...");
         newEventButton.setEnabled(false);
@@ -103,7 +103,7 @@ public class BehaviorPanel extends javax.swing.JPanel {
         fieldsTab.setLayout(new java.awt.BorderLayout());
 
         fieldButtonsPanel.setPreferredSize(new java.awt.Dimension(100, 32));
-        fieldButtonsPanel.setLayout(new java.awt.GridLayout());
+        fieldButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         addFieldButton.setText("Add");
         addFieldButton.addActionListener(new java.awt.event.ActionListener() {
