@@ -40,10 +40,9 @@ public class EventPanel extends javax.swing.JPanel {
             public void mouseDragged(MouseEvent evt){
                 TransferHandler th = jList1.getTransferHandler();
                 if(th==null){
-                    System.out.println("th is null");
                     return;
                 }
-                jList1.getTransferHandler().exportAsDrag(
+                th.exportAsDrag(
                         jList1, evt, TransferHandler.COPY);
             }
         });
@@ -64,11 +63,21 @@ public class EventPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.GridLayout(1, 0));
 
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "a", "b" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jList1.setDragEnabled(true);
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
+            }
+        });
+        jList1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jList1MouseDragged(evt);
             }
         });
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -102,6 +111,10 @@ private void jList1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jLis
         }
     }
 }//GEN-LAST:event_jList1KeyTyped
+
+private void jList1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseDragged
+    jList1.getTransferHandler().exportAsDrag(jList1, evt, TransferHandler.MOVE);
+}//GEN-LAST:event_jList1MouseDragged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;

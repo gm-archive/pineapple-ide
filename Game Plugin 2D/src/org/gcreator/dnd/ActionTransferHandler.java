@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.dnd;
 
 import java.awt.datatransfer.DataFlavor;
@@ -39,7 +38,8 @@ import org.gcreator.gui.ActionListModel;
  * @author Luís Reis
  * @see ActionTransferable
  */
-public class ActionTransferHandler extends TransferHandler{
+public class ActionTransferHandler extends TransferHandler {
+
     private static final long serialVersionUID = 8941610639649161438L;
     public static DataFlavor actionFlavor = new DataFlavor(Action.class, "Action");
 
@@ -47,75 +47,70 @@ public class ActionTransferHandler extends TransferHandler{
     public int getSourceActions(JComponent c) {
         return COPY_OR_MOVE;
     }
-    
+
     @Override
     public Transferable createTransferable(JComponent c) {
-        if(c instanceof PaletteAction){
+        if (c instanceof PaletteAction) {
             ActionType t = ((PaletteAction) c).type;
             Action a = new Action(t);
             return new ActionTransferable(a);
+        } else if (c instanceof JList) {
+            return new ActionTransferable((Action) ((JList) c).getSelectedValue());
         }
         return null;
     }
-    
+
     public void exportDone(JComponent c, Transferable t, int action) {
-        if(action==MOVE&&c instanceof JList){
-            try{
-                
+        if (action == MOVE && c instanceof JList) {
+            try {
+                System.out.println("got here");
                 JList list = (JList) c;
                 Action a = (Action) t.getTransferData(actionFlavor);
-                Action b = (Action) list.getSelectedValue();
-                if(b!=null){
-                    Event e = ((ActionListModel) list.getModel()).getEvent();
-                    e.actions.remove(b);
-                    e.actions.trimToSize();
-                    list.updateUI();
-                }
-            }
-            catch(Exception e){
-                
+                Event e = ((ActionListModel) list.getModel()).getEvent();
+                e.actions.remove(a);
+                e.actions.trimToSize();
+                list.updateUI();
+            } catch (Exception e) {
             }
         }
     }
-    
+
     @Override
-    public boolean canImport(TransferHandler.TransferSupport ts){
-        if(!(ts.getComponent() instanceof JList)){
+    public boolean canImport(TransferHandler.TransferSupport ts) {
+        if (!(ts.getComponent() instanceof JList)) {
             return false;
         }
-        for(DataFlavor df : ts.getDataFlavors()){
-            if(df.getRepresentationClass()==Action.class){
+        for (DataFlavor df : ts.getDataFlavors()) {
+            if (df.getRepresentationClass() == Action.class) {
                 return true;
             }
         }
         return false;
     }
-    
+
     @Override
-    public boolean importData(TransferHandler.TransferSupport ts){
-        if(!(ts.getComponent() instanceof JList)){
+    public boolean importData(TransferHandler.TransferSupport ts) {
+        if (!(ts.getComponent() instanceof JList)) {
             return false;
         }
-        for(DataFlavor df : ts.getDataFlavors()){
-            if(df.getRepresentationClass()==Action.class){
-                try{
+        for (DataFlavor df : ts.getDataFlavors()) {
+            if (df.getRepresentationClass() == Action.class) {
+                try {
                     JList list = (JList) ts.getComponent();
                     ActionListModel alm = (ActionListModel) list.getModel();
                     int index = list.getDropLocation().getIndex();//ts.getDropLocation().getDropPoint());
                     Vector<Action> actions = alm.getEvent().actions;
-                    if(actions.size()<=index||index==-1){
+                    if (actions.size() <= index || index == -1) {
                         actions.add((Action) ts.getTransferable().getTransferData(actionFlavor));
-                    }
-                    else{
-                        actions.ensureCapacity(index+1);
+                    } else {
+                        actions.ensureCapacity(index + 1);
                         actions.insertElementAt(
-                            (Action) ts.getTransferable().getTransferData(actionFlavor), index);
+                                (Action) ts.getTransferable().getTransferData(actionFlavor), index);
                     }
                     list.updateUI();
                     System.out.println("Lets return true");
                     return true;
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     System.out.println(e);
                     e.printStackTrace();
                     return false;
@@ -124,5 +119,4 @@ public class ActionTransferHandler extends TransferHandler{
         }
         return false;
     }
-    
 }
