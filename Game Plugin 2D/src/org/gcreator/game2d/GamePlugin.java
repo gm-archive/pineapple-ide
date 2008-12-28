@@ -22,11 +22,17 @@ THE SOFTWARE.
  */
 package org.gcreator.game2d;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import org.gcreator.core.Core;
 import org.gcreator.editors.ActorEditor;
 import org.gcreator.editors.SceneEditor;
 import org.gcreator.editors.TextEditor;
 import org.gcreator.gui.DocumentPane;
+import org.gcreator.gui.GameSettingsDialog;
 import org.gcreator.gui.PineappleGUI;
 import org.gcreator.managers.EventManager;
 import org.gcreator.managers.SettingsManager;
@@ -35,8 +41,10 @@ import org.gcreator.plugins.DefaultEventTypes;
 import org.gcreator.plugins.Event;
 import org.gcreator.plugins.EventPriority;
 import org.gcreator.plugins.Plugin;
+import org.gcreator.project.Project;
 import org.gcreator.project.io.BasicFile;
 import org.gcreator.project.io.FormatSupporter;
+import org.gcreator.tree.ProjectTreeNode;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 
@@ -161,6 +169,25 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             for (String format : formats) {
                 SettingsManager.set(base + format, fs);
             }
+        } else if(e.getEventType().equals(PineappleGUI.TREE_MENU_INVOKED)) {
+            JPopupMenu menu = (JPopupMenu) e.getArguments()[0];
+            Object o = e.getArguments()[1];
+            if(o instanceof ProjectTreeNode){
+                Project p = PineappleCore.getProject();
+                if(p.getProjectType() instanceof GameProjectType){
+                    JMenuItem item = new JMenuItem("Game Settings");
+                    item.setVisible(true);
+                    item.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent evt){
+                            GameSettingsDialog dialog = new GameSettingsDialog(
+                            Core.getStaticContext().getMainFrame(), true,
+                            PineappleCore.getProject());
+                            dialog.setVisible(true);
+                        }
+                    });
+                    menu.add(item);
+                }
+            }
         }
     }
 
@@ -173,6 +200,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         EventManager.addEventHandler(this, PineappleGUI.FILE_CHANGED);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
+        EventManager.addEventHandler(this, PineappleGUI.TREE_MENU_INVOKED);
         PineappleCore.fileTypeNames.put("actor", "Game Actor");
         PineappleCore.fileTypeDescriptions.put("actor",
                 "Game entities associated with a position and a behavior.");
