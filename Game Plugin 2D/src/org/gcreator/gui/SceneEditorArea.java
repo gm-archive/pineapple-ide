@@ -95,7 +95,7 @@ public class SceneEditorArea extends JPanel {
                             sceneEditor.jPanel1.add(ap, BorderLayout.CENTER);
                         }
                         repaint();
-                        sceneEditor.jPanel1.repaint();
+                        sceneEditor.jPanel1.updateUI();
                     }
                 }
                 else if(mode==MODE_DELETE){
