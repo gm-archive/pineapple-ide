@@ -234,7 +234,8 @@ primitive returns [Expression e = null]
 		LPAREN
 		(ex=expression {((NewCall) e).arguments.add(ex);}
 			(',' ex=expression {((NewCall) e).arguments.add(ex);})*
-		)? RPAREN);
+		)? RPAREN)
+		| ('new' t=clstype '[' x=expression ']' {e=new NewArray(t, x);});
 		
 prepostop returns [Expression e = null]
 	: (p=primitive {e=p;}
@@ -361,7 +362,8 @@ boolconst returns [BooleanConstant b = new BooleanConstant(false)]
 	:	('true' {b.value = true;})|'false';
 
 type returns [Type type = new Type()]
-	: (i=nativetype {type=i;})|(t=clstype {type=t;});
+	: (i=nativetype {type=i;})|(t=clstype {type=t;})
+	('[' ']' {Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;})*;
 
 clstype returns [Type type = new Type()]
 @init{
