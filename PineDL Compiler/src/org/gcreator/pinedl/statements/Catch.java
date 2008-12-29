@@ -25,22 +25,35 @@ package org.gcreator.pinedl.statements;
 
 import java.util.Vector;
 import org.gcreator.pinedl.Leaf;
+import org.gcreator.pinedl.Type;
 
 /**
- * Represents a return statement
+ * Represents an if statement
  * @author Luís Reis
  */
-public class ReturnStatement extends Leaf{
-    public Expression value = null;
+public class Catch extends Leaf{
+    public Type t = null;
+    public String name = "e";
+    public Leaf then = null;
     
     @Override
     public Leaf optimize(){
-        value = (Expression) value.optimize();
+        if(then!=null){
+            then.optimize();
+        }
         return this;
     }
     
     @Override
     public String toString(){
-        return "return[" + value.toString() + "]";
+        String s = "catch[";
+        
+        s += name + ":" + t.toString();
+        
+        s += ",";
+        
+        s += then;
+        
+        return s + "]";
     }
 }

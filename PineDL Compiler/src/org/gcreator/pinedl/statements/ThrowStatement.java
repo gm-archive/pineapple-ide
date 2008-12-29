@@ -27,10 +27,10 @@ import java.util.Vector;
 import org.gcreator.pinedl.Leaf;
 
 /**
- * Represents a return statement
+ * Represents a throw statement
  * @author Luís Reis
  */
-public class ReturnStatement extends Leaf{
+public class ThrowStatement extends Leaf{
     public Expression value = null;
     
     @Override
@@ -41,6 +41,6 @@ public class ReturnStatement extends Leaf{
     
     @Override
     public String toString(){
-        return "return[" + value.toString() + "]";
+        return "throw[" + value.toString() + "]";
     }
 }

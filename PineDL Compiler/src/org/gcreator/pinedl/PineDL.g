@@ -182,10 +182,12 @@ stmt returns [Leaf l = null]
 	:	(e=declAssign {l=e;})
 	| (a=expression STMTEND {l=a;})
 	| (b=returnstmt {l=b;})
+	| (t=throwstmt {l=t;})
 	| (c=ifstmt {l=c;})
 	| (w=whilestmt {l=w;})
 	| (f=forstmt {l=f;})
 	| (d=block {l=d;})
+	| (tr=trystmt {l=tr;})
 	| ('break' STMTEND {l=new BreakStatement();})
 	| ('continue' STMTEND {l=new ContinueStatement();})
 	| STMTEND;
@@ -204,9 +206,16 @@ forstmt returns [ForStatement forCase = new ForStatement()]
 		(s=expression {forCase.condition = s;}) STMTEND
 		(d=expression {forCase.loopStatement = d;}) RPAREN
 		q=stmt {forCase.then = q;};
+
+trystmt returns [TryStatement tryStmt = new TryStatement()]
+	: 'try' b=stmt {tryStmt.then = b;}
+	('catch' LPAREN t=type n=WORD RPAREN b=stmt {Catch c = new Catch(); c.t = t; c.name = n.getText(); c.then = b; tryStmt.catchStmt.add(c);})+;
 	
 returnstmt returns [ReturnStatement ret = new ReturnStatement()]
 	:	'return' (r=expression {ret.value = r;})? STMTEND;
+	
+throwstmt returns [ThrowStatement ret = new ThrowStatement()]
+	:	'throw' (r=expression {ret.value = r;})? STMTEND;
 	
 declAssign returns [DeclAssign e = new DeclAssign()]
 	: t=type {e.type = t;} n=WORD {e.name = n.getText();} ('=' ex=expression {e.value=ex;})? STMTEND;
