@@ -15,7 +15,6 @@ class X extends Y
     //Is used, just like in Java.
     public this() : super(15)
     {
-        x = "I said \"Hello World\"\n";
-        x += "\\But you didn't reply...";
+        for(int i = 0; i < 10; i++){}
     }
 }

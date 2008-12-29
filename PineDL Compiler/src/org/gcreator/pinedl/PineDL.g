@@ -235,12 +235,18 @@ primitive returns [Expression e = null]
 		(ex=expression {((NewCall) e).arguments.add(ex);}
 			(',' ex=expression {((NewCall) e).arguments.add(ex);})*
 		)? RPAREN);
+		
+prepostop returns [Expression e = null]
+	: (p=primitive {e=p;}
+	('++' {e=new PrePostFixOperator(false, true, e);}|'--' {e=new PrePostFixOperator(false, false, e);})?)
+	| ('++' q=primitive {e=new PrePostFixOperator(true, true, q);})
+	| ('--' q=primitive {e=new PrePostFixOperator(true, false, q);});
 	
 notcastexpr returns [Expression e = null]
 @init{
 TypeCast cast = null;
 }
-	:	(p=primitive {e=p;})
+	:	(p=prepostop {e=p;})
 		| (NOT p=notcastexpr {e=new NotOperation(p);})
 		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);});
 		
