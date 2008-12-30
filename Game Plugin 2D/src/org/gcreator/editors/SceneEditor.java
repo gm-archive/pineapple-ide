@@ -8,9 +8,6 @@ package org.gcreator.editors;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.gcreator.actions.ActionType;
@@ -98,12 +95,14 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         else{
             palette.add(actorChooser);
         }
+        palette.updateUI();
     }
 
     public boolean doPalette(ToolWindow window, JPanel panel) {
         panel.removeAll();
         panel.setLayout(new FlowLayout());
         panel.add(palette);
+        panel.updateUI();
         return true;
     }
 

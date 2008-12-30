@@ -24,27 +24,27 @@ THE SOFTWARE.
 package org.gcreator.actions;
 
 /**
- * An Action Type representing an else statement
+ * An Action Type representing a try statement
  * @author Luís Reis
  */
-public class ElseActionType extends ActionType{
+public class TryActionType extends ActionType{
     /**
      * The Else Action type, provided as a static variable to make
      * sure it is only initialized once.
      */
-    public static final ElseActionType ACTIONTYPE_ELSE = new ElseActionType();
+    public static final TryActionType ACTIONTYPE_TRY = new TryActionType();
     
-    protected ElseActionType(){
+    protected TryActionType(){
         
     }
     
     @Override
     public String getName(){
-        return "Else";
+        return "Try";
     }
     
     @Override
     public String toPineDL(Action a){
-        return "else";
+        return "try";
     }
 }

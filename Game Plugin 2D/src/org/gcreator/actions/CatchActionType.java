@@ -23,28 +23,41 @@ THE SOFTWARE.
 
 package org.gcreator.actions;
 
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import org.gcreator.actions.panels.VariableDeclarationPanel;
+
 /**
- * An Action Type representing an else statement
+ * An Action Type representing a catch statement
  * @author Luís Reis
  */
-public class ElseActionType extends ActionType{
+public class CatchActionType extends ActionType{
     /**
-     * The Else Action type, provided as a static variable to make
+     * The Catch Action type, provided as a static variable to make
      * sure it is only initialized once.
      */
-    public static final ElseActionType ACTIONTYPE_ELSE = new ElseActionType();
+    public static final CatchActionType ACTIONTYPE_CATCH = new CatchActionType();
     
-    protected ElseActionType(){
+    protected CatchActionType(){
         
     }
     
     @Override
+    public void makeActionPanel(final Action a, JPanel panel){
+        panel.removeAll();
+        panel.setLayout(new BorderLayout());
+        VariableDeclarationPanel p = new VariableDeclarationPanel(a);
+        p.setVisible(true);
+        panel.add(p, BorderLayout.CENTER);
+    }
+    
+    @Override
     public String getName(){
-        return "Else";
+        return "Catch";
     }
     
     @Override
     public String toPineDL(Action a){
-        return "else";
+        return "catch(" + (a.args==null?"":a.args.toString()) + ")";
     }
 }

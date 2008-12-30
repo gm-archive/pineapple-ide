@@ -42,6 +42,8 @@ public class ActionType {
         actionTypes.add(EndBlockActionType.ACTIONTYPE_ENDBLOCK);
         actionTypes.add(ReturnActionType.ACTIONTYPE_RETURN);
         actionTypes.add(ThrowActionType.ACTIONTYPE_THROW);
+        actionTypes.add(TryActionType.ACTIONTYPE_TRY);
+        actionTypes.add(CatchActionType.ACTIONTYPE_CATCH);
     }
     
     protected ActionType(){
