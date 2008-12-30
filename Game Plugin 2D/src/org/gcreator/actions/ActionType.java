@@ -23,7 +23,6 @@ THE SOFTWARE.
 
 package org.gcreator.actions;
 
-import java.awt.Color;
 import java.util.Vector;
 import javax.swing.JPanel;
 
@@ -41,6 +40,8 @@ public class ActionType {
         actionTypes.add(WhileActionType.ACTIONTYPE_WHILE);
         actionTypes.add(BeginBlockActionType.ACTIONTYPE_BEGINBLOCK);
         actionTypes.add(EndBlockActionType.ACTIONTYPE_ENDBLOCK);
+        actionTypes.add(ReturnActionType.ACTIONTYPE_RETURN);
+        actionTypes.add(ThrowActionType.ACTIONTYPE_THROW);
     }
     
     protected ActionType(){

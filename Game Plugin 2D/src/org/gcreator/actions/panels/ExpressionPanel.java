@@ -11,17 +11,17 @@ import javax.swing.event.DocumentListener;
 import org.gcreator.actions.Action;
 
 /**
- * A panel that represents a condition, for example for if and while actions
+ * A panel that represents an expression, for example an if or while condition
  * @author Luís Reis
  */
-public class ConditionalPanel extends javax.swing.JPanel {
+public class ExpressionPanel extends javax.swing.JPanel {
     public static final long serialVersionUID = 1234L;
 
     /**
-     * Creates new form ConditionalPanel
+     * Creates new form ExpressionPanel
      * @param act The action to render
      */
-    public ConditionalPanel(final Action act) {
+    public ExpressionPanel(final Action act) {
         initComponents();
         jTextField1.setText(act.args==null?"":act.args.toString());
         jTextField1.getDocument().addDocumentListener(new DocumentListener() {
@@ -56,7 +56,7 @@ public class ConditionalPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
 
-        jLabel1.setText("Condition:");
+        jLabel1.setText("Expression:");
 
         jTextField1.setText("jTextField1");
 

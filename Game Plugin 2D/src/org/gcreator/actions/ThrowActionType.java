@@ -28,17 +28,17 @@ import javax.swing.JPanel;
 import org.gcreator.actions.panels.ExpressionPanel;
 
 /**
- * An Action Type representing a while statement
+ * An Action Type representing a throw statement
  * @author Luís Reis
  */
-public class WhileActionType extends ActionType{
+public class ThrowActionType extends ActionType{
     /**
-     * The While Action type, provided as a static variable to make
+     * The Throw Action type, provided as a static variable to make
      * sure it is only initialized once.
      */
-    public static final WhileActionType ACTIONTYPE_WHILE = new WhileActionType();
+    public static final ThrowActionType ACTIONTYPE_THROW = new ThrowActionType();
     
-    protected WhileActionType(){
+    protected ThrowActionType(){
         
     }
     
@@ -53,11 +53,11 @@ public class WhileActionType extends ActionType{
     
     @Override
     public String getName(){
-        return "While";
+        return "Throw";
     }
     
     @Override
     public String toPineDL(Action a){
-        return "while(" + (a.args==null?"":a.args.toString()) + ")";
+        return "throw (" + (a.args==null?"":a.args.toString()) + ");";
     }
 }

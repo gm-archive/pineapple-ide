@@ -25,7 +25,7 @@ package org.gcreator.actions;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import org.gcreator.actions.panels.ConditionalPanel;
+import org.gcreator.actions.panels.ExpressionPanel;
 
 /**
  * An Action Type representing an if statement
@@ -46,7 +46,7 @@ public class IfActionType extends ActionType{
     public void makeActionPanel(final Action a, JPanel panel){
         panel.removeAll();
         panel.setLayout(new BorderLayout());
-        ConditionalPanel p = new ConditionalPanel(a);
+        ExpressionPanel p = new ExpressionPanel(a);
         p.setVisible(true);
         panel.add(p, BorderLayout.CENTER);
     }
