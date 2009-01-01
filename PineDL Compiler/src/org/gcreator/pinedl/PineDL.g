@@ -122,7 +122,7 @@ doc returns [PineClass t]
 @init{
 	target = new PineClass();
 }
-	:	pkgstmt
+	:	pkgstmt?
 		importstmt*
 		clsdecl
 		{t = target;};
