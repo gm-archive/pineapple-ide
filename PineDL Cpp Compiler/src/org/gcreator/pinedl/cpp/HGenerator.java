@@ -29,12 +29,16 @@ import java.io.OutputStream;
 import java.util.Vector;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.gcreator.pinedl.AccessControlKeyword;
+import org.gcreator.pinedl.Argument;
+import org.gcreator.pinedl.Function;
 import org.gcreator.pinedl.NativeType;
 import org.gcreator.pinedl.PineClass;
 import org.gcreator.pinedl.PineDLLexer;
 import org.gcreator.pinedl.PineDLParser;
 import org.gcreator.pinedl.Type;
 import org.gcreator.pinedl.TypeCategory;
+import org.gcreator.pinedl.Variable;
 
 /**
  * Creates a H file from a PineDL context
@@ -44,20 +48,27 @@ public class HGenerator {
     OutputStream out = null;
     InputStream in = null;
     OutputStream err = null;
-    String fname = "";
     PineClass cls = null;
+    String fname = "";
     boolean sucessful = true;
+    Vector<String> context = null;
     
-    public HGenerator(InputStream in, String fname, OutputStream out, OutputStream err){
+    public HGenerator(InputStream in, OutputStream out, OutputStream err, String fname,
+            Vector<String> context){
         try{
             this.in = in;
             this.out = out;
-            this.fname = fname;
             this.err = err;
+            this.context = context;
             parse();
+            this.fname = cls.clsName;
+            if(!this.fname.equals(fname)){
+                throw new Exception("Invalid class name!");
+            }
             write();
         }
         catch(Exception e){
+            e.printStackTrace();
             throwError("Parsing exception: " + e.getMessage());
         }
     }
@@ -70,7 +81,7 @@ public class HGenerator {
     }
     
     private void write() throws Exception{
-        String htitle = getHeaderTitle();
+        String htitle = getHeaderTitle(fname);
         writeLine("#ifndef " + htitle);
         writeLine("#define " + htitle);
         
@@ -79,6 +90,7 @@ public class HGenerator {
         }
         
         writeImports();
+        writeClass();
         
         for(String pkg : cls.packageName){
             writeLine("}");
@@ -91,14 +103,105 @@ public class HGenerator {
     private void writeImports() throws Exception{
         Vector<String> iclass = new Vector<String>();
         
+        Vector<String> s = new Vector<String>();
         for(Type t : cls.importStmt){
-            writeLine("using " + typeToString(t));
+            if(s.contains(t.type[t.type.length-1])){
+                throwError("Found two import statements referencing same class name.");
+                return;
+            }
+            if(context.contains(t.type[t.type.length-1])){
+                throwWarning("Found import statement reference class name of same package");
+                return;
+            }
+            s.add(t.type[t.type.length-1]);
+            writeLine("#include \"" + getHeaderTitle(t.type[t.type.length-1]) + '"');
         }
     }
     
-    private String typeToString(Type t){
+    private void writeClass() throws Exception{
+        String s = "class ";
+        s += detokenize(cls.clsName);
+        if(cls.superClass!=null){
+            s += " extends " + retrieveType(cls.superClass, false);
+        }
+        s += "{";
+        writeLine(s);
+        
+        writeFields();
+        writeMethods();
+        
+        writeLine("}");
+    }
+    
+    private void writeFields() throws Exception{
+        for(Variable field : cls.variables){
+            writeLine(accessToString(field.access) +
+                    (field.isStatic?" static ":" ") +
+                    retrieveType(field.type, true) + ' ' +
+                    detokenize(field.name) + ";");
+        }
+    }
+    
+    private String retrieveType(Type t, boolean reference){
+        if(t.typeCategory==TypeCategory.NATIVE){
+            return typeToString(t, reference);
+        }
         if(t.typeCategory==TypeCategory.ARRAY){
-            return typeToString(t.arrayType) + "*";
+            return retrieveType(t.arrayType, reference) + "*";
+        }
+        if(t.type.length!=1){
+            return typeToString(t, reference);
+        }
+        for(String s : context){
+            if(s.equals(t.type[t.type.length-1])){
+                return s;
+            }
+        }
+        for(Type type : cls.importStmt){
+            if(type.type[type.type.length-1].equals(t.type[0])){
+                return typeToString(type, reference);
+            }
+        }
+        throwError("Unknown type " + t.toString());
+        return "---";
+    }
+    
+    private void writeMethods() throws Exception{
+        for(Function method : cls.functions){
+            String s = accessToString(method.access) +
+                    (method.isStatic?" static ":" ") +
+                    retrieveType(method.returnType, true) + ' ' +
+                    detokenize(method.name) + '(';
+            
+            boolean isFirst = true;
+            for(Argument a : method.arguments){
+                if(!isFirst){
+                    s += ", ";
+                }
+                s += retrieveType(a.type, true);
+                s += ' ';
+                s += detokenize(a.name);
+                isFirst = false;
+            }
+            
+            s += ");";
+            writeLine(s);
+        }
+    }
+    
+    private String accessToString(AccessControlKeyword k){
+        if(k==AccessControlKeyword.PRIVATE){
+            return "private";
+        }
+        if(k==AccessControlKeyword.PROTECTED){
+            return "protected";
+        }
+        return "public";
+    }
+    
+    private String typeToString(Type t, boolean reference){
+        if(t.typeCategory==TypeCategory.ARRAY){
+            return typeToString(t.arrayType, true) + "*";
         }
         if(t.typeCategory==TypeCategory.NATIVE){
             if(t.nativeType==NativeType.BOOL){
@@ -133,11 +236,13 @@ public class HGenerator {
             }
         }
         String x = t.type[0];
-        for(int i = 0; i < t.type.length; i++){
+        for(int i = 1; i < t.type.length; i++){
             x += "::";
             x += t.type[i];
         }
-        x += '*';
+        if(reference){
+            x += '*';
+        }
         return x;
     }
     
@@ -210,10 +315,10 @@ public class HGenerator {
         return id;
     }
     
-    private String getHeaderTitle(){
+    private String getHeaderTitle(String name){
         String s = "__";
         
-        s += fname.toUpperCase();
+        s += name.toUpperCase();
         
         s += "_H__";
         return s;
