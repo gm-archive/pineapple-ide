@@ -33,6 +33,7 @@ import org.gcreator.pinedl.AccessControlKeyword;
 import org.gcreator.pinedl.Argument;
 import org.gcreator.pinedl.Constructor;
 import org.gcreator.pinedl.Function;
+import org.gcreator.pinedl.Leaf;
 import org.gcreator.pinedl.NativeType;
 import org.gcreator.pinedl.PineClass;
 import org.gcreator.pinedl.PineDLLexer;
@@ -40,12 +41,16 @@ import org.gcreator.pinedl.PineDLParser;
 import org.gcreator.pinedl.Type;
 import org.gcreator.pinedl.TypeCategory;
 import org.gcreator.pinedl.Variable;
+import org.gcreator.pinedl.statements.Block;
+import org.gcreator.pinedl.statements.DeclAssign;
+import org.gcreator.pinedl.statements.EqualOperation;
+import org.gcreator.pinedl.statements.SumOperation;
 
 /**
  * Creates a H file from a PineDL context
  * @author Luís Reis
  */
-public class HGenerator {
+public class CppGenerator {
     OutputStream out = null;
     InputStream in = null;
     OutputStream err = null;
@@ -54,7 +59,7 @@ public class HGenerator {
     boolean sucessful = true;
     Vector<String> context = null;
     
-    public HGenerator(InputStream in, OutputStream out, OutputStream err, String fname,
+    public CppGenerator(InputStream in, OutputStream out, OutputStream err, String fname,
             Vector<String> context){
         try{
             this.in = in;
@@ -82,29 +87,18 @@ public class HGenerator {
     }
     
     private void write() throws Exception{
-        String htitle = getHeaderTitle(fname);
-        writeLine("#ifndef " + htitle);
-        writeLine("#define " + htitle);
         
-        writeLine("#include \"pineapple.h\"");
         writeImports();
-        
-        for(String pkg : cls.packageName){
-            writeLine("package " + detokenize(pkg) + "{");
-        }
-        
         writeClass();
         
-        for(String pkg : cls.packageName){
-            writeLine("}");
-        }
-        
-        writeLine("#endif");
         writeLine();
     }
     
     private void writeImports() throws Exception{
         Vector<String> iclass = new Vector<String>();
+        
+        writeLine("#include \"pineapple.h\"");
+        writeLine("using namespace Pineapple;");
         
         Vector<String> s = new Vector<String>();
         for(Type t : cls.importStmt){
@@ -118,32 +112,16 @@ public class HGenerator {
             }
             s.add(t.type[t.type.length-1]);
             writeLine("#include \"" + t.type[t.type.length-1] + '"');
+            writeLine("using " + typeToString(t, false) + ';');
         }
     }
     
     private void writeClass() throws Exception{
-        String s = "class ";
-        s += detokenize(cls.clsName);
-        if(cls.superClass!=null){
-            s += " extends " + retrieveType(cls.superClass, false);
-        }
-        s += "{";
-        writeLine(s);
         
-        writeFields();
-        writeMethods();
+        
         writeConstructors();
+        writeMethods();
         
-        writeLine("}");
-    }
-    
-    private void writeFields() throws Exception{
-        for(Variable field : cls.variables){
-            writeLine(accessToString(field.access) +
-                    (field.isStatic?" static ":" ") +
-                    retrieveType(field.type, true) + ' ' +
-                    detokenize(field.name) + ";");
-        }
     }
     
     private String retrieveType(Type t, boolean reference){
@@ -170,15 +148,12 @@ public class HGenerator {
         return "---";
     }
     
-    private void writeMethods() throws Exception{
-        for(Function method : cls.functions){
-            String s = accessToString(method.access) +
-                    (method.isStatic?" static ":" ") +
-                    retrieveType(method.returnType, true) + ' ' +
-                    detokenize(method.name) + '(';
+    private void writeConstructors() throws Exception{
+        for(Constructor c : cls.constructors){
+            String s = detokenize(cls.clsName) + "::" + detokenize(cls.clsName) + '(';
             
             boolean isFirst = true;
-            for(Argument a : method.arguments){
+            for(Argument a : c.arguments){
                 if(!isFirst){
                     s += ", ";
                 }
@@ -188,15 +163,21 @@ public class HGenerator {
                 isFirst = false;
             }
             
-            s += ");";
+            s += ")";
+            
             writeLine(s);
+            
+            writeLine(leafToString(c.content));
+            
+            writeLine();
         }
     }
     
-    private void writeConstructors() throws Exception{
-        for(Constructor method : cls.constructors){
-            String s = accessToString(method.access) + ' ' +
-                    detokenize(cls.clsName) + '(';
+    private void writeMethods() throws Exception{
+        for(Function method : cls.functions){
+            String s = (method.isStatic?" static ":" ") +
+                    retrieveType(method.returnType, true) + ' ' +
+                    detokenize(cls.clsName) + "::" + detokenize(method.name) + '(';
             
             boolean isFirst = true;
             for(Argument a : method.arguments){
@@ -209,9 +190,46 @@ public class HGenerator {
                 isFirst = false;
             }
             
-            s += ");";
+            s += ")";
+            
             writeLine(s);
+            
+            writeLine(leafToString(method.content));
+            
+            writeLine();
         }
+    }
+    
+    private String leafToString(Leaf l){
+        if(l instanceof Block){
+            String s = "{\n";
+            
+            for(Leaf leaf : ((Block) l).content){
+                s += leafToString(l) + "\n";
+            }
+            
+            return s + "}";
+        }
+        if(l instanceof DeclAssign){
+            DeclAssign da = (DeclAssign) l;
+            String s = retrieveType(da.type, true);
+            s += ' ';
+            s += detokenize(da.name);
+            if(da.value!=null){
+                s += '=';
+                s += leafToString(da.value);
+            }
+            return s + ';';
+        }
+        if(l instanceof EqualOperation){
+            EqualOperation e = (EqualOperation) l;
+            return leafToString(e.left) + "= (" + leafToString(e.right) + ");";
+        }
+        if(l instanceof SumOperation){
+            SumOperation s = (SumOperation) l;
+            return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ");";
+        }
+        return "";
     }
     
     private String accessToString(AccessControlKeyword k){
