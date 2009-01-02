@@ -45,6 +45,7 @@ import org.gcreator.plugins.Plugin;
 public final class PluginManager {
 
     private static Vector<File> modules = new Vector<File>();
+    private static URLClassLoader clsloader;
     
     /** Don't allow instantation
      */
@@ -71,7 +72,7 @@ public final class PluginManager {
             }
         
         }
-        URLClassLoader clsloader = new URLClassLoader(urls);
+        clsloader = new URLClassLoader(urls);
         if (Core.DEBUG) {
         for (URL l : clsloader.getURLs()) {
             System.out.println("Loaded " + l);
@@ -211,5 +212,15 @@ public final class PluginManager {
             /* Should not happen */
             Logger.getLogger(PluginManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * Gets the {@link URLClassLoader} that is used to load the plugins.
+     * This will be <tt>null</tt> if {@link #loadPlugins()} has not yet been called.
+     * 
+     * @return The {@link URLClassLoader} that is used to load the plugins.
+     */
+    public static URLClassLoader getClassLoader() {
+        return clsloader;
     }
 }

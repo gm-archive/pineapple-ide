@@ -41,6 +41,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +85,7 @@ import org.gcreator.managers.SettingsManager;
 import org.gcreator.plugins.DefaultEventTypes;
 import org.gcreator.plugins.EventHandler;
 import org.gcreator.managers.EventManager;
+import org.gcreator.managers.PluginManager;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.plugins.Event;
 import org.gcreator.plugins.EventPriority;
@@ -98,6 +100,7 @@ import org.gcreator.tree.BaseTreeNode;
 import org.gcreator.tree.FileTreeNode;
 import org.gcreator.tree.FolderTreeNode;
 import org.gcreator.tree.ProjectTreeNode;
+import org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
@@ -261,7 +264,7 @@ public class PineappleGUI implements EventHandler {
         f.setIconImage(new ImageIcon(getClass().getResource(
                 "/org/gcreator/pineapple/pineapple.png")).getImage());
 
-        manager = new MyDoggyToolWindowManager();
+        manager = new MyDoggyToolWindowManager(Locale.getDefault(), PluginManager.getClassLoader());
         f.getContentPane().add(manager);
 
         //<editor-fold defaultstate="collapsed" desc="Tree Initialization">
@@ -780,8 +783,8 @@ public class PineappleGUI implements EventHandler {
             File dataFolder = Core.getStaticContext().getApplicationDataFolder();
             File w = new File(dataFolder, "workspace.xml");
             if (w.exists()) {
-                BufferedInputStream in = new BufferedInputStream(new FileInputStream(w));
-                manager.getPersistenceDelegate().apply(in);
+                final BufferedInputStream in = new BufferedInputStream(new FileInputStream(w));
+                manager.getPersistenceDelegate().merge(in, MergePolicy.RESET);
                 in.close();
             }
         } catch (Exception e) {
