@@ -136,12 +136,20 @@ public class CppGenerator {
         }
         for(String s : context){
             if(s.equals(t.type[t.type.length-1])){
-                return s;
+                return s + (reference?"*":"");
             }
         }
         for(Type type : cls.importStmt){
             if(type.type[type.type.length-1].equals(t.type[0])){
                 return typeToString(type, reference);
+            }
+        }
+        if(t.type.length==1){
+            if(t.type[0].equals("Actor")){
+                return "Pineapple::Actor" + (reference?"*":"");
+            }
+            else if(t.type[0].equals("Scene")){
+                return "Pineapple::Scene" + (reference?"*":"");
             }
         }
         throwError("Unknown type " + t.toString());
