@@ -59,6 +59,9 @@ public class BehaviorPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        tabPane.setMinimumSize(new java.awt.Dimension(136, 183));
+        tabPane.setPreferredSize(new java.awt.Dimension(136, 183));
+
         eventsTab.setLayout(new java.awt.BorderLayout());
 
         eventList.setModel(new javax.swing.AbstractListModel() {
@@ -284,7 +287,7 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     private void addTabForEvent(Event e) {
         EventPanel p = new EventPanel(e);
         int i = tabPane.getComponentCount() - 2;
-        tabPane.insertTab(e.type, null, p, "", i);
+        tabPane.insertTab(e.type, null, p, e.type, i);
         tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
     }
 

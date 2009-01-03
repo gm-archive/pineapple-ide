@@ -3,7 +3,6 @@
  *
  * Created on 21 de Dezembro de 2008, 17:49
  */
-
 package org.gcreator.events;
 
 import java.awt.event.KeyEvent;
@@ -22,9 +21,8 @@ import org.gcreator.gui.ActionListModel;
 public class EventPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1;
-    
     private Event e = null;
-    
+
     /**
      * Creates new form EventPanel
      * @param e The event that this panel should represent
@@ -32,18 +30,19 @@ public class EventPanel extends javax.swing.JPanel {
     public EventPanel(Event e) {
         this.e = e;
         initComponents();
-        jList1.setModel(new ActionListModel(e));
-        jList1.setCellRenderer(new ActionCellRenderer());
-        jList1.setTransferHandler(new ActionTransferHandler());
-        jList1.addMouseMotionListener(new MouseAdapter() {
+        actionList.setModel(new ActionListModel(e));
+        actionList.setCellRenderer(new ActionCellRenderer());
+        actionList.setTransferHandler(new ActionTransferHandler());
+        actionList.addMouseMotionListener(new MouseAdapter() {
+
             @Override
-            public void mouseDragged(MouseEvent evt){
-                TransferHandler th = jList1.getTransferHandler();
-                if(th==null){
+            public void mouseDragged(MouseEvent evt) {
+                TransferHandler th = actionList.getTransferHandler();
+                if (th == null) {
                     return;
                 }
                 th.exportAsDrag(
-                        jList1, evt, TransferHandler.COPY);
+                        actionList, evt, TransferHandler.COPY);
             }
         });
     }
@@ -58,68 +57,65 @@ public class EventPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        actionList = new javax.swing.JList();
         jPanel1 = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridLayout(1, 0));
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        actionList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "a", "b" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jList1.setDragEnabled(true);
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        actionList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        actionList.setDragEnabled(true);
+        actionList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                actionListValueChanged(evt);
             }
         });
-        jList1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        actionList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jList1MouseDragged(evt);
+                actionListMouseDragged(evt);
             }
         });
-        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+        actionList.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jList1KeyTyped(evt);
+                actionListKeyTyped(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(actionList);
 
         add(jScrollPane1);
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-    Object o = jList1.getSelectedValue();
-    if(o==null){
+private void actionListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_actionListValueChanged
+    Object o = actionList.getSelectedValue();
+    if (o == null) {
         jPanel1.removeAll();
-    }
-    else{
+    } else {
         ((Action) o).getType().makeActionPanel((Action) o, jPanel1);
         jPanel1.updateUI();
     }
-}//GEN-LAST:event_jList1ValueChanged
+}//GEN-LAST:event_actionListValueChanged
 
-private void jList1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyTyped
-    if(evt.getKeyChar()==KeyEvent.VK_DELETE){
-        Object o = jList1.getSelectedValue();
-        if(o != null){
+private void actionListKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_actionListKeyTyped
+    if (evt.getKeyChar() == KeyEvent.VK_DELETE) {
+        Object o = actionList.getSelectedValue();
+        if (o != null) {
             e.actions.remove(o);
-            jList1.updateUI();
+            actionList.updateUI();
         }
     }
-}//GEN-LAST:event_jList1KeyTyped
+}//GEN-LAST:event_actionListKeyTyped
 
-private void jList1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseDragged
-    jList1.getTransferHandler().exportAsDrag(jList1, evt, TransferHandler.MOVE);
-}//GEN-LAST:event_jList1MouseDragged
-
+private void actionListMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actionListMouseDragged
+    actionList.getTransferHandler().exportAsDrag(actionList, evt, TransferHandler.MOVE);
+}//GEN-LAST:event_actionListMouseDragged
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList jList1;
+    private javax.swing.JList actionList;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-
 }

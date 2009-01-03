@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.editors;
 
+import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,20 +33,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.gcreator.actions.ActionType;
 import org.gcreator.dnd.PaletteAction;
-import org.gcreator.events.Event;
-import org.gcreator.events.EventPanel;
 import org.gcreator.formats.Actor;
 import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.BehaviorPanel;
 import org.gcreator.gui.DocumentPane;
-import org.gcreator.gui.EventCellRenderer;
-import org.gcreator.gui.EventTabRenderer;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -60,11 +56,12 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
-    private boolean toggled;
     private BehaviorPanel behavior;
+    private CardLayout clayout = new CardLayout();
     
     /**
      * Creates a new ActorEditor
+     * 
      * @param f The actor file
      */
     public ActorEditor(BasicFile f) {
@@ -88,8 +85,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 actor.z = (Integer) depthSpinner.getValue();
             }
         });
-        hackAsplit.setDividerLocation(1.0D);
-        hackAsplit.setRightComponent(behavior);
+        view.add(behavior, "behavior");
         spriteChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -150,8 +146,6 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         return true;
     }
 
-
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -165,7 +159,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         toolBar = new javax.swing.JToolBar();
         propertiesToggle = new javax.swing.JToggleButton();
         membersToggle = new javax.swing.JToggleButton();
-        hackAsplit = new javax.swing.JSplitPane();
+        view = new javax.swing.JPanel();
         propertiesPanel = new javax.swing.JPanel();
         inGameRenderingPanel = new javax.swing.JPanel();
         depthSpinner = new javax.swing.JSpinner();
@@ -200,8 +194,14 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         });
         toolBar.add(membersToggle);
 
-        hackAsplit.setDividerLocation(90);
-        hackAsplit.setEnabled(false);
+        view.setLayout(clayout = new java.awt.CardLayout());
+        /*
+        view.setLayout(new java.awt.CardLayout());
+        */
+
+        propertiesPanel.setMaximumSize(new java.awt.Dimension(100, 218));
+        propertiesPanel.setMinimumSize(new java.awt.Dimension(100, 218));
+        propertiesPanel.setPreferredSize(new java.awt.Dimension(100, 218));
 
         inGameRenderingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("In-Game Rendering"));
 
@@ -211,6 +211,8 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
         renderSpriteCheckBox.setSelected(true);
         renderSpriteCheckBox.setText("Render sprite automatically");
+        renderSpriteCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        renderSpriteCheckBox.setOpaque(true);
 
         spriteLabel.setText("Sprite:");
 
@@ -219,7 +221,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         inGameRenderingPanelLayout.setHorizontalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(spriteLabel)
@@ -229,8 +231,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                         .addComponent(depthLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(renderSpriteCheckBox))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addComponent(renderSpriteCheckBox)))
         );
         inGameRenderingPanelLayout.setVerticalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +254,9 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
 
         parentLabel.setText("Parent:");
 
-        isClassFinalCheckBox.setText("Disable inhertance of this class");
+        isClassFinalCheckBox.setText("Barren");
+        isClassFinalCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        isClassFinalCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout polymorhpismPanelLayout = new javax.swing.GroupLayout(polymorhpismPanel);
         polymorhpismPanel.setLayout(polymorhpismPanelLayout);
@@ -261,12 +264,12 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
             polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(polymorhpismPanelLayout.createSequentialGroup()
                 .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(isClassFinalCheckBox)
                     .addGroup(polymorhpismPanelLayout.createSequentialGroup()
                         .addComponent(parentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(isClassFinalCheckBox))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         polymorhpismPanelLayout.setVerticalGroup(
             polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,16 +278,18 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                     .addComponent(parentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(parentChooser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(isClassFinalCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(isClassFinalCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
         propertiesPanel.setLayout(propertiesPanelLayout);
         propertiesPanelLayout.setHorizontalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(polymorhpismPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(polymorhpismPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         propertiesPanelLayout.setVerticalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,39 +297,38 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(polymorhpismPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        hackAsplit.setLeftComponent(propertiesPanel);
+        view.add(propertiesPanel, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(hackAsplit, 0, 0, Short.MAX_VALUE)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hackAsplit, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 private void propertiesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_propertiesToggleActionPerformed
-    hackAsplit.setDividerLocation(1.0D);
+    clayout.first(view);
 }//GEN-LAST:event_propertiesToggleActionPerformed
 
 private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membersToggleActionPerformed
-    hackAsplit.setDividerLocation(0.0D);
+    clayout.last(view);
 }//GEN-LAST:event_membersToggleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel depthLabel;
     private javax.swing.JSpinner depthSpinner;
-    private javax.swing.JSplitPane hackAsplit;
     private javax.swing.JPanel inGameRenderingPanel;
     private javax.swing.JCheckBox isClassFinalCheckBox;
     private javax.swing.JToggleButton membersToggle;
@@ -338,5 +342,7 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel spriteLabel;
     private javax.swing.ButtonGroup toggles;
     private javax.swing.JToolBar toolBar;
+    private javax.swing.JPanel view;
     // End of variables declaration//GEN-END:variables
+
 }
