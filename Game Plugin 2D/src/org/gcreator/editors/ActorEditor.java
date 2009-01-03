@@ -250,7 +250,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        polymorhpismPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Polymorhpism"));
+        polymorhpismPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Polymorphism"));
 
         parentLabel.setText("Parent:");
 
