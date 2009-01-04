@@ -48,18 +48,18 @@ import org.gcreator.pinedl.Variable;
 public class HGenerator {
     OutputStream out = null;
     InputStream in = null;
-    OutputStream err = null;
+    GameCompiler cmp = null;
     PineClass cls = null;
     String fname = "";
-    boolean sucessful = true;
+    private boolean successful = true;
     Vector<String> context = null;
     
-    public HGenerator(InputStream in, OutputStream out, OutputStream err, String fname,
+    public HGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
             Vector<String> context){
         try{
             this.in = in;
             this.out = out;
-            this.err = err;
+            this.cmp = cmp;
             this.context = context;
             parse();
             this.fname = cls.clsName;
@@ -72,6 +72,10 @@ public class HGenerator {
             e.printStackTrace();
             throwError("Parsing exception: " + e.getMessage());
         }
+    }
+    
+    public boolean wasSuccessful(){
+        return successful;
     }
     
     private void parse() throws Exception{
@@ -103,9 +107,7 @@ public class HGenerator {
         writeLine();
     }
     
-    private void writeImports() throws Exception{
-        Vector<String> iclass = new Vector<String>();
-        
+    private void writeImports() throws Exception{        
         Vector<String> s = new Vector<String>();
         for(Type t : cls.importStmt){
             if(s.contains(t.type[t.type.length-1])){
@@ -359,23 +361,17 @@ public class HGenerator {
     }
     
     private void throwWarning(String warning){
-        try{
         String message = "[WARNING] ";
         message += warning;
-        message += '\n';
         
-        err.write(message.getBytes());
-        }catch(IOException e){}
+        cmp.compFrame.writeLine(message);
     }
     
     private void throwError(String error){
-        try{
         String message = "[ERROR] ";
         message += error;
-        message += '\n';
-        sucessful = false;
+        successful = false;
         
-        err.write(message.getBytes());
-        }catch(IOException e){}
+        cmp.compFrame.writeLine(message);
     }
 }

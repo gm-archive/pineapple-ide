@@ -23,7 +23,10 @@ THE SOFTWARE.
 package org.gcreator.pinedl.cpp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 import org.gcreator.actions.Action;
 import org.gcreator.events.Event;
@@ -42,11 +45,16 @@ public class GameCompiler {
     Project p;
     File outputFolder;
     File binFolder;
+    File resFolder;
     CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
+    Vector<File> imageFiles = new Vector<File>();
+    Vector<File> compFiles = new Vector<File>();
+    Vector<String> context = new Vector<String>();
     String gamePackage = "Game";
+    boolean worked = true;
 
-    private GameCompiler(Project p) {
+    public GameCompiler(Project p) {
         this.p = p;
         if (p.getProjectType() instanceof GameProjectType) {
             try {
@@ -58,16 +66,90 @@ public class GameCompiler {
                     if (format.equals("actor")) {
                         createActorScript(e);
                     }
-                    if (format.equals("scene")) {
+                    else if (format.equals("scene")) {
                         createSceneScript(e);
                     }
+                    else if (format.equals("pdl")) {
+                        copyScript(e);
+                    }
+                    else if (format.equals("png")) {
+                        copyImage(e);
+                    }
                 }
+                buildContext();
+                for(File script : pineScripts){
+                    if(!worked){
+                        return;
+                    }
+                    generateHeader(script);
+                    generateCppFile(script);
+                }
+                compile();
             } catch (Exception e) {
                 compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + e.getMessage() + "</font>");
+                worked = false;
             }
         }
     }
+    
+    private void compile(){
+        
+    }
+    
+    private void buildContext(){
+        for(File script : pineScripts){
+            String fname = script.getName();
+            fname = fname.substring(0, fname.lastIndexOf('.')-1);
+            context.add(fname);
+        }
+    }
+    
+    private void generateHeader(File script) throws IOException{
+        InputStream is = new FileInputStream(script);
+        String fname = script.getName();
+        fname = fname.substring(0, fname.lastIndexOf('.')-1);
+        File output = new File(outputFolder, fname + ".h");
+        FileOutputStream fos = new FileOutputStream(output);
+        HGenerator gen = new HGenerator(is, fos, this, fname, context);
+        if(!gen.wasSuccessful()){
+            worked = false;
+        }
+    }
+    
+    private void generateCppFile(File script) throws IOException{
+        InputStream is = new FileInputStream(script);
+        String fname = script.getName();
+        fname = fname.substring(0, fname.lastIndexOf('.')-1);
+        File output = new File(outputFolder, fname + ".h");
+        FileOutputStream fos = new FileOutputStream(output);
+        CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
+        if(!gen.wasSuccessful()){
+            worked = false;
+        }
+    }
 
+    private void copyImage(ProjectElement e) throws Exception {
+        File f = new File(resFolder, e.getName());
+        FileOutputStream fos = new FileOutputStream(f);
+        InputStream is = e.getFile().getInputStream();
+        int c = 0;
+        while((c=is.read())!=-1){
+            fos.write(c);
+        }
+        imageFiles.add(f);
+    }
+    
+    private void copyScript(ProjectElement e) throws Exception {
+        File f = new File(outputFolder, e.getName());
+        FileOutputStream fos = new FileOutputStream(f);
+        InputStream is = e.getFile().getInputStream();
+        int c = 0;
+        while((c=is.read())!=-1){
+            fos.write(c);
+        }
+        pineScripts.add(f);
+    }
+    
     private void createActorScript(ProjectElement e) throws Exception {
         Actor a = new Actor(e.getFile());
         String fname = e.getName();
@@ -130,6 +212,7 @@ public class GameCompiler {
 
         fos.write('}');
         fos.write('\n');
+        pineScripts.add(f);
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
@@ -165,6 +248,7 @@ public class GameCompiler {
         
         fos.write('}');
         fos.write('\n');
+        pineScripts.add(f);
     }
     
     private String outputEvent(Actor a, Event evt) {
@@ -183,10 +267,15 @@ public class GameCompiler {
             outputFolder.delete();
         }
         outputFolder.mkdirs();
-        binFolder = new File(outputFolder, "bin/");
+        binFolder = new File(outputFolder, "bin/"); // OUTPUT/bin
         if (binFolder.exists()) {
             binFolder.delete();
         }
-        binFolder.mkdirs();
+        binFolder.mkdir();
+        resFolder = new File(binFolder, "res/"); // OUTPUT/bin/res
+        if (resFolder.exists()) {
+            resFolder.delete();
+        }
+        resFolder.mkdir();
     }
 }
