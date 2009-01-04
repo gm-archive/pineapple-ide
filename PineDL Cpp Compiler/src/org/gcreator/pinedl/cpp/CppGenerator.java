@@ -44,6 +44,8 @@ import org.gcreator.pinedl.Variable;
 import org.gcreator.pinedl.statements.Block;
 import org.gcreator.pinedl.statements.DeclAssign;
 import org.gcreator.pinedl.statements.EqualOperation;
+import org.gcreator.pinedl.statements.Expression;
+import org.gcreator.pinedl.statements.IntConstant;
 import org.gcreator.pinedl.statements.SumOperation;
 
 /**
@@ -173,6 +175,22 @@ public class CppGenerator {
             
             s += ")";
             
+            if(c.superArguments!=null){
+                s += ": " + retrieveType(cls.superClass, false);
+                s += '(';
+                isFirst = true;
+                for(Expression exp : c.superArguments){
+                    if(!isFirst){
+                        s += ", ";
+                    }
+                    
+                    s += leafToString(exp);
+                    
+                    isFirst = false;
+                }
+                s += ')';
+            }
+            
             writeLine(s);
             
             writeLine(leafToString(c.content));
@@ -236,6 +254,9 @@ public class CppGenerator {
         if(l instanceof SumOperation){
             SumOperation s = (SumOperation) l;
             return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ");";
+        }
+        if(l instanceof IntConstant){
+            return l.toString();
         }
         return "";
     }

@@ -125,7 +125,7 @@ public class HGenerator {
         String s = "class ";
         s += detokenize(cls.clsName);
         if(cls.superClass!=null){
-            s += " extends " + retrieveType(cls.superClass, false);
+            s += " : public " + retrieveType(cls.superClass, false);
         }
         s += "{";
         writeLine(s);
@@ -140,7 +140,7 @@ public class HGenerator {
     private void writeFields() throws Exception{
         for(Variable field : cls.variables){
             writeLine(accessToString(field.access) +
-                    (field.isStatic?" static ":" ") +
+                    (field.isStatic?": static ":": ") +
                     retrieveType(field.type, true) + ' ' +
                     detokenize(field.name) + ";");
         }
@@ -173,7 +173,7 @@ public class HGenerator {
     private void writeMethods() throws Exception{
         for(Function method : cls.functions){
             String s = accessToString(method.access) +
-                    (method.isStatic?" static ":" ") +
+                    (method.isStatic?": static ":": ") +
                     retrieveType(method.returnType, true) + ' ' +
                     detokenize(method.name) + '(';
             
@@ -195,7 +195,7 @@ public class HGenerator {
     
     private void writeConstructors() throws Exception{
         for(Constructor method : cls.constructors){
-            String s = accessToString(method.access) + ' ' +
+            String s = accessToString(method.access) + ": " +
                     detokenize(cls.clsName) + '(';
             
             boolean isFirst = true;

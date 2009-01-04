@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pinedl;
 
 import java.util.Vector;
@@ -32,34 +31,48 @@ import org.gcreator.pinedl.statements.Expression;
  * @author Luís Reis
  */
 public class Constructor {
+
     public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
     public Vector<Argument> arguments = new Vector<Argument>();
     public Block content = new Block();
     public Vector<Expression> superArguments = null;
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         String s = access.toString();
-        
+
         s += " this(";
-        
+
         boolean first = true;
-        for(Argument a : arguments){
-            if(!first){
+        for (Argument a : arguments) {
+            if (!first) {
                 s += ", ";
             }
             s += a.toString();
             first = false;
         }
-        
+
         s += ")";
-        
+
+        if (superArguments != null) {
+            s += ": super(";
+            first = true;
+            for (Expression e : superArguments) {
+                if (!first) {
+                    s += ", ";
+                }
+                s += e.toString();
+                first = false;
+            }
+            s += ")";
+        }
+
         s += content.toString();
-        
+
         return s;
     }
-    
-    public Constructor optimize(){
+
+    public Constructor optimize() {
         content.optimize();
         return this;
     }

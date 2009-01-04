@@ -28,6 +28,7 @@ import java.util.Vector;
 import org.gcreator.actions.Action;
 import org.gcreator.events.Event;
 import org.gcreator.formats.Actor;
+import org.gcreator.formats.Scene;
 import org.gcreator.game2d.GameProjectType;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
@@ -132,7 +133,38 @@ public class GameCompiler {
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
+        Scene scene = new Scene(e.getFile());
+        String fname = e.getName();
+        fname = fname.substring(0, fname.lastIndexOf('.') - 1);
+        fname = fname.replaceAll("\\s", "_");
+        compFrame.writeLine("Creating PineDL Script for scene " + fname);
+        File f = new File(outputFolder, fname + ".pdl");
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write("package ".getBytes());
+        fos.write(gamePackage.getBytes());
+        fos.write(';');
+        fos.write('\n');
+        fos.write('\n');
+        fos.write("class ".getBytes());
+        fos.write(fname.getBytes());
+        fos.write(" extends Scene{\n".getBytes());
         
+        fos.write("public this() : super".getBytes());
+        
+        fos.write(("(" + scene.width + ", " + scene.height + ")").getBytes());
+        
+        fos.write("){\n".getBytes());
+        
+        for(Scene.ActorInScene a : scene.actors){
+            String aname = a.bf.getName();
+            aname = aname.substring(0, aname.lastIndexOf('.')-1);
+            fos.write(("addActor(new "+aname+"("+a.x+", "+a.y+"));").getBytes());
+        }
+        
+        fos.write("}\n".getBytes());
+        
+        fos.write('}');
+        fos.write('\n');
     }
     
     private String outputEvent(Actor a, Event evt) {
