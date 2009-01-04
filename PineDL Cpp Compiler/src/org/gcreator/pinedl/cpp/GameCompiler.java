@@ -77,6 +77,7 @@ public class GameCompiler {
                     }
                 }
                 buildContext();
+                compFrame.writeLine("Generating C++ and header files");
                 for(File script : pineScripts){
                     if(!worked){
                         return;
@@ -84,6 +85,8 @@ public class GameCompiler {
                     generateHeader(script);
                     generateCppFile(script);
                 }
+                compFrame.writeLine("Compiling the game");
+                copyLib();
                 compile();
             } catch (Exception e) {
                 compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + e.getMessage() + "</font>");
@@ -92,8 +95,56 @@ public class GameCompiler {
         }
     }
     
-    private void compile(){
-        
+    private void copyLib() throws IOException{
+        File f = new File(outputFolder, "libPineapple.a");
+        FileOutputStream fos = new FileOutputStream(f);
+        InputStream is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/libPineapple.a");
+        int c = 0;
+        while((c=is.read())!=-1){
+            fos.write(c);
+        }
+        fos.close();
+        f = new File(outputFolder, "pineapple.h.gch");
+        fos = new FileOutputStream(f);
+        is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/pineapple.h.gch");
+        while((c=is.read())!=-1){
+            fos.write(c);
+        }
+    }
+    
+    private void compile() throws IOException{
+        //TODO: MAKE THIS WINDOWS-COMPATIBLE
+        //TODO: TEST THIS AGAINST LARGE PROJECTS
+        File outputFile = new File(outputFolder, "game");
+        String command = "g++ -o \"";
+        command += outputFile.getAbsolutePath();
+        command += "\" \"";
+        File pine1 = new File(outputFolder, "libPineapple.a");
+        command += pine1.getAbsolutePath();
+        command += "\" \"";
+        File pine2 = new File(outputFolder, "pineapple.h.gch");
+        command += pine2.getAbsolutePath();
+        command += "\"";
+        for(File script : pineScripts){
+            command += " \"";
+            command += script.getAbsolutePath();
+            command += "\"";
+        }
+        command += "`sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
+        Process proc = Runtime.getRuntime().exec(command);
+        compFrame.writeLine("Calling GCC C++ for executable generation");
+        int c;
+        String res = "";
+        InputStream is = proc.getInputStream();
+        while((c=is.read())!=-1){
+            if(c!='\n'){
+                res += (char) c;
+            }
+            else{
+                compFrame.writeLine(res);
+                res = "";
+            }
+        }
     }
     
     private void buildContext(){
@@ -114,6 +165,7 @@ public class GameCompiler {
         if(!gen.wasSuccessful()){
             worked = false;
         }
+        fos.close();
     }
     
     private void generateCppFile(File script) throws IOException{
@@ -126,6 +178,7 @@ public class GameCompiler {
         if(!gen.wasSuccessful()){
             worked = false;
         }
+        fos.close();
     }
 
     private void copyImage(ProjectElement e) throws Exception {
@@ -137,9 +190,11 @@ public class GameCompiler {
             fos.write(c);
         }
         imageFiles.add(f);
+        fos.close();
     }
     
     private void copyScript(ProjectElement e) throws Exception {
+        compFrame.writeLine("Copying PineDL script " + e.getName());
         File f = new File(outputFolder, e.getName());
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = e.getFile().getInputStream();
@@ -148,6 +203,7 @@ public class GameCompiler {
             fos.write(c);
         }
         pineScripts.add(f);
+        fos.close();
     }
     
     private void createActorScript(ProjectElement e) throws Exception {
@@ -213,6 +269,7 @@ public class GameCompiler {
         fos.write('}');
         fos.write('\n');
         pineScripts.add(f);
+        fos.close();
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
@@ -249,6 +306,7 @@ public class GameCompiler {
         fos.write('}');
         fos.write('\n');
         pineScripts.add(f);
+        fos.close();
     }
     
     private String outputEvent(Actor a, Event evt) {
