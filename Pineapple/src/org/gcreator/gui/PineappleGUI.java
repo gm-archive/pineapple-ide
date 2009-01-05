@@ -825,7 +825,7 @@ public class PineappleGUI implements EventHandler {
                         "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
                 lf = true;
             } catch (Exception e) {
-                System.out.println("Failed to install l&f: " + e.getMessage());
+                System.out.println("Failed to install Look&Feel: " + e.getMessage());
             }
             if (!lf) {
                 try {
@@ -865,7 +865,6 @@ public class PineappleGUI implements EventHandler {
             }
             p = fs.load(f);
             dip.add(p.getFile().getName(), p);
-            evt.handleEvent();
             tree.updateUI();
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="WINDOW_DISPOSE">
@@ -1292,7 +1291,8 @@ public class PineappleGUI implements EventHandler {
                         if (!((JMenuItem) evt.getSource()).isEnabled()) {
                             return;
                         }
-                        s.load(n.getElement().getFile());
+                        DocumentPane p = s.load(n.getElement().getFile());
+                        dip.add(p.getFile().getName(), p);
                     }
                 });
                 openWith.add(m);
@@ -1313,7 +1313,8 @@ public class PineappleGUI implements EventHandler {
                     if (s == null) {
                         return;
                     }
-                    s.load(n.getElement().getFile());
+                    DocumentPane p = s.load(n.getElement().getFile());
+                    dip.add(p.getFile().getName(), p);
                 }
             });
             openWith.add(other);
@@ -2040,9 +2041,7 @@ public class PineappleGUI implements EventHandler {
             try {
                 o = support.getTransferable().getTransferData(ELEMENT_FLAVOR);
             } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (o == null) {
                 return false;
@@ -2050,7 +2049,6 @@ public class PineappleGUI implements EventHandler {
 
             JTree.DropLocation drop = (JTree.DropLocation) support.getDropLocation();
             if (drop.getPath() == null) {
-                System.out.println("BAH! Null path!");
                 return false;
             }
             Object last = drop.getPath().getLastPathComponent();
