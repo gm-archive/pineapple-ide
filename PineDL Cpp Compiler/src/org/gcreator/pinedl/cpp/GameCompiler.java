@@ -322,6 +322,7 @@ public class GameCompiler {
     private void prepare() throws Exception {
         compFrame = new CompilerFrame();
         compFrame.writeLine("<b>Preparing game compilation</b>");
+        compFrame.setVisible(true);
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
         if (outputFolder.exists()) {
             outputFolder.delete();

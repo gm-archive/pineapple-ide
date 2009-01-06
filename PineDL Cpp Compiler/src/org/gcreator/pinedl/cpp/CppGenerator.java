@@ -234,7 +234,7 @@ public class CppGenerator {
             String s = "{\n";
             
             for(Leaf leaf : ((Block) l).content){
-                s += leafToString(l) + "\n";
+                s += leafToString(leaf) + "\n";
             }
             
             return s + "}";
