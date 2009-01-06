@@ -64,7 +64,7 @@ public class HGenerator {
             parse();
             this.fname = cls.clsName;
             if(!this.fname.equals(fname)){
-                throw new Exception("Invalid class name!");
+                throw new Exception("Invalid class name! " + fname + " vs " + cls.clsName);
             }
             write();
         }

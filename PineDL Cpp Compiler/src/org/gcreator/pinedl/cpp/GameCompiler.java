@@ -150,7 +150,7 @@ public class GameCompiler {
     private void buildContext(){
         for(File script : pineScripts){
             String fname = script.getName();
-            fname = fname.substring(0, fname.lastIndexOf('.')-1);
+            fname = fname.substring(0, fname.lastIndexOf('.'));
             context.add(fname);
         }
     }
@@ -158,7 +158,9 @@ public class GameCompiler {
     private void generateHeader(File script) throws IOException{
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
-        fname = fname.substring(0, fname.lastIndexOf('.')-1);
+        System.out.println("fname="+fname);
+        fname = fname.substring(0, fname.lastIndexOf('.'));
+        System.out.println("new fname="+fname);
         File output = new File(outputFolder, fname + ".h");
         FileOutputStream fos = new FileOutputStream(output);
         HGenerator gen = new HGenerator(is, fos, this, fname, context);
@@ -171,7 +173,7 @@ public class GameCompiler {
     private void generateCppFile(File script) throws IOException{
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
-        fname = fname.substring(0, fname.lastIndexOf('.')-1);
+        fname = fname.substring(0, fname.lastIndexOf('.'));
         File output = new File(outputFolder, fname + ".h");
         FileOutputStream fos = new FileOutputStream(output);
         CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
@@ -209,7 +211,7 @@ public class GameCompiler {
     private void createActorScript(ProjectElement e) throws Exception {
         Actor a = new Actor(e.getFile());
         String fname = e.getName();
-        fname = fname.substring(0, fname.lastIndexOf('.') - 1);
+        fname = fname.substring(0, fname.lastIndexOf('.'));
         fname = fname.replaceAll("\\s", "_");
         compFrame.writeLine("Creating PineDL Script for actor " + fname);
         File f = new File(outputFolder, fname + ".pdl");
@@ -275,7 +277,7 @@ public class GameCompiler {
     private void createSceneScript(ProjectElement e) throws Exception {
         Scene scene = new Scene(e.getFile());
         String fname = e.getName();
-        fname = fname.substring(0, fname.lastIndexOf('.') - 1);
+        fname = fname.substring(0, fname.lastIndexOf('.'));
         fname = fname.replaceAll("\\s", "_");
         compFrame.writeLine("Creating PineDL Script for scene " + fname);
         File f = new File(outputFolder, fname + ".pdl");

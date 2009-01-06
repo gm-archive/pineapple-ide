@@ -790,6 +790,7 @@ public class PineappleGUI implements EventHandler {
         } catch (Exception e) {
             System.err.println("Error while loading workspace: " + e);
         }
+        System.out.println("Ended this");
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="openPluginDialog()           ">
@@ -837,8 +838,10 @@ public class PineappleGUI implements EventHandler {
         //<editor-fold defaultstate="collapsed" desc="WINDOW_CREATED">
         } else if (evt.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
 
+            System.out.println("Got here B");
             /* Initilize the main window */
             initializeWindow();
+            System.out.println("Got here 2");
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="FILE_CHANGED">
         } else if (evt.getEventType().equals(FILE_CHANGED)) {
