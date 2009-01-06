@@ -69,7 +69,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         try {
             actor = new Actor(f);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            e.printStackTrace();
             actor = new Actor();
         }
 

@@ -285,6 +285,7 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
     private void addTabForEvent(Event e) {
+        System.out.println("Add tab " + e.type);
         EventPanel p = new EventPanel(e);
         int i = tabPane.getComponentCount() - 2;
         tabPane.insertTab(e.type, null, p, e.type, i);

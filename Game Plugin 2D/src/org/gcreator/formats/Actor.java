@@ -24,10 +24,8 @@ package org.gcreator.formats;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -47,7 +45,6 @@ import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.io.BasicFile;
-import org.gcreator.project.standard.FileFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -207,7 +204,7 @@ public class Actor extends BehaviorObject {
         }
 
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-
+            System.out.println("parsing " + localName);
             if (localName.equalsIgnoreCase("actor")) {
                 String version = atts.getValue("version");
                 double v = Double.valueOf(version);
@@ -231,15 +228,14 @@ public class Actor extends BehaviorObject {
             if (localName.equalsIgnoreCase("fields")) {
                 parsingFields = true;
             } else if (localName.equalsIgnoreCase("events")) {
+                System.out.println("parsingEvents = true");
                 parsingEvents = true;
-            } else if (localName.equalsIgnoreCase("event")) {
-                parsingEvent = true;
             } else if (localName.equalsIgnoreCase("action")) {
                 parsingAction = true;
             } else if (localName.equalsIgnoreCase("image")) {
                 parsingImage = true;
             }
-
+            
             if (parsingImage) {
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
@@ -258,13 +254,17 @@ public class Actor extends BehaviorObject {
 
                 this.actor.fields.add(f);
             } else if (parsingEvents && localName.equalsIgnoreCase("event")) {
+                System.out.println("Starting");
                 String type = atts.getValue("type");
+                System.out.println("Type is " + type);
                 if (type == null) {
                     System.err.println("ERROR: No type for event.");
                     return;
                 }
+                System.out.println("Creating new Event");
                 curEvent = new Event();
                 curEvent.type = type;
+                System.out.println("Starting event" + curEvent.type);
                 parsingEvent = true;
             } else if (parsingEvent && parsingAction && localName.equalsIgnoreCase("action")) {
                 String className = atts.getValue("type");
@@ -287,6 +287,7 @@ public class Actor extends BehaviorObject {
                 }
 
                 curAction = new Action(type);
+                System.out.println("Adding action");
                 curEvent.actions.add(curAction);
             }
         }
@@ -299,13 +300,16 @@ public class Actor extends BehaviorObject {
             if (!parsing) {
                 return;
             }
-
-            if (parsingFields && localName.equalsIgnoreCase("fields")) {
+            
+            if (parsingImage) {
+                parsingImage = false;
+            } else if (parsingFields && localName.equalsIgnoreCase("fields")) {
                 parsingFields = false;
             } else if (parsingEvents && localName.equalsIgnoreCase("events")) {
                 parsingEvents = false;
             } else if (parsingEvents && parsingEvent && localName.equalsIgnoreCase("event")) {
                 parsingEvent = false;
+                System.out.println("Add event");
                 actor.events.add(curEvent);
                 curEvent = null;
             } else if (parsingAction && localName.equalsIgnoreCase("action")) {
