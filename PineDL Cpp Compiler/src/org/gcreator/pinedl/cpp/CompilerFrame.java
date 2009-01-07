@@ -35,14 +35,16 @@ public class CompilerFrame extends javax.swing.JFrame {
     public class PineDLOutputStream extends OutputStream{
         public void write(int c){
             if(c=='\n'){
-                
+                jEditorPane1.setText(jEditorPane1.getText() + "<br>\n");
             }
-            jTextArea1.append("" + ((char) c));
+            else{
+                jEditorPane1.setText(jEditorPane1.getText() + ((char) c));
+            }
         }
     }
     
     public void writeLine(String s){
-        jTextArea1.append(s + "<br>\n");
+        jEditorPane1.setText(jEditorPane1.getText() + s.replaceAll("\n","<br>\n") + "<br>\n");
     }
     
     /** Creates new form CompilerFrame */
@@ -63,9 +65,10 @@ public class CompilerFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jEditorPane1 = new javax.swing.JEditorPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(300, 200));
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
@@ -77,11 +80,9 @@ public class CompilerFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setDocument(new HTMLDocument());
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jEditorPane1.setEditable(false);
+        jEditorPane1.setText("<html>\n<body>\n");
+        jScrollPane1.setViewportView(jEditorPane1);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -91,9 +92,9 @@ public class CompilerFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
 }

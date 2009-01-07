@@ -168,6 +168,14 @@ public class HGenerator {
                 return typeToString(type, reference);
             }
         }
+        if(t.type.length==1){
+            if(t.type[0].equals("Actor")){
+                return "Pineapple::Actor" + (reference?"*":"");
+            }
+            else if(t.type[0].equals("Scene")){
+                return "Pineapple::Scene" + (reference?"*":"");
+            }
+        }
         throwError("Unknown type " + t.toString());
         return "---";
     }

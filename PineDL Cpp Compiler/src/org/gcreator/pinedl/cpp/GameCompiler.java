@@ -54,65 +54,77 @@ public class GameCompiler {
     String gamePackage = "Game";
     boolean worked = true;
 
-    public GameCompiler(Project p) {
+    public GameCompiler(final Project p) {
         this.p = p;
         if (p.getProjectType() instanceof GameProjectType) {
             try {
                 prepare();
                 //Let's compile it!
-                for (ProjectElement e : p.getFiles()) {
-                    String name = e.getFile().getName();
-                    String format = name.substring(name.lastIndexOf('.') + 1);
-                    if (format.equals("actor")) {
-                        createActorScript(e);
+                Thread t = new Thread() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            for (ProjectElement e : p.getFiles()) {
+                                String name = e.getFile().getName();
+                                String format = name.substring(name.lastIndexOf('.') + 1);
+                                if (format.equals("actor")) {
+                                    createActorScript(e);
+                                } else if (format.equals("scene")) {
+                                    createSceneScript(e);
+                                } else if (format.equals("pdl")) {
+                                    copyScript(e);
+                                } else if (format.equals("png")) {
+                                    copyImage(e);
+                                }
+                            }
+                            buildContext();
+                            compFrame.writeLine("Generating C++ and header files");
+                            for (File script : pineScripts) {
+                                if (!worked) {
+                                    return;
+                                }
+                                generateHeader(script);
+                                generateCppFile(script);
+                            }
+                            copyLib();
+                            compFrame.writeLine("Compiling C++ code");
+                            compile();
+                        } catch (Exception ex) {
+                            compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + ex.getMessage() + "</font>");
+                            worked = false;
+                        }
                     }
-                    else if (format.equals("scene")) {
-                        createSceneScript(e);
-                    }
-                    else if (format.equals("pdl")) {
-                        copyScript(e);
-                    }
-                    else if (format.equals("png")) {
-                        copyImage(e);
-                    }
-                }
-                buildContext();
-                compFrame.writeLine("Generating C++ and header files");
-                for(File script : pineScripts){
-                    if(!worked){
-                        return;
-                    }
-                    generateHeader(script);
-                    generateCppFile(script);
-                }
-                compFrame.writeLine("Compiling the game");
-                copyLib();
-                compile();
+                };
+
+                t.start();
             } catch (Exception e) {
                 compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + e.getMessage() + "</font>");
                 worked = false;
             }
         }
     }
-    
-    private void copyLib() throws IOException{
+
+    private void copyLib() throws IOException {
+        compFrame.writeLine("Copying static library");
         File f = new File(outputFolder, "libPineapple.a");
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/libPineapple.a");
         int c = 0;
-        while((c=is.read())!=-1){
+        while ((c = is.read()) != -1) {
             fos.write(c);
         }
         fos.close();
+        compFrame.writeLine("Copying precompiled header");
         f = new File(outputFolder, "pineapple.h.gch");
         fos = new FileOutputStream(f);
         is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/pineapple.h.gch");
-        while((c=is.read())!=-1){
+        while ((c = is.read()) != -1) {
             fos.write(c);
         }
     }
-    
-    private void compile() throws IOException{
+
+    private void compile() throws IOException {
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
         //TODO: TEST THIS AGAINST LARGE PROJECTS
         File outputFile = new File(outputFolder, "game");
@@ -121,63 +133,67 @@ public class GameCompiler {
         command += "\" \"";
         File pine1 = new File(outputFolder, "libPineapple.a");
         command += pine1.getAbsolutePath();
-        command += "\" \"";
-        File pine2 = new File(outputFolder, "pineapple.h.gch");
-        command += pine2.getAbsolutePath();
         command += "\"";
-        for(File script : pineScripts){
+        for (File script : pineScripts) {
             command += " \"";
-            command += script.getAbsolutePath();
-            command += "\"";
+            String path = script.getAbsolutePath();
+            command += path.substring(0, path.lastIndexOf('.'));
+            command += ".cpp\"";
         }
-        command += "`sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
+        command += " `sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
         Process proc = Runtime.getRuntime().exec(command);
-        compFrame.writeLine("Calling GCC C++ for executable generation");
+        compFrame.writeLine("Calling GCC C++ for executable generation:");
+        compFrame.writeLine(command);
         int c;
         String res = "";
         InputStream is = proc.getInputStream();
-        while((c=is.read())!=-1){
-            if(c!='\n'){
+        while ((c = is.read()) != -1) {
+            if (c != '\n') {
                 res += (char) c;
-            }
-            else{
+            } else {
                 compFrame.writeLine(res);
                 res = "";
             }
         }
+        compFrame.writeLine("Finished!");
+        int x = proc.exitValue();
+        if(x!=0){
+            compFrame.writeLine("There seems to have been some errors with the compiler");
+            compFrame.writeLine("Please report them to the G-Creator team");
+        }
     }
-    
-    private void buildContext(){
-        for(File script : pineScripts){
+
+    private void buildContext() {
+        for (File script : pineScripts) {
             String fname = script.getName();
             fname = fname.substring(0, fname.lastIndexOf('.'));
             context.add(fname);
         }
     }
-    
-    private void generateHeader(File script) throws IOException{
+
+    private void generateHeader(File script) throws IOException {
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
-        System.out.println("fname="+fname);
+        System.out.println("fname=" + fname);
         fname = fname.substring(0, fname.lastIndexOf('.'));
-        System.out.println("new fname="+fname);
+        System.out.println("new fname=" + fname);
         File output = new File(outputFolder, fname + ".h");
         FileOutputStream fos = new FileOutputStream(output);
         HGenerator gen = new HGenerator(is, fos, this, fname, context);
-        if(!gen.wasSuccessful()){
+        if (!gen.wasSuccessful()) {
             worked = false;
         }
         fos.close();
     }
-    
-    private void generateCppFile(File script) throws IOException{
+
+    private void generateCppFile(File script) throws IOException {
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
-        File output = new File(outputFolder, fname + ".h");
+        File output = new File(outputFolder, fname + ".cpp");
         FileOutputStream fos = new FileOutputStream(output);
         CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
-        if(!gen.wasSuccessful()){
+        if (!gen.wasSuccessful()) {
             worked = false;
         }
         fos.close();
@@ -188,26 +204,26 @@ public class GameCompiler {
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = e.getFile().getInputStream();
         int c = 0;
-        while((c=is.read())!=-1){
+        while ((c = is.read()) != -1) {
             fos.write(c);
         }
         imageFiles.add(f);
         fos.close();
     }
-    
+
     private void copyScript(ProjectElement e) throws Exception {
         compFrame.writeLine("Copying PineDL script " + e.getName());
         File f = new File(outputFolder, e.getName());
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = e.getFile().getInputStream();
         int c = 0;
-        while((c=is.read())!=-1){
+        while ((c = is.read()) != -1) {
             fos.write(c);
         }
         pineScripts.add(f);
         fos.close();
     }
-    
+
     private void createActorScript(ProjectElement e) throws Exception {
         Actor a = new Actor(e.getFile());
         String fname = e.getName();
@@ -290,27 +306,27 @@ public class GameCompiler {
         fos.write("class ".getBytes());
         fos.write(fname.getBytes());
         fos.write(" extends Scene{\n".getBytes());
-        
-        fos.write("public this() : super".getBytes());
-        
-        fos.write(("(" + scene.width + ", " + scene.height + ")").getBytes());
-        
+
+        fos.write("\tpublic this() : super".getBytes());
+
+        fos.write(("(" + scene.width + ", " + scene.height).getBytes());
+
         fos.write("){\n".getBytes());
-        
-        for(Scene.ActorInScene a : scene.actors){
+
+        for (Scene.ActorInScene a : scene.actors) {
             String aname = a.bf.getName();
-            aname = aname.substring(0, aname.lastIndexOf('.')-1);
-            fos.write(("addActor(new "+aname+"("+a.x+", "+a.y+"));").getBytes());
+            aname = aname.substring(0, aname.lastIndexOf('.'));
+            fos.write(("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + "));\n").getBytes());
         }
-        
-        fos.write("}\n".getBytes());
-        
+
+        fos.write("\t}\n".getBytes());
+
         fos.write('}');
         fos.write('\n');
         pineScripts.add(f);
         fos.close();
     }
-    
+
     private String outputEvent(Actor a, Event evt) {
         String s = "";
         for (Action act : evt.actions) {
