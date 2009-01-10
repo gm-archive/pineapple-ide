@@ -1,5 +1,5 @@
 /*
- * BehaviorPanel.java
+ * BehaviourPanel.java
  *
  * Created on 26 de Dezembro de 2008, 23:13
  */
@@ -12,15 +12,17 @@ import org.gcreator.formats.BehaviorObject;
 
 /**
  *
- * @author  luis
+ * @author  Luís Reis
  */
-public class BehaviorPanel extends javax.swing.JPanel {
-
+public class BehaviourPanel extends javax.swing.JPanel {
+    
+    private static final long serialVersionUID = 1;
+    
     public BehaviorObject beh;
     public DocumentPane pane;
     
-    /** Creates new form BehaviorPanel */
-    public BehaviorPanel(BehaviorObject obj, DocumentPane pane) {
+    /** Creates new form BehaviourPanel */
+    public BehaviourPanel(BehaviorObject obj, DocumentPane pane) {
         initComponents();
         beh = obj;
         this.pane = pane;
@@ -237,7 +239,7 @@ public class BehaviorPanel extends javax.swing.JPanel {
 private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
     if (beh != null && eventList.getSelectedIndex() != -1) {
         for (Event e : beh.events) {
-            if (e.type.equals(eventList.getSelectedValue().toString())) {
+            if (e.getType().equalsIgnoreCase(eventList.getSelectedValue().toString())) {
                 newEventButton.setEnabled(false);
                 return;
             }
@@ -247,8 +249,7 @@ private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
 }//GEN-LAST:event_eventListValueChanged
 
 private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
-    Event e = new Event();
-    e.type = eventList.getSelectedValue().toString();
+    Event e = new Event(eventList.getSelectedValue().toString());
     beh.events.add(e);
     addTabForEvent(e);
     eventList.setSelectedIndex(-1);
@@ -285,10 +286,9 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
     private void addTabForEvent(Event e) {
-        System.out.println("Add tab " + e.type);
         EventPanel p = new EventPanel(e);
         int i = tabPane.getComponentCount() - 2;
-        tabPane.insertTab(e.type, null, p, e.type, i);
+        tabPane.insertTab(e.getType(), null, p, e.getType(), i);
         tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
     }
 

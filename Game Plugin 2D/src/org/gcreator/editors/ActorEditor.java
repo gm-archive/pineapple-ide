@@ -23,28 +23,21 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.CardLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.gcreator.actions.ActionType;
-import org.gcreator.dnd.PaletteAction;
 import org.gcreator.formats.Actor;
-import org.gcreator.game2d.PaletteUser;
-import org.gcreator.gui.BehaviorPanel;
+import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
-import org.noos.xing.mydoggy.ToolWindow;
 
 /**
  * A very nice editor for an actor.
@@ -52,11 +45,11 @@ import org.noos.xing.mydoggy.ToolWindow;
  * @author Luís Reis
  * @author Serge Humphrey
  */
-public final class ActorEditor extends DocumentPane implements PaletteUser {
+public final class ActorEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
-    private BehaviorPanel behavior;
+    private BehaviourPanel behavior;
     private CardLayout clayout = new CardLayout();
     
     /**
@@ -74,7 +67,7 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
         }
 
         initComponents();
-        behavior = new BehaviorPanel(actor, this);
+        behavior = new BehaviourPanel(actor, this);
         behavior.setVisible(true);
         this.setModified(true);
         spriteChooser.setResourceValidator(new ImageValidator());
@@ -123,27 +116,6 @@ public final class ActorEditor extends DocumentPane implements PaletteUser {
     @Override
     public boolean saveBackend() {
         return save();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean doPalette(ToolWindow palette, JPanel palettePanel) {
-        palettePanel.removeAll();
-        GridLayout gb = new GridLayout(0, 1);
-        palettePanel.setLayout(gb);
-
-        JLabel l = new JLabel("<html><b>Actions:</b></html>");
-        l.setVisible(true);
-        palettePanel.add(l);
-        
-        for (ActionType type : ActionType.actionTypes) {
-            PaletteAction act = new PaletteAction(type);
-            palettePanel.add(act);
-            act.setVisible(true);
-        }
-
-        return true;
     }
 
     /** This method is called from within the constructor to

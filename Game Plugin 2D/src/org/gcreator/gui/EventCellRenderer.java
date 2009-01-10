@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.gui;
 
 import java.awt.Component;
@@ -29,46 +28,40 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 /**
- * Renders an action in a JList
+ * Renders an action in a {@link JList}
  * @author Luís Reis
  */
-public class EventCellRenderer extends DefaultListCellRenderer{
+public class EventCellRenderer extends DefaultListCellRenderer {
+
     private static final long serialVersionUID = 4882722181342781430L;
-    
     public static ImageIcon CREATE_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/create.png"));
     public static ImageIcon DESTROY_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/destroy.png"));
     public static ImageIcon DRAW_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/draw.png"));
     public static ImageIcon UPDATE_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/update.png"));
     public static ImageIcon KEY_IMAGE = new ImageIcon(EventCellRenderer.class.getResource("/org/gcreator/events/images/key.png"));
-    
+
     @Override
     public Component getListCellRendererComponent(JList list,
-            Object value, int index, boolean isSelected, boolean cellHasFocus){
-        
+            Object value, int index, boolean isSelected, boolean cellHasFocus) {
+
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         
-        if(value.toString().equals("Create Event")){
+        if (value.toString().equals("Create Event")) {
             this.setIcon(CREATE_IMAGE);
-        }
-        else if(value.toString().equals("Destroy Event")){
+        } else if (value.toString().equals("Destroy Event")) {
             this.setIcon(DESTROY_IMAGE);
-        }
-        else if(value.toString().equals("Draw Event")){
+        } else if (value.toString().equals("Draw Event")) {
             this.setIcon(DRAW_IMAGE);
-        }
-        else if(value.toString().equals("Update Event")){
+        } else if (value.toString().equals("Update Event")) {
             this.setIcon(UPDATE_IMAGE);
-        }
-        else if(value.toString().equals("Key Press Event")){
+        } else if (value.toString().equals("Key Press Event")) {
             this.setIcon(KEY_IMAGE);
-        }
-        else if(value.toString().equals("Key Release Event")){
+        } else if (value.toString().equals("Key Release Event")) {
             this.setIcon(KEY_IMAGE);
-        }
-        else{
+        } else {
             this.setIcon(null);
         }
-        
+
         return this;
     }
 }

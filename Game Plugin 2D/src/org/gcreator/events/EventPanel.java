@@ -5,48 +5,27 @@
  */
 package org.gcreator.events;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.TransferHandler;
-import org.gcreator.actions.Action;
-import org.gcreator.dnd.ActionTransferHandler;
-import org.gcreator.gui.ActionCellRenderer;
-import org.gcreator.gui.ActionListModel;
 
 /**
- *
+ * Event Editor.
+ * 
  * @author Luís Reis
  */
-public class EventPanel extends javax.swing.JPanel {
+public class EventPanel extends javax.swing.JPanel{
 
     private static final long serialVersionUID = 1;
     private Event e = null;
 
     /**
      * Creates new form EventPanel
+     * 
      * @param e The event that this panel should represent
      */
     public EventPanel(Event e) {
         this.e = e;
         initComponents();
-        actionList.setModel(new ActionListModel(e));
-        actionList.setCellRenderer(new ActionCellRenderer());
-        actionList.setTransferHandler(new ActionTransferHandler());
-        actionList.addMouseMotionListener(new MouseAdapter() {
-
-            @Override
-            public void mouseDragged(MouseEvent evt) {
-                TransferHandler th = actionList.getTransferHandler();
-                if (th == null) {
-                    return;
-                }
-                th.exportAsDrag(
-                        actionList, evt, TransferHandler.COPY);
-            }
-        });
     }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -56,66 +35,23 @@ public class EventPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        actionList = new javax.swing.JList();
-        jPanel1 = new javax.swing.JPanel();
+        propertiesPanel = new javax.swing.JPanel();
 
-        setLayout(new java.awt.GridLayout(1, 0));
-
-        actionList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "a", "b" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        actionList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        actionList.setDragEnabled(true);
-        actionList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                actionListValueChanged(evt);
-            }
-        });
-        actionList.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                actionListMouseDragged(evt);
-            }
-        });
-        actionList.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                actionListKeyTyped(evt);
-            }
-        });
-        jScrollPane1.setViewportView(actionList);
-
-        add(jScrollPane1);
-        add(jPanel1);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(107, 107, 107)
+                .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
-private void actionListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_actionListValueChanged
-    Object o = actionList.getSelectedValue();
-    if (o == null) {
-        jPanel1.removeAll();
-    } else {
-        ((Action) o).getType().makeActionPanel((Action) o, jPanel1);
-        jPanel1.updateUI();
-    }
-}//GEN-LAST:event_actionListValueChanged
-
-private void actionListKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_actionListKeyTyped
-    if (evt.getKeyChar() == KeyEvent.VK_DELETE) {
-        Object o = actionList.getSelectedValue();
-        if (o != null) {
-            e.actions.remove(o);
-            actionList.updateUI();
-        }
-    }
-}//GEN-LAST:event_actionListKeyTyped
-
-private void actionListMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actionListMouseDragged
-    actionList.getTransferHandler().exportAsDrag(actionList, evt, TransferHandler.MOVE);
-}//GEN-LAST:event_actionListMouseDragged
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList actionList;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel propertiesPanel;
     // End of variables declaration//GEN-END:variables
 }

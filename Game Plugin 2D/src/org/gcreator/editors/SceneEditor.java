@@ -23,32 +23,33 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import javax.swing.JLabel;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.gcreator.actions.ActionType;
-import org.gcreator.dnd.PaletteAction;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.gcreator.formats.Scene;
-import org.gcreator.game2d.PaletteUser;
-import org.gcreator.gui.BehaviorPanel;
+import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.ResourceChooser;
 import org.gcreator.gui.SceneEditorArea;
 import org.gcreator.gui.SceneProperties;
 import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
-import org.noos.xing.mydoggy.ToolWindow;
 
 /**
- * The editor of game scenes
+ * The editor of game scenes.
+ * 
  * @author Luís Reis
  */
-public class SceneEditor extends DocumentPane implements PaletteUser {
+public class SceneEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
     public Scene s = null;
-    private BehaviorPanel panel = null;
+    private BehaviourPanel panel = null;
     private JPanel palette = null;
     public ResourceChooser actorChooser = new ResourceChooser();
     public SceneProperties sp = null;
@@ -61,12 +62,11 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         initComponents();
         s = new Scene(f);
         setModified(true);
-        panel = new BehaviorPanel(s, this);
+        panel = new BehaviourPanel(s, this);
         panel.setVisible(true);
         jTabbedPane1.add(panel, "Behavior");
         palette.setVisible(true);
         palette.setLayout(new GridLayout(0, 1));
-        updatePaletteContent();
         actorChooser.setResourceValidator(new ActorValidator());
         actorChooser.setVisible(true);
         sp = new SceneProperties(this);
@@ -84,8 +84,20 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
      */
     @Override
     public boolean save() {
-        s.save(file);
-        return true;
+        boolean success = false;
+        try {
+            s.save(file);
+            success = true;
+        } catch (IOException ex) {
+            Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
     }
     
     /**
@@ -95,34 +107,7 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
     public boolean saveBackend() {
         return save();
     }
-    
-    public void updatePaletteContent() {
-        palette.removeAll();
-        if (jTabbedPane1.getSelectedComponent() == panel) {
-            JLabel l = new JLabel("<html><b>Actions:</b></html>");
-            l.setVisible(true);
-            palette.add(l);
-
-            for (ActionType type : ActionType.actionTypes) {
-                PaletteAction act = new PaletteAction(type);
-                palette.add(act);
-                act.setVisible(true);
-            }
-        }
-        else{
-            palette.add(actorChooser);
-        }
-        palette.updateUI();
-    }
-
-    public boolean doPalette(ToolWindow window, JPanel panel) {
-        panel.removeAll();
-        panel.setLayout(new FlowLayout());
-        panel.add(palette);
-        panel.updateUI();
-        return true;
-    }
-
+  
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -144,12 +129,6 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setLayout(new java.awt.BorderLayout());
-
-        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jTabbedPane1StateChanged(evt);
-            }
-        });
 
         jPanel1.setLayout(new java.awt.BorderLayout());
         jSplitPane1.setLeftComponent(jPanel1);
@@ -190,10 +169,6 @@ public class SceneEditor extends DocumentPane implements PaletteUser {
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-    updatePaletteContent();
-}//GEN-LAST:event_jTabbedPane1StateChanged
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     jButton1.setSelected(true);

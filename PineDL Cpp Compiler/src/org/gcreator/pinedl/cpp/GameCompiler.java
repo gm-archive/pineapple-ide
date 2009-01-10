@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,8 @@ import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 
 /**
- * Compiles the game
+ * This class is used to compile the game.
+ * 
  * @author Luís Reis
  */
 public class GameCompiler {
@@ -242,7 +243,7 @@ public class GameCompiler {
         fos.write(" extends Actor{\n".getBytes());
 
         for (Event evt : a.events) {
-            if (evt.type.equals(Event.TYPE_CREATE)) {
+            if (evt.getType().equals(Event.TYPE_CREATE)) {
                 fos.write("\tpublic this(float x, float y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
@@ -251,7 +252,7 @@ public class GameCompiler {
                 fos.write("\t}\n".getBytes());
             }
 
-            if (evt.type.equals(Event.TYPE_UPDATE)) {
+            if (evt.getType().equals(Event.TYPE_UPDATE)) {
                 fos.write("\tpublic void update(){\n".getBytes());
 
                 fos.write(outputEvent(a, evt).getBytes());
@@ -259,7 +260,7 @@ public class GameCompiler {
                 fos.write("\t}\n".getBytes());
             }
 
-            if (evt.type.equals(Event.TYPE_DRAW)) {
+            if (evt.getType().equals(Event.TYPE_DRAW)) {
                 fos.write("\tpublic void draw(){\n".getBytes());
 
                 fos.write(outputEvent(a, evt).getBytes());
@@ -267,7 +268,7 @@ public class GameCompiler {
                 fos.write("\t}\n".getBytes());
             }
 
-            if (evt.type.equals(Event.TYPE_KEYPRESS)) {
+            if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
                 fos.write("\tpublic void onKeyUp(Key key){\n".getBytes());
 
                 fos.write(outputEvent(a, evt).getBytes());
@@ -275,7 +276,7 @@ public class GameCompiler {
                 fos.write("\t}\n".getBytes());
             }
 
-            if (evt.type.equals(Event.TYPE_KEYRELEASE)) {
+            if (evt.getType().equals(Event.TYPE_KEYRELEASE)) {
                 fos.write("\tpublic void onKeyDown(Key key){\n".getBytes());
 
                 fos.write(outputEvent(a, evt).getBytes());
@@ -329,7 +330,7 @@ public class GameCompiler {
 
     private String outputEvent(Actor a, Event evt) {
         String s = "";
-        for (Action act : evt.actions) {
+        for (Action act : evt) {
             s += act.getType().toPineDL(act) + "\n";
         }
         return s;

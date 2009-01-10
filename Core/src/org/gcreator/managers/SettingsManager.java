@@ -39,10 +39,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.gcreator.core.Core;
-import org.gcreator.xml.Node;
-import org.gcreator.xml.SAXImporter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -85,16 +85,30 @@ public class SettingsManager {
                 System.err.println("Registry load error: Can't read file " + registryFile);
                 return;
             }
-            SAXImporter im = new SAXImporter(registryFile);
-            Node root = im.getDocumentRoot();
-            for (Node n : root.getChildren()) {
-
-                if (n == null || !n.hasAttribute("name")) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setIgnoringComments(true);
+            factory.setValidating(false);
+            DocumentBuilder builder = null;
+            try {
+                builder = factory.newDocumentBuilder();
+            } catch (ParserConfigurationException ex) {
+                Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, "Loading of settings failed!", ex);
+            }
+            if (builder == null) {
+                return;
+            }
+            Document doc = builder.parse(registryFile);
+            Node root = doc.getDocumentElement();
+            NodeList nl = root.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node n = nl.item(i);
+                Node attr = n.getAttributes().getNamedItem("name");
+                if (n == null || attr == null) {
                     continue;
                 }
 
-                String name = n.getAttributeValue("name");
-                String value = n.getContent();
+                String name = attr.getNodeValue();
+                String value = n.getTextContent();
 
                 registry.put(name, value);
             }

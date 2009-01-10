@@ -20,17 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.events;
 
-import java.util.Vector;
-import org.gcreator.actions.Action;
-
 /**
- * Provides a set of actions
+ * Holds things like the <tt>PineDL</tt> code for the event.
+ * 
  * @author Luís Reis
  */
 public class Event {
+
     /**
      * The Create event.
      * Called when the instance is created.
@@ -61,14 +59,42 @@ public class Event {
      * Called when a key is released.
      */
     public static final String TYPE_KEYRELEASE = "Key Release Event";
-    
+
     /**
-     * The event type
+     * Creates a new {@link Event}.
+     * 
+     * @param type The type of the event.
      */
-    public String type = TYPE_CREATE;
-    
+    public Event(String type) {
+        this.type = type;
+    }
+
     /**
-     * The event actions
+     * Gets the event's type.
+     * 
+     * @return The type of this event.
      */
-    public Vector<Action> actions = new Vector<Action>();
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Gets the <tt>PineDL</tt> code for this event.
+     * 
+     * @return The <tt>PineDL</tt> code for this event.
+     */
+    public String getPineDL() {
+        return pineDL;
+    }
+
+    /**
+     * Sets the <tt>PineDL</tt> code for this event.
+     * 
+     * @param newPineDL The new <tt>PineDL</tt> code.
+     */
+    public void setPineDL(String newPineDL) {
+        this.pineDL = newPineDL;
+    }
+    protected String type;
+    protected String pineDL;
 }

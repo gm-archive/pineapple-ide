@@ -31,16 +31,16 @@ public class ActorProperties extends javax.swing.JPanel {
         this.a = a;
         this.area = area;
         initComponents();
-        resourceChooser1.setResourceValidator(new ActorValidator());
-        resourceChooser1.setSelectedFile(a.bf);
-        resourceChooser1.addActionListener(new ActionListener(){
+        actorChooser.setResourceValidator(new ActorValidator());
+        actorChooser.setSelectedFile(a.bf);
+        actorChooser.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
-                ActorProperties.this.a.bf = resourceChooser1.getSelectedFile();
+                ActorProperties.this.a.bf = actorChooser.getSelectedFile();
                 ActorProperties.this.area.repaint();
             }
         });
-        jTextField1.setText(""+a.x);
-        jTextField2.setText(""+a.y);
+        xField.setText(""+a.x);
+        yField.setText(""+a.y);
         DocumentListener dl = new DocumentListener() {
 
             public void insertUpdate(DocumentEvent e) {
@@ -57,18 +57,18 @@ public class ActorProperties extends javax.swing.JPanel {
             
             public void update(DocumentEvent e){
                 try{
-                    ActorProperties.this.a.x = Integer.parseInt(jTextField1.getText());
+                    ActorProperties.this.a.x = Integer.parseInt(xField.getText());
                 }
                 catch(Exception ex){}
                 try{
-                    ActorProperties.this.a.y = Integer.parseInt(jTextField2.getText());
+                    ActorProperties.this.a.y = Integer.parseInt(yField.getText());
                 }
                 catch(Exception ex){}
                 ActorProperties.this.area.repaint();
             }
         };
-        jTextField1.getDocument().addDocumentListener(dl);
-        jTextField2.getDocument().addDocumentListener(dl);
+        xField.getDocument().addDocumentListener(dl);
+        yField.getDocument().addDocumentListener(dl);
     }
 
     /** This method is called from within the constructor to
@@ -81,21 +81,21 @@ public class ActorProperties extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        resourceChooser1 = new org.gcreator.gui.ResourceChooser();
+        actorChooser = new org.gcreator.gui.ResourceChooser();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        xField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        yField = new javax.swing.JTextField();
 
-        jLabel1.setText("Actor");
+        jLabel1.setText("Actor:");
 
         jLabel2.setText("x");
 
-        jTextField1.setText("jTextField1");
+        xField.setText("0");
 
         jLabel3.setText("y");
 
-        jTextField2.setText("jTextField2");
+        yField.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -107,44 +107,44 @@ public class ActorProperties extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resourceChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(actorChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))))
+                            .addComponent(yField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(xField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(resourceChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(actorChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(xField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(195, Short.MAX_VALUE))
+                    .addComponent(yField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.gcreator.gui.ResourceChooser actorChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private org.gcreator.gui.ResourceChooser resourceChooser1;
+    private javax.swing.JTextField xField;
+    private javax.swing.JTextField yField;
     // End of variables declaration//GEN-END:variables
 
 }

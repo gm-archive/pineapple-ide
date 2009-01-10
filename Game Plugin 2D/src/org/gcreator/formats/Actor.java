@@ -37,8 +37,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.gcreator.actions.Action;
-import org.gcreator.actions.ActionType;
 import org.gcreator.events.Event;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.Project;
@@ -66,12 +64,6 @@ public class Actor extends BehaviorObject {
      * The actor version.
      */
     public static final double VERSION = 1.003D;
-    public static final double MINVERSION = VERSION;
-    /**
-     * Defines the maximum extent of forward compatibility
-     */
-    public static final double MAXVERSION = 2.0D; //The first non-accepted version
-    
     /**
      * The actor's z coordinate
      */
@@ -99,7 +91,7 @@ public class Actor extends BehaviorObject {
 
     //<editor-fold defaultstate="collapsed" desc="Actor Saving">
     /**
-     * Saves the actor to a {@lin BasicFile}.
+     * Saves the actor to a {@link BasicFile}.
      * 
      * @param file The {@link BasicFile} to save to.
      * 
@@ -151,13 +143,8 @@ public class Actor extends BehaviorObject {
         Element events = doc.createElement("events");
         for (Event e : this.events) {
             Element event = doc.createElement("event");
-            event.setAttribute("type", e.type);
-            for (Action a : e.actions) {
-                Element action = doc.createElement("action");
-                action.setAttribute("type", a.getType().getClass().getName());
-                action.setTextContent(a.getType().save(a));
-                event.appendChild(action);
-            }
+            event.setAttribute("type", e.getType());
+            event.setTextContent(e.getPineDL());
             events.appendChild(event);
         }
 
@@ -193,10 +180,8 @@ public class Actor extends BehaviorObject {
         private boolean parsingFields;
         private boolean parsingEvents;
         private boolean parsingEvent;
-        private boolean parsingAction;
         private boolean parsingImage;
         private Event curEvent;
-        private Action curAction;
         private Actor actor;
 
         public void setDocumentLocator(Locator locator) {
@@ -211,7 +196,7 @@ public class Actor extends BehaviorObject {
                 if (version == null) {
                     System.err.println("FATAL ERROR: No actor version.");
                     parsing = false;
-                } else if (v<MINVERSION||v>=MAXVERSION) {
+                } else if (v != VERSION) {
                     System.err.println("FATAL ERROR: Invalid actor version: " + version + ", current: " + VERSION);
                     parsing = false;
                 } else {
@@ -230,12 +215,10 @@ public class Actor extends BehaviorObject {
             } else if (localName.equalsIgnoreCase("events")) {
                 System.out.println("parsingEvents = true");
                 parsingEvents = true;
-            } else if (localName.equalsIgnoreCase("action")) {
-                parsingAction = true;
             } else if (localName.equalsIgnoreCase("image")) {
                 parsingImage = true;
             }
-            
+
             if (parsingImage) {
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
@@ -261,46 +244,21 @@ public class Actor extends BehaviorObject {
                     System.err.println("ERROR: No type for event.");
                     return;
                 }
-                System.out.println("Creating new Event");
-                curEvent = new Event();
-                curEvent.type = type;
-                System.out.println("Starting event" + curEvent.type);
+                curEvent = new Event(type);
+                System.out.println("Starting event" + curEvent.getType());
                 parsingEvent = true;
-            } else if (parsingEvent && parsingAction && localName.equalsIgnoreCase("action")) {
-                String className = atts.getValue("type");
-                if (className == null) {
-                    System.err.println("ERROR: No class name for actor.");
-                    return;
-                }
-                ActionType type = null;
-
-                for (ActionType actionType : ActionType.actionTypes) {
-                    if (actionType.getClass().getName().equals(className)) {
-                        type = actionType;
-                        break;
-                    }
-                }
-
-                if (type == null) {
-                    System.err.println("ERROR: Unknown action for class " + className + ".");
-                    return;
-                }
-
-                curAction = new Action(type);
-                System.out.println("Adding action");
-                curEvent.actions.add(curAction);
             }
         }
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (localName.equalsIgnoreCase("actor") && !parsingEvents && !parsingEvent && !parsingFields && !parsingAction) {
+            if (localName.equalsIgnoreCase("actor") && !parsingEvents && !parsingEvent && !parsingFields) {
                 parsing = false;
                 return;
             }
             if (!parsing) {
                 return;
             }
-            
+
             if (parsingImage) {
                 parsingImage = false;
             } else if (parsingFields && localName.equalsIgnoreCase("fields")) {
@@ -312,11 +270,6 @@ public class Actor extends BehaviorObject {
                 System.out.println("Add event");
                 actor.events.add(curEvent);
                 curEvent = null;
-            } else if (parsingAction && localName.equalsIgnoreCase("action")) {
-                //if (curAction.parent == null || curAction.parent == baseAction) {
-                parsingAction = false;
-            //}
-            //curAction = curAction.parent;
             }
         }
 
@@ -337,40 +290,33 @@ public class Actor extends BehaviorObject {
         }
 
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if (parsingAction) {
-                String s = "";
-                for (int i = 0; i < length; i++) {
-                    s += ch[i + start];
-                }
-                curAction.getType().load(curAction, s);
-            } else if (parsingImage) {
-                String s = "";
+            String s = new String(ch, start, length);
+            if (parsingImage) {
                 for (int i = 0; i < length; i++) {
                     s += ch[i + start];
                 }
                 setImage(s, PineappleCore.getProject());
+            } else if (parsingEvent) {
+                curEvent.setPineDL(s);
             }
-        /**else=No one cares*/
         }
 
         private void setImage(String s, Project p) {
             for (ProjectElement e : p.getFiles()) {
-                if(e instanceof ProjectFolder){
+                if (e instanceof ProjectFolder) {
                     setImage(s, (ProjectFolder) e);
-                }
-                else if (e.getFile().getPath().equals(s)) {
+                } else if (e.getFile().getPath().equals(s)) {
                     image = e.getFile();
                     break;
                 }
             }
         }
-        
+
         private void setImage(String s, ProjectFolder p) {
             for (ProjectElement e : p.getChildren()) {
-                if(e instanceof ProjectFolder){
+                if (e instanceof ProjectFolder) {
                     setImage(s, (ProjectFolder) e);
-                }
-                else if (e.getFile().getPath().equals(s)) {
+                } else if (e.getFile().getPath().equals(s)) {
                     image = e.getFile();
                     break;
                 }
