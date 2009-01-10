@@ -80,8 +80,9 @@ public class CompilerFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
+        jEditorPane1.setContentType("text/html");
         jEditorPane1.setEditable(false);
-        jEditorPane1.setText("<html>\n<body>\n");
+        jEditorPane1.setText("<html>\n  <head>\n\n  </head>\n  <body>\nPineapple Compiler:<br>\n\n");
         jScrollPane1.setViewportView(jEditorPane1);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);

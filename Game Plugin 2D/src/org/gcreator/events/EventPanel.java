@@ -5,6 +5,12 @@
  */
 package org.gcreator.events;
 
+import java.awt.BorderLayout;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 
 /**
  * Event Editor.
@@ -15,6 +21,7 @@ public class EventPanel extends javax.swing.JPanel{
 
     private static final long serialVersionUID = 1;
     private Event e = null;
+    private RSyntaxTextArea textArea;
 
     /**
      * Creates new form EventPanel
@@ -24,6 +31,30 @@ public class EventPanel extends javax.swing.JPanel{
     public EventPanel(Event e) {
         this.e = e;
         initComponents();
+        textArea = new RSyntaxTextArea();
+        textArea.restoreDefaultSyntaxHighlightingColorScheme();
+        textArea.setAutoIndentEnabled(true);
+        textArea.setBracketMatchingEnabled(true);
+        textArea.setSyntaxEditingStyle(RSyntaxTextArea.PINEDL_SYNTAX_STYLE);
+        RTextScrollPane scroll = new RTextScrollPane(getWidth(), getHeight(), textArea, true);
+        scroll.setVisible(true);
+        textArea.setVisible(true);
+        textArea.setText(e.getPineDL());
+        textArea.getDocument().addDocumentListener(new DocumentListener(){
+            public void changedUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void insertUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void removeUpdate(DocumentEvent evt){
+                update(evt);
+            }
+            public void update(DocumentEvent evt){
+                EventPanel.this.e.setPineDL(textArea.getText());
+            }
+        });
+        add(scroll, BorderLayout.CENTER);
     }
     
     /** This method is called from within the constructor to
@@ -35,23 +66,9 @@ public class EventPanel extends javax.swing.JPanel{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        propertiesPanel = new javax.swing.JPanel();
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel propertiesPanel;
     // End of variables declaration//GEN-END:variables
 }

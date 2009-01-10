@@ -28,7 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
-import org.gcreator.actions.Action;
 import org.gcreator.events.Event;
 import org.gcreator.formats.Actor;
 import org.gcreator.formats.Scene;
@@ -329,11 +328,7 @@ public class GameCompiler {
     }
 
     private String outputEvent(Actor a, Event evt) {
-        String s = "";
-        for (Action act : evt) {
-            s += act.getType().toPineDL(act) + "\n";
-        }
-        return s;
+        return evt.getPineDL();
     }
 
     private void prepare() throws Exception {

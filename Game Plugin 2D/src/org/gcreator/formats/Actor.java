@@ -60,6 +60,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class Actor extends BehaviorObject {
 
+    public static final double MIN_VERSION = 1.003D;
+    public static final double MAX_VERSION = 2.0D;
     /**
      * The actor version.
      */
@@ -196,7 +198,7 @@ public class Actor extends BehaviorObject {
                 if (version == null) {
                     System.err.println("FATAL ERROR: No actor version.");
                     parsing = false;
-                } else if (v != VERSION) {
+                } else if (v < MIN_VERSION || v >= MAX_VERSION) {
                     System.err.println("FATAL ERROR: Invalid actor version: " + version + ", current: " + VERSION);
                     parsing = false;
                 } else {

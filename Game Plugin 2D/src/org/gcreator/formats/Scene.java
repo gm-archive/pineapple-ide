@@ -70,6 +70,8 @@ public class Scene extends BehaviorObject {
     public int width = 640;
     public int height = 480;
     public Color bgColor = Color.BLACK;
+    public static final double MIN_VERSION = 1.0D;
+    public static final double MAX_VERSION = 2.0D;
     public static final double VERSION = 1.0D;
     public Vector<ActorInScene> actors = new Vector<ActorInScene>();
 
@@ -265,7 +267,7 @@ public class Scene extends BehaviorObject {
                 if (version == null) {
                     System.err.println("FATAL ERROR: No scene version.");
                     parsing = false;
-                } else if (v != VERSION) {
+                } else if (v < MIN_VERSION || v >= MAX_VERSION) {
                     System.err.println("FATAL ERROR: Invalid scene version: " + version + ", current: " + VERSION);
                     parsing = false;
                 } else {
