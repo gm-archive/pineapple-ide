@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Vector;
 import org.gcreator.events.Event;
 import org.gcreator.formats.Actor;
@@ -53,6 +54,7 @@ public class GameCompiler {
     Vector<String> context = new Vector<String>();
     String gamePackage = "Game";
     boolean worked = true;
+    OutputStream headerH = null;
 
     public GameCompiler(final Project p) {
         this.p = p;
@@ -125,6 +127,8 @@ public class GameCompiler {
     }
 
     private void compile() throws IOException {
+        headerH.write("#endif\n".getBytes());
+        headerH.close();
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
         //TODO: TEST THIS AGAINST LARGE PROJECTS
         File outputFile = new File(outputFolder, "game");
@@ -178,6 +182,9 @@ public class GameCompiler {
         fname = fname.substring(0, fname.lastIndexOf('.'));
         System.out.println("new fname=" + fname);
         File output = new File(outputFolder, fname + ".h");
+        headerH.write("#include \"".getBytes());
+        headerH.write(fname.getBytes());
+        headerH.write(".h\"\n".getBytes());
         FileOutputStream fos = new FileOutputStream(output);
         HGenerator gen = new HGenerator(is, fos, this, fname, context);
         if (!gen.wasSuccessful()) {
@@ -350,5 +357,9 @@ public class GameCompiler {
             resFolder.delete();
         }
         resFolder.mkdir();
+        headerH = new FileOutputStream(new File(outputFolder, "header.h"));
+        headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
+        headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
+        headerH.write("#define \"pineapple.h\"\n".getBytes());
     }
 }

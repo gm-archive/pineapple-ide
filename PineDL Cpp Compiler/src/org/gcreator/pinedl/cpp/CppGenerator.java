@@ -102,7 +102,7 @@ public class CppGenerator {
     private void writeImports() throws Exception {
         Vector<String> iclass = new Vector<String>();
 
-        writeLine("#include \"pineapple.h\"");
+        writeLine("#include \"header.h\"");
         writeLine("using namespace Pineapple;");
 
         Vector<String> s = new Vector<String>();
@@ -116,7 +116,6 @@ public class CppGenerator {
                 return;
             }
             s.add(t.type[t.type.length - 1]);
-            writeLine("#include \"" + t.type[t.type.length - 1] + '"');
             writeLine("using " + typeToString(t, false) + ';');
         }
     }

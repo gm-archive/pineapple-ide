@@ -89,7 +89,7 @@ public class HGenerator {
         writeLine("#ifndef " + htitle);
         writeLine("#define " + htitle);
 
-        writeLine("#include \"pineapple.h\"");
+        writeLine("#include \"header.h\"");
         writeImports();
 
         for (String pkg : cls.packageName) {
