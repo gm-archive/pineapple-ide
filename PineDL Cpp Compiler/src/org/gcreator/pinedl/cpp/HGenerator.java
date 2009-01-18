@@ -93,7 +93,7 @@ public class HGenerator {
         writeImports();
 
         for (String pkg : cls.packageName) {
-            writeLine("package " + detokenize(pkg) + "{");
+            writeLine("namespace " + detokenize(pkg) + "{");
         }
 
         writeClass();
@@ -135,7 +135,7 @@ public class HGenerator {
         writeMethods();
         writeConstructors();
 
-        writeLine("}");
+        writeLine("};");
     }
 
     private void writeFields() throws Exception {

@@ -294,9 +294,7 @@ public class Actor extends BehaviorObject {
         public void characters(char[] ch, int start, int length) throws SAXException {
             String s = new String(ch, start, length);
             if (parsingImage) {
-                for (int i = 0; i < length; i++) {
-                    s += ch[i + start];
-                }
+                System.out.println("setImage: "+s);
                 setImage(s, PineappleCore.getProject());
             } else if (parsingEvent) {
                 curEvent.setPineDL(s);
@@ -308,9 +306,11 @@ public class Actor extends BehaviorObject {
                 if (e instanceof ProjectFolder) {
                     setImage(s, (ProjectFolder) e);
                 } else if (e.getFile().getPath().equals(s)) {
+                    System.out.println("Matched "+e.getFile().getPath());
                     image = e.getFile();
                     break;
                 }
+                System.out.println("Did not match "+e.getFile().getPath());
             }
         }
 
@@ -319,9 +319,11 @@ public class Actor extends BehaviorObject {
                 if (e instanceof ProjectFolder) {
                     setImage(s, (ProjectFolder) e);
                 } else if (e.getFile().getPath().equals(s)) {
+                    System.out.println("Matched "+e.getFile().getPath());
                     image = e.getFile();
                     break;
                 }
+                System.out.println("Did not match "+e.getFile().getPath());
             }
         }
 

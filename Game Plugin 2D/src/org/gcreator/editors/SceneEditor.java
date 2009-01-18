@@ -23,15 +23,18 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.gcreator.formats.Scene;
+import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.ResourceChooser;
@@ -39,13 +42,14 @@ import org.gcreator.gui.SceneEditorArea;
 import org.gcreator.gui.SceneProperties;
 import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
+import org.noos.xing.mydoggy.ToolWindow;
 
 /**
  * The editor of game scenes.
  * 
  * @author Luís Reis
  */
-public class SceneEditor extends DocumentPane {
+public class SceneEditor extends DocumentPane implements PaletteUser{
 
     private static final long serialVersionUID = 1L;
     public Scene s = null;
@@ -55,7 +59,9 @@ public class SceneEditor extends DocumentPane {
     public SceneProperties sp = null;
     public SceneEditorArea sea = null;
 
-    /** Creates new form SceneEditor */
+    /** Creates new form SceneEditor
+     * @param f The file to edit
+     */
     public SceneEditor(BasicFile f) {
         super(f);
         palette = new JPanel();
@@ -77,8 +83,24 @@ public class SceneEditor extends DocumentPane {
         sea.updateUI();
         jScrollPane1.setViewportView(sea);
         setModified(true);
+        updatePaletteContent();
     }
 
+    public void updatePaletteContent() {
+        palette.removeAll();
+        palette.add(actorChooser);
+        palette.updateUI();
+    }
+
+    public boolean doPalette(ToolWindow window, JPanel panel) {
+        panel.removeAll();
+        panel.setLayout(new FlowLayout());
+        panel.add(palette);
+        panel.updateUI();
+        return true;
+    }
+
+    
     /**
      * {@inheritDoc}
      */

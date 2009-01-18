@@ -213,11 +213,13 @@ public class Scene extends BehaviorObject {
         /* Actors */
         Element actors = doc.createElement("actors");
         for (ActorInScene a : this.actors) {
-            Element actor = doc.createElement("actor");
-            actor.setAttribute("x", String.valueOf(a.x));
-            actor.setAttribute("y", String.valueOf(a.y));
-            actor.setAttribute("file", String.valueOf(a.bf.getPath()));
-            actors.appendChild(actor);
+            if(a.bf!=null){
+                Element actor = doc.createElement("actor");
+                actor.setAttribute("x", String.valueOf(a.x));
+                actor.setAttribute("y", String.valueOf(a.y));
+                actor.setAttribute("file", String.valueOf(a.bf.getPath()));
+                actors.appendChild(actor);
+            }
         }
         root.appendChild(actors);
 
@@ -338,8 +340,9 @@ public class Scene extends BehaviorObject {
                 ActorInScene unit = new ActorInScene();
                 unit.x = Integer.parseInt(atts.getValue("x"));
                 unit.y = Integer.parseInt(atts.getValue("y"));
-                String path = atts.getValue("path");
+                String path = atts.getValue("file");
                 setActor(unit, path, PineappleCore.getProject());
+                System.out.println("x="+unit.x+",y="+unit.y+",path="+path);
                 actors.add(unit);
             }
         }

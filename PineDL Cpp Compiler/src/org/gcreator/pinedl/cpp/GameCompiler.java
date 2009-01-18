@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pinedl.cpp;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -150,7 +151,7 @@ public class GameCompiler {
         compFrame.writeLine(command);
         int c;
         String res = "";
-        InputStream is = proc.getInputStream();
+        InputStream is = new BufferedInputStream(proc.getInputStream());
         while ((c = is.read()) != -1) {
             if (c != '\n') {
                 res += (char) c;
@@ -360,6 +361,6 @@ public class GameCompiler {
         headerH = new FileOutputStream(new File(outputFolder, "header.h"));
         headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
         headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
-        headerH.write("#define \"pineapple.h\"\n".getBytes());
+        headerH.write("#include \"pineapple.h\"\n".getBytes());
     }
 }
