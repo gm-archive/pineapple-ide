@@ -1,6 +1,8 @@
 #ifndef _IO_H_
 #define _IO_H_
 
+#include <string>
+
 namespace Pineapple{
     class InputStream{
         virtual int read() = 0;
