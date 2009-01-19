@@ -1,6 +1,6 @@
 #include "pineapple.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 using namespace Pineapple;
 
