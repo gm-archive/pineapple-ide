@@ -132,12 +132,9 @@ public class GameCompiler {
         headerH.close();
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
         //TODO: TEST THIS AGAINST LARGE PROJECTS
-        File outputFile = new File(outputFolder, "game");
+        File outputFile = new File(binFolder, "game");
         String command = "g++ -o \"";
         command += outputFile.getAbsolutePath();
-        command += "\" \"";
-        File pine1 = new File(outputFolder, "libPineapple.a");
-        command += pine1.getAbsolutePath();
         command += "\"";
         for (File script : pineScripts) {
             command += " \"";
@@ -145,7 +142,10 @@ public class GameCompiler {
             command += path.substring(0, path.lastIndexOf('.'));
             command += ".cpp\"";
         }
-        command += " `sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
+        command += "\"";
+        File pine1 = new File(outputFolder, "libPineapple.a");
+        command += pine1.getAbsolutePath();
+        command += "\" `sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
         Process proc = Runtime.getRuntime().exec(command);
         compFrame.writeLine("Calling GCC C++ for executable generation:");
         compFrame.writeLine(command);

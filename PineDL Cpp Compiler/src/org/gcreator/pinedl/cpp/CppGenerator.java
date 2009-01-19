@@ -43,8 +43,11 @@ import org.gcreator.pinedl.statements.Block;
 import org.gcreator.pinedl.statements.DeclAssign;
 import org.gcreator.pinedl.statements.EqualOperation;
 import org.gcreator.pinedl.statements.Expression;
+import org.gcreator.pinedl.statements.FunctionReference;
 import org.gcreator.pinedl.statements.IntConstant;
+import org.gcreator.pinedl.statements.NewCall;
 import org.gcreator.pinedl.statements.SumOperation;
+import org.gcreator.pinedl.statements.VariableReference;
 
 /**
  * Creates a H file from a PineDL context.
@@ -233,7 +236,7 @@ public class CppGenerator {
             String s = "{\n";
 
             for (Leaf leaf : ((Block) l).content) {
-                s += leafToString(leaf) + "\n";
+                s += leafToString(leaf) + ";\n";
             }
 
             return s + "}";
@@ -247,18 +250,54 @@ public class CppGenerator {
                 s += '=';
                 s += leafToString(da.value);
             }
-            return s + ';';
+            return s;
         }
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
-            return leafToString(e.left) + "= (" + leafToString(e.right) + ");";
+            return leafToString(e.left) + "= (" + leafToString(e.right) + ")";
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
-            return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ");";
+            return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ")";
         }
         if (l instanceof IntConstant) {
             return l.toString();
+        }
+        if (l instanceof FunctionReference) {
+            FunctionReference f = (FunctionReference) l;
+            String s = f.name;
+            s += '(';
+            boolean first = true;
+            for(Expression e : f.arguments){
+                if(!first){
+                    s += ", ";
+                }
+                s += leafToString(e);
+                first = false;
+            }
+            s += ')';
+            return s;
+        }
+        if (l instanceof VariableReference) {
+            return ((VariableReference) l).name;
+        }
+        if (l instanceof NewCall) {
+            NewCall n = (NewCall) l;
+            String s = "new ";
+            s += typeToString(n.type, false);
+            s += '(';
+            
+            boolean first = true;
+            for(Expression e : n.arguments){
+                if(!first){
+                    s += ", ";
+                }
+                s += leafToString(e);
+                first = false;
+            }
+            
+            s += ')';
+            return s;
         }
         return "";
     }
