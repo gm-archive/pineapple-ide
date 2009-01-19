@@ -46,6 +46,7 @@ import org.gcreator.pinedl.statements.Expression;
 import org.gcreator.pinedl.statements.FunctionReference;
 import org.gcreator.pinedl.statements.IntConstant;
 import org.gcreator.pinedl.statements.NewCall;
+import org.gcreator.pinedl.statements.StringConstant;
 import org.gcreator.pinedl.statements.SumOperation;
 import org.gcreator.pinedl.statements.VariableReference;
 
@@ -261,6 +262,9 @@ public class CppGenerator {
             return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ")";
         }
         if (l instanceof IntConstant) {
+            return l.toString();
+        }
+        if (l instanceof StringConstant) {
             return l.toString();
         }
         if (l instanceof FunctionReference) {

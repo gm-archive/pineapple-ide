@@ -29,11 +29,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Hashtable;
 import java.util.Vector;
 import org.gcreator.events.Event;
 import org.gcreator.formats.Actor;
 import org.gcreator.formats.Scene;
 import org.gcreator.game2d.GameProjectType;
+import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 
@@ -117,6 +119,13 @@ public class GameCompiler {
         fos.write("\tPineapple::Application::init();".getBytes());
         fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
+        Hashtable<String, String> hs = PineappleCore.getProject().getSettings();
+        if(hs.containsKey(("scene-order"))){
+            String scene = hs.get("scene-order").split(";")[0];
+            scene = scene.substring(scene.lastIndexOf('/')+1);
+            scene = scene.substring(0, scene.indexOf('.'));
+            fos.write(("\tPineapple::Application::setScene(new Game::"+scene+"());\n").getBytes());
+        }
         fos.write("\tPineapple::Window::run();\n".getBytes());
         fos.write("}\n".getBytes());
         fos.close();
@@ -270,6 +279,11 @@ public class GameCompiler {
                 fos.write("\tpublic this(float x, float y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
+                if(a.image!=null){
+                    fos.write("\t\ttexture = new Texture(\"res/".getBytes());
+                    fos.write(a.image.getName().getBytes());
+                    fos.write("\");\n".getBytes());
+                }
                 fos.write(outputEvent(a, evt).getBytes());
 
                 fos.write("\t}\n".getBytes());
