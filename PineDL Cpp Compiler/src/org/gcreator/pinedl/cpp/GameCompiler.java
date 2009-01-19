@@ -92,6 +92,7 @@ public class GameCompiler {
                             }
                             copyLib();
                             compFrame.writeLine("Compiling C++ code");
+                            generateMain();
                             compile();
                         } catch (Exception ex) {
                             compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + ex.getMessage() + "</font>");
@@ -108,6 +109,19 @@ public class GameCompiler {
         }
     }
 
+    private void generateMain() throws IOException {
+        File f = new File(outputFolder, "main.cpp");
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write("#include \"header.h\"\n\n".getBytes());
+        fos.write("int main(int argc, char** argv){\n".getBytes());
+        fos.write("\tPineapple::Application::init();".getBytes());
+        fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
+        fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
+        fos.write("\tPineapple::Window::run();\n".getBytes());
+        fos.write("}\n".getBytes());
+        fos.close();
+    }
+    
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
         File f = new File(outputFolder, "libPineapple.a");
@@ -142,7 +156,9 @@ public class GameCompiler {
             command += path.substring(0, path.lastIndexOf('.'));
             command += ".cpp\"";
         }
-        command += "\"";
+        command += " \"";
+        command += (new File(outputFolder, "main.cpp")).getAbsolutePath();
+        command += "\" \"";
         File pine1 = new File(outputFolder, "libPineapple.a");
         command += pine1.getAbsolutePath();
         command += "\" `sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
