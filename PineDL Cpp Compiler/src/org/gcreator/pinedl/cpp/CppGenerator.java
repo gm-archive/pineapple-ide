@@ -104,6 +104,7 @@ public class CppGenerator {
 
         writeLine("#include \"header.h\"");
         writeLine("using namespace Pineapple;");
+        writeLine("using namespace Game;");
 
         Vector<String> s = new Vector<String>();
         for (Type t : cls.importStmt) {

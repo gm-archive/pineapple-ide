@@ -127,7 +127,7 @@ public class GameCompiler {
         }
     }
 
-    private void compile() throws IOException {
+    private void compile() throws Exception {
         headerH.write("#endif\n".getBytes());
         headerH.close();
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
@@ -152,6 +152,7 @@ public class GameCompiler {
         int c;
         String res = "";
         InputStream is = new BufferedInputStream(proc.getInputStream());
+        int x = proc.waitFor();
         while ((c = is.read()) != -1) {
             if (c != '\n') {
                 res += (char) c;
@@ -161,7 +162,6 @@ public class GameCompiler {
             }
         }
         compFrame.writeLine("Finished!");
-        int x = proc.exitValue();
         if(x!=0){
             compFrame.writeLine("There seems to have been some errors with the compiler");
             compFrame.writeLine("Please report them to the G-Creator team");
