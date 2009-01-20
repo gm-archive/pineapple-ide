@@ -166,6 +166,10 @@ public class CppGenerator {
                 return "Pineapple::Scene" + (reference ? "*" : "");
             } else if (t.type[0].equals("Math")) {
                 return "Pineapple::Math" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Key")) {
+                return "Pineapple::Key" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Keyboard")) {
+                return "Pineapple::Keyboard" + (reference ? "*" : "");
             }
         }
         throwError("Unknown type " + t.toString());
