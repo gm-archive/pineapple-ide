@@ -45,7 +45,7 @@ public class BasicFileRenderer extends DefaultListCellRenderer{
         int indexofslash = path.lastIndexOf('/');
         setText("<html>" + path.substring(0, indexofslash) +
                 "<b>" + path.substring(indexofslash+1, indexofdot)
-                + "</b>" + path.substring(indexofdot+1));
+                + "</b>." + path.substring(indexofdot+1));
         
         return this;
     }

@@ -58,6 +58,7 @@ public class GameCompiler {
     String gamePackage = "Game";
     boolean worked = true;
     OutputStream headerH = null;
+    File outputFile = null;
 
     public GameCompiler(final Project p) {
         this.p = p;
@@ -110,6 +111,18 @@ public class GameCompiler {
             }
         }
     }
+    
+    public static void copyFile(String resFolder, File outFolder, String fname) throws IOException{
+        File f = new File(outFolder, fname);
+        FileOutputStream fos = new FileOutputStream(f);
+        InputStream is = GameCompiler.class.getResourceAsStream(resFolder+fname);
+        int c;
+        while ((c = is.read()) != -1) {
+            fos.write(c);
+        }
+        fos.close();
+        is.close();
+    }
 
     private void generateMain() throws IOException {
         File f = new File(outputFolder, "main.cpp");
@@ -133,21 +146,24 @@ public class GameCompiler {
     
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
-        File f = new File(outputFolder, "libPineapple.a");
-        FileOutputStream fos = new FileOutputStream(f);
-        InputStream is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/libPineapple.a");
-        int c = 0;
-        while ((c = is.read()) != -1) {
-            fos.write(c);
-        }
-        fos.close();
-        compFrame.writeLine("Copying precompiled header");
-        f = new File(outputFolder, "pineapple.h.gch");
-        fos = new FileOutputStream(f);
-        is = getClass().getResourceAsStream("/org/gcreator/pinedl/cpp/res/linux/pineapple.h.gch");
-        while ((c = is.read()) != -1) {
-            fos.write(c);
-        }
+        copyFile("/org/gcreator/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
+        compFrame.writeLine("Copying header files");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "actor.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "application.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "color.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "exceptions.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "io.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "keyboard.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "keycodes.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "pamath.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "scene.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "texture.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "timer.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "vector.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "view.h");
+        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "window.h");
+        compFrame.writeLine("Copying runner files");
+        copyFile("/org/gcreator/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
     }
 
     private void compile() throws Exception {
@@ -155,7 +171,7 @@ public class GameCompiler {
         headerH.close();
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
         //TODO: TEST THIS AGAINST LARGE PROJECTS
-        File outputFile = new File(binFolder, "game");
+        outputFile = new File(binFolder, "game");
         String command = "g++ -o \"";
         command += outputFile.getAbsolutePath();
         command += "\"";
@@ -176,8 +192,8 @@ public class GameCompiler {
         compFrame.writeLine(command);
         int c;
         String res = "";
-        InputStream is = new BufferedInputStream(proc.getInputStream());
         int x = proc.waitFor();
+        InputStream is = new BufferedInputStream(proc.getInputStream());
         while ((c = is.read()) != -1) {
             if (c != '\n') {
                 res += (char) c;
@@ -370,7 +386,7 @@ public class GameCompiler {
     }
 
     private void prepare() throws Exception {
-        compFrame = new CompilerFrame();
+        compFrame = new CompilerFrame(this);
         compFrame.writeLine("<b>Preparing game compilation</b>");
         compFrame.setVisible(true);
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
@@ -391,6 +407,19 @@ public class GameCompiler {
         headerH = new FileOutputStream(new File(outputFolder, "header.h"));
         headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
         headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
-        headerH.write("#include \"pineapple.h\"\n".getBytes());
+        headerH.write("#include \"actor.h\"\n".getBytes());
+        headerH.write("#include \"application.h\"\n".getBytes());
+        headerH.write("#include \"color.h\"\n".getBytes());
+        headerH.write("#include \"exceptions.h\"\n".getBytes());
+        headerH.write("#include \"io.h\"\n".getBytes());
+        headerH.write("#include \"keyboard.h\"\n".getBytes());
+        headerH.write("#include \"keycodes.h\"\n".getBytes());
+        headerH.write("#include \"pamath.h\"\n".getBytes());
+        headerH.write("#include \"scene.h\"\n".getBytes());
+        headerH.write("#include \"texture.h\"\n".getBytes());
+        headerH.write("#include \"timer.h\"\n".getBytes());
+        headerH.write("#include \"vector.h\"\n".getBytes());
+        headerH.write("#include \"view.h\"\n".getBytes());
+        headerH.write("#include \"window.h\"\n".getBytes());
     }
 }

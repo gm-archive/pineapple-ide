@@ -247,6 +247,7 @@ public class Actor extends BehaviorObject {
                     return;
                 }
                 curEvent = new Event(type);
+                curEvent.setPineDL("");
                 System.out.println("Starting event" + curEvent.getType());
                 parsingEvent = true;
             }
@@ -297,7 +298,7 @@ public class Actor extends BehaviorObject {
                 System.out.println("setImage: "+s);
                 setImage(s, PineappleCore.getProject());
             } else if (parsingEvent) {
-                curEvent.setPineDL(s);
+                curEvent.setPineDL(curEvent.getPineDL()+s);
             }
         }
 

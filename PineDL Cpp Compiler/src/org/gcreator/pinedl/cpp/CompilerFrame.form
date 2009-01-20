@@ -40,11 +40,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Open Folder"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run Game"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -62,8 +68,9 @@
       <SubComponents>
         <Component class="javax.swing.JEditorPane" name="jEditorPane1">
           <Properties>
+            <Property name="contentType" type="java.lang.String" value="text/html"/>
             <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" value="Compiling...&#xa;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;b&gt;Compiling... &lt;/b&gt;&lt;br/&gt;"/>
           </Properties>
         </Component>
       </SubComponents>

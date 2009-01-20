@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g 2009-01-01 16:10:56
+// $ANTLR 3.1.1 /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g 2009-01-20 19:30:38
 
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.HashMap;
 public class PineDLParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PLUS", "MINUS", "MULT", "DIV", "MOD", "DOT", "RSHIFT", "LSHIFT", "NOT", "EQUAL", "LESS", "MORE", "LESSEQ", "MOREEQ", "EQUALS", "NEQUAL", "STMTEND", "BITWISEAND", "BITWISEOR", "BITWISEXOR", "LOGAND", "LOGOR", "BLKBEG", "BLKEND", "LPAREN", "RPAREN", "LARRAY", "RARRAY", "WORD", "STRINGCONST_PRIVATE", "DOUBLECONST_PRIVATE", "DIGIT", "INTCONST_PRIVATE", "ALPHA", "SLCOMMENT", "MLCOMMENT", "WHITESPACE", "'package'", "'import'", "'class'", "'extends'", "'static'", "'this'", "':'", "'super'", "','", "'break'", "'continue'", "'if'", "'else'", "'while'", "'for'", "'try'", "'catch'", "'return'", "'throw'", "'new'", "'++'", "'--'", "'?'", "'+='", "'-='", "'*='", "'/='", "'%='", "'&='", "'|='", "'^='", "'<<='", "'>>='", "'null'", "'true'", "'false'", "'int'", "'uint'", "'float'", "'ufloat'", "'double'", "'udouble'", "'char'", "'uchar'", "'bool'", "'string'", "'public'", "'private'", "'protected'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "PLUS", "MINUS", "MULT", "DIV", "MOD", "DOT", "RSHIFT", "LSHIFT", "NOT", "EQUAL", "LESS", "MORE", "LESSEQ", "MOREEQ", "EQUALS", "NEQUAL", "STMTEND", "BITWISEAND", "BITWISEOR", "BITWISEXOR", "LOGAND", "LOGOR", "BLKBEG", "BLKEND", "LPAREN", "RPAREN", "LARRAY", "RARRAY", "WORD", "STRINGCONST_PRIVATE", "DOUBLECONST_PRIVATE", "DIGIT", "INTCONST_PRIVATE", "ALPHA", "SLCOMMENT", "MLCOMMENT", "WHITESPACE", "'package'", "'import'", "'class'", "'extends'", "'static'", "'this'", "':'", "'super'", "','", "'break'", "'continue'", "'if'", "'else'", "'while'", "'for'", "'try'", "'catch'", "'return'", "'throw'", "'new'", "'++'", "'--'", "'?'", "'+='", "'-='", "'*='", "'/='", "'%='", "'&='", "'|='", "'^='", "'<<='", "'>>='", "'null'", "'true'", "'false'", "'int'", "'uint'", "'float'", "'ufloat'", "'double'", "'udouble'", "'char'", "'uchar'", "'bool'", "'string'", "'void'", "'public'", "'private'", "'protected'"
     };
     public static final int T__68=68;
     public static final int T__69=69;
@@ -70,6 +70,7 @@ public class PineDLParser extends Parser {
     public static final int BITWISEAND=21;
     public static final int T__58=58;
     public static final int T__51=51;
+    public static final int T__90=90;
     public static final int T__52=52;
     public static final int T__53=53;
     public static final int LESSEQ=16;
@@ -764,7 +765,7 @@ public class PineDLParser extends Parser {
             int alt12=2;
             int LA12_0 = input.LA(1);
 
-            if ( (LA12_0==WORD||(LA12_0>=77 && LA12_0<=86)) ) {
+            if ( (LA12_0==WORD||(LA12_0>=77 && LA12_0<=87)) ) {
                 alt12=1;
             }
             switch (alt12) {
@@ -895,7 +896,7 @@ public class PineDLParser extends Parser {
                 int alt13=2;
                 int LA13_0 = input.LA(1);
 
-                if ( (LA13_0==NOT||LA13_0==STMTEND||LA13_0==BLKBEG||LA13_0==LPAREN||(LA13_0>=WORD && LA13_0<=DOUBLECONST_PRIVATE)||LA13_0==INTCONST_PRIVATE||LA13_0==46||LA13_0==48||(LA13_0>=50 && LA13_0<=52)||(LA13_0>=54 && LA13_0<=56)||(LA13_0>=58 && LA13_0<=62)||(LA13_0>=74 && LA13_0<=86)) ) {
+                if ( (LA13_0==NOT||LA13_0==STMTEND||LA13_0==BLKBEG||LA13_0==LPAREN||(LA13_0>=WORD && LA13_0<=DOUBLECONST_PRIVATE)||LA13_0==INTCONST_PRIVATE||LA13_0==46||LA13_0==48||(LA13_0>=50 && LA13_0<=52)||(LA13_0>=54 && LA13_0<=56)||(LA13_0>=58 && LA13_0<=62)||(LA13_0>=74 && LA13_0<=87)) ) {
                     alt13=1;
                 }
 
@@ -4265,7 +4266,7 @@ public class PineDLParser extends Parser {
             int alt54=2;
             int LA54_0 = input.LA(1);
 
-            if ( ((LA54_0>=77 && LA54_0<=86)) ) {
+            if ( ((LA54_0>=77 && LA54_0<=87)) ) {
                 alt54=1;
             }
             else if ( (LA54_0==WORD) ) {
@@ -4436,7 +4437,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "nativetype"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:384:1: nativetype returns [Type type = new Type()] : ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:384:1: nativetype returns [Type type = new Type()] : ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) | ( 'void' ) );
     public final Type nativetype() throws RecognitionException {
         Type type =  new Type();
 
@@ -4444,8 +4445,8 @@ public class PineDLParser extends Parser {
         	type.typeCategory = TypeCategory.NATIVE;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:387:3: ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) )
-            int alt56=10;
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:387:3: ( ( 'int' ) | ( 'uint' ) | ( 'float' ) | ( 'ufloat' ) | ( 'double' ) | ( 'udouble' ) | ( 'char' ) | ( 'uchar' ) | ( 'bool' ) | ( 'string' ) | ( 'void' ) )
+            int alt56=11;
             switch ( input.LA(1) ) {
             case 77:
                 {
@@ -4495,6 +4496,11 @@ public class PineDLParser extends Parser {
             case 86:
                 {
                 alt56=10;
+                }
+                break;
+            case 87:
+                {
+                alt56=11;
                 }
                 break;
             default:
@@ -4666,6 +4672,22 @@ public class PineDLParser extends Parser {
 
                     }
                     break;
+                case 11 :
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:397:2: ( 'void' )
+                    {
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:397:2: ( 'void' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:397:3: 'void'
+                    {
+                    match(input,87,FOLLOW_87_in_nativetype2495); if (state.failed) return type;
+                    if ( state.backtracking==0 ) {
+                      type.nativeType = NativeType.VOID;
+                    }
+
+                    }
+
+
+                    }
+                    break;
 
             }
         }
@@ -4681,25 +4703,25 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "accesscontrolkeyword"
-    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:398:1: accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC] : ( 'public' | ( 'private' ) | ( 'protected' ) );
+    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:1: accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC] : ( 'public' | ( 'private' ) | ( 'protected' ) );
     public final AccessControlKeyword accesscontrolkeyword() throws RecognitionException {
         AccessControlKeyword a =  AccessControlKeyword.PUBLIC;
 
         try {
-            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:2: ( 'public' | ( 'private' ) | ( 'protected' ) )
+            // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:2: ( 'public' | ( 'private' ) | ( 'protected' ) )
             int alt57=3;
             switch ( input.LA(1) ) {
-            case 87:
+            case 88:
                 {
                 alt57=1;
                 }
                 break;
-            case 88:
+            case 89:
                 {
                 alt57=2;
                 }
                 break;
-            case 89:
+            case 90:
                 {
                 alt57=3;
                 }
@@ -4714,19 +4736,19 @@ public class PineDLParser extends Parser {
 
             switch (alt57) {
                 case 1 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:4: 'public'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:4: 'public'
                     {
-                    match(input,87,FOLLOW_87_in_accesscontrolkeyword2504); if (state.failed) return a;
+                    match(input,88,FOLLOW_88_in_accesscontrolkeyword2512); if (state.failed) return a;
 
                     }
                     break;
                 case 2 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:15: ( 'private' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:15: ( 'private' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:15: ( 'private' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:16: 'private'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:15: ( 'private' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:16: 'private'
                     {
-                    match(input,88,FOLLOW_88_in_accesscontrolkeyword2509); if (state.failed) return a;
+                    match(input,89,FOLLOW_89_in_accesscontrolkeyword2517); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PRIVATE;
                     }
@@ -4737,12 +4759,12 @@ public class PineDLParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:65: ( 'protected' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:65: ( 'protected' )
                     {
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:65: ( 'protected' )
-                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:399:66: 'protected'
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:65: ( 'protected' )
+                    // /home/luis/NetBeansProjects/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pinedl/PineDL.g:400:66: 'protected'
                     {
-                    match(input,89,FOLLOW_89_in_accesscontrolkeyword2517); if (state.failed) return a;
+                    match(input,90,FOLLOW_90_in_accesscontrolkeyword2525); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PROTECTED;
                     }
@@ -5161,49 +5183,48 @@ public class PineDLParser extends Parser {
     protected DFA33 dfa33 = new DFA33(this);
     protected DFA51 dfa51 = new DFA51(this);
     static final String DFA4_eotS =
-        "\31\uffff";
+        "\32\uffff";
     static final String DFA4_eofS =
-        "\31\uffff";
+        "\32\uffff";
     static final String DFA4_minS =
-        "\1\33\1\uffff\3\40\1\uffff\13\40\1\11\1\24\1\40\1\37\2\uffff\1\11"+
-        "\1\36";
+        "\1\33\1\uffff\17\40\1\11\1\uffff\1\24\1\40\1\37\2\uffff\1\11\1\36";
     static final String DFA4_maxS =
-        "\1\131\1\uffff\3\126\1\uffff\1\126\13\40\1\34\1\40\1\37\2\uffff"+
-        "\2\40";
+        "\1\132\1\uffff\4\127\14\40\1\uffff\1\34\1\40\1\37\2\uffff\2\40";
     static final String DFA4_acceptS =
-        "\1\uffff\1\4\3\uffff\1\3\17\uffff\1\1\1\2\2\uffff";
+        "\1\uffff\1\4\20\uffff\1\3\3\uffff\1\2\1\1\2\uffff";
     static final String DFA4_specialS =
-        "\31\uffff}>";
+        "\32\uffff}>";
     static final String[] DFA4_transitionS = {
-            "\1\1\73\uffff\1\2\1\3\1\4",
+            "\1\1\74\uffff\1\2\1\3\1\4",
             "",
-            "\1\21\14\uffff\1\6\1\5\36\uffff\1\7\1\10\1\11\1\12\1\13\1\14"+
-            "\1\15\1\16\1\17\1\20",
-            "\1\21\14\uffff\1\6\1\5\36\uffff\1\7\1\10\1\11\1\12\1\13\1\14"+
-            "\1\15\1\16\1\17\1\20",
-            "\1\21\14\uffff\1\6\1\5\36\uffff\1\7\1\10\1\11\1\12\1\13\1\14"+
-            "\1\15\1\16\1\17\1\20",
+            "\1\21\14\uffff\1\5\1\22\36\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\14\1\15\1\16\1\17\1\20",
+            "\1\21\14\uffff\1\5\1\22\36\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\14\1\15\1\16\1\17\1\20",
+            "\1\21\14\uffff\1\5\1\22\36\uffff\1\6\1\7\1\10\1\11\1\12\1\13"+
+            "\1\14\1\15\1\16\1\17\1\20",
+            "\1\21\54\uffff\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1"+
+            "\17\1\20",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\23",
+            "\1\24\24\uffff\1\25\1\uffff\1\23",
             "",
-            "\1\21\54\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17"+
-            "\1\20",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\22",
-            "\1\23\24\uffff\1\24\1\uffff\1\22",
-            "\1\25\7\uffff\1\26",
-            "\1\27",
+            "\1\27\7\uffff\1\26",
             "\1\30",
+            "\1\31",
             "",
             "",
-            "\1\23\24\uffff\1\24\1\uffff\1\22",
-            "\1\24\1\uffff\1\22"
+            "\1\24\24\uffff\1\25\1\uffff\1\23",
+            "\1\25\1\uffff\1\23"
     };
 
     static final short[] DFA4_eot = DFA.unpackEncodedString(DFA4_eotS);
@@ -5244,9 +5265,9 @@ public class PineDLParser extends Parser {
     static final String DFA14_eofS =
         "\22\uffff";
     static final String DFA14_minS =
-        "\1\14\1\uffff\1\4\13\uffff\1\14\1\40\1\4\1\14";
+        "\1\14\1\uffff\1\4\13\uffff\1\40\1\14\1\4\1\14";
     static final String DFA14_maxS =
-        "\1\126\1\uffff\1\111\13\uffff\1\114\1\60\1\111\1\114";
+        "\1\127\1\uffff\1\111\13\uffff\1\60\1\114\1\111\1\114";
     static final String DFA14_acceptS =
         "\1\uffff\1\1\1\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13"+
         "\1\14\4\uffff";
@@ -5255,9 +5276,9 @@ public class PineDLParser extends Parser {
     static final String[] DFA14_transitionS = {
             "\1\3\7\uffff\1\15\5\uffff\1\11\1\uffff\1\3\3\uffff\1\2\2\3\1"+
             "\uffff\1\3\11\uffff\1\3\1\uffff\1\3\1\uffff\1\13\1\14\1\6\1"+
-            "\uffff\1\7\1\10\1\12\1\uffff\1\4\1\5\3\3\13\uffff\3\3\12\1",
+            "\uffff\1\7\1\10\1\12\1\uffff\1\4\1\5\3\3\13\uffff\3\3\13\1",
             "",
-            "\5\3\1\17\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\16\1\uffff"+
+            "\5\3\1\16\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\17\1\uffff"+
             "\1\1\34\uffff\15\3",
             "",
             "",
@@ -5270,10 +5291,10 @@ public class PineDLParser extends Parser {
             "",
             "",
             "",
+            "\1\20\15\uffff\1\3\1\uffff\1\3",
             "\1\3\17\uffff\1\3\2\uffff\1\1\3\3\1\uffff\1\3\11\uffff\1\3"+
             "\1\uffff\1\3\13\uffff\3\3\13\uffff\3\3",
-            "\1\20\15\uffff\1\3\1\uffff\1\3",
-            "\5\3\1\17\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\21\1\uffff"+
+            "\5\3\1\16\2\3\1\uffff\15\3\2\uffff\1\3\1\uffff\1\21\1\uffff"+
             "\1\1\34\uffff\15\3",
             "\1\3\17\uffff\1\3\2\uffff\1\1\3\3\1\uffff\1\3\11\uffff\1\3"+
             "\1\uffff\1\3\13\uffff\3\3\13\uffff\3\3"
@@ -5317,25 +5338,25 @@ public class PineDLParser extends Parser {
     static final String DFA16_eofS =
         "\11\uffff";
     static final String DFA16_minS =
-        "\1\14\1\uffff\1\4\2\uffff\1\14\1\40\1\4\1\14";
+        "\1\14\1\uffff\1\4\2\uffff\1\40\1\14\1\4\1\14";
     static final String DFA16_maxS =
-        "\1\126\1\uffff\1\111\2\uffff\1\114\1\60\1\111\1\114";
+        "\1\127\1\uffff\1\111\2\uffff\1\60\1\114\1\111\1\114";
     static final String DFA16_acceptS =
         "\1\uffff\1\1\1\uffff\1\2\1\3\4\uffff";
     static final String DFA16_specialS =
         "\11\uffff}>";
     static final String[] DFA16_transitionS = {
             "\1\1\7\uffff\1\4\7\uffff\1\1\3\uffff\1\2\2\1\1\uffff\1\1\11"+
-            "\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1\12\3",
+            "\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1\13\3",
             "",
-            "\5\1\1\6\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\5\1\uffff\1"+
+            "\5\1\1\5\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\6\1\uffff\1"+
             "\3\34\uffff\15\1",
             "",
             "",
+            "\1\7\15\uffff\1\1\1\uffff\1\1",
             "\1\1\17\uffff\1\1\2\uffff\1\3\3\1\1\uffff\1\1\11\uffff\1\1"+
             "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1",
-            "\1\7\15\uffff\1\1\1\uffff\1\1",
-            "\5\1\1\6\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\10\1\uffff"+
+            "\5\1\1\5\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\10\1\uffff"+
             "\1\3\34\uffff\15\1",
             "\1\1\17\uffff\1\1\2\uffff\1\3\3\1\1\uffff\1\1\11\uffff\1\1"+
             "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1"
@@ -5438,38 +5459,39 @@ public class PineDLParser extends Parser {
     static final String DFA33_eofS =
         "\10\uffff\1\1\1\uffff\2\1\1\uffff";
     static final String DFA33_minS =
-        "\1\14\1\uffff\1\14\2\uffff\1\4\1\40\1\14\4\4\1\14";
+        "\1\14\1\uffff\1\14\1\uffff\1\4\1\uffff\1\14\1\40\4\4\1\14";
     static final String DFA33_maxS =
-        "\1\114\1\uffff\1\126\2\uffff\1\111\1\60\2\114\1\111\3\114";
+        "\1\114\1\uffff\1\127\1\uffff\1\111\1\uffff\1\114\1\60\1\114\1\111"+
+        "\3\114";
     static final String DFA33_acceptS =
-        "\1\uffff\1\1\1\uffff\1\2\1\3\10\uffff";
+        "\1\uffff\1\1\1\uffff\1\2\1\uffff\1\3\7\uffff";
     static final String DFA33_specialS =
         "\15\uffff}>";
     static final String[] DFA33_transitionS = {
             "\1\3\17\uffff\1\2\3\uffff\3\1\1\uffff\1\1\11\uffff\1\1\1\uffff"+
             "\1\1\13\uffff\3\1\13\uffff\3\1",
             "",
-            "\1\1\17\uffff\1\1\3\uffff\1\5\2\1\1\uffff\1\1\11\uffff\1\1"+
-            "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1\12\4",
+            "\1\1\17\uffff\1\1\3\uffff\1\4\2\1\1\uffff\1\1\11\uffff\1\1"+
+            "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1\13\5",
             "",
-            "",
-            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\10\1\7\36"+
+            "\5\1\1\7\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\10\1\6\36"+
             "\uffff\15\1",
-            "\1\11\15\uffff\1\1\1\uffff\1\1",
-            "\1\1\17\uffff\1\1\2\uffff\1\4\3\1\1\uffff\1\1\11\uffff\1\1"+
+            "",
+            "\1\1\17\uffff\1\1\2\uffff\1\5\3\1\1\uffff\1\1\11\uffff\1\1"+
             "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1",
-            "\5\1\1\uffff\2\1\1\4\15\1\2\uffff\1\4\1\1\1\uffff\1\1\3\4\1"+
-            "\uffff\1\4\11\uffff\1\4\1\1\1\4\1\1\12\uffff\1\4\1\12\1\13\13"+
-            "\1\3\4",
-            "\5\1\1\6\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\10\1\14"+
+            "\1\11\15\uffff\1\1\1\uffff\1\1",
+            "\5\1\1\uffff\2\1\1\5\15\1\2\uffff\1\5\1\1\1\uffff\1\1\3\5\1"+
+            "\uffff\1\5\11\uffff\1\5\1\1\1\5\1\1\12\uffff\1\5\1\12\1\13\13"+
+            "\1\3\5",
+            "\5\1\1\7\2\1\1\uffff\7\1\1\uffff\5\1\2\uffff\1\1\1\10\1\14"+
             "\36\uffff\15\1",
-            "\5\1\1\uffff\2\1\1\uffff\15\1\2\uffff\1\4\1\1\1\uffff\1\1\3"+
-            "\4\1\uffff\1\4\11\uffff\1\4\1\1\1\4\1\1\12\uffff\1\4\2\uffff"+
-            "\13\1\3\4",
-            "\5\1\1\uffff\2\1\1\uffff\15\1\2\uffff\1\4\1\1\1\uffff\1\1\3"+
-            "\4\1\uffff\1\4\11\uffff\1\4\1\1\1\4\1\1\12\uffff\1\4\2\uffff"+
-            "\13\1\3\4",
-            "\1\1\17\uffff\1\1\2\uffff\1\4\3\1\1\uffff\1\1\11\uffff\1\1"+
+            "\5\1\1\uffff\2\1\1\uffff\15\1\2\uffff\1\5\1\1\1\uffff\1\1\3"+
+            "\5\1\uffff\1\5\11\uffff\1\5\1\1\1\5\1\1\12\uffff\1\5\2\uffff"+
+            "\13\1\3\5",
+            "\5\1\1\uffff\2\1\1\uffff\15\1\2\uffff\1\5\1\1\1\uffff\1\1\3"+
+            "\5\1\uffff\1\5\11\uffff\1\5\1\1\1\5\1\1\12\uffff\1\5\2\uffff"+
+            "\13\1\3\5",
+            "\1\1\17\uffff\1\1\2\uffff\1\5\3\1\1\uffff\1\1\11\uffff\1\1"+
             "\1\uffff\1\1\13\uffff\3\1\13\uffff\3\1"
     };
 
@@ -5777,28 +5799,28 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_WORD_in_clsdecl341 = new BitSet(new long[]{0x0000100004000000L});
     public static final BitSet FOLLOW_44_in_clsdecl346 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_clstype_in_clsdecl350 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_BLKBEG_in_clsdecl358 = new BitSet(new long[]{0x0000000008000000L,0x0000000003800000L});
-    public static final BitSet FOLLOW_field_in_clsdecl365 = new BitSet(new long[]{0x0000000008000000L,0x0000000003800000L});
-    public static final BitSet FOLLOW_method_in_clsdecl374 = new BitSet(new long[]{0x0000000008000000L,0x0000000003800000L});
-    public static final BitSet FOLLOW_constructor_in_clsdecl380 = new BitSet(new long[]{0x0000000008000000L,0x0000000003800000L});
+    public static final BitSet FOLLOW_BLKBEG_in_clsdecl358 = new BitSet(new long[]{0x0000000008000000L,0x0000000007000000L});
+    public static final BitSet FOLLOW_field_in_clsdecl365 = new BitSet(new long[]{0x0000000008000000L,0x0000000007000000L});
+    public static final BitSet FOLLOW_method_in_clsdecl374 = new BitSet(new long[]{0x0000000008000000L,0x0000000007000000L});
+    public static final BitSet FOLLOW_constructor_in_clsdecl380 = new BitSet(new long[]{0x0000000008000000L,0x0000000007000000L});
     public static final BitSet FOLLOW_BLKEND_in_clsdecl388 = new BitSet(new long[]{0x0000000000100002L});
     public static final BitSet FOLLOW_STMTEND_in_clsdecl390 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_accesscontrolkeyword_in_field407 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
-    public static final BitSet FOLLOW_45_in_field414 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_accesscontrolkeyword_in_field407 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
+    public static final BitSet FOLLOW_45_in_field414 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_type_in_field424 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_field432 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_field438 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_accesscontrolkeyword_in_method455 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
-    public static final BitSet FOLLOW_45_in_method462 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_accesscontrolkeyword_in_method455 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
+    public static final BitSet FOLLOW_45_in_method462 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_type_in_method472 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_method480 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_method486 = new BitSet(new long[]{0x0000200120000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_LPAREN_in_method486 = new BitSet(new long[]{0x0000200120000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_argumentlist_in_method492 = new BitSet(new long[]{0x0000000020000000L});
     public static final BitSet FOLLOW_RPAREN_in_method498 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_block_in_method504 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_accesscontrolkeyword_in_constructor522 = new BitSet(new long[]{0x0000400000000000L});
     public static final BitSet FOLLOW_46_in_constructor528 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_constructor532 = new BitSet(new long[]{0x0000200120000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_LPAREN_in_constructor532 = new BitSet(new long[]{0x0000200120000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_argumentlist_in_constructor538 = new BitSet(new long[]{0x0000000020000000L});
     public static final BitSet FOLLOW_RPAREN_in_constructor544 = new BitSet(new long[]{0x0000800004000000L});
     public static final BitSet FOLLOW_47_in_constructor549 = new BitSet(new long[]{0x0001000000000000L});
@@ -5810,12 +5832,12 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_RPAREN_in_constructor589 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_block_in_constructor597 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_argument_in_argumentlist615 = new BitSet(new long[]{0x0002000000000002L});
-    public static final BitSet FOLLOW_49_in_argumentlist620 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_49_in_argumentlist620 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_argument_in_argumentlist624 = new BitSet(new long[]{0x0002000000000002L});
     public static final BitSet FOLLOW_type_in_argument646 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_argument653 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BLKBEG_in_block669 = new BitSet(new long[]{0x7DDD60171C101000L,0x00000000007FFC00L});
-    public static final BitSet FOLLOW_stmt_in_block674 = new BitSet(new long[]{0x7DDD60171C101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_BLKBEG_in_block669 = new BitSet(new long[]{0x7DDD60171C101000L,0x0000000000FFFC00L});
+    public static final BitSet FOLLOW_stmt_in_block674 = new BitSet(new long[]{0x7DDD60171C101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_BLKEND_in_block680 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_declAssign_in_stmt698 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_expression_in_stmt709 = new BitSet(new long[]{0x0000000000100000L});
@@ -5835,17 +5857,17 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_52_in_ifstmt832 = new BitSet(new long[]{0x0000000010000000L});
     public static final BitSet FOLLOW_LPAREN_in_ifstmt834 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_expression_in_ifstmt838 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_ifstmt842 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_RPAREN_in_ifstmt842 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_ifstmt848 = new BitSet(new long[]{0x0020000000000002L});
-    public static final BitSet FOLLOW_53_in_ifstmt855 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_53_in_ifstmt855 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_ifstmt859 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_54_in_whilestmt878 = new BitSet(new long[]{0x0000000010000000L});
     public static final BitSet FOLLOW_LPAREN_in_whilestmt880 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_expression_in_whilestmt884 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_whilestmt888 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_RPAREN_in_whilestmt888 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_whilestmt894 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_55_in_forstmt911 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_forstmt913 = new BitSet(new long[]{0x7001601710101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_LPAREN_in_forstmt913 = new BitSet(new long[]{0x7001601710101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_expression_in_forstmt919 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_forstmt923 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_declAssign_in_forstmt928 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
@@ -5853,15 +5875,15 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_expression_in_forstmt940 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_STMTEND_in_forstmt945 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_expression_in_forstmt952 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_forstmt957 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_RPAREN_in_forstmt957 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_forstmt963 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_56_in_trystmt978 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_56_in_trystmt978 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_trystmt982 = new BitSet(new long[]{0x0200000000000000L});
     public static final BitSet FOLLOW_57_in_trystmt988 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_trystmt990 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_LPAREN_in_trystmt990 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_type_in_trystmt994 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_trystmt998 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_trystmt1000 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_RPAREN_in_trystmt1000 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_trystmt1004 = new BitSet(new long[]{0x0200000000000002L});
     public static final BitSet FOLLOW_58_in_returnstmt1022 = new BitSet(new long[]{0x7001401710101000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_expression_in_returnstmt1027 = new BitSet(new long[]{0x0000000000100000L});
@@ -5920,7 +5942,7 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_prepostop_in_notcastexpr1453 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_NOT_in_notcastexpr1463 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1467 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_LPAREN_in_notcastexpr1477 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_LPAREN_in_notcastexpr1477 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_type_in_notcastexpr1481 = new BitSet(new long[]{0x0000000020000000L});
     public static final BitSet FOLLOW_RPAREN_in_notcastexpr1483 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});
     public static final BitSet FOLLOW_notcastexpr_in_notcastexpr1487 = new BitSet(new long[]{0x0000000000000002L});
@@ -6022,16 +6044,17 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_84_in_nativetype2471 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_85_in_nativetype2479 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_86_in_nativetype2487 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_87_in_accesscontrolkeyword2504 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_88_in_accesscontrolkeyword2509 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_87_in_nativetype2495 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_88_in_accesscontrolkeyword2512 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_89_in_accesscontrolkeyword2517 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_53_in_synpred27_PineDL855 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_90_in_accesscontrolkeyword2525 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_53_in_synpred27_PineDL855 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_synpred27_PineDL859 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_57_in_synpred30_PineDL988 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_LPAREN_in_synpred30_PineDL990 = new BitSet(new long[]{0x0000200100000000L,0x00000000007FE000L});
+    public static final BitSet FOLLOW_LPAREN_in_synpred30_PineDL990 = new BitSet(new long[]{0x0000200100000000L,0x0000000000FFE000L});
     public static final BitSet FOLLOW_type_in_synpred30_PineDL994 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_WORD_in_synpred30_PineDL998 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_RPAREN_in_synpred30_PineDL1000 = new BitSet(new long[]{0x7DDD601714101000L,0x00000000007FFC00L});
+    public static final BitSet FOLLOW_RPAREN_in_synpred30_PineDL1000 = new BitSet(new long[]{0x7DDD601714101000L,0x0000000000FFFC00L});
     public static final BitSet FOLLOW_stmt_in_synpred30_PineDL1004 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ternary_in_synpred88_PineDL1973 = new BitSet(new long[]{0x0000000000002002L,0x00000000000003FFL});
     public static final BitSet FOLLOW_EQUAL_in_synpred88_PineDL1981 = new BitSet(new long[]{0x7001401710001000L,0x0000000000001C00L});

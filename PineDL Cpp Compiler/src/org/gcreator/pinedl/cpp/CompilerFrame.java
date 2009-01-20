@@ -23,6 +23,7 @@ THE SOFTWARE.
 
 package org.gcreator.pinedl.cpp;
 
+import java.io.File;
 import java.io.OutputStream;
 import javax.swing.text.html.HTMLDocument;
 
@@ -44,11 +45,15 @@ public class CompilerFrame extends javax.swing.JFrame {
     }
     
     public void writeLine(String s){
-        jEditorPane1.setText(jEditorPane1.getText() + s.replaceAll("\n","<br>\n") + "<br>\n");
+        String txt = jEditorPane1.getText();
+        jEditorPane1.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n","<br>\n") + "<br>\n");
     }
     
+    GameCompiler c;
+    
     /** Creates new form CompilerFrame */
-    public CompilerFrame() {
+    public CompilerFrame(GameCompiler c) {
+        this.c = c;
         initComponents();
     }
 
@@ -73,21 +78,50 @@ public class CompilerFrame extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         jButton1.setText("Open Folder");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1);
 
         jButton2.setText("Run Game");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton2);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
+        jEditorPane1.setContentType("text/html");
         jEditorPane1.setEditable(false);
-        jEditorPane1.setText("Compiling...\n");
+        jEditorPane1.setText("<html><b>Compiling... </b><br/>");
         jScrollPane1.setViewportView(jEditorPane1);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    try{
+        Runtime.getRuntime().exec(new String[]{"nautilus",c.binFolder.getAbsolutePath()});
+    }
+    catch(Exception e){
+        
+    }
+}//GEN-LAST:event_jButton1ActionPerformed
+
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    try{
+        Runtime.getRuntime().exec(new String[]{"sh",(new File(c.binFolder, "rungame.sh")).getAbsolutePath()});
+    }
+    catch(Exception e){
+        
+    }
+}//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

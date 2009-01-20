@@ -38,5 +38,6 @@ public enum NativeType {
     BOOL,
     CHAR,
     UCHAR,
-    STRING
+    STRING,
+    VOID
 }

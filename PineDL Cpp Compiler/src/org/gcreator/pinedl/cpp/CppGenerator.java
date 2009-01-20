@@ -41,12 +41,16 @@ import org.gcreator.pinedl.Type;
 import org.gcreator.pinedl.TypeCategory;
 import org.gcreator.pinedl.statements.Block;
 import org.gcreator.pinedl.statements.DeclAssign;
+import org.gcreator.pinedl.statements.DivisionOperation;
 import org.gcreator.pinedl.statements.EqualOperation;
 import org.gcreator.pinedl.statements.Expression;
 import org.gcreator.pinedl.statements.FunctionReference;
 import org.gcreator.pinedl.statements.IntConstant;
+import org.gcreator.pinedl.statements.LessOperation;
+import org.gcreator.pinedl.statements.MultiplyOperation;
 import org.gcreator.pinedl.statements.NewCall;
 import org.gcreator.pinedl.statements.StringConstant;
+import org.gcreator.pinedl.statements.SubtractionOperation;
 import org.gcreator.pinedl.statements.SumOperation;
 import org.gcreator.pinedl.statements.VariableReference;
 
@@ -154,10 +158,14 @@ public class CppGenerator {
             }
         }
         if (t.type.length == 1) {
-            if (t.type[0].equals("Actor")) {
+            if (t.type[0].equals("Texture")) {
+                return "Pineapple::Texture" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Actor")) {
                 return "Pineapple::Actor" + (reference ? "*" : "");
             } else if (t.type[0].equals("Scene")) {
                 return "Pineapple::Scene" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Math")) {
+                return "Pineapple::Math" + (reference ? "*" : "");
             }
         }
         throwError("Unknown type " + t.toString());
@@ -261,6 +269,22 @@ public class CppGenerator {
             SumOperation s = (SumOperation) l;
             return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ")";
         }
+        if (l instanceof SubtractionOperation) {
+            SubtractionOperation s = (SubtractionOperation) l;
+            return "(" + leafToString(s.left) + ")-(" + leafToString(s.right) + ")";
+        }
+        if (l instanceof MultiplyOperation) {
+            MultiplyOperation s = (MultiplyOperation) l;
+            return "(" + leafToString(s.left) + ")*(" + leafToString(s.right) + ")";
+        }
+        if (l instanceof DivisionOperation) {
+            DivisionOperation s = (DivisionOperation) l;
+            return "(" + leafToString(s.left) + ")/(" + leafToString(s.right) + ")";
+        }
+        if (l instanceof LessOperation) {
+            LessOperation s = (LessOperation) l;
+            return "(" + leafToString(s.left) + ")<(" + leafToString(s.right) + ")";
+        }
         if (l instanceof IntConstant) {
             return l.toString();
         }
@@ -303,6 +327,18 @@ public class CppGenerator {
             s += ')';
             return s;
         }
+        if (l instanceof DeclAssign){
+            DeclAssign a = (DeclAssign) l;
+            String s = retrieveType(a.type, true);
+            s += ' ';
+            s += a.name;
+            if(a.value!=null){
+                s += " = (";
+                s += leafToString(a.value);
+                s += ')';
+            }
+            return s;
+        }
         return "";
     }
 
@@ -335,6 +371,9 @@ public class CppGenerator {
             }
             if (t.nativeType == NativeType.INT) {
                 return "int";
+            }
+            if (t.nativeType == NativeType.VOID) {
+                return "void";
             }
             if (t.nativeType == NativeType.STRING) {
                 return "std::string";

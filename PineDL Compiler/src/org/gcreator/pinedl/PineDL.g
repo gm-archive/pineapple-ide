@@ -393,7 +393,8 @@ nativetype returns [Type type = new Type()]
 	('char' {type.nativeType = NativeType.CHAR;})|
 	('uchar' {type.nativeType = NativeType.UCHAR;})|
 	('bool' {type.nativeType = NativeType.BOOL;})|
-	('string' {type.nativeType = NativeType.STRING;});
+	('string' {type.nativeType = NativeType.STRING;})|
+	('void' {type.nativeType = NativeType.VOID;});
 	
 accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC]
 	:	'public' | ('private' {a = AccessControlKeyword.PRIVATE;}) | ('protected' {a = AccessControlKeyword.PROTECTED;});

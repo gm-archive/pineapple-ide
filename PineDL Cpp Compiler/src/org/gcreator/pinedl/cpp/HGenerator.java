@@ -168,11 +168,14 @@ public class HGenerator {
             }
         }
         if(t.type.length==1){
-            if(t.type[0].equals("Actor")){
-                return "Pineapple::Actor" + (reference?"*":"");
-            }
-            else if(t.type[0].equals("Scene")){
-                return "Pineapple::Scene" + (reference?"*":"");
+            if (t.type[0].equals("Texture")) {
+                return "Pineapple::Texture" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Actor")) {
+                return "Pineapple::Actor" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Scene")) {
+                return "Pineapple::Scene" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Math")) {
+                return "Pineapple::Math" + (reference ? "*" : "");
             }
         }
         throwError("Unknown type " + t.toString());
@@ -252,6 +255,9 @@ public class HGenerator {
             }
             if (t.nativeType == NativeType.INT) {
                 return "int";
+            }
+            if (t.nativeType == NativeType.VOID) {
+                return "void";
             }
             if (t.nativeType == NativeType.STRING) {
                 return "std::string";
