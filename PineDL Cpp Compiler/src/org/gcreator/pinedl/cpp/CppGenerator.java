@@ -42,9 +42,11 @@ import org.gcreator.pinedl.TypeCategory;
 import org.gcreator.pinedl.statements.Block;
 import org.gcreator.pinedl.statements.DeclAssign;
 import org.gcreator.pinedl.statements.DivisionOperation;
+import org.gcreator.pinedl.statements.DoubleConstant;
 import org.gcreator.pinedl.statements.EqualOperation;
 import org.gcreator.pinedl.statements.Expression;
 import org.gcreator.pinedl.statements.FunctionReference;
+import org.gcreator.pinedl.statements.IfStatement;
 import org.gcreator.pinedl.statements.IntConstant;
 import org.gcreator.pinedl.statements.LessOperation;
 import org.gcreator.pinedl.statements.MultiplyOperation;
@@ -238,6 +240,8 @@ public class CppGenerator {
 
             writeLine(s);
 
+            System.out.println(method.content.toString());
+            
             writeLine(leafToString(method.content));
 
             writeLine();
@@ -245,11 +249,16 @@ public class CppGenerator {
     }
 
     private String leafToString(Leaf l) {
+        return leafToString(l, false);
+    }
+    
+    private String leafToString(Leaf l, boolean statement) {
+        System.out.println("class="+l.getClass().getName());
         if (l instanceof Block) {
             String s = "{\n";
 
             for (Leaf leaf : ((Block) l).content) {
-                s += leafToString(leaf) + ";\n";
+                s += leafToString(leaf, true) + "\n";
             }
 
             return s + "}";
@@ -263,11 +272,18 @@ public class CppGenerator {
                 s += '=';
                 s += leafToString(da.value);
             }
+            if(statement){
+                s += ';';
+            }
             return s;
         }
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
-            return leafToString(e.left) + "= (" + leafToString(e.right) + ")";
+            String s = leafToString(e.left) + "= (" + leafToString(e.right) + ")";
+            if(statement){
+                s += ';';
+            }
+            return s;
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
@@ -286,10 +302,17 @@ public class CppGenerator {
             return "(" + leafToString(s.left) + ")/(" + leafToString(s.right) + ")";
         }
         if (l instanceof LessOperation) {
+            System.out.println("got here for less");
             LessOperation s = (LessOperation) l;
             return "(" + leafToString(s.left) + ")<(" + leafToString(s.right) + ")";
         }
+        else{
+            System.out.println("not less");
+        }
         if (l instanceof IntConstant) {
+            return l.toString();
+        }
+        if (l instanceof DoubleConstant) {
             return l.toString();
         }
         if (l instanceof StringConstant) {
@@ -308,6 +331,9 @@ public class CppGenerator {
                 first = false;
             }
             s += ')';
+            if(statement){
+                s += ';';
+            }
             return s;
         }
         if (l instanceof VariableReference) {
@@ -329,6 +355,9 @@ public class CppGenerator {
             }
             
             s += ')';
+            if(statement){
+                s += ';';
+            }
             return s;
         }
         if (l instanceof DeclAssign){
@@ -340,6 +369,26 @@ public class CppGenerator {
                 s += " = (";
                 s += leafToString(a.value);
                 s += ')';
+                if(statement){
+                    s += ';';
+                }
+            }
+            return s;
+        }
+        if (l instanceof IfStatement){
+            IfStatement i = (IfStatement) l;
+            String s = "if(";
+            System.out.println("i.condition="+i.condition.toString());
+            String le = leafToString(i.condition);
+            System.out.println("="+le);
+            s += le;
+            s += "){";
+            s += leafToString(i.then, true);
+            s += "}";
+            if(i.elseCase!=null){
+                s += "else{";
+                s += leafToString(i.elseCase, true);
+                s += "}";
             }
             return s;
         }
