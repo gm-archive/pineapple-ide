@@ -170,30 +170,40 @@ public class GameCompiler {
         headerH.write("#endif\n".getBytes());
         headerH.close();
         //TODO: MAKE THIS WINDOWS-COMPATIBLE
-        //TODO: TEST THIS AGAINST LARGE PROJECTS
         outputFile = new File(binFolder, "game");
-        String command = "g++ -o \"";
-        command += outputFile.getAbsolutePath();
-        command += "\"";
+        Vector<String> command = new Vector<String>();
+        command.add("g++");
+        command.add("-o");
+        command.add(outputFile.getAbsolutePath());
         for (File script : pineScripts) {
-            command += " \"";
             String path = script.getAbsolutePath();
-            command += path.substring(0, path.lastIndexOf('.'));
-            command += ".cpp\"";
+            command.add(path.substring(0, path.lastIndexOf('.'))+".cpp");
         }
-        command += " \"";
-        command += (new File(outputFolder, "main.cpp")).getAbsolutePath();
-        command += "\" \"";
-        File pine1 = new File(outputFolder, "libPineapple.a");
-        command += pine1.getAbsolutePath();
-        command += "\" `sdl-config --cflags --libs` -lSDL_image -lGL -lGLU";
-        Process proc = Runtime.getRuntime().exec(command);
-        compFrame.writeLine("Calling GCC C++ for executable generation:");
-        compFrame.writeLine(command);
+        command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
+        command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
+        
+        
+        Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
+        InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
+        String sdlout = "";
         int c;
+        while ((c = sdlis.read()) != -1) {
+            sdlout += (char) c;
+        }
+        sdlconfig.waitFor();
+        String[] sdloutSplit = sdlout.split("\\s");
+        for(String cmd : sdloutSplit){
+            command.add(cmd);
+        }
+        
+        
+        command.add("-lSDL_image");
+        command.add("-lGL");
+        command.add("-lGLU");
+        Process proc = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
+        compFrame.writeLine("Calling GCC C++ for executable generation");
         String res = "";
-        int x = proc.waitFor();
-        InputStream is = new BufferedInputStream(proc.getInputStream());
+        InputStream is = new BufferedInputStream(proc.getErrorStream());
         while ((c = is.read()) != -1) {
             if (c != '\n') {
                 res += (char) c;
@@ -202,6 +212,7 @@ public class GameCompiler {
                 res = "";
             }
         }
+        int x = proc.waitFor();
         compFrame.writeLine("Finished!");
         if(x!=0){
             compFrame.writeLine("There seems to have been some errors with the compiler");

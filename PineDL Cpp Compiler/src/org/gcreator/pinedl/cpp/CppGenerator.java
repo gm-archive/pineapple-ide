@@ -51,6 +51,7 @@ import org.gcreator.pinedl.statements.IntConstant;
 import org.gcreator.pinedl.statements.LessOperation;
 import org.gcreator.pinedl.statements.MultiplyOperation;
 import org.gcreator.pinedl.statements.NewCall;
+import org.gcreator.pinedl.statements.RetrieverExpression;
 import org.gcreator.pinedl.statements.StringConstant;
 import org.gcreator.pinedl.statements.SubtractionOperation;
 import org.gcreator.pinedl.statements.SumOperation;
@@ -176,6 +177,45 @@ public class CppGenerator {
         }
         throwError("Unknown type " + t.toString());
         return "---";
+    }
+    
+    private String merge(String[] x, char c){
+        String res = x[0];
+        for(int i = 1; i < x.length; i++){
+            res += c;
+            res += x[i];
+        }
+        return res;
+    }
+    
+    public boolean isType(String t){
+        for (Type type : cls.importStmt) {
+            if(merge(type.type,'.').equals(t)){
+                return true;
+            }
+            if(type.type[type.type.length - 1].equals(t)){
+                return true;
+            }
+        }
+        if(t.equals("Texture")||t.equals("Pineapple.Texture")){
+            return true;
+        }
+        if(t.equals("Actor")||t.equals("Pineapple.Actor")){
+            return true;
+        }
+        if(t.equals("Scene")||t.equals("Pineapple.Scene")){
+            return true;
+        }
+        if(t.equals("Math")||t.equals("Pineapple.Math")){
+            return true;
+        }
+        if(t.equals("Key")||t.equals("Pineapple.Key")){
+            return true;
+        }
+        if(t.equals("Keyboard")||t.equals("Pineapple.Keyboard")){
+            return true;
+        }
+        return false;
     }
 
     private void writeConstructors() throws Exception {
@@ -378,9 +418,7 @@ public class CppGenerator {
         if (l instanceof IfStatement){
             IfStatement i = (IfStatement) l;
             String s = "if(";
-            System.out.println("i.condition="+i.condition.toString());
             String le = leafToString(i.condition);
-            System.out.println("="+le);
             s += le;
             s += "){";
             s += leafToString(i.then, true);
@@ -391,6 +429,10 @@ public class CppGenerator {
                 s += "}";
             }
             return s;
+        }
+        if(l instanceof RetrieverExpression){
+            RetrieverExpression e = (RetrieverExpression) l;
+            return "\"" + e.toString() + "\"";
         }
         return "";
     }
