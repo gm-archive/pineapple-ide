@@ -59,9 +59,26 @@ public class GameCompiler {
     boolean worked = true;
     OutputStream headerH = null;
     File outputFile = null;
+    CompilationProfile profile = null;
 
-    public GameCompiler(final Project p) {
+    public GameCompiler(final Project p){
+        this(p, getDefaultProfile());
+    }
+    
+    public static CompilationProfile getDefaultProfile(){
+        String os = System.getProperty("os.name");
+        if(os.startsWith("Windows")){
+            return CompilationProfile.WINDOWS_TO_WINDOWS;
+        }
+        if(os.equals("Linux")||os.equals("Solaris")||os.equals("FreeBSD")){
+            return CompilationProfile.UNIX_TO_UNIX;
+        }
+        return null;
+    }
+    
+    public GameCompiler(final Project p, final CompilationProfile profile) {
         this.p = p;
+        this.profile = profile;
         if (p.getProjectType() instanceof GameProjectType) {
             try {
                 prepare();
@@ -146,7 +163,13 @@ public class GameCompiler {
     
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
-        copyFile("/org/gcreator/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
+        if(profile==CompilationProfile.UNIX_TO_UNIX){
+            copyFile("/org/gcreator/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
+        }
+        else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", outputFolder, "libPineapple.a");
+        }
         compFrame.writeLine("Copying header files");
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "actor.h");
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "application.h");
@@ -163,13 +186,14 @@ public class GameCompiler {
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "view.h");
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "window.h");
         compFrame.writeLine("Copying runner files");
-        copyFile("/org/gcreator/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
+        if(profile==CompilationProfile.UNIX_TO_UNIX){
+            copyFile("/org/gcreator/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
+        }
     }
 
     private void compile() throws Exception {
         headerH.write("#endif\n".getBytes());
         headerH.close();
-        //TODO: MAKE THIS WINDOWS-COMPATIBLE
         outputFile = new File(binFolder, "game");
         Vector<String> command = new Vector<String>();
         command.add("g++");
@@ -182,18 +206,25 @@ public class GameCompiler {
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
         
-        
-        Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
-        InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
-        String sdlout = "";
         int c;
-        while ((c = sdlis.read()) != -1) {
-            sdlout += (char) c;
+        if(profile==CompilationProfile.UNIX_TO_UNIX){
+            Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
+            InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
+            String sdlout = "";
+            while ((c = sdlis.read()) != -1) {
+                sdlout += (char) c;
+            }
+            sdlconfig.waitFor();
+            String[] sdloutSplit = sdlout.split("\\s");
+            for(String cmd : sdloutSplit){
+                command.add(cmd);
+            }
         }
-        sdlconfig.waitFor();
-        String[] sdloutSplit = sdlout.split("\\s");
-        for(String cmd : sdloutSplit){
-            command.add(cmd);
+        else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
+            command.add("-lmingw32");
+            command.add("-lSDLmain");
+            command.add("-lSDL");
+            command.add("-mwindows");
         }
         
         

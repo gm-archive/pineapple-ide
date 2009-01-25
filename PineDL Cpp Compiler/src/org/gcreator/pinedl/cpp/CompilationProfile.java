@@ -27,9 +27,13 @@ package org.gcreator.pinedl.cpp;
  * An enumeration of the common compilation profiles available.
  * @author Luís Reis
  */
-public enum CompilationProfiles {
+public enum CompilationProfile {
     /**
      * Used to create UNIX executables from UNIX systems
      */
-    UNIX_TO_UNIX
+    UNIX_TO_UNIX,
+    /**
+     * Used to create WINDOWS executables from WINDOWS systems
+     */
+    WINDOWS_TO_WINDOWS
 }
