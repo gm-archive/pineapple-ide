@@ -2,6 +2,7 @@
 #define APPLICATION_H
 
 #include "scene.h"
+#include <string>
 
 namespace Pineapple {
 
@@ -15,6 +16,7 @@ public:
 	static void exit() { running = false; }
 	static bool isRunning() { return running; }
 	static int getSpeed() { return speed; }
+	static std::string getCurrentDirectory();
 
 	static void setScene(Scene* scene);
 	static Scene* getScene() { return currentScene; }
