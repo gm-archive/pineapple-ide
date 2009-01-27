@@ -5,6 +5,9 @@
  */
 package org.gcreator.gui;
 
+import java.awt.Component;
+import java.util.Vector;
+import javax.swing.JPanel;
 import javax.swing.table.AbstractTableModel;
 import org.gcreator.events.Event;
 import org.gcreator.events.EventPanel;
@@ -241,10 +244,12 @@ private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
         for (Event e : beh.events) {
             if (e.getType().equalsIgnoreCase(eventList.getSelectedValue().toString())) {
                 newEventButton.setEnabled(false);
+                deleteEventButton.setEnabled(true);
                 return;
             }
         }
         newEventButton.setEnabled(true);
+        deleteEventButton.setEnabled(false);
     }
 }//GEN-LAST:event_eventListValueChanged
 
@@ -254,6 +259,7 @@ private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
     addTabForEvent(e);
     eventList.setSelectedIndex(-1);
     newEventButton.setEnabled(false);
+    deleteEventButton.setEnabled(true);
     this.setModified();
 }//GEN-LAST:event_newEventButtonActionPerformed
 
@@ -261,12 +267,29 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     if (eventList.getSelectedIndex() < 0) {
         return;
     }
-    beh.events.remove(eventList.getSelectedIndex());
-    if (eventList.getSelectedIndex() > beh.events.size()) {
-        eventList.setSelectedIndex(beh.events.size() - 1);
+    Component[] cs = tabPane.getComponents();
+    
+    @SuppressWarnings("unchecked")
+    Vector<Event> evec = (Vector<Event>) beh.events.clone();
+    
+    for(Event e : evec){
+        if(e.getType().equals(eventList.getSelectedValue())){
+            beh.events.remove(e);
+            break;
+        }
+    }
+    for(Component c : cs){
+        if(c instanceof EventPanel){
+            EventPanel ev = (EventPanel) c;
+            if(ev.getEvent().getType().equals(eventList.getSelectedValue())){
+                tabPane.remove(c);
+                break;
+            }
+        }
     }
     eventList.updateUI();
     this.setModified();
+    deleteEventButton.setEnabled(false);
 }//GEN-LAST:event_deleteEventButtonActionPerformed
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed

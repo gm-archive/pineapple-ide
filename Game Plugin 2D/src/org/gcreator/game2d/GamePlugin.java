@@ -93,7 +93,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     public boolean accept(String format) {
         for (String f : formats) {
-            if (format.equalsIgnoreCase(f)) {
+            if (format!=null&&format.equalsIgnoreCase(f)) {
                 return true;
             }
         }

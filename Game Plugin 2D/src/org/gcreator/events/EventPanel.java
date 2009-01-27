@@ -22,6 +22,10 @@ public class EventPanel extends javax.swing.JPanel{
     private static final long serialVersionUID = 1;
     private Event e = null;
     private RSyntaxTextArea textArea;
+    
+    public Event getEvent(){
+        return e;
+    }
 
     /**
      * Creates new form EventPanel
