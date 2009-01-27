@@ -1,6 +1,17 @@
 #include "SDL/SDL_opengl.h"
 #include "scene.h"
 #include "application.h"
+
+#include <cstdio>
+#ifdef WINDOWS
+    #include <direct.h>
+    #include <windows.h>
+    #define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    #define GetCurrentDir getcwd
+#endif
+
 using namespace Pineapple;
 
 int Application::speed = 60;
@@ -22,4 +33,51 @@ void Application::setScene(Scene* scene)
         delete currentScene;
 
     currentScene = scene;
+}
+
+std::string Application::getCurrentDirectory()
+{
+    char cPath[FILENAME_MAX+1];
+	if(!GetCurrentDir(cPath, sizeof(cPath))){
+	    return "";
+	}
+	cPath[sizeof(cPath) - 1] = '\0';
+	std::string s = cPath;
+    return s;
+}
+
+std::string Application::getExecutablePath()
+{
+    char cPath[FILENAME_MAX+1];
+#ifdef WINDOWS
+    int bytes = GetModuleFileName(NULL, cPath, FILENAME_MAX);
+    if(bytes==0){
+        return "";
+    }
+    cPath[sizeof(cPath) - 1] = '\0';
+#else
+    char szTmp[32];
+    sprintf(szTmp, "/proc/%d/exe", getpid());
+    int bytes = readlink(szTmp, cPath, FILENAME_MAX);
+    if(bytes >= 0){
+            cPath[bytes] = '\0';
+    }
+#endif
+	std::string s = cPath;
+    return s;
+}
+
+std::string Application::getExecutableDirectory()
+{
+    std::string fpath = getExecutablePath();
+    if(fpath==""){ return ""; }
+    size_t i = fpath.find_last_of("/");
+    size_t i2 = fpath.find_last_of("\\");
+    if(i2>i){
+        i = i2;
+    }
+    if(i==std::string::npos){
+        return fpath;
+    }
+    return fpath.substr(0, i+1);
 }

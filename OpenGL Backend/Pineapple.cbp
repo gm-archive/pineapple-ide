@@ -47,7 +47,6 @@
 		<Unit filename="keyboard.h" />
 		<Unit filename="keycodes.h" />
 		<Unit filename="pamath.h" />
-		<Unit filename="pineapple.h" />
 		<Unit filename="scene.cpp" />
 		<Unit filename="scene.h" />
 		<Unit filename="texture.cpp" />
