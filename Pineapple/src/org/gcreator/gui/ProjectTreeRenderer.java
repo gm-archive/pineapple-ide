@@ -71,6 +71,19 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
             if (el.getIcon() != null) {
                 this.setIcon(el.getIcon());
             }
+            String s = this.getText();
+            int index = s.lastIndexOf('.');
+            if(index!=-1){
+                String name = s.substring(0, index);
+                String format = s.substring(index);
+                name = name.replaceAll("&", "&amp");
+                name = name.replaceAll("<", "&lt;");
+                name = name.replaceAll(">", "&gt;");
+                format = format.replaceAll("&", "&amp");
+                format = format.replaceAll("<", "&lt;");
+                format = format.replaceAll(">", "&gt;");
+                setText("<html>"+name+"<font color='gray'>"+format);
+            }
         }
 
         return this;
