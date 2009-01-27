@@ -106,20 +106,30 @@ public class CompilerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    try{
-        Runtime.getRuntime().exec(new String[]{"nautilus",c.binFolder.getAbsolutePath()});
-    }
-    catch(Exception e){
-        
+    String ap = c.binFolder.getAbsolutePath();
+    if(!tryRun("explorer", ap)){
+        tryRun("nautilus", ap);
     }
 }//GEN-LAST:event_jButton1ActionPerformed
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+public boolean tryRun(String cmd1, String cmd2){
     try{
-        Runtime.getRuntime().exec(new String[]{"sh",(new File(c.binFolder, "rungame.sh")).getAbsolutePath()});
+        Runtime.getRuntime().exec(new String[]{cmd1,cmd2});
+        return true;
     }
     catch(Exception e){
-        
+        return false;
+    }
+}
+
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    if(!tryRun("sh",(new File(c.binFolder, "rungame.sh")).getAbsolutePath())){
+        try{
+            Runtime.getRuntime().exec("game.exe", null, c.binFolder);
+        }
+        catch(Exception e){
+            
+        }
     }
 }//GEN-LAST:event_jButton2ActionPerformed
 

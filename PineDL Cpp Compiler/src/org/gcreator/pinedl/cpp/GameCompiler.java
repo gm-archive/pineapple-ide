@@ -168,6 +168,11 @@ public class GameCompiler {
         }
         else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
             copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL_image.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "jpeg.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "libpng12-0.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "libtiff-3.dll");
+            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "zlib1.dll");
             copyFile("/org/gcreator/pinedl/cpp/res/windows/", outputFolder, "libPineapple.a");
         }
         compFrame.writeLine("Copying header files");
@@ -219,18 +224,22 @@ public class GameCompiler {
             for(String cmd : sdloutSplit){
                 command.add(cmd);
             }
+            command.add("-lSDL_image");
+            command.add("-lGL");
+            command.add("-lGLU");
         }
         else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
             command.add("-lmingw32");
             command.add("-lSDLmain");
             command.add("-lSDL");
             command.add("-mwindows");
+            command.add("-lSDL_image");
+            command.add("-lglu32");
+            command.add("-lopengl32");
         }
         
         
-        command.add("-lSDL_image");
-        command.add("-lGL");
-        command.add("-lGLU");
+        
         Process proc = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
         compFrame.writeLine("Calling GCC C++ for executable generation");
         String res = "";
