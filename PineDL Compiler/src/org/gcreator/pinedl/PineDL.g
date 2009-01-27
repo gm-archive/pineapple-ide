@@ -351,17 +351,19 @@ STRINGCONST_PRIVATE
 
 doubleconst returns [DoubleConstant d = null]
 	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
-	
+
+//No negative number support due to https://sourceforge.net/tracker2/index.php?func=detail&aid=2526252&group_id=242839&atid=1120759
 DOUBLECONST_PRIVATE
-	: ('-'? DIGIT* '.' DIGIT+);
+	: (DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
 	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
 
 
+//No negative number support due to https://sourceforge.net/tracker2/index.php?func=detail&aid=2526252&group_id=242839&atid=1120759
 INTCONST_PRIVATE
-	:	('-'?
-		(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
+	:	(
+			(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
