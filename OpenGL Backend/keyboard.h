@@ -1,7 +1,11 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#define WINTRANSPARENT TRANSPARENT
+#undef TRANSPARENT
+#define TRANSPARENT _SDL_TRANSPARENT
 #include "SDL/SDL.h"
+#undef TRANSPARENT
 #include "keycodes.h"
 
 namespace Pineapple {

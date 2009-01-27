@@ -3,7 +3,7 @@
 #include "application.h"
 
 #include <cstdio>
-#ifdef WINDOWS
+#ifdef WIN32
     #include <direct.h>
     #include <windows.h>
     #define GetCurrentDir _getcwd
@@ -49,7 +49,7 @@ std::string Application::getCurrentDirectory()
 std::string Application::getExecutablePath()
 {
     char cPath[FILENAME_MAX+1];
-#ifdef WINDOWS
+#ifdef WIN32
     int bytes = GetModuleFileName(NULL, cPath, FILENAME_MAX);
     if(bytes==0){
         return "";

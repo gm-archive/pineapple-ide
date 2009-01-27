@@ -6,14 +6,16 @@ namespace Pineapple{
         private:
             float r,g,b,a;
         public:
+            
             static Color* const BLACK;
             static Color* const WHITE;
             static Color* const RED;
             static Color* const GREEN;
             static Color* const BLUE;
             static Color* const YELLOW;
-            static Color* const TRANSPARENT;
-            Color(float r, float g, float b, float a = 1.0f){
+            static Color* const TRANSPARENT_WHITE;
+            
+            Color(float r, float g, float b, float a = 1.0){
                 this->r = r;
                 this->g = g;
                 this->b = b;

@@ -1,7 +1,6 @@
 #include "SDL/SDL_opengl.h"
 #include "view.h"
 #include "window.h"
-#include <iostream>
 
 using namespace Pineapple;
 
@@ -21,6 +20,7 @@ View::View(int swidth, int sheight, int pwidth, int pheight,
 
 void View::set(const Color* bgColor)
 {
+    
     //viewport
     int width = pwidth;
     int height = pheight;
