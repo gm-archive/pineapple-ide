@@ -69,7 +69,7 @@ public class CppCompilerPlugin extends Plugin{
                     new GameCompiler(PineappleCore.getProject());
                 }
             });
-            PineappleGUI.projectMenu.add(compile);
+            PineappleGUI.toolsMenu.add(compile);
         }
     }
 }

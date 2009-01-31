@@ -64,11 +64,9 @@ public class Core {
      * @see #unload()
      */
     protected static void load() {
+        
         /* Logging code for Alpha testing releases */
         
-        /* No Alpha release for a while. */
-        
-        /*
         try {
             DateFormat d = DateFormat.getDateInstance();
             System.setErr(new PrintStream(("error-log-" + d.format(Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
@@ -76,7 +74,7 @@ public class Core {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
+        
         /* End of logging code */
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
