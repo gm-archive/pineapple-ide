@@ -91,6 +91,7 @@ public class GameCompiler {
                             for (ProjectElement e : p.getFiles()) {
                                 String name = e.getFile().getName();
                                 String format = name.substring(name.lastIndexOf('.') + 1);
+                                format = format.toLowerCase();
                                 if (format.equals("actor")) {
                                     createActorScript(e);
                                 } else if (format.equals("scene")) {
@@ -98,6 +99,14 @@ public class GameCompiler {
                                 } else if (format.equals("pdl")) {
                                     copyScript(e);
                                 } else if (format.equals("png")) {
+                                    copyImage(e);
+                                } else if (format.equals("jpg")) {
+                                    copyImage(e);
+                                } else if (format.equals("jpeg")) {
+                                    copyImage(e);
+                                } else if (format.equals("gif")) {
+                                    copyImage(e);
+                                } else if (format.equals("bmp")) {
                                     copyImage(e);
                                 }
                             }
