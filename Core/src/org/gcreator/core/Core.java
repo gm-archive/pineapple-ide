@@ -22,10 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.core;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.text.DateFormat;
-import java.util.Calendar;
 import org.gcreator.gui.MainFrame;
 import org.gcreator.managers.DefaultUncaughtExceptionHandler;
 import org.gcreator.managers.SettingsManager;
@@ -66,15 +62,18 @@ public class Core {
     protected static void load() {
         
         /* Logging code for Alpha testing releases */
-        
-        try {
-            DateFormat d = DateFormat.getDateInstance();
-            System.setErr(new PrintStream(("error-log-" + d.format(Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-            System.setOut(new PrintStream(("output-log-" + d.format(Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+//     
+//     * * * * * * * * * * * * * * * * 
+//      *   Not needed for a while  *
+//     * * * * * * * * * * * * * * * *  
+//        try {
+//            java.text.DateFormat d = java.text.DateFormat.getDateInstance();
+//            System.setErr(new java.io.PrintStream(("error-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+//            System.setOut(new java.io.PrintStream(("output-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+//        } catch (java.io.IOException e) {
+//            e.printStackTrace();
+//        }
+//        
         /* End of logging code */
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
