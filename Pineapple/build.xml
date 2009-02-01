@@ -5,8 +5,6 @@
 <project name="PineappleModule" default="default" basedir="..">
     <description>Performs some useful tasks</description>
     
-    <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
-
     <target name="clean">
         <echo message="P1"/>
         <subant target="clean">
@@ -31,15 +29,9 @@
         <subant target="jar">
             <fileset dir="Pineapple" includes="xbuild.xml"/>
         </subant>
-        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/dist/Plugins"/>
+                <subant target="default">
+            <fileset dir="Pineapple" includes="copy-module.xml"/>
+        </subant>
+        
     </target>
 </project>

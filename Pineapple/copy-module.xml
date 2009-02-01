@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CopyModule" default="default" basedir="..">
+    
+    <description>Copies the module to the proper location</description>
+    
+    <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
+    
+    <target name="default">
+        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/build/Plugins"/>
+        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/dist/Plugins"/>
+        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/build/Plugins"/>
+        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/dist/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/build/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/dist/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/build/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/dist/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/build/Plugins"/>
+        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/dist/Plugins"/>
+    </target>
+    
+</project>

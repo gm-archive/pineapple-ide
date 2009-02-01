@@ -4,9 +4,7 @@
 <!-- (If you delete it and reopen the project it will be recreated.) -->
 <project name="PineappleModule" default="default" basedir="..">
     <description>Performs some useful tasks</description>
-   
-    <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
-    
+  
     <target name="clean">
         <subant target="clean">
             <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
@@ -26,10 +24,13 @@
     </target>
     
     <target name="jar">
+        
         <subant target="jar">
             <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
         </subant>
-        <v-copy src="Game Plugin 2D/dist/Game_Plugin_2D.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Game Plugin 2D/dist/Game_Plugin_2D.jar" destdir="Core/dist/Plugins"/>
+        
+        <subant target="default">
+            <fileset dir="Game Plugin 2D" includes="copy-module.xml"/>
+        </subant>
     </target>
 </project>
