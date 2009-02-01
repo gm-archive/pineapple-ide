@@ -27,9 +27,11 @@ import org.gcreator.project.ProjectFile;
 
 /**
  * Specifies whether a resource is valid or not
- * @see ResourcePicker
+ * 
+ * @see ResourceChooser
  * @author Luís Reis
  */
 public interface ResourceValidator {
+
     boolean isValid(ProjectFile file);
 }

@@ -20,27 +20,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.gui.validators;
 
+import javax.imageio.ImageIO;
 import org.gcreator.gui.ResourceValidator;
 import org.gcreator.project.ProjectFile;
 
 /**
- * A validator that matches only images
+ * A validator that matches only images using {@link ImageIO}.
+ * 
  * @author Luís Reis
  */
-public class ImageValidator implements ResourceValidator{
+public class ImageValidator implements ResourceValidator {
+
     public boolean isValid(ProjectFile file) {
         String name = file.getName();
-        int indexOfDot = name.lastIndexOf('.');
-        if(indexOfDot==-1){
+        int i = name.lastIndexOf('.');
+        if (i == -1 || i == name.length()) {
             return false;
         }
-        String format = name.substring(indexOfDot+1);
-        if(format.equals("png")){
-            return true;
+        String format = name.substring(i + 1);
+        for (String s : ImageIO.getReaderFileSuffixes()) {
+            if (format.equalsIgnoreCase(s)) {
+                return true;
+            }
         }
+            
         return false;
     }
 }
