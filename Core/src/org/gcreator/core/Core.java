@@ -62,18 +62,14 @@ public class Core {
     protected static void load() {
         
         /* Logging code for Alpha testing releases */
-//     
-//     * * * * * * * * * * * * * * * * 
-//      *   Not needed for a while  *
-//     * * * * * * * * * * * * * * * *  
-//        try {
-//            java.text.DateFormat d = java.text.DateFormat.getDateInstance();
-//            System.setErr(new java.io.PrintStream(("error-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-//            System.setOut(new java.io.PrintStream(("output-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-//        } catch (java.io.IOException e) {
-//            e.printStackTrace();
-//        }
-//        
+        try {
+            java.text.DateFormat d = java.text.DateFormat.getDateInstance();
+            System.setErr(new java.io.PrintStream(("error-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+            System.setOut(new java.io.PrintStream(("output-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+        
         /* End of logging code */
 
         Thread.setDefaultUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler());
