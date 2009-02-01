@@ -29,7 +29,7 @@
             <fileset dir="Syntax Highlighter" includes="xbuild.xml"/>
         </subant>
         <subant target="default">
-            <fileset dir="" includes="copy-module.xml"/>
+            <fileset dir="Syntax Highlighter" includes="copy-module.xml"/>
         </subant>
     </target>
 </project>
