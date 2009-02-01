@@ -28,7 +28,7 @@
             <fileset dir="PineDL Cpp Compiler" includes="xbuild.xml"/>
         </subant>
         <subant target="default">
-            <fileset dir="" includes="copy-module.xml"/>
+            <fileset dir="PineDL Cpp Compiler" includes="copy-module.xml"/>
         </subant>
     </target>
 </project>
