@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +76,7 @@ public class Scene extends BehaviorObject {
 
     public Scene() {
     }
-    
+
     public Scene(BasicFile file) {
         try {
             new SceneImporter(this, new BufferedInputStream(file.getInputStream()));
@@ -213,7 +212,7 @@ public class Scene extends BehaviorObject {
         /* Actors */
         Element actors = doc.createElement("actors");
         for (ActorInScene a : this.actors) {
-            if(a.bf!=null){
+            if (a.bf != null) {
                 Element actor = doc.createElement("actor");
                 actor.setAttribute("x", String.valueOf(a.x));
                 actor.setAttribute("y", String.valueOf(a.y));
@@ -342,7 +341,7 @@ public class Scene extends BehaviorObject {
                 unit.y = Integer.parseInt(atts.getValue("y"));
                 String path = atts.getValue("file");
                 setActor(unit, path, PineappleCore.getProject());
-                System.out.println("x="+unit.x+",y="+unit.y+",path="+path);
+                System.out.println("x=" + unit.x + ",y=" + unit.y + ",path=" + path);
                 actors.add(unit);
             }
         }

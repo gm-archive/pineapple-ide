@@ -1,84 +1,51 @@
 /*
- * SceneProperties.java
- *
- * Created on 27 de Dezembro de 2008, 13:50
- */
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+ */
 package org.gcreator.gui;
 
 import java.awt.Color;
 import javax.swing.JColorChooser;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.gcreator.editors.SceneEditor;
 
 /**
  *
- * @author  luis
+ * The panel for the scene's properties.
+ * 
+ * @author Luís Reis
  */
 public class SceneProperties extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 5613L;
-    
-    
     private SceneEditor editor;
-    private Color ok;
-    
-    /** Creates new form SceneProperties */
+
+    /** Creates new form SceneProperties
+     * @param editor The editor to set the properties for.
+     */
     public SceneProperties(SceneEditor editor) {
         initComponents();
         this.editor = editor;
-        jTextField1.setText(""+ editor.s.width);
-        jTextField2.setText(""+ editor.s.height);
-        ok = jTextField1.getBackground();
-        validateTextFields();
-        DocumentListener d = new DocumentListener(){
-            public void insertUpdate(DocumentEvent evt){
-                update(evt);
-            }
-            public void removeUpdate(DocumentEvent evt){
-                update(evt);
-            }
-            public void changedUpdate(DocumentEvent evt){
-                update(evt);
-            }
-            public void update(DocumentEvent evt){
-                validateTextFields();
-            }
-        };
-        jTextField1.getDocument().addDocumentListener(d);
-        jTextField2.getDocument().addDocumentListener(d);
-        jPanel1.setBackground(editor.s.bgColor);
-    }
-    
-    private void validateTextFields(){
-        try{
-            int i = Integer.parseInt(jTextField1.getText());
-            if(i<=0){
-                throw new Exception();
-            }
-            jTextField1.setBackground(ok);
-            editor.s.width = i;
-        }
-        catch(Exception e){
-            jTextField1.setBackground(Color.RED);
-        }
-        
-        try{
-            int i = Integer.parseInt(jTextField2.getText());
-            if(i<=0){
-                throw new Exception();
-            }
-            jTextField2.setBackground(ok);
-            editor.s.height = i;
-        }
-        catch(Exception e){
-            jTextField2.setBackground(Color.RED);
-        }
-        editor.jScrollPane1.updateUI();
-        if(editor.sea!=null){
-            editor.sea.updateUI();
-        }
+        sceneWidthSpinner.setValue(new Integer(editor.s.width));
+        sceneHeightSpinner.setValue(new Integer(editor.s.height));
+        backgroundColorPanel.setBackground(editor.s.bgColor);
     }
 
     /** This method is called from within the constructor to
@@ -91,38 +58,50 @@ public class SceneProperties extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        backgroundColorPanel = new javax.swing.JPanel();
+        sceneWidthSpinner = new javax.swing.JSpinner();
+        sceneHeightSpinner = new javax.swing.JSpinner();
 
         jLabel1.setText("Width:");
 
-        jTextField1.setText("jTextField1");
-
         jLabel2.setText("Height:");
-
-        jTextField2.setText("jTextField2");
 
         jLabel3.setText("Background Color:");
 
-        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        backgroundColorPanel.setBackground(new java.awt.Color(255, 255, 255));
+        backgroundColorPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        backgroundColorPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel1MouseClicked(evt);
+                backgroundColorPanelMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 212, Short.MAX_VALUE)
+        javax.swing.GroupLayout backgroundColorPanelLayout = new javax.swing.GroupLayout(backgroundColorPanel);
+        backgroundColorPanel.setLayout(backgroundColorPanelLayout);
+        backgroundColorPanelLayout.setHorizontalGroup(
+            backgroundColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 53, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 33, Short.MAX_VALUE)
+        backgroundColorPanelLayout.setVerticalGroup(
+            backgroundColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 21, Short.MAX_VALUE)
         );
+
+        sceneWidthSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(640), Integer.valueOf(1), null, Integer.valueOf(10)));
+        sceneWidthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sceneWidthSpinnerStateChanged(evt);
+            }
+        });
+
+        sceneHeightSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(480), Integer.valueOf(1), null, Integer.valueOf(10)));
+        sceneHeightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sceneHeightSpinnerStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,17 +110,18 @@ public class SceneProperties extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
-                    .addComponent(jLabel3))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(sceneHeightSpinner)
+                            .addComponent(sceneWidthSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addComponent(jLabel3)
+                    .addComponent(backgroundColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,36 +129,42 @@ public class SceneProperties extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sceneWidthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                    .addComponent(sceneHeightSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(287, Short.MAX_VALUE))
+                .addComponent(backgroundColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+private void backgroundColorPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundColorPanelMouseClicked
     Color c = JColorChooser.showDialog(this, "Select color", editor.s.bgColor);
-    if(c!=null){
+    if (c != null) {
         editor.s.bgColor = c;
-        jPanel1.setBackground(editor.s.bgColor);
+        backgroundColorPanel.setBackground(editor.s.bgColor);
         editor.sea.repaint();
     }
-}//GEN-LAST:event_jPanel1MouseClicked
+}//GEN-LAST:event_backgroundColorPanelMouseClicked
 
+private void sceneWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneWidthSpinnerStateChanged
+    editor.s.width = (Integer)sceneWidthSpinner.getValue();
+}//GEN-LAST:event_sceneWidthSpinnerStateChanged
+
+private void sceneHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneHeightSpinnerStateChanged
+    editor.s.height = (Integer)sceneHeightSpinner.getValue();
+}//GEN-LAST:event_sceneHeightSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundColorPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSpinner sceneHeightSpinner;
+    private javax.swing.JSpinner sceneWidthSpinner;
     // End of variables declaration//GEN-END:variables
-
 }

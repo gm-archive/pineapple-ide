@@ -224,7 +224,6 @@ public class Actor extends BehaviorObject {
         }
 
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            System.out.println("parsing " + localName);
             if (localName.equalsIgnoreCase("actor")) {
                 String version = atts.getValue("version");
                 double v = Double.valueOf(version);
@@ -276,16 +275,13 @@ public class Actor extends BehaviorObject {
 
                 this.actor.fields.add(f);
             } else if (parsingEvents && localName.equalsIgnoreCase("event")) {
-                System.out.println("Starting");
                 String type = atts.getValue("type");
-                System.out.println("Type is " + type);
                 if (type == null) {
                     System.err.println("ERROR: No type for event.");
                     return;
                 }
                 curEvent = new Event(type);
                 curEvent.setPineDL("");
-                System.out.println("Starting event" + curEvent.getType());
                 parsingEvent = true;
             }
         }
@@ -310,7 +306,6 @@ public class Actor extends BehaviorObject {
                 parsingEvents = false;
             } else if (parsingEvents && parsingEvent && localName.equalsIgnoreCase("event")) {
                 parsingEvent = false;
-                System.out.println("Add event");
                 actor.events.add(curEvent);
                 curEvent = null;
             }

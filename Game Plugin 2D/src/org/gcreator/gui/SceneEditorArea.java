@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import org.gcreator.project.io.BasicFile;
 
 /**
  * Draws the actors(and tiles, in the future)
+ * 
  * @author Luís Reis
  */
 public class SceneEditorArea extends JPanel {
@@ -54,6 +55,10 @@ public class SceneEditorArea extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent evt) {
+                if (evt.getButton() != MouseEvent.BUTTON1) {
+                    return;//TODO: right-clicking
+                }
+                
                 if (mode == MODE_ADD) {
                     BasicFile f = sceneEditor.actorChooser.getSelectedFile();
                     if (f != null) {
@@ -66,8 +71,7 @@ public class SceneEditorArea extends JPanel {
                         selection = a;
                         repaint();
                     }
-                }
-                else if (mode == MODE_EDIT) {
+                } else if (mode == MODE_EDIT) {
                     if (sceneEditor == null || sceneEditor.s == null) {
                         return;
                     }
@@ -76,29 +80,33 @@ public class SceneEditorArea extends JPanel {
                     selection = null;
                     for (Scene.ActorInScene actor : s.actors) {
                         BufferedImage i = actor.getImage();
-                        if(i==null){ continue; }
+                        if (i == null) {
+                            continue;
+                        }
                         int x = evt.getX();
                         int y = evt.getY();
-                        if(x<actor.x){ continue; }
-                        if(y<actor.y){ continue; }
-                        if(x<actor.x+i.getWidth()&&y<actor.y+i.getHeight()){
+                        if (x < actor.x) {
+                            continue;
+                        }
+                        if (y < actor.y) {
+                            continue;
+                        }
+                        if (x < actor.x + i.getWidth() && y < actor.y + i.getHeight()) {
                             selection = actor;
                         }
                     }
-                    if(oldSelection!=selection){
-                        sceneEditor.jPanel1.removeAll();
-                        if(selection==null){
-                            sceneEditor.jPanel1.add(sceneEditor.sp, BorderLayout.CENTER);
-                        }
-                        else{
+                    if (oldSelection != selection) {
+                        sceneEditor.settingsPanel.removeAll();
+                        if (selection == null) {
+                            sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
+                        } else {
                             ActorProperties ap = new ActorProperties(selection, SceneEditorArea.this);
-                            sceneEditor.jPanel1.add(ap, BorderLayout.CENTER);
+                            sceneEditor.settingsPanel.add(ap, BorderLayout.CENTER);
                         }
                         repaint();
-                        sceneEditor.jPanel1.updateUI();
+                        sceneEditor.settingsPanel.updateUI();
                     }
-                }
-                else if(mode==MODE_DELETE){
+                } else if (mode == MODE_DELETE) {
                     if (sceneEditor == null || sceneEditor.s == null) {
                         return;
                     }
@@ -106,30 +114,37 @@ public class SceneEditorArea extends JPanel {
                     Scene.ActorInScene chosen = null;
                     for (Scene.ActorInScene actor : s.actors) {
                         BufferedImage i = actor.getImage();
-                        if(i==null){ continue; }
+                        if (i == null) {
+                            continue;
+                        }
                         int x = evt.getX();
                         int y = evt.getY();
-                        if(x<actor.x){ continue; }
-                        if(y<actor.y){ continue; }
-                        if(x<actor.x+i.getWidth()&&y<actor.y+i.getHeight()){
+                        if (x < actor.x) {
+                            continue;
+                        }
+                        if (y < actor.y) {
+                            continue;
+                        }
+                        if (x < actor.x + i.getWidth() && y < actor.y + i.getHeight()) {
                             chosen = actor;
                         }
                     }
                     s.actors.remove(chosen);
-                    if(selection==chosen){
+                    if (selection == chosen) {
                         selection = null;
-                        sceneEditor.jPanel1.removeAll();
-                        sceneEditor.jPanel1.add(sceneEditor.sp, BorderLayout.CENTER);
-                        sceneEditor.jPanel1.repaint();
+                        sceneEditor.settingsPanel.removeAll();
+                        sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
+                        sceneEditor.settingsPanel.repaint();
                     }
                     repaint();
                 }
             }
         });
-        addMouseMotionListener(new MouseAdapter(){
+        addMouseMotionListener(new MouseAdapter() {
+
             @Override
-            public void mouseDragged(MouseEvent e){
-                if(selection!=null){
+            public void mouseDragged(MouseEvent e) {
+                if (selection != null) {
                     selection.x = e.getX();
                     selection.y = e.getY();
                     repaint();

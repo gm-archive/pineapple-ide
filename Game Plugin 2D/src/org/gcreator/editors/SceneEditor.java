@@ -23,81 +23,59 @@ THE SOFTWARE.
 package org.gcreator.editors;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.gcreator.formats.Scene;
-import org.gcreator.game2d.PaletteUser;
 import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
-import org.gcreator.gui.ResourceChooser;
 import org.gcreator.gui.SceneEditorArea;
 import org.gcreator.gui.SceneProperties;
 import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
-import org.noos.xing.mydoggy.ToolWindow;
 
 /**
  * The editor of game scenes.
  * 
  * @author Luís Reis
  */
-public class SceneEditor extends DocumentPane implements PaletteUser{
+public class SceneEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
     public Scene s = null;
     private BehaviourPanel panel = null;
-    private JPanel palette = null;
-    public ResourceChooser actorChooser = new ResourceChooser();
     public SceneProperties sp = null;
     public SceneEditorArea sea = null;
 
-    /** Creates new form SceneEditor
+    /** 
+     * Creates new form SceneEditor
+     * 
      * @param f The file to edit
      */
     public SceneEditor(BasicFile f) {
         super(f);
-        palette = new JPanel();
         initComponents();
         s = new Scene(f);
-        setModified(true);
+        this.setModified(true);
         panel = new BehaviourPanel(s, this);
         panel.setVisible(true);
-        jTabbedPane1.add(panel, "Behavior");
-        palette.setVisible(true);
-        palette.setLayout(new GridLayout(0, 1));
+        tabs.add(panel, "Behavior");
         actorChooser.setResourceValidator(new ActorValidator());
         actorChooser.setVisible(true);
         sp = new SceneProperties(this);
-        jPanel1.add(sp, BorderLayout.CENTER);
+        settingsPanel.add(sp, BorderLayout.CENTER);
         sea = new SceneEditorArea();
         sea.setVisible(true);
         sea.sceneEditor = this;
         sea.updateUI();
-        jScrollPane1.setViewportView(sea);
-        setModified(true);
-        updatePaletteContent();
-    }
-
-    public void updatePaletteContent() {
-        palette.removeAll();
-        palette.add(actorChooser);
-        palette.updateUI();
-    }
-
-    public boolean doPalette(ToolWindow window, JPanel panel) {
-        panel.removeAll();
-        panel.setLayout(new FlowLayout());
-        panel.add(palette);
-        panel.updateUI();
-        return true;
+        seaScrollPane.setViewportView(sea);
+        seaScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+	seaScrollPane.getVerticalScrollBar().setBlockIncrement(64);
+	seaScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+	seaScrollPane.getHorizontalScrollBar().setBlockIncrement(64);
     }
 
     
@@ -139,93 +117,113 @@ public class SceneEditor extends DocumentPane implements PaletteUser{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        toolButtonGroup = new javax.swing.ButtonGroup();
+        tabs = new javax.swing.JTabbedPane();
+        Splitter = new javax.swing.JSplitPane();
+        settingsPanel = new javax.swing.JPanel();
+        environmentTab = new javax.swing.JPanel();
+        seaScrollPane = new javax.swing.JScrollPane();
+        topToolBar = new javax.swing.JToolBar();
+        actorChooser = new org.gcreator.gui.ResourceChooser();
+        addActorButton = new javax.swing.JToggleButton();
+        editActorButton = new javax.swing.JToggleButton();
+        deleteActorButton = new javax.swing.JToggleButton();
 
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
-        jSplitPane1.setLeftComponent(jPanel1);
+        settingsPanel.setLayout(new java.awt.BorderLayout());
+        Splitter.setLeftComponent(settingsPanel);
 
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        topToolBar.setFloatable(false);
+        topToolBar.setRollover(true);
+        topToolBar.add(actorChooser);
 
-        jButton1.setText("Add");
-        jButton1.setSelected(true);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        toolButtonGroup.add(addActorButton);
+        addActorButton.setSelected(true);
+        addActorButton.setText("Add");
+        addActorButton.setFocusable(false);
+        addActorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addActorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addActorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addActorButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1);
+        topToolBar.add(addActorButton);
 
-        jButton2.setText("Edit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        toolButtonGroup.add(editActorButton);
+        editActorButton.setText("Edit");
+        editActorButton.setFocusable(false);
+        editActorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editActorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editActorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                editActorButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2);
+        topToolBar.add(editActorButton);
 
-        jButton3.setText("Delete");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        toolButtonGroup.add(deleteActorButton);
+        deleteActorButton.setText("Delete");
+        deleteActorButton.setFocusable(false);
+        deleteActorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteActorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteActorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                deleteActorButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton3);
+        topToolBar.add(deleteActorButton);
 
-        jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout environmentTabLayout = new javax.swing.GroupLayout(environmentTab);
+        environmentTab.setLayout(environmentTabLayout);
+        environmentTabLayout.setHorizontalGroup(
+            environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(topToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+            .addComponent(seaScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+        );
+        environmentTabLayout.setVerticalGroup(
+            environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(environmentTabLayout.createSequentialGroup()
+                .addComponent(topToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        jSplitPane1.setRightComponent(jPanel2);
+        Splitter.setRightComponent(environmentTab);
 
-        jTabbedPane1.addTab("Environment", jSplitPane1);
+        tabs.addTab("Environment", Splitter);
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(tabs, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    jButton1.setSelected(true);
-    jButton2.setSelected(false);
-    jButton3.setSelected(false);
+private void addActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActorButtonActionPerformed
     sea.mode = SceneEditorArea.MODE_ADD;
     sea.repaint();
-}//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_addActorButtonActionPerformed
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    jButton1.setSelected(false);
-    jButton2.setSelected(true);
-    jButton3.setSelected(false);
+private void editActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActorButtonActionPerformed
     sea.mode = SceneEditorArea.MODE_EDIT;
     sea.repaint();
-}//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_editActorButtonActionPerformed
 
-private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    jButton1.setSelected(false);
-    jButton2.setSelected(false);
-    jButton3.setSelected(true);
+private void deleteActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActorButtonActionPerformed
     sea.mode = SceneEditorArea.MODE_DELETE;
     sea.repaint();
-}//GEN-LAST:event_jButton3ActionPerformed
+}//GEN-LAST:event_deleteActorButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    public javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    public javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JSplitPane Splitter;
+    public org.gcreator.gui.ResourceChooser actorChooser;
+    private javax.swing.JToggleButton addActorButton;
+    private javax.swing.JToggleButton deleteActorButton;
+    private javax.swing.JToggleButton editActorButton;
+    private javax.swing.JPanel environmentTab;
+    public javax.swing.JScrollPane seaScrollPane;
+    public javax.swing.JPanel settingsPanel;
+    private javax.swing.JTabbedPane tabs;
+    private javax.swing.ButtonGroup toolButtonGroup;
+    private javax.swing.JToolBar topToolBar;
     // End of variables declaration//GEN-END:variables
 }
