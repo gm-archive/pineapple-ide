@@ -335,6 +335,7 @@ public class Scene extends BehaviorObject {
                 curEvent = new Event(type);
                 System.out.println("Starting event" + curEvent.getType());
                 parsingEvent = true;
+                curEvent.setPineDL("");
             } else if (parsingActors && localName.equalsIgnoreCase("actor")) {
                 ActorInScene unit = new ActorInScene();
                 unit.x = Integer.parseInt(atts.getValue("x"));
@@ -388,7 +389,7 @@ public class Scene extends BehaviorObject {
         public void characters(char[] ch, int start, int length) throws SAXException {
             String s = new String(ch, start, length);
             if (parsingEvent) {
-                curEvent.setPineDL(s);
+                curEvent.setPineDL(curEvent.getPineDL()+s);
             }
         }
 
