@@ -1,6 +1,6 @@
 /*
- Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pinedl.cpp;
 
 import java.io.File;
 import java.io.OutputStream;
-import javax.swing.text.html.HTMLDocument;
+import javax.swing.JOptionPane;
 
 /**
- *
+ * Frame for compiler output
+ * 
  * @author Luís Reis
  */
 public class CompilerFrame extends javax.swing.JFrame {
 
-    public class PineDLOutputStream extends OutputStream{
-        public void write(int c){
-            if(c=='\n'){
+    public class PineDLOutputStream extends OutputStream {
+
+        public void write(int c) {
+            if (c == '\n') {
                 jEditorPane1.setText(jEditorPane1.getText() + "<br>\n");
-            }
-            else{
+            } else {
                 jEditorPane1.setText(jEditorPane1.getText() + ((char) c));
             }
         }
     }
-    
-    public void writeLine(String s){
+
+    public void writeLine(String s) {
         String txt = jEditorPane1.getText();
-        jEditorPane1.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n","<br>\n") + "<br>\n");
+        jEditorPane1.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br>\n") + "<br>\n");
     }
-    
     GameCompiler c;
-    
+
     /** Creates new form CompilerFrame */
     public CompilerFrame(GameCompiler c) {
         this.c = c;
@@ -107,32 +106,44 @@ public class CompilerFrame extends javax.swing.JFrame {
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String ap = c.binFolder.getAbsolutePath();
-    if(!tryRun("explorer", ap)){
-        tryRun("nautilus", ap);
+    if (tryRun("explorer", ap)) { // Windows
+        return;
     }
+    if (tryRun("nautilus", ap)) { //GNOME
+        return;
+    }
+    if (tryRun("dolphin", ap)) { //KDE
+        return;
+    }
+    if (tryRun("thunar", ap)) { // Xfce
+        return;
+    }
+    if (tryRun("open", ap)) { // Mac OS X
+        return;
+    }
+    JOptionPane.showMessageDialog(this,
+            "No  file browser command to open " + ap);
 }//GEN-LAST:event_jButton1ActionPerformed
 
-public boolean tryRun(String cmd1, String cmd2){
-    try{
-        Runtime.getRuntime().exec(new String[]{cmd1,cmd2});
-        return true;
+    public boolean tryRun(String cmd1, String cmd2) {
+        try {
+            System.out.println(cmd1 + "\n" + cmd2);
+            Runtime.getRuntime().exec(new String[]{cmd1, cmd2});
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
-    catch(Exception e){
-        return false;
-    }
-}
 
 private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    if(!tryRun("sh",(new File(c.binFolder, "rungame.sh")).getAbsolutePath())){
-        try{
+    if (!tryRun("/bin/sh", "\"" + (new File(c.binFolder, "rungame.sh")).getAbsolutePath() + "\"")) {
+        try {
             Runtime.getRuntime().exec("game.exe", null, c.binFolder);
-        }
-        catch(Exception e){
-            
+        } catch (Exception e) {
         }
     }
 }//GEN-LAST:event_jButton2ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -140,5 +151,4 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-
 }

@@ -70,8 +70,30 @@ public class Actor extends BehaviorObject {
      * The actor's z coordinate
      */
     public float z = 0;
+    
+    /**
+     * The sprite's image
+     */
     public BasicFile image = null;
 
+    /**
+     * Whether to blit the sprite's image automatically during the game
+     * (as opposed to manually, which the programmer must add a function to
+     * the draw event to blit the sprite)
+     */
+    public boolean renderAutomatically = true;
+    
+    /**
+     * The parent of this actor. May be <tt>null</tt>.
+     */
+    public BasicFile parent;
+    
+    /**
+     * If an actor is <tt>barren</tt>, then it can have no children, just like
+     * <tt>final</tt> classes in Java.
+     */
+    public boolean barren = false;
+    
     /**
      * Creates a new actor
      */
@@ -115,7 +137,9 @@ public class Actor extends BehaviorObject {
         doc.setXmlVersion("1.0");
         Element root = doc.createElement("actor");
         root.setAttribute("version", Double.toString(VERSION));
-        root.setAttribute("z", Float.toString(z));
+        root.setAttribute("z", Float.toString(this.z));
+        root.setAttribute("barren", Boolean.toString(this.barren));
+        root.setAttribute("render-automatically", Boolean.toString(this.renderAutomatically));
 
         /* Fields */
         Element fields = doc.createElement("fields");
@@ -131,15 +155,23 @@ public class Actor extends BehaviorObject {
         }
         root.appendChild(fields);
 
+        /* Image */
         Element img = doc.createElement("image");
-
-        if (image != null) {
-            img.setTextContent(image.getPath());
+        if (this.image != null) {
+            img.setTextContent(this.image.getPath());
         } else {
             img.setTextContent("");
         }
-
         root.appendChild(img);
+        
+        /* Parent */
+        Element prnt = doc.createElement("parent");
+        if (this.parent != null) {
+            prnt.setTextContent(this.parent.getPath());
+        } else {
+            prnt.setTextContent("");
+        }
+        root.appendChild(prnt);
 
         /* Events */
         Element events = doc.createElement("events");
@@ -167,7 +199,7 @@ public class Actor extends BehaviorObject {
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="ActorImporter">
-    private final class ActorImporter implements ContentHandler {
+    private static final class ActorImporter implements ContentHandler {
 
         public ActorImporter(Actor a, InputStream in) throws SAXException, IOException {
             this.actor = a;
@@ -183,6 +215,7 @@ public class Actor extends BehaviorObject {
         private boolean parsingEvents;
         private boolean parsingEvent;
         private boolean parsingImage;
+        private boolean parsingParent;
         private Event curEvent;
         private Actor actor;
 
@@ -204,7 +237,9 @@ public class Actor extends BehaviorObject {
                 } else {
                     parsing = true;
                 }
-                z = Float.valueOf(atts.getValue("z"));
+                actor.z = Float.valueOf(atts.getValue("z"));
+                actor.renderAutomatically = Boolean.valueOf(atts.getValue("render-automatically"));
+                actor.barren = Boolean.valueOf(atts.getValue("barren"));
                 return;
             }
 
@@ -215,13 +250,15 @@ public class Actor extends BehaviorObject {
             if (localName.equalsIgnoreCase("fields")) {
                 parsingFields = true;
             } else if (localName.equalsIgnoreCase("events")) {
-                System.out.println("parsingEvents = true");
                 parsingEvents = true;
             } else if (localName.equalsIgnoreCase("image")) {
                 parsingImage = true;
+            } else if (localName.equalsIgnoreCase("parent")) {
+                parsingParent = true;
             }
 
             if (parsingImage) {
+            } else if (parsingParent) {
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
                 name = atts.getValue("name");
@@ -254,16 +291,19 @@ public class Actor extends BehaviorObject {
         }
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (localName.equalsIgnoreCase("actor") && !parsingEvents && !parsingEvent && !parsingFields) {
-                parsing = false;
-                return;
-            }
             if (!parsing) {
                 return;
             }
+            if (localName.equalsIgnoreCase("actor") && parsing && !parsingEvents && !parsingEvent && !parsingFields && !parsingImage && !parsingParent) {
+                parsing = false;
+                return;
+            }
+            
 
             if (parsingImage) {
                 parsingImage = false;
+            } else if (parsingParent) {
+                parsingParent = false;
             } else if (parsingFields && localName.equalsIgnoreCase("fields")) {
                 parsingFields = false;
             } else if (parsingEvents && localName.equalsIgnoreCase("events")) {
@@ -295,37 +335,34 @@ public class Actor extends BehaviorObject {
         public void characters(char[] ch, int start, int length) throws SAXException {
             String s = new String(ch, start, length);
             if (parsingImage) {
-                System.out.println("setImage: "+s);
-                setImage(s, PineappleCore.getProject());
+                actor.image = getFile(s, PineappleCore.getProject());
+            } else if (parsingParent) {
+                actor.parent = getFile(s, PineappleCore.getProject());
             } else if (parsingEvent) {
                 curEvent.setPineDL(curEvent.getPineDL()+s);
             }
         }
 
-        private void setImage(String s, Project p) {
+        private BasicFile getFile(String s, Project p) {
             for (ProjectElement e : p.getFiles()) {
                 if (e instanceof ProjectFolder) {
-                    setImage(s, (ProjectFolder) e);
+                    return getFile(s, (ProjectFolder) e);
                 } else if (e.getFile().getPath().equals(s)) {
-                    System.out.println("Matched "+e.getFile().getPath());
-                    image = e.getFile();
-                    break;
+                    return e.getFile();
                 }
-                System.out.println("Did not match "+e.getFile().getPath());
             }
+            return null;
         }
 
-        private void setImage(String s, ProjectFolder p) {
+        private BasicFile getFile(String s, ProjectFolder p) {
             for (ProjectElement e : p.getChildren()) {
                 if (e instanceof ProjectFolder) {
-                    setImage(s, (ProjectFolder) e);
+                    return getFile(s, (ProjectFolder) e);
                 } else if (e.getFile().getPath().equals(s)) {
-                    System.out.println("Matched "+e.getFile().getPath());
-                    image = e.getFile();
-                    break;
+                    return e.getFile();
                 }
-                System.out.println("Did not match "+e.getFile().getPath());
             }
+            return null;
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {

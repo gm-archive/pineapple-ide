@@ -190,6 +190,9 @@
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="opaque" type="boolean" value="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="renderSpriteCheckBoxActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="org.gcreator.gui.ResourceChooser" name="spriteChooser">
                 </Component>
@@ -219,7 +222,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="parentChooser" min="-2" pref="75" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="isClassFinalCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="barrenCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="76" max="32767" attributes="0"/>
                       </Group>
@@ -233,7 +236,7 @@
                               <Component id="parentChooser" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="isClassFinalCheckBox" max="32767" attributes="0"/>
+                          <Component id="barrenCheckBox" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -246,12 +249,15 @@
                     <Property name="text" type="java.lang.String" value="Parent:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="isClassFinalCheckBox">
+                <Component class="javax.swing.JCheckBox" name="barrenCheckBox">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Barren"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="horizontalTextPosition" type="int" value="4"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barrenCheckBoxActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

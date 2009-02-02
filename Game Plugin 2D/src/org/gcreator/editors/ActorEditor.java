@@ -36,11 +36,12 @@ import javax.xml.transform.TransformerException;
 import org.gcreator.formats.Actor;
 import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
+import org.gcreator.gui.validators.ActorValidator;
 import org.gcreator.gui.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 
 /**
- * A very nice editor for an actor.
+ * A very nice editor for actors.
  * 
  * @author Luís Reis
  * @author Serge Humphrey
@@ -55,7 +56,7 @@ public final class ActorEditor extends DocumentPane {
     /**
      * Creates a new ActorEditor
      * 
-     * @param f The actor file
+     * @param f The actor file.
      */
     public ActorEditor(BasicFile f) {
         super(f);
@@ -70,7 +71,6 @@ public final class ActorEditor extends DocumentPane {
         behavior = new BehaviourPanel(actor, this);
         behavior.setVisible(true);
         this.setModified(true);
-        spriteChooser.setResourceValidator(new ImageValidator());
         depthSpinner.setValue(actor.z);
         depthSpinner.addChangeListener(new ChangeListener() {
 
@@ -79,14 +79,27 @@ public final class ActorEditor extends DocumentPane {
             }
         });
         view.add(behavior, "behavior");
+        
+        spriteChooser.setResourceValidator(new ImageValidator());
         spriteChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Changed image");
                 actor.image = spriteChooser.getSelectedFile();
             }
         });
         spriteChooser.setSelectedFile(actor.image);
+        
+        parentChooser.setResourceValidator(new ActorValidator());
+        parentChooser.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                actor.parent = parentChooser.getSelectedFile();
+            }
+        });
+        parentChooser.setSelectedFile(actor.parent);
+        
+        renderSpriteCheckBox.setSelected(actor.renderAutomatically);
+        barrenCheckBox.setSelected(actor.barren);
     }
 
     /**
@@ -142,7 +155,7 @@ public final class ActorEditor extends DocumentPane {
         polymorhpismPanel = new javax.swing.JPanel();
         parentChooser = new org.gcreator.gui.ResourceChooser();
         parentLabel = new javax.swing.JLabel();
-        isClassFinalCheckBox = new javax.swing.JCheckBox();
+        barrenCheckBox = new javax.swing.JCheckBox();
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -185,6 +198,11 @@ public final class ActorEditor extends DocumentPane {
         renderSpriteCheckBox.setText("Render sprite automatically");
         renderSpriteCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         renderSpriteCheckBox.setOpaque(true);
+        renderSpriteCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                renderSpriteCheckBoxActionPerformed(evt);
+            }
+        });
 
         spriteLabel.setText("Sprite:");
 
@@ -226,9 +244,14 @@ public final class ActorEditor extends DocumentPane {
 
         parentLabel.setText("Parent:");
 
-        isClassFinalCheckBox.setText("Barren");
-        isClassFinalCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        isClassFinalCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        barrenCheckBox.setText("Barren");
+        barrenCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        barrenCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        barrenCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barrenCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout polymorhpismPanelLayout = new javax.swing.GroupLayout(polymorhpismPanel);
         polymorhpismPanel.setLayout(polymorhpismPanelLayout);
@@ -240,7 +263,7 @@ public final class ActorEditor extends DocumentPane {
                         .addComponent(parentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(isClassFinalCheckBox))
+                    .addComponent(barrenCheckBox))
                 .addContainerGap(76, Short.MAX_VALUE))
         );
         polymorhpismPanelLayout.setVerticalGroup(
@@ -250,7 +273,7 @@ public final class ActorEditor extends DocumentPane {
                     .addComponent(parentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(parentChooser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(isClassFinalCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(barrenCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
@@ -298,11 +321,19 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     clayout.last(view);
 }//GEN-LAST:event_membersToggleActionPerformed
 
+private void renderSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renderSpriteCheckBoxActionPerformed
+    actor.renderAutomatically = renderSpriteCheckBox.isSelected();
+}//GEN-LAST:event_renderSpriteCheckBoxActionPerformed
+
+private void barrenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barrenCheckBoxActionPerformed
+    actor.barren = barrenCheckBox.isSelected();
+}//GEN-LAST:event_barrenCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox barrenCheckBox;
     private javax.swing.JLabel depthLabel;
     private javax.swing.JSpinner depthSpinner;
     private javax.swing.JPanel inGameRenderingPanel;
-    private javax.swing.JCheckBox isClassFinalCheckBox;
     private javax.swing.JToggleButton membersToggle;
     private org.gcreator.gui.ResourceChooser parentChooser;
     private javax.swing.JLabel parentLabel;

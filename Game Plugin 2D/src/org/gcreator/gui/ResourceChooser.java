@@ -96,6 +96,12 @@ public class ResourceChooser extends JPanel {
         return selectedFile;
     }
 
+    /**
+     * Sets the selected item (file) in the menu.
+     * May be <tt>null</tt>.
+     * 
+     * @param file The file to select.
+     */
     public void setSelectedFile(BasicFile file) {
         BasicFile oldFile = selectedFile;
         selectedFile = file;
