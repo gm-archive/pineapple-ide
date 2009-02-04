@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -162,9 +162,11 @@ public class FileFile implements BasicFile {
      */
     @Override
     public void rename(String newName) throws IOException {
-        if (!file.renameTo(new File(file.getParentFile(), newName))) {
+        File dest = new File(file.getParentFile(), newName);
+        if (!file.renameTo(dest)) {
             throw new IOException("Renaming failed for " + this.file);
         }
+        this.file = dest;
         if (PineappleCore.getProject() != null && PineappleCore.getProject().getManager() instanceof DefaultProjectManager) {
             ((DefaultProjectManager) PineappleCore.getProject().getManager()).saveToManifest();
         }
