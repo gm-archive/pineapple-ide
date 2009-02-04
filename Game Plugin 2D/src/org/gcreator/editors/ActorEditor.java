@@ -30,6 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -50,7 +52,7 @@ public final class ActorEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
-    private BehaviourPanel behavior;
+    private BehaviourPanel behaviour;
     private CardLayout clayout = new CardLayout();
     
     /**
@@ -68,36 +70,43 @@ public final class ActorEditor extends DocumentPane {
         }
 
         initComponents();
-        behavior = new BehaviourPanel(actor, this);
-        behavior.setVisible(true);
-        this.setModified(true);
+        behaviour = new BehaviourPanel(actor, this);
+        behaviour.setVisible(true);
+        behaviour.tableModel.addTableModelListener(new TableModelListener() {
+
+            public void tableChanged(TableModelEvent e) {
+                setModified(true);
+            }
+        });
         depthSpinner.setValue(actor.z);
         depthSpinner.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
                 actor.z = (Integer) depthSpinner.getValue();
+                setModified(true);
             }
         });
-        view.add(behavior, "behavior");
+        view.add(behaviour, "behavior");
         
         spriteChooser.setResourceValidator(new ImageValidator());
+        spriteChooser.setSelectedFile(actor.image);
         spriteChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 actor.image = spriteChooser.getSelectedFile();
+                setModified(true);
             }
         });
-        spriteChooser.setSelectedFile(actor.image);
         
         parentChooser.setResourceValidator(new ActorValidator());
+        parentChooser.setSelectedFile(actor.parent);
         parentChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 actor.parent = parentChooser.getSelectedFile();
+                setModified(true);
             }
         });
-        parentChooser.setSelectedFile(actor.parent);
-        
         renderSpriteCheckBox.setSelected(actor.renderAutomatically);
         barrenCheckBox.setSelected(actor.barren);
     }
@@ -323,10 +332,12 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
 private void renderSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renderSpriteCheckBoxActionPerformed
     actor.renderAutomatically = renderSpriteCheckBox.isSelected();
+    setModified(true);
 }//GEN-LAST:event_renderSpriteCheckBoxActionPerformed
 
 private void barrenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barrenCheckBoxActionPerformed
     actor.barren = barrenCheckBox.isSelected();
+    setModified(true);
 }//GEN-LAST:event_barrenCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -37,7 +37,9 @@ public class SceneProperties extends javax.swing.JPanel {
     private static final long serialVersionUID = 5613L;
     private SceneEditor editor;
 
-    /** Creates new form SceneProperties
+    /**
+     * Creates new form SceneProperties
+     * 
      * @param editor The editor to set the properties for.
      */
     public SceneProperties(SceneEditor editor) {
@@ -117,11 +119,10 @@ public class SceneProperties extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(sceneHeightSpinner)
-                            .addComponent(sceneWidthSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(sceneWidthSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)))
                     .addComponent(jLabel3)
                     .addComponent(backgroundColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,14 +150,17 @@ private void backgroundColorPanelMouseClicked(java.awt.event.MouseEvent evt) {//
         backgroundColorPanel.setBackground(editor.s.bgColor);
         editor.sea.repaint();
     }
+    editor.setModified(true);
 }//GEN-LAST:event_backgroundColorPanelMouseClicked
 
 private void sceneWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneWidthSpinnerStateChanged
     editor.s.width = (Integer)sceneWidthSpinner.getValue();
+    editor.setModified(true);
 }//GEN-LAST:event_sceneWidthSpinnerStateChanged
 
 private void sceneHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneHeightSpinnerStateChanged
     editor.s.height = (Integer)sceneHeightSpinner.getValue();
+    editor.setModified(true);
 }//GEN-LAST:event_sceneHeightSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

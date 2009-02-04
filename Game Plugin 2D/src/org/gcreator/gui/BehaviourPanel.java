@@ -8,35 +8,45 @@ package org.gcreator.gui;
 import java.awt.Component;
 import java.util.Vector;
 import javax.swing.JPanel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import org.gcreator.events.Event;
 import org.gcreator.events.EventPanel;
 import org.gcreator.formats.BehaviorObject;
 
 /**
- *
+ * Panel with all the events, fields, and stuff.
+ * 
  * @author  Luís Reis
  */
-public class BehaviourPanel extends javax.swing.JPanel {
-    
+public class BehaviourPanel extends JPanel implements Event.EventChangeListener {
+
     private static final long serialVersionUID = 1;
-    
-    public BehaviorObject beh;
+    public BehaviorObject bObj;
     public DocumentPane pane;
-    
-    /** Creates new form BehaviourPanel */
+    public TableModel tableModel;
+
+    /** 
+     * Creates new form BehaviourPanel
+     * 
+     * @param obj The {@link BehaviorObject}.
+     * @param pane The {@link DocumentPane} that this panel should belong to.
+     */
     public BehaviourPanel(BehaviorObject obj, DocumentPane pane) {
         initComponents();
-        beh = obj;
+        bObj = obj;
         this.pane = pane;
-        for (Event e : beh.events) {
+        for (Event e : bObj.events) {
             this.addTabForEvent(e);
+            e.addChangeListener(this);
         }
         eventList.setCellRenderer(new EventCellRenderer());
     }
-    
-    public void setModified(){
-       pane.setModified(true);
+
+    public void setModified(boolean b) {
+        pane.setModified(b);
     }
 
     /** This method is called from within the constructor to
@@ -131,7 +141,7 @@ public class BehaviourPanel extends javax.swing.JPanel {
 
         fieldsTab.add(fieldButtonsPanel, java.awt.BorderLayout.SOUTH);
 
-        fieldsTable.setModel(new FieldsTableModel());
+        fieldsTable.setModel(tableModel = new FieldsTableModel());
         fieldsTabelScrollPane.setViewportView(fieldsTable);
 
         fieldsTab.add(fieldsTabelScrollPane, java.awt.BorderLayout.CENTER);
@@ -141,18 +151,18 @@ public class BehaviourPanel extends javax.swing.JPanel {
         add(tabPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    
     //<editor-fold defaultstate="collapsed" desc="class FieldsTableModel">
-    private class FieldsTableModel extends AbstractTableModel {
+    private class FieldsTableModel implements TableModel {
 
         private static final long serialVersionUID = 1;
-
+        private Vector<TableModelListener> listeners = new Vector<TableModelListener>();
+        
         public int getRowCount() {
-            return beh.fields.size();
+            return bObj.fields.size();
         }
 
         public int getColumnCount() {
-            /* Name | Type | Static | Final | Defualt Value*/
+            /* Name | Type | Static | Final | Defualt Value */
             return 5;
         }
 
@@ -201,15 +211,15 @@ public class BehaviourPanel extends javax.swing.JPanel {
         public Object getValueAt(int rowIndex, int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                    return beh.fields.get(rowIndex).getName();
+                    return bObj.fields.get(rowIndex).getName();
                 case 1:
-                    return beh.fields.get(rowIndex).getType();
+                    return bObj.fields.get(rowIndex).getType();
                 case 2:
-                    return beh.fields.get(rowIndex).isStatic();
+                    return bObj.fields.get(rowIndex).isStatic();
                 case 3:
-                    return beh.fields.get(rowIndex).isFinal();
+                    return bObj.fields.get(rowIndex).isFinal();
                 case 4:
-                    return beh.fields.get(rowIndex).getDefaultValue();
+                    return bObj.fields.get(rowIndex).getDefaultValue();
                 default:
                     return String.class;
             }
@@ -219,29 +229,39 @@ public class BehaviourPanel extends javax.swing.JPanel {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                    beh.fields.get(rowIndex).setName((String) aValue);
+                    bObj.fields.get(rowIndex).setName((String) aValue);
                     return;
                 case 1:
-                    beh.fields.get(rowIndex).setType((String) aValue);
+                    bObj.fields.get(rowIndex).setType((String) aValue);
                     return;
                 case 2:
-                    beh.fields.get(rowIndex).setStatic((Boolean) aValue);
+                    bObj.fields.get(rowIndex).setStatic((Boolean) aValue);
                     return;
                 case 3:
-                    beh.fields.get(rowIndex).setFinal((Boolean) aValue);
+                    bObj.fields.get(rowIndex).setFinal((Boolean) aValue);
                     return;
                 case 4:
-                    beh.fields.get(rowIndex).setDefaultValue((String) aValue);
+                    bObj.fields.get(rowIndex).setDefaultValue((String) aValue);
                     return;
             }
+            TableModelEvent e = new TableModelEvent(this, rowIndex, rowIndex, columnIndex, TableModelEvent.UPDATE);
+            for (TableModelListener l : listeners) {
+                l.tableChanged(e);
+            }
+        }
+
+        public void addTableModelListener(TableModelListener l) {
+            listeners.add(l);
+        }
+
+        public void removeTableModelListener(TableModelListener l) {
+            listeners.remove(l);
         }
     }
     //</editor-fold>
-
-    
 private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
-    if (beh != null && eventList.getSelectedIndex() != -1) {
-        for (Event e : beh.events) {
+    if (bObj != null && eventList.getSelectedIndex() != -1) {
+        for (Event e : bObj.events) {
             if (e.getType().equalsIgnoreCase(eventList.getSelectedValue().toString())) {
                 newEventButton.setEnabled(false);
                 deleteEventButton.setEnabled(true);
@@ -255,12 +275,13 @@ private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
 
 private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
     Event e = new Event(eventList.getSelectedValue().toString());
-    beh.events.add(e);
+    bObj.events.add(e);
     addTabForEvent(e);
+    e.addChangeListener(this);
     eventList.setSelectedIndex(-1);
     newEventButton.setEnabled(false);
     deleteEventButton.setEnabled(true);
-    this.setModified();
+    this.setModified(true);
 }//GEN-LAST:event_newEventButtonActionPerformed
 
 private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEventButtonActionPerformed
@@ -268,44 +289,43 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         return;
     }
     Component[] cs = tabPane.getComponents();
-    
     @SuppressWarnings("unchecked")
-    Vector<Event> evec = (Vector<Event>) beh.events.clone();
-    
-    for(Event e : evec){
-        if(e.getType().equals(eventList.getSelectedValue())){
-            beh.events.remove(e);
+    Vector<Event> evec = (Vector<Event>) bObj.events.clone();
+
+    for (Event e : evec) {
+        if (e.getType().equals(eventList.getSelectedValue())) {
+            bObj.events.remove(e);
             break;
         }
     }
-    for(Component c : cs){
-        if(c instanceof EventPanel){
+    for (Component c : cs) {
+        if (c instanceof EventPanel) {
             EventPanel ev = (EventPanel) c;
-            if(ev.getEvent().getType().equals(eventList.getSelectedValue())){
+            if (ev.getEvent().getType().equals(eventList.getSelectedValue())) {
                 tabPane.remove(c);
                 break;
             }
         }
     }
     eventList.updateUI();
-    this.setModified();
+    this.setModified(true);
     deleteEventButton.setEnabled(false);
 }//GEN-LAST:event_deleteEventButtonActionPerformed
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
-    beh.fields.add(new BehaviorObject.Field("newField", "int"));
+    bObj.fields.add(new BehaviorObject.Field("newField", "int"));
     fieldsTable.updateUI();
-    this.setModified();
+    this.setModified(true);
 }//GEN-LAST:event_addFieldButtonActionPerformed
 
 private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
     int[] rows = fieldsTable.getSelectedRows();
     for (int row = rows.length - 1; row >= 0; row--) {
-        beh.fields.remove(row);
+        bObj.fields.remove(row);
     }
     fieldsTable.getSelectionModel().setSelectionInterval(-1, -1);
     fieldsTable.updateUI();
-    this.setModified();
+    this.setModified(true);
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
     private void addTabForEvent(Event e) {
@@ -313,6 +333,10 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
         int i = tabPane.getComponentCount() - 2;
         tabPane.insertTab(e.getType(), null, p, e.getType(), i);
         tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
+    }
+
+    public void eventChanged(Event e) {
+        setModified(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

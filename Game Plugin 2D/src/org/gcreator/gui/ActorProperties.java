@@ -1,29 +1,47 @@
 /*
- * ActorProperties.java
- *
- * Created on 27 de Dezembro de 2008, 16:30
- */
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+ */
 package org.gcreator.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import org.gcreator.formats.Scene;
 import org.gcreator.gui.validators.ActorValidator;
 
 /**
- *
- * @author  luis
+ * A properties panel for actors in scenes.
+ * 
+ * @author Luís Reis
  */
 public class ActorProperties extends javax.swing.JPanel {
-    private static final long serialVersionUID = -3017742931775563622L;
 
+    private static final long serialVersionUID = -3017742931775563622L;
     private Scene.ActorInScene a;
     private SceneEditorArea area;
     
-    /** Creates new form ActorProperties
+    
+    /**
+     * Creates new form ActorProperties.
+     * 
      * @param a The Actor to edit
      * @param area The area where the actor is drawn
      */
@@ -32,45 +50,23 @@ public class ActorProperties extends javax.swing.JPanel {
         this.area = area;
         initComponents();
         actorChooser.setResourceValidator(new ActorValidator());
-        actorChooser.setSelectedFile(a.bf);
-        actorChooser.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
+        update();
+        actorChooser.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
                 ActorProperties.this.a.bf = actorChooser.getSelectedFile();
                 ActorProperties.this.area.repaint();
+                ActorProperties.this.area.sceneEditor.setModified(true);
             }
         });
-        xField.setText(""+a.x);
-        yField.setText(""+a.y);
-        DocumentListener dl = new DocumentListener() {
-
-            public void insertUpdate(DocumentEvent e) {
-                update(e);
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                update(e);
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                update(e);
-            }
-            
-            public void update(DocumentEvent e){
-                try{
-                    ActorProperties.this.a.x = Integer.parseInt(xField.getText());
-                }
-                catch(Exception ex){}
-                try{
-                    ActorProperties.this.a.y = Integer.parseInt(yField.getText());
-                }
-                catch(Exception ex){}
-                ActorProperties.this.area.repaint();
-            }
-        };
-        xField.getDocument().addDocumentListener(dl);
-        yField.getDocument().addDocumentListener(dl);
     }
 
+    public void update() {
+        actorChooser.setSelectedFile(a.bf);
+        xSpinner.setValue(new Integer(a.x));
+        ySpinner.setValue(new Integer(a.y));
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -83,19 +79,27 @@ public class ActorProperties extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         actorChooser = new org.gcreator.gui.ResourceChooser();
         jLabel2 = new javax.swing.JLabel();
-        xField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        yField = new javax.swing.JTextField();
+        xSpinner = new javax.swing.JSpinner();
+        ySpinner = new javax.swing.JSpinner();
 
         jLabel1.setText("Actor:");
 
-        jLabel2.setText("x");
+        jLabel2.setText("x:");
 
-        xField.setText("0");
+        jLabel3.setText("y:");
 
-        jLabel3.setText("y");
+        xSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                xSpinnerStateChanged(evt);
+            }
+        });
 
-        yField.setText("0");
+        ySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                ySpinnerStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -108,14 +112,15 @@ public class ActorProperties extends javax.swing.JPanel {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(actorChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(ySpinner))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(yField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                            .addComponent(xField, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(xSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -128,23 +133,32 @@ public class ActorProperties extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(xField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(xSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(yField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+private void xSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_xSpinnerStateChanged
+    ActorProperties.this.a.x = (Integer)xSpinner.getValue();
+    ActorProperties.this.area.repaint();
+    area.sceneEditor.setModified(true);
+}//GEN-LAST:event_xSpinnerStateChanged
 
+private void ySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ySpinnerStateChanged
+    ActorProperties.this.a.y = (Integer)ySpinner.getValue();
+    ActorProperties.this.area.repaint();
+    area.sceneEditor.setModified(true);
+}//GEN-LAST:event_ySpinnerStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.gcreator.gui.ResourceChooser actorChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField xField;
-    private javax.swing.JTextField yField;
+    private javax.swing.JSpinner xSpinner;
+    private javax.swing.JSpinner ySpinner;
     // End of variables declaration//GEN-END:variables
-
 }

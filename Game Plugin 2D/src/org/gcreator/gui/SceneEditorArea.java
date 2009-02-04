@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -49,6 +50,8 @@ public class SceneEditorArea extends JPanel {
     public int mode = MODE_ADD;
     public SceneEditor sceneEditor = null;
     public Scene.ActorInScene selection = null;
+    ActorProperties ap;
+    private Point dragOffset;
 
     public SceneEditorArea() {
         addMouseListener(new MouseAdapter() {
@@ -70,21 +73,23 @@ public class SceneEditorArea extends JPanel {
                         s.actors.add(a);
                         selection = a;
                         repaint();
+                        sceneEditor.setModified(true);
                     }
                 } else if (mode == MODE_EDIT) {
                     if (sceneEditor == null || sceneEditor.s == null) {
                         return;
                     }
                     Scene s = sceneEditor.s;
+                    /* Select Actor */
                     Scene.ActorInScene oldSelection = selection;
                     selection = null;
+                    int x = evt.getX();
+                    int y = evt.getY();
                     for (Scene.ActorInScene actor : s.actors) {
                         BufferedImage i = actor.getImage();
                         if (i == null) {
                             continue;
                         }
-                        int x = evt.getX();
-                        int y = evt.getY();
                         if (x < actor.x) {
                             continue;
                         }
@@ -93,6 +98,8 @@ public class SceneEditorArea extends JPanel {
                         }
                         if (x < actor.x + i.getWidth() && y < actor.y + i.getHeight()) {
                             selection = actor;
+                            dragOffset = new Point(actor.x - x, actor.y - y);
+                            break;
                         }
                     }
                     if (oldSelection != selection) {
@@ -100,7 +107,7 @@ public class SceneEditorArea extends JPanel {
                         if (selection == null) {
                             sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
                         } else {
-                            ActorProperties ap = new ActorProperties(selection, SceneEditorArea.this);
+                            ap = new ActorProperties(selection, SceneEditorArea.this);
                             sceneEditor.settingsPanel.add(ap, BorderLayout.CENTER);
                         }
                         repaint();
@@ -127,14 +134,19 @@ public class SceneEditorArea extends JPanel {
                         }
                         if (x < actor.x + i.getWidth() && y < actor.y + i.getHeight()) {
                             chosen = actor;
+                            break;
                         }
                     }
                     s.actors.remove(chosen);
+                    sceneEditor.setModified(true);
                     if (selection == chosen) {
                         selection = null;
                         sceneEditor.settingsPanel.removeAll();
                         sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
                         sceneEditor.settingsPanel.repaint();
+                        if (ap != null) {
+                            ap.update();
+                        }
                     }
                     repaint();
                 }
@@ -145,8 +157,9 @@ public class SceneEditorArea extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (selection != null) {
-                    selection.x = e.getX();
-                    selection.y = e.getY();
+                    selection.x = e.getX() + dragOffset.x;
+                    selection.y = e.getY() + dragOffset.y;
+                    sceneEditor.setModified(true);
                     repaint();
                 }
             }

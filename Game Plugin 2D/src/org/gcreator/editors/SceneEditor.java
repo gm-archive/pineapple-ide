@@ -59,7 +59,6 @@ public class SceneEditor extends DocumentPane {
         super(f);
         initComponents();
         s = new Scene(f);
-        this.setModified(true);
         panel = new BehaviourPanel(s, this);
         panel.setVisible(true);
         tabs.add(panel, "Behavior");

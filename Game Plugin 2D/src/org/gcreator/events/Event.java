@@ -22,6 +22,8 @@ THE SOFTWARE.
  */
 package org.gcreator.events;
 
+import java.util.Vector;
+
 /**
  * Holds things like the <tt>PineDL</tt> code for the event.
  * 
@@ -67,6 +69,7 @@ public class Event {
      */
     public Event(String type) {
         this.type = type;
+        this.listeners = new Vector<EventChangeListener>();
     }
 
     /**
@@ -94,7 +97,53 @@ public class Event {
      */
     public void setPineDL(String newPineDL) {
         this.pineDL = newPineDL;
+        fireChange();
     }
+    
+    /**
+     * Registers the given {@link EventChangeListener} to listen for
+     * changes to this event.
+     * 
+     * @param l The {@link EventChangeListener} to register.
+     */
+    public void addChangeListener(EventChangeListener l) {
+        listeners.add(l);
+    }
+    
+    /**
+     * Unregisters the given {@link EventChangeListener} so that it
+     * no longer listens for changes to this event.
+     * 
+     * @param l The {@link EventChangeListener} to de-register.
+     * 
+     * @return Whether the given listener was indeed registered
+     * and sucessfully ungegistered.
+     */
+    public boolean removeChangeListener(EventChangeListener l) {
+        return listeners.remove(l);
+    }
+    
+    private void fireChange() {
+        for (EventChangeListener e : listeners) {
+         e.eventChanged(this);   
+        }
+    }
+    
+    private volatile Vector<EventChangeListener> listeners;
+    
     protected String type;
     protected String pineDL;
+    
+    /**
+     * Listens for changes to events.
+     */
+    public interface EventChangeListener {
+        
+        /**
+         * Called when the event is changed.
+         * 
+         * @param e The event that was changed.
+         */
+        public void eventChanged(Event e);
+    }
 }
