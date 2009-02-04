@@ -1986,6 +1986,7 @@ public class PineappleGUI implements EventHandler {
                 } catch (Exception exc) {} 
             }
         });
+        menu.add(item);
 
         int i = 0;
         for (String s : PineappleCore.fileTypeNames.values()) {
