@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="CopyModules" default="default" basedir="..">
+    <description>Runs all of the copy-module scripts</description>
+    
+    <target name="default">
+    <ant antfile="Game Plugin 2D/copy-module.xml" />
+    <ant antfile="Pineapple/copy-module.xml" />
+    <ant antfile="PineDL/copy-module.xml" />
+    <ant antfile="PineDL Compiler/copy-module.xml" />
+    <ant antfile="PineDL Cpp Compiler/copy-module.xml" />
+    <ant antfile="Syntax Highlighter/copy-module.xml" />
+    </target>
+    
+</project>
+
