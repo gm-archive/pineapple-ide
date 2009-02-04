@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey <bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -66,20 +66,17 @@ public final class PineappleCore {
 
     /**
      * The file type names
-     * TODO: CHANGE THIS SYSTEM BEFORE ALPHA 5
      */
     public static Hashtable<String, String> fileTypeNames =
             new Hashtable<String, String>();
     
     /**
      * The file type descriptions
-     * TODO: CHANGE THIS SYSTEM BEFORE ALPHA 5
      */
     public static Hashtable<String, String> fileTypeDescriptions =
             new Hashtable<String, String>();
     
     static {
-           // TODO: CHANGE THIS SYSTEM BEFORE ALPHA 5
         fileTypeNames.put("txt", "Text File");
         fileTypeDescriptions.put("txt", "A plain text file");
     }
@@ -115,7 +112,8 @@ public final class PineappleCore {
         EventManager.addEventHandler(c, REGISTER_FORMATS, EventPriority.MEDIUM);
         EventManager.addEventHandler(c, REGISTER_PROJECT_TYPES, EventPriority.MEDIUM);
         EventManager.addEventHandler(c, DefaultEventTypes.PLUGINS_LOADED);
-
+        EventManager.addEventHandler(c, PineappleGUI.PINEAPPLE_GUI_INITIALIZED);
+        
         gui = new PineappleGUI();
     }
 
@@ -198,7 +196,7 @@ public final class PineappleCore {
                 EventManager.fireEvent(this, REGISTER_FORMATS);
                 projectTypes = new Vector<ProjectType>(2);
                 EventManager.fireEvent(this, REGISTER_PROJECT_TYPES);
-
+                
             } else if (event.getEventType().equals(REGISTER_FORMATS)) {
 
                 addFormatSupporter(new PlainTextSupporter());
@@ -212,6 +210,8 @@ public final class PineappleCore {
 
                 PineappleCore.addProjectType(new DefaultProjectType());
 
+            } else if (event.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
+                setProject(null);// Fire PROJECT_CHANGED events
             }
         }
     }

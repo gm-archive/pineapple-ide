@@ -96,7 +96,6 @@ import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.ProjectType;
 import org.gcreator.project.io.BasicFile;
 import org.gcreator.project.io.FormatSupporter;
-import org.gcreator.project.io.ProjectManager;
 import org.gcreator.project.standard.FileFile;
 import org.gcreator.tree.BaseTreeNode;
 import org.gcreator.tree.FileTreeNode;
@@ -142,7 +141,7 @@ public class PineappleGUI implements EventHandler {
     /**
      * The help menu
      */
-    public static JMenu helpMenu;
+    public static JMenu     helpMenu;
     public static JMenuItem fileNewProject;
     public static JMenuItem fileNewFile;
     public static JMenuItem fileOpenFile;
@@ -152,6 +151,7 @@ public class PineappleGUI implements EventHandler {
     public static JMenuItem fileExit;
     public static JMenuItem toolsPlugins;
     public static JMenuItem projectRemove;
+    public static JMenu     projectNew;
     public static JMenuItem projectOpen;
     public static JMenuItem projectAdd;
     public static JMenuItem projectImport;
@@ -222,6 +222,12 @@ public class PineappleGUI implements EventHandler {
      * is for (e.g. "open-image").
      */
     public static final String FILE_CHOOSER_CREATED = "file-chooser-created";
+    
+    /**
+     * Called when the Pineapple GUI has been initialized.
+     */
+    public static final String PINEAPPLE_GUI_INITIALIZED = "pineapple-gui-initialized";
+    
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="PineappleGUI()               ">
     /**
@@ -511,6 +517,10 @@ public class PineappleGUI implements EventHandler {
         //<editor-fold defaultstate="collapsed" desc="Project menu">
         projectMenu = new JMenu("Project");
 
+        /* New > submenu*/
+        projectNew = createNewFileMenu(null);
+        projectMenu.add(projectNew);
+        
         projectAdd = new JMenuItem("Add File/Folder...") {
 
             private static final long serialVersionUID = 1;
@@ -792,7 +802,8 @@ public class PineappleGUI implements EventHandler {
         } catch (Exception e) {
             System.err.println("Error while loading workspace: " + e);
         }
-        System.out.println("Ended this");
+        EventManager.fireEvent(this, PINEAPPLE_GUI_INITIALIZED);
+        
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="openPluginDialog()           ">
@@ -935,8 +946,10 @@ public class PineappleGUI implements EventHandler {
         } else if (evt.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
             if (PineappleCore.getProject() == null) {
                 treeModel.setRoot(null);
+                projectNew.setEnabled(false);
             } else {
                 treeModel.setRoot(PineappleCore.getProject().getTreeNode());
+                projectNew.setEnabled(true);
             }
             tree.updateUI();
         }
