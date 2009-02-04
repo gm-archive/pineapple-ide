@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pinedl.cpp;
 
+import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -403,6 +404,11 @@ public class GameCompiler {
         
         if(!hasCreate){
             fos.write("\tpublic this(float x, float y){\n".getBytes());
+            if(a.image!=null){
+                    fos.write("\t\ttexture = new Texture(\"res/".getBytes());
+                    fos.write(a.image.getName().getBytes());
+                    fos.write("\");\n".getBytes());
+            }
             fos.write("\t}\n".getBytes());
         }
 
@@ -435,6 +441,15 @@ public class GameCompiler {
 
         fos.write("){\n".getBytes());
 
+        
+        Color c = scene.bgColor;
+        String cs = ((Integer) c.getRed()).toString();
+        cs += ", ";
+        cs += c.getGreen();
+        cs += ", ";
+        cs += c.getBlue();
+        fos.write(("\t\tsetBackground(new Color("+cs+"));\n").getBytes());
+        
         for (Scene.ActorInScene a : scene.actors) {
             String aname = a.bf.getName();
             aname = aname.substring(0, aname.lastIndexOf('.'));
