@@ -350,8 +350,11 @@ public class GameCompiler {
         fos.write(fname.getBytes());
         fos.write(" extends Actor{\n".getBytes());
 
+        boolean hasCreate = false;
+        
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
+                hasCreate = true;
                 fos.write("\tpublic this(float x, float y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
@@ -396,6 +399,11 @@ public class GameCompiler {
 
                 fos.write("\t}\n".getBytes());
             }
+        }
+        
+        if(!hasCreate){
+            fos.write("\tpublic this(float x, float y){\n".getBytes());
+            fos.write("\t}\n".getBytes());
         }
 
         fos.write('}');
