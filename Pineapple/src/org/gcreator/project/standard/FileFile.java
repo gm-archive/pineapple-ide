@@ -162,7 +162,7 @@ public class FileFile implements BasicFile {
      */
     @Override
     public void rename(String newName) throws IOException {
-        if (!file.renameTo(new File(newName))) {
+        if (!file.renameTo(new File(file.getParentFile(), newName))) {
             throw new IOException("Renaming failed for " + this.file);
         }
         if (PineappleCore.getProject() != null && PineappleCore.getProject().getManager() instanceof DefaultProjectManager) {

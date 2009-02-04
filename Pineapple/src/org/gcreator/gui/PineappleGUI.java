@@ -1997,10 +1997,11 @@ public class PineappleGUI implements EventHandler {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String type = (String) PineappleCore.fileTypeNames.keySet().toArray()[n];
-                    PineappleCore.getProject().getManager().createFile(
+                    openFile( PineappleCore.getProject().getManager().createFile(
                       f,
                       getFileName("new" + type.toUpperCase() + "File", f, PineappleCore.getProject()),
-                      type);
+                      type));
+                    
                 }
             });
             menu.add(item);
