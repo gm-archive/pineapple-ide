@@ -89,12 +89,14 @@ import org.gcreator.managers.PluginManager;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.plugins.Event;
 import org.gcreator.plugins.EventPriority;
+import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;
 import org.gcreator.project.ProjectFolder;
 import org.gcreator.project.ProjectType;
 import org.gcreator.project.io.BasicFile;
 import org.gcreator.project.io.FormatSupporter;
+import org.gcreator.project.io.ProjectManager;
 import org.gcreator.project.standard.FileFile;
 import org.gcreator.tree.BaseTreeNode;
 import org.gcreator.tree.FileTreeNode;
@@ -304,22 +306,22 @@ public class PineappleGUI implements EventHandler {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                
-                
-                
+
+
+
                 try {
                     if (e.getKeyChar() == 'p' && e.isControlDown()) {
                         DefaultMutableTreeNode n = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                         for (TreeNode node : n.getPath()) {
-                            System.out.print(((JLabel)tree.getCellRenderer().getTreeCellRendererComponent(tree, node, false, false, false, 0, false)).getText() + "/");
+                            System.out.print(((JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, node, false, false, false, 0, false)).getText() + "/");
                         }
                     }
                 } catch (Exception exc) {
                 }
-                
-                
-                
-                
+
+
+
+
                 Object o = tree.getSelectionPath().getLastPathComponent();
                 if (o == null || !(o instanceof FileTreeNode)) {
                     return;
@@ -1094,29 +1096,9 @@ public class PineappleGUI implements EventHandler {
         //<editor-fold defaultstate="collapsed" desc="Project">
         if (o instanceof ProjectTreeNode) {
 
-            final ProjectTreeNode node = (ProjectTreeNode) o;
-
-            JMenuItem newFile = new JMenuItem("New File/Folder...") {
-
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean isEnabled() {
-                    return PineappleCore.getProject() != null && super.isEnabled();
-                }
-            };
+            JMenu newFile = createNewFileMenu(null);
             newFile.setMnemonic('N');
             newFile.setVisible(true);
-            newFile.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                        return;
-                    }
-                    new NewFileWizard(Core.getStaticContext().getMainFrame(), node.getProject(), null, false).setVisible(true);
-                }
-            });
             menu.add(newFile);
 
             JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
@@ -1329,27 +1311,9 @@ public class PineappleGUI implements EventHandler {
 
         if (o instanceof FolderTreeNode) {
             final ProjectFolder f = (ProjectFolder) ((FolderTreeNode) o).getElement();
-            JMenuItem newFile = new JMenuItem("New File/Folder...") {
-
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean isEnabled() {
-                    return PineappleCore.getProject() != null && super.isEnabled();
-                }
-            };
+            JMenu newFile = createNewFileMenu(f);
             newFile.setMnemonic('N');
             newFile.setVisible(true);
-            newFile.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                        return;
-                    }
-                    new NewFileWizard(Core.getStaticContext().getMainFrame(), f.getProject(), f, false).setVisible(true);
-                }
-            });
             menu.add(newFile);
 
             JMenuItem addFile = new JMenuItem("Add File/Folder...") {
@@ -1408,13 +1372,14 @@ public class PineappleGUI implements EventHandler {
 
         if (o instanceof BaseTreeNode) {
             JMenuItem del = new JMenuItem("Delete from Disk") {
+
                 private static final long serialVersionUID = 1;
 
                 @Override
                 public boolean isEnabled() {
                     if (!super.isEnabled() || tree == null || tree.getSelectionPath() == null ||
-                        tree.getSelectionPath().getLastPathComponent() == null ||
-                        !(tree.getSelectionPath().getLastPathComponent() instanceof BaseTreeNode)) {
+                            tree.getSelectionPath().getLastPathComponent() == null ||
+                            !(tree.getSelectionPath().getLastPathComponent() instanceof BaseTreeNode)) {
                         return false;
                     }
                     ProjectElement el = ((BaseTreeNode) tree.getSelectionPath().getLastPathComponent()).getElement();
@@ -1432,7 +1397,7 @@ public class PineappleGUI implements EventHandler {
                 }
             });
             menu.add(del);
-            
+
             menu.add("Move...").addActionListener(new ActionListener() {
 
                 @Override
@@ -1459,8 +1424,7 @@ public class PineappleGUI implements EventHandler {
                     String s = JOptionPane.showInputDialog(
                             Core.getStaticContext().getMainFrame(),
                             "New name:",
-                            "Rename file",
-                            JOptionPane.QUESTION_MESSAGE);
+                            t.getElement().getName());
                     if (s != null) {
                         try {
                             PineappleCore.getProject().rename(t.getElement().getFile(), s);
@@ -1994,7 +1958,70 @@ public class PineappleGUI implements EventHandler {
         return supporters.toArray(new FormatSupporter[supporters.size()]);
     }
     //</editor-fold>
-    
+    //<editor-fold defaultstate="collapsed" desc="createNewFileMenu(ProjectFolder f)                        ">
+   private JMenu createNewFileMenu(final ProjectFolder f) {
+        JMenu menu = new JMenu("New");
+        /* Folder */
+        JMenuItem item = new JMenuItem("Folder");
+        item.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BasicFile folder = PineappleCore.getProject().getManager().createFolder(f, getFileName("newFolder", f, PineappleCore.getProject()));
+                try {
+                    tree.startEditingAtPath(new TreePath(((DefaultMutableTreeNode)folder.getElement().getTreeNode()).getPath()));
+                } catch (Exception exc) {} 
+            }
+        });
+
+        int i = 0;
+        for (String s : PineappleCore.fileTypeNames.values()) {
+            item = new JMenuItem(s);
+            item.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PineappleCore.getProject().getManager().createFolder(
+                            f, getFileName("new" + 
+               PineappleCore.fileTypeNames.keySet().toArray()[0].toString().toUpperCase() + "File", f, PineappleCore.getProject()));
+                }
+            });
+            menu.add(item);
+            i++;
+        }
+        return menu;
+    }
+   //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="getFileName(String, ProjectFolder, Project)               ">
+    private String getFileName(String fname, ProjectFolder folder, Project project) {
+        if (!exists(fname, folder,project)) {
+            return fname;
+        }
+        
+        int i = 1;
+        while (exists(fname+i, folder, project)) {
+            i++;
+        }
+        return fname+1;
+    }
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="exists(String, ProjectFolder, Project)                    ">
+    private boolean exists(String fname, ProjectFolder folder, Project project) {
+        if (folder == null) {
+            for (ProjectElement e : project.getFiles()) {
+                if (e.getName().equals(fname)) {
+                    return true;
+                }
+            }
+        } else {
+            for (ProjectElement e : folder.getChildren()) {
+                if (e.getName().equals(fname)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }//</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="TreeTransferHandler">
     private class TreeTransferHandler extends TransferHandler {

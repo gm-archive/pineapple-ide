@@ -44,10 +44,12 @@ public final class NewFileWizard extends javax.swing.JDialog {
 
             private static final long serialVersionUID = 1;
 
+            @Override
             public int getSize() {
                 return PineappleCore.fileTypeNames.size() + 1;
             }
 
+            @Override
             public Object getElementAt(int index) {
                 if (index == 0) {
                     return FOLDER;
