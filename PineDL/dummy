@@ -4,6 +4,8 @@
 <import>pineapple.lang</import>
 <import>pineapple.std</import>
 <field privacy="public" static="true" const="false" type="int" name="name"/>
+<constructor privacy="public">
+</constructor>
 <method privacy="public" static="false" return="int" name="sum">
 <argument type="int" name="x"/>
 <argument type="string" name="y"/>

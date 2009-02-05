@@ -6,11 +6,15 @@
     <description>Performs some useful tasks</description>
     
     <target name="clean">
-        <echo message="P1"/>
         <subant target="clean">
             <fileset dir="PineDL" includes="xbuild.xml"/>
         </subant>
-        <echo message="P2"/>
+    </target>
+    
+    <target name="run-single">
+        <subant target="run-single">
+            <fileset dir="PineDL" includes="xbuild.xml"/>
+        </subant>
     </target>
     
     <target name="javadoc">

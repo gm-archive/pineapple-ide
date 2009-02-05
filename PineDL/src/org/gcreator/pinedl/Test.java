@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pinedl;
 
 import java.io.FileOutputStream;
@@ -31,23 +30,27 @@ import org.antlr.runtime.RecognitionException;
 
 /**
  * Used only for testing purposes
+ * 
  * @author Luís Reis
  */
 public class Test {
-    public static void main(String[] args){
-        try{
+
+    public static void main(String[] args) {
+        try {
+            System.out.println("Welcome to Test.");
             PineDLLexer lexer = new PineDLLexer(new ANTLRInputStream(
-                Test.class.getResourceAsStream("/org/gcreator/pinedl/test.pdl")));
+                    Test.class.getResourceAsStream("/org/gcreator/pinedl/test.pdl")));
             CommonTokenStream ts = new CommonTokenStream(lexer);
             PineDLParser parser = new PineDLParser(ts);
             parser.setSignalReceiver(new InterfaceSignalReceiver(new FileOutputStream("dummy")));
             parser.doc();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             System.out.println("IOException: " + e);
-        }
-        catch(RecognitionException e){
+        } catch (RecognitionException e) {
             System.out.println("RecognitionException: " + e);
         }
+    }
+
+    private Test() {
     }
 }
