@@ -356,7 +356,7 @@ public class GameCompiler {
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
                 hasCreate = true;
-                fos.write("\tpublic this(float x, float y){\n".getBytes());
+                fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
                 if(a.image!=null){
@@ -403,7 +403,7 @@ public class GameCompiler {
         }
         
         if(!hasCreate){
-            fos.write("\tpublic this(float x, float y){\n".getBytes());
+            fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
             if(a.image!=null){
                     fos.write("\t\ttexture = new Texture(\"res/".getBytes());
                     fos.write(a.image.getName().getBytes());
