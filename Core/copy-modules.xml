@@ -6,7 +6,6 @@
     <target name="default">
     <ant antfile="Game Plugin 2D/copy-module.xml" />
     <ant antfile="Pineapple/copy-module.xml" />
-    <ant antfile="PineDL/copy-module.xml" />
     <ant antfile="PineDL Compiler/copy-module.xml" />
     <ant antfile="PineDL Cpp Compiler/copy-module.xml" />
     <ant antfile="Syntax Highlighter/copy-module.xml" />
