@@ -73,7 +73,7 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
             }
             String s = this.getText();
             int index = s.lastIndexOf('.');
-            if(index!=-1){
+            if(index!=-1&&!isSelected){
                 String name = s.substring(0, index);
                 String format = s.substring(index);
                 name = name.replaceAll("&", "&amp");
