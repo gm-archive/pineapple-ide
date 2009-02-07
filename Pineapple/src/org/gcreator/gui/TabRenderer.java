@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.ref.WeakReference;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,15 +42,19 @@ import javax.swing.plaf.basic.BasicButtonUI;
 /**
  * Provides a way for {@link TabbedInterfaceProvider} to have close buttons
  * on tabs
+ * 
  * @author Luís Reis
  */
 public class TabRenderer extends JPanel {
+    
+    private static final long serialVersionUID = 1;
 
-    private WeakReference<TabbedInterfaceProvider> tabs;
+    private volatile WeakReference<TabbedInterfaceProvider> tabs;
 
     /**
-     * Creates a new TabRenderer
-     * @param tabs The TabbedInterfaceProvider
+     * Creates a new TabRenderer.
+     * 
+     * @param tabs The TabbedInterfaceProvider.
      */
     public TabRenderer(TabbedInterfaceProvider tabs) {
         this.tabs = new WeakReference<TabbedInterfaceProvider>(tabs);
@@ -58,11 +62,13 @@ public class TabRenderer extends JPanel {
         setOpaque(false);
         JLabel label = new JLabel() {
 
+            private static final long serialVersionUID = 1;
+            
             @Override
             public String getText() {
                 try {
                     TabbedInterfaceProvider pane = TabRenderer.this.tabs.get();
-                    return pane.getDocumentAt(pane.tabs.indexOfTabComponent(TabRenderer.this)).getTitle();
+                    return pane.getDocumentAt(pane.indexOfTabComponent(TabRenderer.this)).getTitle();
                 } catch (Exception e) {
                     return null;
                 }
@@ -71,6 +77,9 @@ public class TabRenderer extends JPanel {
         label.setVisible(true);
         add(label);
         final JButton b = new JButton() {
+
+            private static final long serialVersionUID = 1;
+            
             /* Old Aurora Code */
             @Override
             protected void paintComponent(Graphics g) {
@@ -99,23 +108,16 @@ public class TabRenderer extends JPanel {
         b.setContentAreaFilled(false);
         b.setFocusable(false);
         b.setRolloverEnabled(true);
-        b.addMouseListener(new MouseListener() {
+        b.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 b.repaint();
             }
 
+            @Override
             public void mouseExited(MouseEvent evt) {
                 b.repaint();
-            }
-
-            public void mouseClicked(MouseEvent evt) {
-            }
-
-            public void mousePressed(MouseEvent evt) {
-            }
-
-            public void mouseReleased(MouseEvent evt) {
             }
         });
         b.addActionListener(new ActionListener() {
@@ -123,7 +125,7 @@ public class TabRenderer extends JPanel {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 TabbedInterfaceProvider pane = TabRenderer.this.tabs.get();
-                DocumentPane doc = pane.getDocumentAt(pane.tabs.indexOfTabComponent(
+                DocumentPane doc = pane.getDocumentAt(pane.indexOfTabComponent(
                         TabRenderer.this));
                 doc.dispose();
             }

@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,123 +22,89 @@ THE SOFTWARE.
  */
 package org.gcreator.gui;
 
-import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.gcreator.managers.EventManager;
+import javax.swing.SwingUtilities;
 
 /**
  * Provides a tabbed document interface provider.
+ * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
-public class TabbedInterfaceProvider extends DocumentInterfaceProvider {
+public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInterfaceProvider {
 
     private static final long serialVersionUID = 1L;
-    /**
-     * The underlying JTabbedPane.
-     * Do not use unless you're directly targetting TabbedInterfaceProvider
-     */
-    protected JTabbedPane tabs;
 
     /**
-     * Creates a new TabbedInterfaceProvider
+     * Creates a new TabbedInterfaceProvider.
      */
     public TabbedInterfaceProvider() {
-        setLayout(new BorderLayout());
-        tabs = new JTabbedPane();
-        tabs.setVisible(true);
-        add(tabs, BorderLayout.CENTER);
-        tabs.addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent evt) {
-                EventManager.fireEvent(TabbedInterfaceProvider.this,
-                        PineappleGUI.FILE_CHANGED);
-            }
-        });
+        PineappleGUI.manager.setMainContent(this);
     }
 
-    //NOTE: The Javadoc from most methods in inherited from
-    //DocumentInterfaceProvider
-    public void setSelectedIndex(int index) {
-        if (index < -1 || index > getDocumentCount()) {
-            tabs.setSelectedIndex(-1);
-        } else {
-            tabs.setSelectedIndex(index);
-        }
-
-    }
-
-    public int getSelectedIndex() {
-        return tabs.getSelectedIndex();
-    }
-
+    @Override
     public int getDocumentCount() {
-        return tabs.getComponentCount();
+        return this.getTabCount();
     }
 
+    @Override
     public DocumentPane getDocumentAt(int index) {
         try {
-            return (DocumentPane) tabs.getComponentAt(index);
+            return (DocumentPane) super.getComponentAt(index);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
     }
 
-    public void add(String title, DocumentPane pane) {
-        tabs.add(title, pane);
-        tabs.setTabComponentAt(tabs.indexOfComponent(pane), new TabRenderer(this));
-        tabs.setSelectedIndex(tabs.indexOfComponent(pane));
-    }
+    @Override
+    public void add(final String title, final DocumentPane pane) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-    public String getTitleAt(int index) {
-        return tabs.getTitleAt(index);
-    }
-
-    public void setTitleAt(int index, String title) {
-        tabs.setTitleAt(index, title);
+            @Override
+            public void run() {
+                addTab(title, pane);
+                int index = indexOfComponent(pane);
+                setTabComponentAt(index, new TabRenderer(TabbedInterfaceProvider.this));
+                setSelectedIndex(index);
+            }
+        });
     }
 
     /**
      * Gets the selected document.
      */
-    @Override //Overritten for possible performance improvements
+    @Override
     public DocumentPane getSelectedDocument() {
-        return (DocumentPane) tabs.getSelectedComponent();
+        return (DocumentPane) super.getSelectedComponent();
     }
 
+    @Override
     public void removeDocumentAt(int index) {
-        try {
-            tabs.remove(index);
-        //Eventually should fire event
-        } catch (Exception e) {
-        }
+        super.remove(index);
     }
 
     /**
-     * Removes a given pane.
-     * @param pane The pane to remove
-     */
-    @Override //Overwritten for possible performance improvements
-    public void remove(DocumentPane pane) {
-        tabs.remove(pane);
-        if (pane != null) {
-            //Eventually should fire event
-        }
-    }
-
-    public int getDocumentIndex(DocumentPane pane) {
-        return tabs.indexOfComponent(pane);
-    }
-
-    /**
-     * Updates the look&feel of the tabs
+     * {@inheritDoc}
      */
     @Override
-    public void updateUI() {
-        super.updateUI();
-        if (tabs != null) {
-            tabs.updateUI();
+    public void remove(DocumentPane pane) {
+        super.remove(pane);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getDocumentIndex(DocumentPane pane) {
+        return super.indexOfComponent(pane);
+    }
+
+    @Override
+    public DocumentPane[] getDocuments() {
+        DocumentPane[] p = new DocumentPane[this.getDocumentCount()];
+        for (int i = 0; i < p.length; i++) {
+            p[i] = getDocumentAt(i);
         }
+        return p;
     }
 }

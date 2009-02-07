@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -113,7 +113,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
  * @author Serge Humphrey
  */
 public class PineappleGUI implements EventHandler {
-    //<editor-fold defaultstate="collapsed" desc="Variables                    ">
+    //<editor-fold defaultstate="collapsed" desc="Fields                       ">
     /**
      * The project tree
      */
@@ -143,7 +143,6 @@ public class PineappleGUI implements EventHandler {
      */
     public static JMenu     helpMenu;
     public static JMenuItem fileNewProject;
-    public static JMenuItem fileNewFile;
     public static JMenuItem fileOpenFile;
     public static JMenuItem fileOpenProject;
     public static JMenuItem fileSaveProject;
@@ -368,13 +367,25 @@ public class PineappleGUI implements EventHandler {
         tree.setScrollsOnExpand(true);
         tree.setShowsRootHandles(true);
         tree.setToggleClickCount(3);
-        manager.registerToolWindow("Project", "Project", null, new JScrollPane(tree),
+        ToolWindow treeWindow = manager.registerToolWindow("Project", "Project", null, new JScrollPane(tree),
                 ToolWindowAnchor.LEFT);
+        treeWindow.setVisible(true);
         //</editor-fold>
 
-        dip = new TabbedInterfaceProvider();
-        dip.setVisible(true);
-        manager.setMainContent(dip);
+        /* Try to load the interface provider from a setting.
+          This allows plug-ins to provide a different interface provider without hassle.
+         */ 
+        try {
+            dip = (DocumentInterfaceProvider) Class.forName(SettingsManager.get("pineapple.gui.interfaceprovider")).newInstance();
+        } catch (Throwable r) {
+            /* I guess it didn't work.
+               Revert to default. */
+            dip = new TabbedInterfaceProvider();
+            /* Let's set the registry setting back to the
+               TabbedInterfaceProvider just to annoy plug-in developers.
+             */
+            SettingsManager.set("pineapple.gui.interfaceprovider", TabbedInterfaceProvider.class.getCanonicalName());
+        }
 
         menubar = new JMenuBar();
         menubar.setVisible(true);
@@ -400,29 +411,6 @@ public class PineappleGUI implements EventHandler {
             }
         });
         fileMenu.add(fileNewProject);
-
-        fileNewFile = new JMenuItem("New File/Folder") {
-
-            private static final long serialVersionUID = 1;
-
-            @Override
-            public boolean isEnabled() {
-                return PineappleCore.getProject() != null && super.isEnabled();
-            }
-        };
-        fileNewFile.setMnemonic('N');
-        fileNewFile.setVisible(true);
-        fileNewFile.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                    return;
-                }
-                popupNewFileDialog();
-            }
-        });
-        fileMenu.add(fileNewFile);
 
         fileMenu.addSeparator();
 
@@ -2007,6 +1995,22 @@ public class PineappleGUI implements EventHandler {
             menu.add(item);
             i++;
         }
+        menu.addSeparator();
+        JMenuItem other = new JMenuItem("Other...");
+        other.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        popupNewFileDialog();
+                    }
+                });
+            }
+        });
+        menu.add(other);
         return menu;
     }
    //</editor-fold>

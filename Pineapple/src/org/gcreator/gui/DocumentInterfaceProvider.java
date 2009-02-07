@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bobtheblueberry@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,54 +22,49 @@ THE SOFTWARE.
 */
 package org.gcreator.gui;
 
-import javax.swing.JPanel;
-
 /**
- * Provides a way to display documents, such as JTabbedPane and a MDI view.
+ * Provides a way to display documents, such as a tabbed pane or MDI view.
  * 
  * @author Luís Reis
  */
-public abstract class DocumentInterfaceProvider extends JPanel {
+public interface DocumentInterfaceProvider {
 
     /**
      * Adds a new DocumentPane
      * @param title The title to be used
-     * @param docs The DocumentPane to be added
+     * @param doc The DocumentPane to be added
      */
-    public abstract void add(String title, DocumentPane doc);
+    public void add(String title, DocumentPane doc);
 
     /**
      * Gets the DocumentPane at a given index
-     * @param i The index to be retrieved
+     * 
+     * @param i The index to be retrieved.
+     * @return The DocumentPane at a given index.
      */
-    public abstract DocumentPane getDocumentAt(int i);
+    public DocumentPane getDocumentAt(int i);
 
     /**
      * Gets the number of documents.
+     * 
+     * @return The number of documents.
      */
-    public abstract int getDocumentCount();
+    public int getDocumentCount();
 
     /**
-     * Gets the selected index
+     * Gets the index of the selected document.
+     * 
+     * @return The index of the selected document.
      */
-    public abstract int getSelectedIndex();
+    public int getSelectedIndex();
 
     /**
-     * Gets the selected document.<br>
-     * Pineapple provides a default implementation. Classes extending
-     * DocumentInterfaceProviders may override this method to obtain better
-     * performance.
+     * Gets the selected document.
+     * 
+     * @return The selected document, or <tt>null</tt>
+     * if not document is selected.
      */
-    public DocumentPane getSelectedDocument() {
-        int i = getSelectedIndex();
-        if (i == -1) {
-            return null;
-        }
-        if (i < getDocumentCount()) {
-            return getDocumentAt(i);
-        }
-        return null;
-    }
+    public DocumentPane getSelectedDocument();
 
     /**
      * Sets the selected index. If that index has no equivalent
@@ -79,19 +74,24 @@ public abstract class DocumentInterfaceProvider extends JPanel {
      * 
      * @see DefaultEventTypes#FILE_CHANGED
      */
-    public abstract void setSelectedIndex(int index);
+    public void setSelectedIndex(int index);
 
     /**
-     * Gets the title of the document at the given index
-     * @param index The index
+     * Gets the title of the document at the given index.
+     * 
+     * @param index The index.
+     * 
+     * @return Gets the title of the document at the given index.
      */
-    public abstract String getTitleAt(int index);
+    public String getTitleAt(int index);
 
     /**
-     * Gets the index of a document
-     * @param pane The document
+     * Gets the index of a document.
+     * 
+     * @param pane The document.
+     * @return The index of the given index.
      */
-    public abstract int getDocumentIndex(DocumentPane pane);
+    public int getDocumentIndex(DocumentPane pane);
 
     /**
      * Sets the title of the document at the given index
@@ -101,35 +101,29 @@ public abstract class DocumentInterfaceProvider extends JPanel {
     public abstract void setTitleAt(int index, String title);
 
     /**
-     * Removes the document at the given index
-     * @param index The index
+     * Removes the document at the given index.
+     * 
+     * @param index The index.
      */
-    public abstract void removeDocumentAt(int index);
+    public void removeDocumentAt(int index);
 
     /**
-     * Removed a given {@link DocumentPane}<br>
-     * Pineapple provides a default implementation. Classes extending
-     * DocumentInterfaceProviders may override this method to obtain better
-     * performance.
+     * Remove a given {@link DocumentPane}.
+     * 
+     * @param pane The {@link DocumentPane}.
      */
-    public void remove(DocumentPane pane) {
-        int i = getDocumentIndex(pane);
-        if (i == -1) {
-            return;
-        }
-        if (i < getDocumentCount()) {
-            removeDocumentAt(i);
-        }
-    }
+    public void remove(DocumentPane pane);
 
     /**
-     * Returns ALL DocumentPanes of the provider.
+     * Gets the documents that this provider has open.
+     * 
+     * @return An array of the documents.
      */
-    public DocumentPane[] getDocuments() {
-        DocumentPane[] p = new DocumentPane[getDocumentCount()];
-        for (int i = 0; i < p.length; i++) {
-            p[i] = getDocumentAt(i);
-        }
-        return p;
-    }
+    public DocumentPane[] getDocuments();
+    
+    /**
+     * Updates the providers UI, assuming that it is
+     * a Swing component.
+     */
+    public void updateUI();
 }

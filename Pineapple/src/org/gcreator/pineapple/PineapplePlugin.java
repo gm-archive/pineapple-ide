@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple;
 
-import org.gcreator.managers.EventManager;
-import org.gcreator.plugins.DefaultEventTypes;
 import org.gcreator.plugins.Plugin;
 
 /**
