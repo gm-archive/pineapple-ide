@@ -156,7 +156,7 @@ public class GameCompiler {
         FileOutputStream fos = new FileOutputStream(f);
         fos.write("#include \"header.h\"\n\n".getBytes());
         fos.write("int main(int argc, char** argv){\n".getBytes());
-        fos.write("\tPineapple::Application::init();".getBytes());
+        fos.write("\tPineapple::Application::init();\n".getBytes());
         fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
         Hashtable<String, String> hs = PineappleCore.getProject().getSettings();

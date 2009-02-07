@@ -54,7 +54,10 @@ public class GameSettingsDialog extends javax.swing.JDialog {
         if(s!=null){
             String[] scenes = s.split(";");
             for(String scene : scenes){
-                sceneOrder.add(getScene(scene, p));
+                BasicFile f = getScene(scene, p);
+                if(f!=null){
+                    sceneOrder.add(f);
+                }
             }
         }
         jList1.setModel(new AbstractListModel(){

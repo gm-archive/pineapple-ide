@@ -40,6 +40,11 @@ public class BasicFileRenderer extends DefaultListCellRenderer{
             Object value, int index, boolean isSelected, boolean hasFocus){
         super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
         
+        if(value==null){
+            setText("INVALID SCENE");
+            return this;
+        }
+        
         String path = ((BasicFile) value).getPath();
         int indexofdot = path.lastIndexOf('.');
         int indexofslash = path.lastIndexOf('/');

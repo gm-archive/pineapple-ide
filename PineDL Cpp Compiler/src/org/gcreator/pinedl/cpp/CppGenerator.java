@@ -293,7 +293,6 @@ public class CppGenerator {
     }
     
     private String leafToString(Leaf l, boolean statement) {
-        System.out.println("class="+l.getClass().getName());
         if (l instanceof Block) {
             String s = "{\n";
 
@@ -342,7 +341,6 @@ public class CppGenerator {
             return "(" + leafToString(s.left) + ")/(" + leafToString(s.right) + ")";
         }
         if (l instanceof LessOperation) {
-            System.out.println("got here for less");
             LessOperation s = (LessOperation) l;
             return "(" + leafToString(s.left) + ")<(" + leafToString(s.right) + ")";
         }
