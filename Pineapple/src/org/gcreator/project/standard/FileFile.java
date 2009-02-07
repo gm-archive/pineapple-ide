@@ -87,24 +87,20 @@ public class FileFile implements BasicFile {
      */
     @Override
     public boolean delete() {
-        if (file.isDirectory()) {
-            recursiveDelete(file);
-        }
-
-        return file.delete();
+        return recursiveDelete(file);
     }
 
-    private void recursiveDelete(File f) {
-        if (f.exists()) {
-            return;
+    private boolean recursiveDelete(File f) {
+        if (!f.exists()) {
+            return false;
         }
-        if (!f.isDirectory()) {
-            f.delete();
-        } else {
+        if (f.isDirectory()) {
             for (File sub : f.listFiles()) {
                 recursiveDelete(sub);
             }
         }
+        
+        return f.delete();
     }
 
     /**

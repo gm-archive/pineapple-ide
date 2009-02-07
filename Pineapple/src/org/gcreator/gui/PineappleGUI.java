@@ -509,7 +509,7 @@ public class PineappleGUI implements EventHandler {
         projectNew = createNewFileMenu(null);
         projectMenu.add(projectNew);
         
-        projectAdd = new JMenuItem("Add File/Folder...") {
+        projectAdd = new JMenuItem("Add Existing...") {
 
             private static final long serialVersionUID = 1;
 
