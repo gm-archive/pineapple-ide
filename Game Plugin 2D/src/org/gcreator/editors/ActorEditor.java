@@ -110,12 +110,12 @@ public final class ActorEditor extends DocumentPane {
         renderSpriteCheckBox.setSelected(actor.renderAutomatically);
         barrenCheckBox.setSelected(actor.barren);
     }
-
+    
     /**
-     * {@inheritDoc}
+     * Saves the file
      */
     @Override
-    public boolean save() {
+    public boolean saveBackend() {
         boolean saved = false;
         try {
             actor.save(file);
@@ -130,14 +130,6 @@ public final class ActorEditor extends DocumentPane {
             Logger.getLogger(ActorEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
         return saved;
-    }
-    
-    /**
-     * Saves the file
-     */
-    @Override
-    public boolean saveBackend() {
-        return save();
     }
 
     /** This method is called from within the constructor to

@@ -56,19 +56,27 @@ public abstract class DocumentPane extends JPanel {
 
     /**
      * Saves the file.
+     * 
      * @return Whether or not the file was saved.
      */
     public boolean save() {
+        System.out.println("CALL SAVE");
         if (file == null) {
+            System.out.println("FILE is not NULL: "+file);
             if (!saveas()) {
+                System.out.println("SAVEAS is FALSE");
                 return false;
-            //no else here
-            }
+            } else {System.out.println("SAVEAS is TRUE");}
+            setModified(false);
+            updateUI();
         }
         if (saveBackend()) {
+            System.out.println("SAVE BACKEND is TRUE");
             setModified(false);
+            updateUI();
             return true;
-        }
+        } else {System.out.println("SAVE BACKEND is FALSE");}
+        System.out.println("RETURNING FALSE");
         return false;
     }
 

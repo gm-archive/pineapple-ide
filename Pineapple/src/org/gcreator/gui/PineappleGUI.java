@@ -467,8 +467,22 @@ public class PineappleGUI implements EventHandler {
             }
         });
         fileMenu.add(fileOpenFile);
-
-        fileSave = new JMenuItem("Save");
+        fileMenu.addSeparator();
+                    
+        fileSave = new JMenuItem("Save") {
+            @Override
+            public boolean isEnabled() {
+                if (!super.isEnabled()) {
+                    return super.isEnabled();
+                }
+                DocumentPane p = dip.getSelectedDocument();
+                boolean b = false;
+                if (p != null) {
+                    b = p.isModified();
+                }
+                return b;
+            }
+        };
         fileSave.setMnemonic('S');
         fileSave.setVisible(true);
         fileSave.setEnabled(false);
@@ -778,20 +792,29 @@ public class PineappleGUI implements EventHandler {
             window.setAvailable(true);
         }
 
-        /* Try to load the MyDoggy settings */
-        try {
-            File dataFolder = Core.getStaticContext().getApplicationDataFolder();
-            File w = new File(dataFolder, "workspace.xml");
-            if (w.exists()) {
-                final BufferedInputStream in = new BufferedInputStream(new FileInputStream(w));
-                manager.getPersistenceDelegate().merge(in, MergePolicy.RESET);
-                in.close();
+        File lock = new File(Core.getStaticContext().getApplicationDataFolder(), ".workspace_loaded");
+        if (!lock.exists()) {
+            try {
+                lock.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception e) {
-            System.err.println("Error while loading workspace: " + e);
+            /* Try to load the MyDoggy settings */
+            try {
+                File dataFolder = Core.getStaticContext().getApplicationDataFolder();
+                File w = new File(dataFolder, "workspace.xml");
+                if (w.exists()) {
+                    final BufferedInputStream in = new BufferedInputStream(new FileInputStream(w));
+                    manager.getPersistenceDelegate().merge(in, MergePolicy.RESET);
+                    in.close();
+                }
+            } catch (Exception e) {
+                System.err.println("Error while loading workspace: " + e);
+            }
         }
+        lock.delete();
         EventManager.fireEvent(this, PINEAPPLE_GUI_INITIALIZED);
-        
+
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="openPluginDialog()           ">
@@ -1058,6 +1081,7 @@ public class PineappleGUI implements EventHandler {
     public void saveFile() {
         DocumentPane p = dip.getSelectedDocument();
         if (p != null) {
+            System.out.println("CALLING SAVE");
             p.save();
         }
     }
