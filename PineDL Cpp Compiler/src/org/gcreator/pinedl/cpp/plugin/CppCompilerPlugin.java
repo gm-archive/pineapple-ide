@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pinedl.cpp.plugin;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
+import org.gcreator.game2d.GameProjectType;
 import org.gcreator.gui.PineappleGUI;
 import org.gcreator.managers.EventManager;
 import org.gcreator.pineapple.PineappleCore;
@@ -39,37 +39,48 @@ import org.gcreator.plugins.Plugin;
  * Provides integration with Pineapple
  * @author Luís Reis
  */
-public class CppCompilerPlugin extends Plugin{
+public class CppCompilerPlugin extends Plugin {
+
     public JMenuItem compile = null;
-    
-    public String getDescription(){
+
+    public String getDescription() {
         return "Compiles games to C++/OpenGL";
     }
-    public String getAuthor(){
+
+    public String getAuthor() {
         return "Luís Reis";
     }
-    public String getName(){
+
+    public String getName() {
         return "Pineapple C++ Compiler";
     }
-    
+
     @Override
-    public void initialize(){
+    public void initialize() {
         System.out.println("Loaded CppCompilerPlugin");
         EventManager.addEventHandler(this, DefaultEventTypes.WINDOW_CREATED, EventPriority.LOW);
+        EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED, EventPriority.LOW);
     }
-    
+
     @Override
-    public void handleEvent(Event evt){
+    public void handleEvent(Event evt) {
         System.out.println("Event called " + evt.getEventType());
-        if(evt.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)){
+        if (evt.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
             compile = new JMenuItem("Compile");
             compile.setVisible(true);
-            compile.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent evt){
+            compile.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent evt) {
                     new GameCompiler(PineappleCore.getProject());
                 }
             });
+            compile.setEnabled(false);
             PineappleGUI.toolsMenu.add(compile);
+        } else if (evt.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
+            if (compile != null) {
+                compile.setEnabled(PineappleCore.getProject() != null && 
+                        PineappleCore.getProject().getProjectType() instanceof GameProjectType);
+            }
         }
     }
 }

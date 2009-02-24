@@ -62,21 +62,20 @@ public class GameCompiler {
     File outputFile = null;
     CompilationProfile profile = null;
 
-    public GameCompiler(final Project p){
+    public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
     }
-    
-    public static CompilationProfile getDefaultProfile(){
+
+    public static CompilationProfile getDefaultProfile() {
         String os = System.getProperty("os.name");
-        if(os.startsWith("Windows")){
+        if (os.startsWith("Windows")) {
             return CompilationProfile.WINDOWS_TO_WINDOWS;
-        }
-        if(os.equals("Linux")||os.equals("Solaris")||os.equals("FreeBSD")){
+        } else { /* No one cares about BeOS, the only non-unix other platform */
+            
             return CompilationProfile.UNIX_TO_UNIX;
         }
-        return null;
     }
-    
+
     public GameCompiler(final Project p, final CompilationProfile profile) {
         this.p = p;
         this.profile = profile;
@@ -138,11 +137,11 @@ public class GameCompiler {
             }
         }
     }
-    
-    public static void copyFile(String resFolder, File outFolder, String fname) throws IOException{
+
+    public static void copyFile(String resFolder, File outFolder, String fname) throws IOException {
         File f = new File(outFolder, fname);
         FileOutputStream fos = new FileOutputStream(f);
-        InputStream is = GameCompiler.class.getResourceAsStream(resFolder+fname);
+        InputStream is = GameCompiler.class.getResourceAsStream(resFolder + fname);
         int c;
         while ((c = is.read()) != -1) {
             fos.write(c);
@@ -160,23 +159,22 @@ public class GameCompiler {
         fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
         Hashtable<String, String> hs = PineappleCore.getProject().getSettings();
-        if(hs.containsKey(("scene-order"))){
+        if (hs.containsKey(("scene-order"))) {
             String scene = hs.get("scene-order").split(";")[0];
-            scene = scene.substring(scene.lastIndexOf('/')+1);
+            scene = scene.substring(scene.lastIndexOf('/') + 1);
             scene = scene.substring(0, scene.indexOf('.'));
-            fos.write(("\tPineapple::Application::setScene(new Game::"+scene+"());\n").getBytes());
+            fos.write(("\tPineapple::Application::setScene(new Game::" + scene + "());\n").getBytes());
         }
         fos.write("\tPineapple::Window::run();\n".getBytes());
         fos.write("}\n".getBytes());
         fos.close();
     }
-    
+
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
-        if(profile==CompilationProfile.UNIX_TO_UNIX){
+        if (profile == CompilationProfile.UNIX_TO_UNIX) {
             copyFile("/org/gcreator/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
-        }
-        else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
+        } else if (profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
             copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
             copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL_image.dll");
             copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "jpeg.dll");
@@ -201,7 +199,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "view.h");
         copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "window.h");
         compFrame.writeLine("Copying runner files");
-        if(profile==CompilationProfile.UNIX_TO_UNIX){
+        if (profile == CompilationProfile.UNIX_TO_UNIX) {
             copyFile("/org/gcreator/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
         }
     }
@@ -216,13 +214,13 @@ public class GameCompiler {
         command.add(outputFile.getAbsolutePath());
         for (File script : pineScripts) {
             String path = script.getAbsolutePath();
-            command.add(path.substring(0, path.lastIndexOf('.'))+".cpp");
+            command.add(path.substring(0, path.lastIndexOf('.')) + ".cpp");
         }
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
-        
+
         int c;
-        if(profile==CompilationProfile.UNIX_TO_UNIX){
+        if (profile == CompilationProfile.UNIX_TO_UNIX) {
             Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
             InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
             String sdlout = "";
@@ -231,14 +229,13 @@ public class GameCompiler {
             }
             sdlconfig.waitFor();
             String[] sdloutSplit = sdlout.split("\\s");
-            for(String cmd : sdloutSplit){
+            for (String cmd : sdloutSplit) {
                 command.add(cmd);
             }
             command.add("-lSDL_image");
             command.add("-lGL");
             command.add("-lGLU");
-        }
-        else if(profile==CompilationProfile.WINDOWS_TO_WINDOWS){
+        } else if (profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
             command.add("-lmingw32");
             command.add("-lSDLmain");
             command.add("-lSDL");
@@ -247,9 +244,9 @@ public class GameCompiler {
             command.add("-lglu32");
             command.add("-lopengl32");
         }
-        
-        
-        
+
+
+
         Process proc = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
         compFrame.writeLine("Calling GCC C++ for executable generation");
         String res = "";
@@ -264,7 +261,7 @@ public class GameCompiler {
         }
         int x = proc.waitFor();
         compFrame.writeLine("Finished!");
-        if(x!=0){
+        if (x != 0) {
             compFrame.writeLine("There seems to have been some errors with the compiler");
             compFrame.writeLine("Please report them to the G-Creator team");
         }
@@ -352,14 +349,14 @@ public class GameCompiler {
         fos.write(" extends Actor{\n".getBytes());
 
         boolean hasCreate = false;
-        
+
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
                 hasCreate = true;
                 fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
-                if(a.image!=null){
+                if (a.image != null) {
                     fos.write("\t\ttexture = new Texture(\"res/".getBytes());
                     fos.write(a.image.getName().getBytes());
                     fos.write("\");\n".getBytes());
@@ -401,13 +398,13 @@ public class GameCompiler {
                 fos.write("\t}\n".getBytes());
             }
         }
-        
-        if(!hasCreate){
+
+        if (!hasCreate) {
             fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
-            if(a.image!=null){
-                    fos.write("\t\ttexture = new Texture(\"res/".getBytes());
-                    fos.write(a.image.getName().getBytes());
-                    fos.write("\");\n".getBytes());
+            if (a.image != null) {
+                fos.write("\t\ttexture = new Texture(\"res/".getBytes());
+                fos.write(a.image.getName().getBytes());
+                fos.write("\");\n".getBytes());
             }
             fos.write("\t}\n".getBytes());
         }
@@ -441,15 +438,15 @@ public class GameCompiler {
 
         fos.write("){\n".getBytes());
 
-        
+
         Color c = scene.bgColor;
         String cs = ((Integer) c.getRed()).toString();
         cs += ", ";
         cs += c.getGreen();
         cs += ", ";
         cs += c.getBlue();
-        fos.write(("\t\tsetBackground(new Color("+cs+"));\n").getBytes());
-        
+        fos.write(("\t\tsetBackground(new Color(" + cs + "));\n").getBytes());
+
         for (Scene.ActorInScene a : scene.actors) {
             String aname = a.bf.getName();
             aname = aname.substring(0, aname.lastIndexOf('.'));

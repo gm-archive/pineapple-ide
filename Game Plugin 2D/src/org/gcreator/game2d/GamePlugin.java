@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 BobSerge<serge_1994@hotmail.com>
+Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -63,6 +63,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     public static final String PALETTE_CREATED = "game-palette-created";
     public static ToolWindow palette = null;
     public static JPanel palettePanel = null;
+    public static JMenuItem gameSettings;
 
     /**
      * {@inheritDoc}
@@ -93,7 +94,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     public boolean accept(String format) {
         for (String f : formats) {
-            if (format!=null&&format.equalsIgnoreCase(f)) {
+            if (format != null && format.equalsIgnoreCase(f)) {
                 return true;
             }
         }
@@ -124,11 +125,10 @@ public class GamePlugin extends Plugin implements FormatSupporter {
 
         return new TextEditor(f);
     }
-    
     /**
      * An array of the formats supported by the 2D Game Plug-in.
      */
-    public static final String[] formats = new String[] {
+    public static final String[] formats = new String[]{
         "actor",
         "scene"
     };
@@ -165,28 +165,48 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             PineappleCore.addFormatSupporter(this);
             /* Set the default FormatSupporters for certain types. */
             String base = "files.formats.formatsupporter.remember.";
-            String fs   = this.getClass().getCanonicalName();
+            String fs = this.getClass().getCanonicalName();
             for (String format : formats) {
                 SettingsManager.set(base + format, fs);
             }
-        } else if(e.getEventType().equals(PineappleGUI.TREE_MENU_INVOKED)) {
+        } else if (e.getEventType().equals(PineappleGUI.TREE_MENU_INVOKED) && PineappleCore.getProject() != null) {
             JPopupMenu menu = (JPopupMenu) e.getArguments()[0];
             Object o = e.getArguments()[1];
-            if(o instanceof ProjectTreeNode){
+            if (o instanceof ProjectTreeNode) {
                 Project p = PineappleCore.getProject();
-                if(p.getProjectType() instanceof GameProjectType){
+                if (p.getProjectType() instanceof GameProjectType) {
                     JMenuItem item = new JMenuItem("Game Settings");
                     item.setVisible(true);
-                    item.addActionListener(new ActionListener(){
-                        public void actionPerformed(ActionEvent evt){
+                    item.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent evt) {
                             GameSettingsDialog dialog = new GameSettingsDialog(
-                            Core.getStaticContext().getMainFrame(), true,
-                            PineappleCore.getProject());
+                                    Core.getStaticContext().getMainFrame(), true,
+                                    PineappleCore.getProject());
                             dialog.setVisible(true);
                         }
                     });
                     menu.add(item);
                 }
+            }
+        } else if (e.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
+            gameSettings = new JMenuItem("Game Settings");
+            gameSettings.setVisible(true);
+            gameSettings.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent evt) {
+                    GameSettingsDialog dialog = new GameSettingsDialog(
+                            Core.getStaticContext().getMainFrame(), true,
+                            PineappleCore.getProject());
+                    dialog.setVisible(true);
+                }
+            });
+            gameSettings.setEnabled(false);
+            PineappleGUI.toolsMenu.add(gameSettings);
+        } else if (e.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
+            if (gameSettings != null) {
+                gameSettings.setEnabled(PineappleCore.getProject() != null && 
+                        PineappleCore.getProject().getProjectType() instanceof GameProjectType);
             }
         }
     }
@@ -201,6 +221,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
         EventManager.addEventHandler(this, PineappleGUI.TREE_MENU_INVOKED);
+        EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED);
+        EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED);
         PineappleCore.fileTypeNames.put("actor", "Game Actor");
         PineappleCore.fileTypeDescriptions.put("actor",
                 "Game entities associated with a position and a behavior.");
