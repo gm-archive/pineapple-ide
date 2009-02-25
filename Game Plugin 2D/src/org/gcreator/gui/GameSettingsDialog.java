@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.AbstractListModel;
-import org.gcreator.gui.validators.SceneValidator;
+import org.gcreator.validators.SceneValidator;
 import org.gcreator.project.Project;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;

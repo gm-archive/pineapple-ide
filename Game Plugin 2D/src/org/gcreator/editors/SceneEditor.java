@@ -34,7 +34,7 @@ import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
 import org.gcreator.gui.SceneEditorArea;
 import org.gcreator.gui.SceneProperties;
-import org.gcreator.gui.validators.ActorValidator;
+import org.gcreator.validators.ActorValidator;
 import org.gcreator.project.io.BasicFile;
 
 /**

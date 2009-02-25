@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.gui;
 
+import org.gcreator.validators.ResourceValidator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -32,7 +33,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import org.gcreator.gui.validators.UniversalValidator;
+import org.gcreator.validators.UniversalValidator;
 import org.gcreator.pineapple.PineappleCore;
 import org.gcreator.project.ProjectElement;
 import org.gcreator.project.ProjectFile;

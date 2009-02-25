@@ -21,17 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-package org.gcreator.gui;
+package org.gcreator.validators;
 
+import org.gcreator.validators.ResourceValidator;
 import org.gcreator.project.ProjectFile;
 
 /**
- * Specifies whether a resource is valid or not
- * 
- * @see ResourceChooser
+ * A validator that matches only actors
  * @author Luís Reis
  */
-public interface ResourceValidator {
-
-    boolean isValid(ProjectFile file);
+public class ActorValidator implements ResourceValidator{
+    public boolean isValid(ProjectFile file) {
+        String name = file.getName();
+        int indexOfDot = name.lastIndexOf('.');
+        if(indexOfDot==-1){
+            return false;
+        }
+        String format = name.substring(indexOfDot+1);
+        if(format.equals("actor")){
+            return true;
+        }
+        return false;
+    }
 }

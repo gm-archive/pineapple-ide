@@ -38,8 +38,8 @@ import javax.xml.transform.TransformerException;
 import org.gcreator.formats.Actor;
 import org.gcreator.gui.BehaviourPanel;
 import org.gcreator.gui.DocumentPane;
-import org.gcreator.gui.validators.ActorValidator;
-import org.gcreator.gui.validators.ImageValidator;
+import org.gcreator.validators.ActorValidator;
+import org.gcreator.validators.ImageValidator;
 import org.gcreator.project.io.BasicFile;
 
 /**
@@ -72,7 +72,7 @@ public final class ActorEditor extends DocumentPane {
         initComponents();
         behaviour = new BehaviourPanel(actor, this);
         behaviour.setVisible(true);
-        behaviour.tableModel.addTableModelListener(new TableModelListener() {
+        behaviour.fieldsTable.getModel().addTableModelListener(new TableModelListener() {
 
             public void tableChanged(TableModelEvent e) {
                 setModified(true);

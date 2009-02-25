@@ -25,7 +25,7 @@ package org.gcreator.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.gcreator.formats.Scene;
-import org.gcreator.gui.validators.ActorValidator;
+import org.gcreator.validators.ActorValidator;
 
 /**
  * A properties panel for actors in scenes.

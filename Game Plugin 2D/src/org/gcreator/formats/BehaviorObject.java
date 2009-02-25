@@ -45,12 +45,14 @@ public class BehaviorObject {
      * A simplex class that stores all of the data for a field.
      */
     public static class Field {
+        private static final long serialVersionUID = 177435937L;
 
-        protected String type;
+        
         protected String name;
-        protected String defaultValue;
+        protected String type;
         protected boolean isStatic;
         protected boolean isFinal;
+        protected String defaultValue;
 
         /**
          * Creates a new {@link Field} that is not static and has
