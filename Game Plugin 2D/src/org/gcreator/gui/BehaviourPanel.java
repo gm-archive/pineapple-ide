@@ -77,13 +77,13 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
         JComboBox typeBox = new JComboBox();
         String[] types = new String[] {
-            "Integer",
-            "String",
-            "Double",
-            "Float",
-            "Long",
-            "Byte",
-            "Short",
+            "int",
+            "string",
+            "double",
+            "float",
+            "long",
+            "byte",
+            "short",
         };
         for (String s : types) {
             typeBox.addItem(s);
