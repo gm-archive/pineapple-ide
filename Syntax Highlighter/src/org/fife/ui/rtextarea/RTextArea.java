@@ -67,7 +67,7 @@ import javax.swing.undo.UndoManager;
 import org.fife.print.RPrintUtilities;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.Macro.MacroRecord;
-import org.gcreator.syntax.PineDLEditor;
+import org.gcreator.pineapple.syntax.PineDLEditor;
 
 /**
  * An extension of <code>JTextArea</code> that adds the following features:

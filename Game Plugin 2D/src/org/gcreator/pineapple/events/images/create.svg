@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32px"
+   height="32px"
+   id="svg2383"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="create.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/luis/NetBeansProjects/Sabre/Trunk/Game Plugin 2D/src/org/gcreator/events/images/create.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs2385">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 16 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="32 : 16 : 1"
+       inkscape:persp3d-origin="16 : 10.666667 : 1"
+       id="perspective2391" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="16"
+     inkscape:cx="16.000788"
+     inkscape:cy="16.000788"
+     inkscape:current-layer="svg2383"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1280"
+     inkscape:window-height="910"
+     inkscape:window-x="0"
+     inkscape:window-y="25" />
+  <metadata
+     id="metadata2388">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.80599999;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.75;stroke-opacity:1"
+     id="path3218"
+     sodipodi:cx="16"
+     sodipodi:cy="16"
+     sodipodi:rx="15"
+     sodipodi:ry="15"
+     d="M 31,16 A 15,15 0 1 1 1,16 A 15,15 0 1 1 31,16 z" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.80599999;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.75;stroke-opacity:1"
+     id="path3221"
+     sodipodi:cx="16"
+     sodipodi:cy="16"
+     sodipodi:rx="12"
+     sodipodi:ry="12"
+     d="M 28,16 A 12,12 0 1 1 4,16 A 12,12 0 1 1 28,16 z"
+     transform="translate(6.25e-2,0.125)" />
+  <path
+     style="opacity:1;fill:#00ff00;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.050375;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.75;stroke-opacity:1"
+     d="M 14.913288,30.535702 C 11.865571,30.256221 9.1122221,29.152976 6.8169427,27.291562 C 6.076244,26.690876 4.9316646,25.505815 4.373189,24.761382 C 2.4525159,22.201176 1.4702871,19.273389 1.4587777,16.074212 C 1.4541065,14.775839 1.5215646,14.083042 1.7600159,12.980462 C 3.0037321,7.2296198 7.453409,2.853061 13.225788,1.7030941 C 15.232456,1.3033273 17.753198,1.3872829 19.725788,1.9195804 C 24.334895,3.1633341 28.033701,6.5423954 29.687551,11.020195 C 30.242913,12.523836 30.48067,13.84056 30.522032,15.641695 C 30.56802,17.643909 30.358801,19.021175 29.734695,20.824617 C 27.987938,25.872129 23.459826,29.605409 18.100788,30.416393 C 17.461486,30.513138 15.477176,30.587412 14.913288,30.535703 L 14.913288,30.535702 z M 17.882038,28.411305 C 20.586751,27.992235 22.934245,26.805514 24.851913,24.88784 C 26.82287,22.916894 27.993638,20.525285 28.386301,17.667962 C 28.50812,16.781502 28.479351,14.995091 28.329438,14.136712 C 28.044476,12.505109 27.449263,10.922136 26.602632,9.5442741 C 25.684563,8.0501523 24.165413,6.5424216 22.596245,5.568001 C 19.755807,3.8041516 16.247383,3.2607348 13.007622,4.0828266 C 8.6054946,5.1998685 5.0969434,8.7198798 4.014359,13.105462 C 3.4195771,15.514941 3.5593134,18.119159 4.4067309,20.417962 C 5.3637609,23.014113 7.2405346,25.294271 9.6068802,26.735806 C 11.251855,27.737895 13.252865,28.375222 15.257038,28.535397 C 15.804346,28.579139 17.235468,28.511484 17.882038,28.411304 L 17.882038,28.411305 z"
+     id="path3223"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     inkscape:export-filename="/home/luis/NetBeansProjects/Sabre/Trunk/Game Plugin 2D/src/org/gcreator/events/images/create.png" />
+  <path
+     style="fill:#00ff00;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 14.25,24.8125 L 17.625,24.75 L 17.625,17.625 L 24.6875,17.625 L 24.6875,14.4375 L 17.625,14.4375 L 17.5625,7.25 L 14.3125,7.25 L 14.3125,14.4375 L 7.1875,14.4375 L 7.1875,17.625 L 14.3125,17.625 L 14.25,24.8125 z"
+     id="path3231" />
+</svg>
