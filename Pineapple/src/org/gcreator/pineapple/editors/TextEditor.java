@@ -77,7 +77,7 @@ public class TextEditor extends DocumentPane {
         if (e != null && e.exists()) {
             BufferedInputStream in = null;
             try {
-                in = new BufferedInputStream(e.getInputStream());
+                in = new BufferedInputStream(e.getReader());
                 StringBuilder b = new StringBuilder((int) e.getLength());
                 int r;
                 while ((r = in.read()) != -1) {
@@ -130,7 +130,7 @@ public class TextEditor extends DocumentPane {
     @Override
     public boolean saveBackend() {
         try {
-            BufferedOutputStream out = new BufferedOutputStream(file.getOutputStream());
+            BufferedOutputStream out = new BufferedOutputStream(file.getWriter());
             out.write(editor.getText().getBytes());
             out.close();
             return true;

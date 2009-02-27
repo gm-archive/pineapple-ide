@@ -120,14 +120,14 @@ public class DefaultProjectManager implements ProjectManager {
     @Override
     public BasicFile createFile(ProjectFolder folder, String name, String type) {
         File f = new File(
-                ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
+                ((folder == null) ? project.getProjectFolder() : ((DefaultFile) folder.getFile()).file),
                 name + "." + type);
         try {
             f.createNewFile();
         } catch (IOException ex) {
             Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        FileFile ff = new FileFile(f, folder, project);
+        DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
             try {
                 ProjectElement e = project.createElement(ff);
@@ -148,10 +148,10 @@ public class DefaultProjectManager implements ProjectManager {
     @Override
     public BasicFile createFolder(ProjectFolder folder, String name) {
         File f = new File(
-                ((folder == null) ? project.getProjectFolder() : ((FileFile) folder.getFile()).file),
+                ((folder == null) ? project.getProjectFolder() : ((DefaultFile) folder.getFile()).file),
                 name);
         f.mkdir();
-        FileFile ff = new FileFile(f, folder, project);
+        DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
             try {
                 project.add(project.createElement(ff));
@@ -352,10 +352,10 @@ public class DefaultProjectManager implements ProjectManager {
     public BasicFile copyFileToProject(File file, ProjectFolder folder, String newName) {
         File newFile = copyFile(file, newName,
                 ((folder != null)
-                ? ((FileFile) folder.getFile()).file
+                ? ((DefaultFile) folder.getFile()).file
                 : project.getProjectFolder()));
 
-        BasicFile f = new FileFile(newFile, folder, project);
+        BasicFile f = new DefaultFile(newFile, folder, project);
         if (folder != null) {
             folder.reload();
         } else {
@@ -374,12 +374,12 @@ public class DefaultProjectManager implements ProjectManager {
      */
     @Override
     public BasicFile copyFile(BasicFile file, ProjectFolder folder, String newName) {
-        File newFile = copyFile(((FileFile) file).file, newName,
+        File newFile = copyFile(((DefaultFile) file).file, newName,
                 ((folder != null)
-                ? ((FileFile) folder.getFile()).file
+                ? ((DefaultFile) folder.getFile()).file
                 : project.getProjectFolder()));
 
-        BasicFile f = new FileFile(newFile, folder, project);
+        BasicFile f = new DefaultFile(newFile, folder, project);
         if (folder != null) {
             folder.reload();
         } else {
@@ -548,7 +548,7 @@ public class DefaultProjectManager implements ProjectManager {
                         return;
                     }
                     try {
-                        FileFile f = new FileFile(file, null, project);
+                        DefaultFile f = new DefaultFile(file, null, project);
                         ProjectElement e = project.createElement(f);
                         f.element = e;
                         project.add(e);

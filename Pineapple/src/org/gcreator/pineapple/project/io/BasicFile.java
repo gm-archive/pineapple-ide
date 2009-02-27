@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey <bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import org.gcreator.pineapple.project.ProjectElement;
  * 
  * @author Serge Humphrey
  */
-public interface BasicFile {
+public interface BasicFile extends Register {
     
     /**
      * Gets the file's name.
@@ -92,27 +92,6 @@ public interface BasicFile {
      *
      */
     public BasicFile[] list();
-    
-    /**
-     * Creates a new stream for reading the file's data.
-     * The stream should not be buffered.
-     * 
-     * @return An unbuffered {@link java.io.InputStream} for 
-     * reading the file's data.
-     * @throws java.io.IOException If an {@link java.io.IOException} occurs.
-     */
-    public InputStream getInputStream() throws IOException;
-    
-    /**
-     * Creates a new stream for writing data to the file.
-     * The stream should not be buffered.
-     * 
-     * @return An unbuffered {@link java.io.OutputStream}
-     * for writing data to the file.
-     * 
-     * @throws java.io.IOException If an {@link java.io.IOException} occurs.
-     */
-    public OutputStream getOutputStream() throws IOException;
     
     /**
      * Renames the file

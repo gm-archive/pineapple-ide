@@ -309,7 +309,7 @@ public class GameCompiler {
     private void copyImage(ProjectElement e) throws Exception {
         File f = new File(resFolder, e.getName());
         FileOutputStream fos = new FileOutputStream(f);
-        InputStream is = e.getFile().getInputStream();
+        InputStream is = e.getFile().getReader();
         int c = 0;
         while ((c = is.read()) != -1) {
             fos.write(c);
@@ -322,7 +322,7 @@ public class GameCompiler {
         compFrame.writeLine("Copying PineDL script " + e.getName());
         File f = new File(outputFolder, e.getName());
         FileOutputStream fos = new FileOutputStream(f);
-        InputStream is = e.getFile().getInputStream();
+        InputStream is = e.getFile().getReader();
         int c = 0;
         while ((c = is.read()) != -1) {
             fos.write(c);

@@ -157,8 +157,8 @@ public class AboutDialog extends JDialog {
     public JScrollPane createMITTab() {
         JTextPane p = new JTextPane();
         p.setText(
-"Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>\n"+
-"Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>\n"+
+"Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>\n"+
+"Copyright (C) 2008, 2009 Serge Humphrey <bob@bobtheblueberry.com>\n"+
 "\n"+
 "Permission is hereby granted, free of charge, to any person obtaining a copy\n"+
 "of this software and associated documentation files (the \"Software\"), to deal\n"+

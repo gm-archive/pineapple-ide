@@ -110,7 +110,7 @@ public class Actor extends BehaviorObject {
      */
     public Actor(BasicFile file) throws SAXException, IOException {
         this();
-        new ActorImporter(this, new BufferedInputStream(file.getInputStream()));
+        new ActorImporter(this, new BufferedInputStream(file.getReader()));
     }
 
     //<editor-fold defaultstate="collapsed" desc="Actor Saving">
@@ -191,7 +191,7 @@ public class Actor extends BehaviorObject {
 
         // Write the DOM document to the file
         Transformer xformer;
-        BufferedOutputStream out = new BufferedOutputStream(file.getOutputStream());
+        BufferedOutputStream out = new BufferedOutputStream(file.getWriter());
         result = new StreamResult(out);
         xformer = TransformerFactory.newInstance().newTransformer();
         xformer.transform(source, result);

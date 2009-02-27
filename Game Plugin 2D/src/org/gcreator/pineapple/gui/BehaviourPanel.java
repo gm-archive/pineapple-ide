@@ -23,19 +23,27 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Vector;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.gcreator.pineapple.events.Event;
-import org.gcreator.pineapple.events.EventPanel;
 import org.gcreator.pineapple.formats.BehaviorObject;
 import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.project.io.Register;
+import org.gcreator.pineapple.syntax.PineDLEditor;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.validators.Glob;
 
@@ -346,15 +354,15 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
             break;
         }
     }
-    for (Component c : cs) {
-        if (c instanceof EventPanel) {
-            EventPanel ev = (EventPanel) c;
-            if (ev.getEvent().getType().equals(eventList.getSelectedValue())) {
-                tabPane.remove(c);
-                break;
-            }
-        }
-    }
+//    for (Component c : cs) {
+//        if (c instanceof EventPanel) {
+//            EventPanel ev = (EventPanel) c;
+//            if (ev.getEvent().getType().equals(eventList.getSelectedValue())) {
+//                tabPane.remove(c);
+//                break;
+//            }
+//        }
+//    }
     eventList.updateUI();
     this.setModified(true);
     deleteEventButton.setEnabled(false);
@@ -377,8 +385,81 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     this.setModified(true);
 }//GEN-LAST:event_removeFieldButtonActionPerformed
 
-    private void addTabForEvent(Event e) {
-        EventPanel p = new EventPanel(e);
+    private void addTabForEvent(final Event e) {
+        Register r = new Register() {
+
+            public InputStream getReader() throws IOException {
+                return new InputStream() {
+
+                    String buffer = e.getPineDL();
+                    int pos = 0;
+
+                    @Override
+                    public int read() throws IOException {
+                        if (pos >= buffer.length()) {
+                            return -1;
+                        }
+                        return buffer.charAt(pos++);
+                    }
+
+                    @Override
+                    public int available() {
+                        return buffer.length()-pos;
+                    }
+                };
+            }
+
+            public OutputStream getWriter() throws IOException {
+                return new OutputStream() {
+
+                    StringBuffer buffer = new StringBuffer();
+
+                    { e.setPineDL(""); }
+                    @Override
+                    public void write(int b) throws IOException {
+                        buffer.append((char)b);
+                    }
+
+                    @Override
+                    public void flush() {
+                        e.setPineDL(e.getPineDL() + buffer);
+                    }
+
+                    @Override
+                    public void close() {
+                        flush();
+                    }
+                };
+            }
+        };
+        PineDLEditor p = new PineDLEditor(r);
+        p.editor.getDocument().addDocumentListener(new DocumentListener() {
+
+            public void change(DocumentEvent e) {
+                setModified(true);
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                change(e);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                change(e);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                change(e);
+            }
+        });
+        p.editor.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
+                    pane.save();
+                }
+            }
+        });
         int i = tabPane.getComponentCount() - 2;
         tabPane.insertTab(e.getType(), null, p, e.getType(), i);
         tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));

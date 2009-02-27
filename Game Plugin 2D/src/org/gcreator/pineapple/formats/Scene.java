@@ -79,7 +79,7 @@ public class Scene extends BehaviorObject {
 
     public Scene(BasicFile file) {
         try {
-            new SceneImporter(this, new BufferedInputStream(file.getInputStream()));
+            new SceneImporter(this, new BufferedInputStream(file.getReader()));
         } catch (SAXException ex) {
             Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -145,7 +145,7 @@ public class Scene extends BehaviorObject {
             }
             try {
                 Actor a = new Actor(bf);
-                return ImageIO.read(a.image.getInputStream());
+                return ImageIO.read(a.image.getReader());
             } catch (Exception e) {
                 return null;
             }
@@ -229,7 +229,7 @@ public class Scene extends BehaviorObject {
 
         // Write the DOM document to the file
         Transformer xformer;
-        BufferedOutputStream out = new BufferedOutputStream(file.getOutputStream());
+        BufferedOutputStream out = new BufferedOutputStream(file.getWriter());
         result = new StreamResult(out);
         xformer = TransformerFactory.newInstance().newTransformer();
         xformer.transform(source, result);

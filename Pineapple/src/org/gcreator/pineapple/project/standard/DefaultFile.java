@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,20 +39,20 @@ import org.gcreator.pineapple.project.io.BasicFile;
  * 
  * @author Serge Humphrey
  */
-public class FileFile implements BasicFile {
+public class DefaultFile implements BasicFile {
 
     protected File file;
     protected Project project;
     protected ProjectElement element;
     
     /**
-     * Creates a new {@link FileFile} with a given {@link java.io.File}.
+     * Creates a new {@link DefaultFile} with a given {@link java.io.File}.
      * 
      * @param file The {@link java.io.File} to use.
      * @param e The {@link ProjectElement} that this file belongs to.
      * @param p The {@link Project} which this file should belong to.
      */
-    public FileFile(File file, ProjectElement e, Project p) {
+    public DefaultFile(File file, ProjectElement e, Project p) {
         this.file = file;
         this.project = p;
         this.element = e;
@@ -107,7 +107,7 @@ public class FileFile implements BasicFile {
      * {@inheritDoc}
      */
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getReader() throws IOException {
         return new FileInputStream(file);
     }
 
@@ -115,7 +115,7 @@ public class FileFile implements BasicFile {
      * {@inheritDoc}
      */
     @Override
-    public OutputStream getOutputStream() throws IOException {
+    public OutputStream getWriter() throws IOException {
         return new FileOutputStream(file);
     }
 
@@ -137,10 +137,10 @@ public class FileFile implements BasicFile {
             return null;
         }
 
-        FileFile[] files = new FileFile[ffiles.length];
+        DefaultFile[] files = new DefaultFile[ffiles.length];
         int i = 0;
         for (File f : ffiles) {
-            files[i++] = new FileFile(f, element, project);
+            files[i++] = new DefaultFile(f, element, project);
         }
         return files;
     }

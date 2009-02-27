@@ -52,7 +52,7 @@ public final class ImagePreviewer extends DocumentPane {
     public ImagePreviewer(BasicFile file) {
         super(file);
         try {
-            BufferedInputStream s = new BufferedInputStream(file.getInputStream());
+            BufferedInputStream s = new BufferedInputStream(file.getReader());
             BufferedImage img = ImageIO.read(s);
             s.close();
             if (img == null) {

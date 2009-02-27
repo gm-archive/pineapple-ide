@@ -97,7 +97,7 @@ import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.ProjectType;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.FormatSupporter;
-import org.gcreator.pineapple.project.standard.FileFile;
+import org.gcreator.pineapple.project.standard.DefaultFile;
 import org.gcreator.pineapple.tree.BaseTreeNode;
 import org.gcreator.pineapple.tree.FileTreeNode;
 import org.gcreator.pineapple.tree.FolderTreeNode;
@@ -1947,8 +1947,8 @@ public class PineappleGUI implements EventHandler {
         if (PineappleCore.getProject() != null) {
             bf = PineappleCore.getProject().getProjectType().createBasicFile(f, PineappleCore.getProject());
         } else {
-            /* Shouldn't use FileFile, but will anyways. */
-            bf = new FileFile(f, null, null); /* 
+            /* Shouldn't use DefaultFile, but will anyways. */
+            bf = new DefaultFile(f, null, null); /*
         NOTE:
          * Can't use getPath() method
          * with null project.

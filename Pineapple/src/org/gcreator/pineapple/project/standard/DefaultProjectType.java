@@ -91,6 +91,6 @@ public class DefaultProjectType implements ProjectType {
      */
     @Override
     public BasicFile createBasicFile(File f, Project p) {
-        return new FileFile(f, null, p);
+        return new DefaultFile(f, null, p);
     }
 }
