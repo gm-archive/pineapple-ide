@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.editors;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import javax.imageio.ImageIO;
@@ -46,7 +46,8 @@ public final class ImagePreviewer extends DocumentPane {
     private ImageIcon image;
 
     /**
-     * Creates an ImagePreviewer from a File
+     * Creates an ImagePreviewer from a {@link File}.
+     *
      * @param file The image file
      */
     public ImagePreviewer(BasicFile file) {
@@ -63,7 +64,7 @@ public final class ImagePreviewer extends DocumentPane {
         } catch (Exception e) {
             System.out.println("Exception while reading image " + file.getPath() + ": " + e);
         }
-        this.setLayout(new BorderLayout());
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 3));
         label = new JLabel(image);
         this.add(new JScrollPane(label), BorderLayout.CENTER);
     }

@@ -930,16 +930,22 @@ public class PineappleGUI implements EventHandler {
         //<editor-fold defaultstate="collapsed" desc="FILE_OPENED">
         } else if (evt.getEventType().equals(FILE_OPENED) && evt.getArguments().length >= 1) {
 
-            DocumentPane p;
             Object[] arguments = evt.getArguments();
-            BasicFile f = (BasicFile) arguments[0];
-            FormatSupporter fs = getFormatSupporter(f, false);
+            final BasicFile f = (BasicFile) arguments[0];
+            final FormatSupporter fs = getFormatSupporter(f, false);
             if (fs == null) {
                 return;
             }
-            p = fs.load(f);
-            dip.add(p.getFile().getName(), p);
-            tree.updateUI();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    DocumentPane p;
+                    p = fs.load(f);
+                    dip.add(p.getFile().getName(), p);
+                    tree.updateUI();
+                }
+            });
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="WINDOW_DISPOSE">
         } else if (evt.getEventType().equals(DefaultEventTypes.WINDOW_DISPOSED)) {
@@ -1045,6 +1051,7 @@ public class PineappleGUI implements EventHandler {
         for (DocumentPane component : comps) {
             if (component != null && component.getFile() == f) {
                 canOpen = false;
+                dip.setSelectedIndex(dip.getDocumentIndex(component));
                 break;
             }
         }
