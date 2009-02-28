@@ -152,6 +152,16 @@ public abstract class Project {
     }
 
     /**
+     * Gets the project's file that it stores project information in.
+     * This may be something like a project manifest file, or perhaps
+     * even an archive.
+     * 
+     * @return The project file that stores information about
+     * the project on the filesystem.
+     */
+    public abstract File getProjectFile();
+
+    /**
      * Sets the folder that this project can use for
      * storing data in.
      * 

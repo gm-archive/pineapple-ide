@@ -189,6 +189,7 @@ public final class PineappleCore {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void handleEvent(Event event) {
             if (event.getEventType().equals(DefaultEventTypes.PLUGINS_LOADED)) {
 
@@ -211,7 +212,10 @@ public final class PineappleCore {
                 PineappleCore.addProjectType(new DefaultProjectType());
 
             } else if (event.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
-                setProject(null);// Fire PROJECT_CHANGED events
+                /* Fire PROJECT_CHANGED events if the project hasn't been set already. */
+                if (project == null) {
+                    setProject(null);
+                }
             }
         }
     }

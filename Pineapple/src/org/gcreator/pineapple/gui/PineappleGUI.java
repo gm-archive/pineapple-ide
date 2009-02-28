@@ -81,6 +81,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.DefaultEventTypes;
@@ -106,6 +112,10 @@ import org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 //</editor-fold>
 /**
  * This deals with the main GUI stuff.
@@ -327,8 +337,11 @@ public class PineappleGUI implements EventHandler {
 
 
 
-
-                Object o = tree.getSelectionPath().getLastPathComponent();
+                TreePath tp = tree.getSelectionPath();
+                if (tp == null) {
+                    return;
+                }
+                Object o = tp.getLastPathComponent();
                 if (o == null || !(o instanceof FileTreeNode)) {
                     return;
                 }
@@ -792,6 +805,7 @@ public class PineappleGUI implements EventHandler {
         for (ToolWindow window : manager.getToolWindows()) {
             window.setAvailable(true);
         }
+        File dataFolder = Core.getStaticContext().getApplicationDataFolder();
 
         File lock = new File(Core.getStaticContext().getApplicationDataFolder(), ".workspace_loaded");
         if (!lock.exists()) {
@@ -800,9 +814,9 @@ public class PineappleGUI implements EventHandler {
             } catch (IOException ex) {
                 Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             /* Try to load the MyDoggy settings */
             try {
-                File dataFolder = Core.getStaticContext().getApplicationDataFolder();
                 File w = new File(dataFolder, "workspace.xml");
                 if (w.exists()) {
                     final BufferedInputStream in = new BufferedInputStream(new FileInputStream(w));
@@ -814,6 +828,36 @@ public class PineappleGUI implements EventHandler {
             }
         }
         lock.delete();
+
+        try {
+            File pf = new File(dataFolder, "projects.xml");
+            if (!pf.exists()) {
+                pf.createNewFile();
+            }
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setIgnoringElementContentWhitespace(true);
+            factory.setIgnoringComments(true);
+            factory.setValidating(false);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(pf);
+            Element root = doc.getDocumentElement();
+            NodeList nl = root.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node n = nl.item(i);
+                File p = new File(n.getTextContent());
+                if (!p.exists()) {
+                    continue;
+                } else {
+                    //NOTE: this must be changed
+                    // when Pineapple supports multiple projects
+                    EventManager.fireEvent(this, PROJECT_OPENED, p);
+                    tree.updateUI();
+                    break; // Can't load any more projects anyways.
+                }
+            }
+        } catch (Exception e) {
+        }
+        
         EventManager.fireEvent(this, PINEAPPLE_GUI_INITIALIZED);
 
     }
@@ -921,9 +965,30 @@ public class PineappleGUI implements EventHandler {
                     }
                 }
             }
+            try {
+                File pf = new File(Core.getStaticContext().getApplicationDataFolder(), "projects.xml");
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.newDocument();
+
+                Element root = doc.createElement("projects");
+                Element project = doc.createElement("project");
+                project.setTextContent( (PineappleCore.getProject() != null)
+                        ? PineappleCore.getProject().getProjectFile().getCanonicalPath()
+                        : null );
+                root.appendChild(project);
+                doc.appendChild(root);
+
+
+                TransformerFactory tFactory = TransformerFactory.newInstance();
+                Transformer transformer = tFactory.newTransformer();
+                DOMSource source = new DOMSource(doc);
+                StreamResult result = new StreamResult(new FileOutputStream(pf));
+                transformer.transform(source, result);
+            } catch (Exception e) {
+            }
         //</editor-fold>
         } else if (evt.getEventType().equals(PROJECT_OPENED)) {
-
             if (evt.getArguments().length == 0) {
                 return;
             }

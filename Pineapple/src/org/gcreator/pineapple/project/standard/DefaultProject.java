@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey <bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import org.gcreator.pineapple.project.ProjectType;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
 
 /**
- * A default implementation of {@link Project}.
+ * The default implementation of {@link Project}.
  * 
  * @author Serge Humphrey
  */
@@ -214,6 +214,14 @@ public class DefaultProject extends Project {
             }
         });
         t.start();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public File getProjectFile() {
+        return new File(getProjectFolder().getPath() + File.separator + "project." + getProjectType().getProjectFileTypes()[0]);
     }
 
     private class ProjectSettings<K, V> extends Hashtable<K, V> {
