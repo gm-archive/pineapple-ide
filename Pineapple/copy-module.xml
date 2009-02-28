@@ -5,7 +5,7 @@
     
     <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
     
-    <target name="copy">
+    <target name="copy" depends="checkcopy" if="exists">
         <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/build/Plugins"/>
         <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/dist/Plugins"/>
         <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/build/Plugins"/>
@@ -17,8 +17,12 @@
         <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/build/Plugins"/>
         <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/dist/Plugins"/>
     </target>
-    
-    <target name="default">
+
+    <target name="checkcopy">
+        <available file="Pineapple/dist/Pineapple.jar" property="exists"/>
+    </target>
+
+    <target name="default" depends="copy">
         <!-- Ensure all other modules are properly copied -->
         <ant antfile="Core/copy-modules.xml" />
     </target>

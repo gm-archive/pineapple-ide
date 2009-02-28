@@ -29,9 +29,10 @@
         <subant target="jar">
             <fileset dir="Pineapple" includes="xbuild.xml"/>
         </subant>
-                <subant target="default">
+        
+        <subant target="default" >
             <fileset dir="Pineapple" includes="copy-module.xml"/>
         </subant>
-        
+      
     </target>
 </project>

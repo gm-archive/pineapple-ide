@@ -24,13 +24,14 @@
     </target>
     
     <target name="jar">
-        
+
         <subant target="jar">
             <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
         </subant>
-        
+      
         <subant target="default">
             <fileset dir="Game Plugin 2D" includes="copy-module.xml"/>
         </subant>
+
     </target>
 </project>
