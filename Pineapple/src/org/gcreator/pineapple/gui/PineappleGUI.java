@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -862,11 +862,13 @@ public class PineappleGUI implements EventHandler {
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="WINDOW_CREATED">
         } else if (evt.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
-
-            System.out.println("Got here B");
-            /* Initilize the main window */
-            initializeWindow();
-            System.out.println("Got here 2");
+            /* Initilize the main window in the AWT GUI thread */
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    initializeWindow();
+                }
+            });
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="FILE_CHANGED">
         } else if (evt.getEventType().equals(FILE_CHANGED)) {

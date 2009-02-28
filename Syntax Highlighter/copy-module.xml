@@ -6,9 +6,14 @@
     
     <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
     
+    <target name="copy">
+       <v-copy src="Syntax Highlighter/dist/Syntax_Highlighter.jar" destdir="Core/build/Plugins"/>
+       <v-copy src="Syntax Highlighter/dist/Syntax_Highlighter.jar" destdir="Core/dist/Plugins"/>
+    </target>
+    
     <target name="default">
-        <v-copy src="Syntax Highlighter/dist/Syntax_Highlighter.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Syntax Highlighter/dist/Syntax_Highlighter.jar" destdir="Core/dist/Plugins"/>
+        <!-- Ensure all other modules are properly copied -->
+        <ant antfile="Core/copy-modules.xml" />
     </target>
     
 </project>
