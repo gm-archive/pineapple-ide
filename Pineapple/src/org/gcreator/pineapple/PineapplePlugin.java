@@ -22,7 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple;
 
-import org.gcreator.plugins.Plugin;
+import org.gcreator.pineapple.plugins.Plugin;
 
 /**
  * The Plugin class for Pineapple.

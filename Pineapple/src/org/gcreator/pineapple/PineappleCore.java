@@ -24,18 +24,18 @@ package org.gcreator.pineapple;
 
 import java.util.Hashtable;
 import java.util.Vector;
-import org.gcreator.gui.PineappleGUI;
-import org.gcreator.managers.EventManager;
-import org.gcreator.plugins.DefaultEventTypes;
-import org.gcreator.plugins.Event;
-import org.gcreator.plugins.EventHandler;
-import org.gcreator.plugins.EventPriority;
-import org.gcreator.project.Project;
-import org.gcreator.project.ProjectType;
-import org.gcreator.project.io.FormatSupporter;
-import org.gcreator.project.standard.DefaultProjectType;
-import org.gcreator.project.standard.ImageSupporter;
-import org.gcreator.project.standard.PlainTextSupporter;
+import org.gcreator.pineapple.gui.PineappleGUI;
+import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.plugins.DefaultEventTypes;
+import org.gcreator.pineapple.plugins.Event;
+import org.gcreator.pineapple.plugins.EventHandler;
+import org.gcreator.pineapple.plugins.EventPriority;
+import org.gcreator.pineapple.project.Project;
+import org.gcreator.pineapple.project.ProjectType;
+import org.gcreator.pineapple.project.io.FormatSupporter;
+import org.gcreator.pineapple.project.standard.DefaultProjectType;
+import org.gcreator.pineapple.project.standard.ImageSupporter;
+import org.gcreator.pineapple.project.standard.PlainTextSupporter;
 
 /**
  * Preforms core-related pineapple tasks.
