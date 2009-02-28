@@ -128,7 +128,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     /**
      * An array of the formats supported by the 2D Game Plug-in.
      */
-    public static final String[] formats = new String[]{
+    public static final String[] formats = new String[] {
         "actor",
         "scene"
     };
@@ -146,13 +146,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void handleEvent(Event e) {
-        if (e.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
-            palettePanel = new JPanel();
-            palette = PineappleGUI.manager.registerToolWindow("Palette", "Palette", null, palettePanel,
-                    ToolWindowAnchor.RIGHT);
-            palette.setAvailable(false);
-            EventManager.fireEvent(this, PALETTE_CREATED, palette, palettePanel);
-        } else if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
+        if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
             DocumentPane p = PineappleGUI.dip.getSelectedDocument();
             if (p != null && p instanceof PaletteUser) {
                 palette.setAvailable(((PaletteUser) p).doPalette(palette, palettePanel));
@@ -203,6 +197,14 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             });
             gameSettings.setEnabled(false);
             PineappleGUI.toolsMenu.add(gameSettings);
+
+            /* Palette */
+            palettePanel = new JPanel();
+            palette = PineappleGUI.manager.registerToolWindow("Palette", "Palette", null, palettePanel,
+                    ToolWindowAnchor.RIGHT);
+            palette.setAvailable(false);
+            EventManager.fireEvent(this, PALETTE_CREATED, palette, palettePanel);
+            
         } else if (e.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
             if (gameSettings != null) {
                 gameSettings.setEnabled(PineappleCore.getProject() != null && 
@@ -216,7 +218,6 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void initialize() {
-        EventManager.addEventHandler(this, DefaultEventTypes.WINDOW_CREATED, EventPriority.LOW);
         EventManager.addEventHandler(this, PineappleGUI.FILE_CHANGED);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);

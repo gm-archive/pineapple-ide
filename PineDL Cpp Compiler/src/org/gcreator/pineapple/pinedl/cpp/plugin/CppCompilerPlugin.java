@@ -58,14 +58,13 @@ public class CppCompilerPlugin extends Plugin {
     @Override
     public void initialize() {
         System.out.println("Loaded CppCompilerPlugin");
-        EventManager.addEventHandler(this, DefaultEventTypes.WINDOW_CREATED, EventPriority.LOW);
+        EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED, EventPriority.LOW);
         EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED, EventPriority.LOW);
     }
 
     @Override
     public void handleEvent(Event evt) {
-        System.out.println("Event called " + evt.getEventType());
-        if (evt.getEventType().equals(DefaultEventTypes.WINDOW_CREATED)) {
+        if (evt.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
             compile = new JMenuItem("Compile");
             compile.setVisible(true);
             compile.addActionListener(new ActionListener() {
