@@ -40,8 +40,8 @@ import org.gcreator.pineapple.managers.PluginManager;
 public class Core {
 
     /* 0.97... -> Alpha
-     * ...005 -> 5       */
-    private static final double version = 0.97005;
+     * ...006 -> 6       */
+    private static final double version = 0.97006;
     private static final StaticContext staticContext = new StaticContext();
     
     /**
@@ -134,6 +134,7 @@ public class Core {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //TODO: Redo and make this system a lot better.
         if (args.length == 0) {
         } else if (args[0].equalsIgnoreCase("--help") || args[0].equalsIgnoreCase("-help") || args[0].equalsIgnoreCase("-h")) {
             System.out.println("G-Creator version " + Core.version());
@@ -144,13 +145,13 @@ public class Core {
             System.exit(0);
         } else if (args[0].equalsIgnoreCase("--version") || args[0].equalsIgnoreCase("-version") || args[0].equalsIgnoreCase("-v")) {
             System.out.println("G-Creator version " + Core.version());
-            System.out.println("Copyright © 2005-2008 The G-Creator Project");
+            System.out.println("Copyright © 2005-2009 The G-Creator Project");
             System.out.println("http://www.g-creator.org");
             System.exit(0);
         } else if (args[0].equalsIgnoreCase("--license") || args[0].equalsIgnoreCase("-l")) {
             System.out.println(
-                    "Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>\n" +
-                    "Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>\n" +
+                    "Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>\n" +
+                    "Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>\n" +
                     "\n" +
                     "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
                     "of this software and associated documentation files (the \"Software\"), to deal\n" +

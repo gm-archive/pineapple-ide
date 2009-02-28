@@ -30,13 +30,13 @@ import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.pinedl.cpp.GameCompiler;
-import org.gcreator.pineapple.plugins.DefaultEventTypes;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.EventPriority;
 import org.gcreator.pineapple.plugins.Plugin;
 
 /**
- * Provides integration with Pineapple
+ * Provides C++ Compiler integration with Pineapple.
+ *
  * @author Luís Reis
  */
 public class CppCompilerPlugin extends Plugin {
@@ -57,7 +57,6 @@ public class CppCompilerPlugin extends Plugin {
 
     @Override
     public void initialize() {
-        System.out.println("Loaded CppCompilerPlugin");
         EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED, EventPriority.LOW);
         EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED, EventPriority.LOW);
     }
