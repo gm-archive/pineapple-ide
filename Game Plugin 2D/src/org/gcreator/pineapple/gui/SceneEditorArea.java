@@ -65,7 +65,7 @@ public class SceneEditorArea extends JPanel {
                 if (mode == MODE_ADD) {
                     BasicFile f = sceneEditor.actorChooser.getSelectedFile();
                     if (f != null) {
-                        Scene s = sceneEditor.s;
+                        Scene s = sceneEditor.scene;
                         Scene.ActorInScene a = new Scene.ActorInScene();
                         a.bf = f;
                         a.x = evt.getX();
@@ -76,10 +76,10 @@ public class SceneEditorArea extends JPanel {
                         sceneEditor.setModified(true);
                     }
                 } else if (mode == MODE_EDIT) {
-                    if (sceneEditor == null || sceneEditor.s == null) {
+                    if (sceneEditor == null || sceneEditor.scene == null) {
                         return;
                     }
-                    Scene s = sceneEditor.s;
+                    Scene s = sceneEditor.scene;
                     /* Select Actor */
                     Scene.ActorInScene oldSelection = selection;
                     selection = null;
@@ -114,10 +114,10 @@ public class SceneEditorArea extends JPanel {
                         sceneEditor.settingsPanel.updateUI();
                     }
                 } else if (mode == MODE_DELETE) {
-                    if (sceneEditor == null || sceneEditor.s == null) {
+                    if (sceneEditor == null || sceneEditor.scene == null) {
                         return;
                     }
-                    Scene s = sceneEditor.s;
+                    Scene s = sceneEditor.scene;
                     Scene.ActorInScene chosen = null;
                     for (Scene.ActorInScene actor : s.actors) {
                         BufferedImage i = actor.getImage();
@@ -171,17 +171,17 @@ public class SceneEditorArea extends JPanel {
         if (sceneEditor == null) {
             return new Dimension(1, 1);
         }
-        Scene scene = sceneEditor.s;
+        Scene scene = sceneEditor.scene;
         return new Dimension(scene.width, scene.height);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (sceneEditor == null || sceneEditor.s == null) {
+        if (sceneEditor == null || sceneEditor.scene == null) {
             return;
         }
-        Scene s = sceneEditor.s;
+        Scene s = sceneEditor.scene;
         g.setColor(s.bgColor);
         g.fillRect(0, 0, s.width, s.height);
         Collections.sort(s.actors);

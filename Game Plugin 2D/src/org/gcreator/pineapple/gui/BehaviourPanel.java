@@ -51,12 +51,14 @@ import org.gcreator.pineapple.validators.Glob;
  * Panel with all the events, fields, and stuff.
  * 
  * @author  Luís Reis
+ * @author  Serge Humphrey
  */
 public class BehaviourPanel extends JPanel implements Event.EventChangeListener {
 
     private static final long serialVersionUID = 1;
     public BehaviorObject bObj;
     public DocumentPane pane;
+    protected TableRowSorter<TableModel> sorter;
 
     /** 
      * Creates new form BehaviourPanel
@@ -76,7 +78,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
         fieldsTable.setModel(new StupidTableModel());
         TableColumn t;
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(new StupidTableModel(5));
+        sorter = new TableRowSorter<TableModel>(new StupidTableModel(5));
         fieldsTable.setRowSorter(sorter);
 
         t = new TableColumn(0, 20);
@@ -254,7 +256,19 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         }
 
         public Class<?> getColumnClass(int columnIndex) {
-            return getValueAt(0, columnIndex).getClass();
+            switch (columnIndex) {
+                case 0:
+                    return String.class;
+                case 1:
+                    return String.class;
+                case 2:
+                    return Boolean.class;
+                case 3:
+                    return Boolean.class;
+                case 4:
+                    return String.class;
+            }
+            return null;
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -300,7 +314,6 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
             }
             TableModelEvent e = new TableModelEvent(this, rowIndex, rowIndex, columnIndex, TableModelEvent.UPDATE);
             for (TableModelListener l : listeners) {
-
                 l.tableChanged(e);
             }
         }
@@ -354,15 +367,6 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
             break;
         }
     }
-//    for (Component c : cs) {
-//        if (c instanceof EventPanel) {
-//            EventPanel ev = (EventPanel) c;
-//            if (ev.getEvent().getType().equals(eventList.getSelectedValue())) {
-//                tabPane.remove(c);
-//                break;
-//            }
-//        }
-//    }
     eventList.updateUI();
     this.setModified(true);
     deleteEventButton.setEnabled(false);
@@ -370,6 +374,7 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
     bObj.fields.add(new BehaviorObject.Field("newField", "int"));
+    sorter.rowsInserted(bObj.fields.size()-1, bObj.fields.size()-1);
     fieldsTable.updateUI();
     this.setModified(true);
 }//GEN-LAST:event_addFieldButtonActionPerformed
@@ -378,8 +383,8 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     int[] rows = fieldsTable.getSelectedRows();
     for (int row = rows.length - 1; row >= 0; row--) {
         bObj.fields.remove(row);
+        sorter.rowsDeleted(row, row);
     }
-
     fieldsTable.getSelectionModel().setSelectionInterval(-1, -1);
     fieldsTable.updateUI();
     this.setModified(true);

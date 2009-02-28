@@ -45,7 +45,7 @@ import org.gcreator.pineapple.project.io.BasicFile;
 public class SceneEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
-    public Scene s = null;
+    public Scene scene = null;
     private BehaviourPanel panel = null;
     public SceneProperties sp = null;
     public SceneEditorArea sea = null;
@@ -58,8 +58,8 @@ public class SceneEditor extends DocumentPane {
     public SceneEditor(BasicFile f) {
         super(f);
         initComponents();
-        s = new Scene(f);
-        panel = new BehaviourPanel(s, this);
+        scene = new Scene(f);
+        panel = new BehaviourPanel(scene, this);
         panel.setVisible(true);
         tabs.add(panel, "Behavior");
         actorChooser.setResourceValidator(new ActorValidator());
@@ -72,12 +72,12 @@ public class SceneEditor extends DocumentPane {
         sea.updateUI();
         seaScrollPane.setViewportView(sea);
         seaScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-	seaScrollPane.getVerticalScrollBar().setBlockIncrement(64);
-	seaScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-	seaScrollPane.getHorizontalScrollBar().setBlockIncrement(64);
+        seaScrollPane.getVerticalScrollBar().setBlockIncrement(64);
+        seaScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        seaScrollPane.getHorizontalScrollBar().setBlockIncrement(64);
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
@@ -85,7 +85,7 @@ public class SceneEditor extends DocumentPane {
     public boolean save() {
         boolean success = false;
         try {
-            s.save(file);
+            scene.save(file);
             success = true;
         } catch (IOException ex) {
             Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);

@@ -28,7 +28,7 @@ import org.gcreator.pineapple.editors.SceneEditor;
 
 /**
  *
- * The panel for the scene's properties.
+ * The panel for the scene'scene properties.
  * 
  * @author Luís Reis
  */
@@ -45,9 +45,9 @@ public class SceneProperties extends javax.swing.JPanel {
     public SceneProperties(SceneEditor editor) {
         initComponents();
         this.editor = editor;
-        sceneWidthSpinner.setValue(new Integer(editor.s.width));
-        sceneHeightSpinner.setValue(new Integer(editor.s.height));
-        backgroundColorPanel.setBackground(editor.s.bgColor);
+        sceneWidthSpinner.setValue(new Integer(editor.scene.width));
+        sceneHeightSpinner.setValue(new Integer(editor.scene.height));
+        backgroundColorPanel.setBackground(editor.scene.bgColor);
     }
 
     /** This method is called from within the constructor to
@@ -144,22 +144,22 @@ public class SceneProperties extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void backgroundColorPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundColorPanelMouseClicked
-    Color c = JColorChooser.showDialog(this, "Select color", editor.s.bgColor);
+    Color c = JColorChooser.showDialog(this, "Select color", editor.scene.bgColor);
     if (c != null) {
-        editor.s.bgColor = c;
-        backgroundColorPanel.setBackground(editor.s.bgColor);
+        editor.scene.bgColor = c;
+        backgroundColorPanel.setBackground(editor.scene.bgColor);
         editor.sea.repaint();
     }
     editor.setModified(true);
 }//GEN-LAST:event_backgroundColorPanelMouseClicked
 
 private void sceneWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneWidthSpinnerStateChanged
-    editor.s.width = (Integer)sceneWidthSpinner.getValue();
+    editor.scene.width = (Integer)sceneWidthSpinner.getValue();
     editor.setModified(true);
 }//GEN-LAST:event_sceneWidthSpinnerStateChanged
 
 private void sceneHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneHeightSpinnerStateChanged
-    editor.s.height = (Integer)sceneHeightSpinner.getValue();
+    editor.scene.height = (Integer)sceneHeightSpinner.getValue();
     editor.setModified(true);
 }//GEN-LAST:event_sceneHeightSpinnerStateChanged
 
