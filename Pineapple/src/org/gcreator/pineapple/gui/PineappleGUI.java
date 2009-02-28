@@ -2235,26 +2235,43 @@ public class PineappleGUI implements EventHandler {
                 return false;
             }
             Object last = drop.getPath().getLastPathComponent();
-            if (last instanceof FolderTreeNode) {
-                ProjectFolder f = (ProjectFolder) ((FolderTreeNode) last).getElement();
+            if (last instanceof FolderTreeNode || last instanceof ProjectTreeNode) {
+                Iterable<ProjectElement> children;
+                ProjectFolder f = null;
+                Project p = null;
+                if (last instanceof ProjectTreeNode) {
+                    p = ((ProjectTreeNode) last).getProject();
+                    children = p.getFiles();
+                } else { // FolderTreeNode
+                    f = (ProjectFolder) ((FolderTreeNode) last).getElement();
+                    children = f.getChildren();
+                }
                 String newName = e.getName();
                 boolean done = false, changed;
                 int i = 1;
-                System.out.println("!DONE");
                 while (!done) {
                     changed = false;
-                    for (ProjectElement el : f.getChildren()) {
+                    for (ProjectElement el : children) {
                         if (el.getName().equals(newName)) {
-                            newName = e.getName() + "_" + i++;
+                            String s, l;
+                            int dot = e.getName().indexOf('.');
+                            if (dot < 0) {
+                                l = "";
+                            } else {
+                                l = e.getName().substring(dot);
+                            }
+                            s = e.getName().substring(0, dot);
+                            newName = s + "_" + i++ + l;
                             changed = true;
                             break;
                         }
                     }
                     done = !changed;
                 }
-                System.out.println("COPY " + e.getFile() + " TO " + f + " NEW NAME: " + newName);
-                e.getProject().getManager().copyFile(e.getFile(), f, newName);
-                System.out.println("COPY COMPLETE");
+                BasicFile nf = e.getProject().getManager().copyFile(e.getFile(), f, newName);
+                if (last instanceof ProjectTreeNode) {
+                    tree.updateUI();
+                }
             }
 
             /* Delete file if necessary */
