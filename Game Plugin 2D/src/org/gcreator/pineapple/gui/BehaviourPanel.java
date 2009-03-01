@@ -401,6 +401,9 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
                     @Override
                     public int read() throws IOException {
+                        if(buffer==null){
+                            buffer = "";
+                        }
                         if (pos >= buffer.length()) {
                             return -1;
                         }
@@ -409,6 +412,9 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
                     @Override
                     public int available() {
+                        if(buffer==null){
+                            buffer = "";
+                        }
                         return buffer.length()-pos;
                     }
                 };
@@ -437,11 +443,12 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
                 };
             }
         };
-        PineDLEditor p = new PineDLEditor(r);
+        final PineDLEditor p = new PineDLEditor(r);
         p.editor.getDocument().addDocumentListener(new DocumentListener() {
 
-            public void change(DocumentEvent e) {
+            public void change(DocumentEvent ev) {
                 setModified(true);
+                e.setPineDL(p.editor.getText());
             }
 
             public void insertUpdate(DocumentEvent e) {
