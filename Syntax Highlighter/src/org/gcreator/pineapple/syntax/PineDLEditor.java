@@ -24,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -49,10 +50,12 @@ public class PineDLEditor extends JPanel {
     private static final long serialVersionUID = 1L;
     private RTextScrollPane scroll;
     public RSyntaxTextArea editor;
+    protected Register data;
 
     public PineDLEditor(Register data) {
         this.setLayout(new BorderLayout());
         this.editor = new RSyntaxTextArea();
+        this.data = data;
 
         editor.restoreDefaultSyntaxHighlightingColorScheme();
 
@@ -167,4 +170,16 @@ public class PineDLEditor extends JPanel {
         }
         return stylingMenu;
     }
+
+    public boolean save() {
+        try {
+            BufferedOutputStream out = new BufferedOutputStream(data.getWriter());
+            out.write(editor.getText().getBytes());
+            out.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

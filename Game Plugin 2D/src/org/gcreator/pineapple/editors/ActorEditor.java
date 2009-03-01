@@ -118,6 +118,7 @@ public final class ActorEditor extends DocumentPane {
     public boolean saveBackend() {
         boolean saved = false;
         try {
+            behaviour.save();
             actor.save(file);
             saved = true;
         } catch (IOException ex) {

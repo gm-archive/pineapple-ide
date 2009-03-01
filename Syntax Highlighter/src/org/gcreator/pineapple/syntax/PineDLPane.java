@@ -2,7 +2,7 @@
     Copyright (C) 2009 Luís Reis<luiscubal@gmail.com>
     Copyright (C) 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
-    This file is part of PineDL Integration.
+    This file is part of Syntax Highlighter.
 
     PineDL Integration is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
