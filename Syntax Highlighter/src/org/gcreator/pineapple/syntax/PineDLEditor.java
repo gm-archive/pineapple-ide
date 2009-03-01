@@ -76,6 +76,9 @@ public class PineDLEditor extends JPanel {
         }
 
         scroll = new RTextScrollPane(getWidth(), getHeight(), editor, true);
+        editor.setBracketMatchingEnabled(true);
+        editor.setSyntaxEditingStyle(RSyntaxTextArea.PINEDL_SYNTAX_STYLE);
+        
         this.add(scroll, BorderLayout.CENTER);
     }
 
