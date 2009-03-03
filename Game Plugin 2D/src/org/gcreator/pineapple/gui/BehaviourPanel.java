@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.gcreator.pineapple.events.Event;
-import org.gcreator.pineapple.formats.BehaviorObject;
+import org.gcreator.pineapple.formats.ClassResource;
+import org.gcreator.pineapple.formats.ClassResource.Field;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.Register;
 import org.gcreator.pineapple.syntax.PineDLEditor;
@@ -56,21 +57,21 @@ import org.gcreator.pineapple.validators.Glob;
 public class BehaviourPanel extends JPanel implements Event.EventChangeListener {
 
     private static final long serialVersionUID = 1;
-    public BehaviorObject bObj;
+    public ClassResource res;
     public DocumentPane pane;
     protected TableRowSorter<TableModel> sorter;
 
     /** 
      * Creates new form BehaviourPanel
      * 
-     * @param obj The {@link BehaviorObject}.
+     * @param obj The {@link ClassResource}.
      * @param pane The {@link DocumentPane} that this panel should belong to.
      */
-    public BehaviourPanel(BehaviorObject obj, DocumentPane pane) {
+    public BehaviourPanel(ClassResource obj, DocumentPane pane) {
         initComponents();
-        bObj = obj;
+        res = obj;
         this.pane = pane;
-        for (Event e : bObj.events) {
+        for (Event e : res.events) {
             this.addTabForEvent(e);
             e.addChangeListener(this);
         }
@@ -252,7 +253,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         }
 
         public int getRowCount() {
-            return bObj.fields.size();
+            return res.fields.size();
         }
 
         public int getColumnCount() {
@@ -284,7 +285,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            BehaviorObject.Field f = bObj.fields.get(rowIndex);
+            ClassResource.Field f = res.fields.get(rowIndex);
             switch (columnIndex) {
                 case 0:
                     return f.getName();
@@ -302,7 +303,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         }
 
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            BehaviorObject.Field f = bObj.fields.get(rowIndex);
+            ClassResource.Field f = res.fields.get(rowIndex);
             switch (columnIndex) {
                 case 0:
                     f.setName(aValue.toString());
@@ -335,8 +336,8 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         }
     }
 private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventListValueChanged
-    if (bObj != null && eventList.getSelectedIndex() != -1) {
-        for (Event e : bObj.events) {
+    if (res != null && eventList.getSelectedIndex() != -1) {
+        for (Event e : res.events) {
             if (e.getType().equalsIgnoreCase(eventList.getSelectedValue().toString())) {
                 newEventButton.setEnabled(false);
                 deleteEventButton.setEnabled(true);
@@ -350,7 +351,7 @@ private void eventListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
 
 private void newEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEventButtonActionPerformed
     Event e = new Event(eventList.getSelectedValue().toString());
-    bObj.events.add(e);
+    res.events.add(e);
     addTabForEvent(e);
     e.addChangeListener(this);
     eventList.setSelectedIndex(-1);
@@ -366,11 +367,11 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
     Component[] cs = tabPane.getComponents();
     @SuppressWarnings("unchecked")
-    Vector<Event> evec = (Vector<Event>) bObj.events.clone();
+    Vector<Event> evec = (Vector<Event>) res.events.clone();
 
     for (Event e : evec) {
         if (e.getType().equals(eventList.getSelectedValue())) {
-            bObj.events.remove(e);
+            res.events.remove(e);
             break;
         }
     }
@@ -380,19 +381,36 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_deleteEventButtonActionPerformed
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed
-    bObj.fields.add(new BehaviorObject.Field("newField", "int"));
-    sorter.rowsInserted(bObj.fields.size() - 1, bObj.fields.size() - 1);
+    String name = "newField";
+    int i = 1;
+    boolean exists = true;
+    while (exists) {
+        boolean b = false;
+        for (ClassResource.Field f : res.fields) {
+            if (f.getName().equals(name)) {
+                name = "newField" + i++;
+                exists = true;
+                b = true;
+                break;
+            }
+        }
+        exists = b;
+    }
+    exists = false;
+    res.fields.add(new ClassResource.Field(name, "int"));
+    sorter.rowsInserted(res.fields.size() - 1, res.fields.size() - 1);
     fieldsTable.updateUI();
     this.setModified(true);
 }//GEN-LAST:event_addFieldButtonActionPerformed
 
 private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFieldButtonActionPerformed
     int[] rows = fieldsTable.getSelectedRows();
-    for (int row = rows.length - 1; row >= 0; row--) {
-        bObj.fields.remove(row);
+    for (int i = rows.length - 1; i >= 0; i--) {
+        int row = rows[i];
+        res.fields.remove(row);
         sorter.rowsDeleted(row, row);
+        fieldsTable.getSelectionModel().removeSelectionInterval(row, row);
     }
-    fieldsTable.getSelectionModel().setSelectionInterval(-1, -1);
     fieldsTable.updateUI();
     this.setModified(true);
 }//GEN-LAST:event_removeFieldButtonActionPerformed

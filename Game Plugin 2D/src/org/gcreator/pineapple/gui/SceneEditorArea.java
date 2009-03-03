@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,16 +30,22 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import org.gcreator.pineapple.editors.SceneEditor;
 import org.gcreator.pineapple.formats.Scene;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
- * Draws the actors(and tiles, in the future)
+ * Draws the components of scene.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
 public class SceneEditorArea extends JPanel {
 
@@ -48,13 +54,18 @@ public class SceneEditorArea extends JPanel {
     public static final int MODE_EDIT = 1;
     public static final int MODE_DELETE = 2;
     public int mode = MODE_ADD;
-    public SceneEditor sceneEditor = null;
+    public SceneEditor editor = null;
     public Scene.ActorInScene selection = null;
+    protected HashMap<BasicFile, BufferedImage> imageCache;
+    
     ActorProperties ap;
     private Point dragOffset;
 
-    public SceneEditorArea() {
-        addMouseListener(new MouseAdapter() {
+    public SceneEditorArea(SceneEditor e) {
+        this.editor = e;
+        this.imageCache = new HashMap<BasicFile, BufferedImage>(2);
+
+        this.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent evt) {
@@ -63,23 +74,22 @@ public class SceneEditorArea extends JPanel {
                 }
                 
                 if (mode == MODE_ADD) {
-                    BasicFile f = sceneEditor.actorChooser.getSelectedFile();
+                    BasicFile f = editor.actorChooser.getSelectedFile();
                     if (f != null) {
-                        Scene s = sceneEditor.scene;
-                        Scene.ActorInScene a = new Scene.ActorInScene();
-                        a.bf = f;
+                        Scene s = editor.scene;
+                        Scene.ActorInScene a = new Scene.ActorInScene(f);
                         a.x = evt.getX();
                         a.y = evt.getY();
                         s.actors.add(a);
                         selection = a;
                         repaint();
-                        sceneEditor.setModified(true);
+                        editor.setModified(true);
                     }
                 } else if (mode == MODE_EDIT) {
-                    if (sceneEditor == null || sceneEditor.scene == null) {
+                    if (editor == null || editor.scene == null) {
                         return;
                     }
-                    Scene s = sceneEditor.scene;
+                    Scene s = editor.scene;
                     /* Select Actor */
                     Scene.ActorInScene oldSelection = selection;
                     selection = null;
@@ -103,21 +113,19 @@ public class SceneEditorArea extends JPanel {
                         }
                     }
                     if (oldSelection != selection) {
-                        sceneEditor.settingsPanel.removeAll();
-                        if (selection == null) {
-                            sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
-                        } else {
+                        editor.settingsPanel.removeAll();
+                        if (selection != null) {
                             ap = new ActorProperties(selection, SceneEditorArea.this);
-                            sceneEditor.settingsPanel.add(ap, BorderLayout.CENTER);
+                            editor.settingsPanel.add(ap, BorderLayout.CENTER);
                         }
                         repaint();
-                        sceneEditor.settingsPanel.updateUI();
+                        editor.settingsPanel.updateUI();
                     }
                 } else if (mode == MODE_DELETE) {
-                    if (sceneEditor == null || sceneEditor.scene == null) {
+                    if (editor == null || editor.scene == null) {
                         return;
                     }
-                    Scene s = sceneEditor.scene;
+                    Scene s = editor.scene;
                     Scene.ActorInScene chosen = null;
                     for (Scene.ActorInScene actor : s.actors) {
                         BufferedImage i = actor.getImage();
@@ -138,12 +146,11 @@ public class SceneEditorArea extends JPanel {
                         }
                     }
                     s.actors.remove(chosen);
-                    sceneEditor.setModified(true);
+                    editor.setModified(true);
                     if (selection == chosen) {
                         selection = null;
-                        sceneEditor.settingsPanel.removeAll();
-                        sceneEditor.settingsPanel.add(sceneEditor.sp, BorderLayout.CENTER);
-                        sceneEditor.settingsPanel.repaint();
+                        editor.settingsPanel.removeAll();
+                        editor.settingsPanel.repaint();
                         if (ap != null) {
                             ap.update();
                         }
@@ -159,7 +166,7 @@ public class SceneEditorArea extends JPanel {
                 if (selection != null) {
                     selection.x = e.getX() + dragOffset.x;
                     selection.y = e.getY() + dragOffset.y;
-                    sceneEditor.setModified(true);
+                    editor.setModified(true);
                     repaint();
                 }
             }
@@ -167,33 +174,96 @@ public class SceneEditorArea extends JPanel {
     }
 
     @Override
+    public int getWidth() {
+        return editor.scene.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return editor.scene.getHeight();
+    }
+
+    @Override
+    public Dimension getSize() {
+        return new Dimension(getWidth(), getHeight());
+    }
+
+    @Override
     public Dimension getPreferredSize() {
-        if (sceneEditor == null) {
-            return new Dimension(1, 1);
-        }
-        Scene scene = sceneEditor.scene;
-        return new Dimension(scene.width, scene.height);
+        return getSize();
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return getSize();
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return getSize();
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (sceneEditor == null || sceneEditor.scene == null) {
+        if (editor == null || editor.scene == null) {
             return;
         }
-        Scene s = sceneEditor.scene;
-        g.setColor(s.bgColor);
-        g.fillRect(0, 0, s.width, s.height);
+        Scene s = editor.scene;
+        if (s.isBackgroundColorDrawn()) {
+            g.setColor(s.getBackgroundColor());
+            g.fillRect(0, 0, s.getWidth(), s.getHeight());
+        }
+        drawBackgrounds(g);
         Collections.sort(s.actors);
         for (Scene.ActorInScene actor : s.actors) {
             BufferedImage i = actor.getImage();
-            if (i != null) {
-                g.drawImage(i, actor.x, actor.y, null);
-            }
-            if (actor == selection && mode == MODE_EDIT) {
+            g.drawImage(i, actor.x, actor.y, null);
+            if (actor == selection) {
                 g.setColor(Color.YELLOW);
                 g.drawRect(actor.x, actor.y, i.getWidth(), i.getHeight());
             }
+
         }
+    }
+
+    private void drawBackgrounds(Graphics g) {
+        Scene s = editor.scene;
+        for (Scene.Background b : s.backgrounds) {
+            if (b.image == null) {
+                continue;
+            }
+            BufferedImage img = getImage(b.image);
+            if (img == null) {
+                continue;
+            }
+            for (int yy = 0; b.y + (img.getHeight()*yy) < s.getHeight(); yy++) {
+                for (int xx = 0; b.x + (img.getWidth()*xx) < s.getWidth(); xx++) {
+                    g.drawImage(img, b.x + (img.getWidth()*xx), b.y + (img.getHeight()*yy), null);
+                    if (!b.hrepeat) {
+                        break;
+                    }
+                }
+                if (!b.vrepeat) {
+                    break;
+                }
+            }
+
+        }
+    }
+
+    private BufferedImage getImage(BasicFile f) {
+        if (!imageCache.containsKey(f)) {
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(f.getReader());
+            } catch (IOException ex) {
+                Logger.getLogger(SceneEditorArea.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (img != null) {
+                imageCache.put(f, img);
+            }
+        }
+        return imageCache.get(f);
     }
 }

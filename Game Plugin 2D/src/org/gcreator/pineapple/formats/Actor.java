@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,18 @@ package org.gcreator.pineapple.formats;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -57,47 +64,30 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * An utility class to load and save Actor data.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
-public class Actor extends BehaviorObject {
+public class Actor extends ClassResource {
 
     public static final double MIN_VERSION = 1.003D;
     public static final double MAX_VERSION = 2.0D;
     /**
      * The actor version.
      */
-    public static final double VERSION = 1.003D;
-    /**
-     * The actor's z coordinate
-     */
-    public float z = 0;
-    
-    /**
-     * The sprite's image
-     */
-    public BasicFile image = null;
+    public static final double VERSION = 1.100D;
 
     /**
-     * Whether to blit the sprite's image automatically during the game
-     * (as opposed to manually, which the programmer must add a function to
-     * the draw event to blit the sprite)
+     * Where the actor's properties are stored.
      */
-    public boolean renderAutomatically = true;
-    
-    /**
-     * The parent of this actor. May be <tt>null</tt>.
-     */
-    public BasicFile parent;
-    
-    /**
-     * If an actor is <tt>barren</tt>, then it can have no children, just like
-     * <tt>final</tt> classes in Java.
-     */
-    public boolean barren = false;
-    
+    protected Hashtable<String, Object> properties;
+
     /**
      * Creates a new actor
      */
     public Actor() {
+        properties = new Hashtable<String, Object>();
+        properties.put("barren", false);
+        properties.put("render-automatically", true);
+        properties.put("z", 0.0F);
     }
 
     /**
@@ -110,8 +100,127 @@ public class Actor extends BehaviorObject {
      */
     public Actor(BasicFile file) throws SAXException, IOException {
         this();
+        int i = file.getName().indexOf('.');
+        if (i > 0) {
+            this.setName(file.getName().substring(0, i));
+        }
         new ActorImporter(this, new BufferedInputStream(file.getReader()));
     }
+
+    /**
+     * Gets the name of this actor.
+     * 
+     * @return This Actor's name.
+     */
+    public String getName() {
+        return properties.get("name").toString();
+    }
+
+    /**
+     * Sets this actor's name.
+     *
+     * @param name The new name for this actor.
+     */
+    public void setName(String name) {
+        properties.put("name", name);
+    }
+
+    /**
+     * Gets whether this actor is barren (can have children) or not.
+     *
+     * @return Whether this actor is barren or not.
+     * @see #setBarren(barren)
+     */
+    public boolean isBarren() {
+        return (Boolean)properties.get("barren");
+    }
+
+    /**
+     * Sets whether this actor is barren.
+     *
+     * @param barren Whether or not this actor can have children.
+     */
+    public void setBarren(boolean barren) {
+        properties.put("barren", barren);
+    }
+
+    /**
+     * Gets the parent of this actor, <tt>null</tt> if it has
+     * not been set.
+     *
+     * @return This actor's parent.
+     * @see #getParent()
+     */
+    public BasicFile getParent() {
+        return (BasicFile)properties.get("parent");
+    }
+
+    /**
+     * Sets this actor's parent.
+     *
+     * @param parent The new parent for this actor.
+     */
+    public void setParent(BasicFile parent) {
+        properties.put("parent", parent);
+    }
+
+    /**
+     * Get's this actor's image, or <tt>null</tt> if it
+     * has not been set.
+     *
+     * @return This actor's image.
+     */
+    public BasicFile getImage() {
+        return (BasicFile)properties.get("image");
+    }
+
+    /**
+     * Sets this actor's image.
+     *
+     * @param image The new image for this actor.
+     */
+    public void setImage(BasicFile image) {
+        properties.put("image", image);
+    }
+
+    /**
+     * Gets whether or not this actor's image is blitted
+     * automatically during the game.
+     *
+     * @return Wheter or not this actor's image should be
+     * drawn automatically during the game.
+     */
+    public boolean isRenderedAutomatically() {
+        return (Boolean)properties.get("render-automatically");
+    }
+
+    /**
+     * Sets whether to render this actor's image during the game.
+     *
+     * @param auto Whether or not to render this actor's image.
+     */
+    public void setRenderedAutomatically(boolean auto) {
+        properties.put("render-automatically", auto);
+    }
+
+    /**
+     * Get's this actor's depth (z).
+     *
+     * @return This actor's z co-ordiante.
+     */
+    public float getZ() {
+        return (Float)properties.get("z");
+    }
+
+    /**
+     * Sets this actor's z co-ordinate.
+     *
+     * @param z The new depth value for this actor.
+     */
+    public void setZ(float z) {
+        properties.put("z", z);
+    }
+
 
     //<editor-fold defaultstate="collapsed" desc="Actor Saving">
     /**
@@ -137,9 +246,6 @@ public class Actor extends BehaviorObject {
         doc.setXmlVersion("1.0");
         Element root = doc.createElement("actor");
         root.setAttribute("version", Double.toString(VERSION));
-        root.setAttribute("z", Float.toString(this.z));
-        root.setAttribute("barren", Boolean.toString(this.barren));
-        root.setAttribute("render-automatically", Boolean.toString(this.renderAutomatically));
 
         /* Fields */
         Element fields = doc.createElement("fields");
@@ -155,23 +261,6 @@ public class Actor extends BehaviorObject {
         }
         root.appendChild(fields);
 
-        /* Image */
-        Element img = doc.createElement("image");
-        if (this.image != null) {
-            img.setTextContent(this.image.getPath());
-        } else {
-            img.setTextContent("");
-        }
-        root.appendChild(img);
-        
-        /* Parent */
-        Element prnt = doc.createElement("parent");
-        if (this.parent != null) {
-            prnt.setTextContent(this.parent.getPath());
-        } else {
-            prnt.setTextContent("");
-        }
-        root.appendChild(prnt);
 
         /* Events */
         Element events = doc.createElement("events");
@@ -184,6 +273,18 @@ public class Actor extends BehaviorObject {
 
         root.appendChild(events);
 
+        /* Properties */
+        Element properties = doc.createElement("properties");
+        Enumeration<Object> values = this.properties.elements();
+        for (String key : this.properties.keySet()) {
+            Object value = values.nextElement();
+            Element property = doc.createElement("property");
+            property.setAttribute("name", key);
+            property.setAttribute("value", propertyString(value));
+            properties.appendChild(property);
+        }
+        root.appendChild(properties);
+
         doc.appendChild(root);
         // Prepare the DOM document for writing
         Source source = new DOMSource(doc);
@@ -194,6 +295,7 @@ public class Actor extends BehaviorObject {
         BufferedOutputStream out = new BufferedOutputStream(file.getWriter());
         result = new StreamResult(out);
         xformer = TransformerFactory.newInstance().newTransformer();
+        xformer.setOutputProperty(OutputKeys.INDENT, "yes");
         xformer.transform(source, result);
         out.close();
     }
@@ -214,8 +316,7 @@ public class Actor extends BehaviorObject {
         private boolean parsingFields;
         private boolean parsingEvents;
         private boolean parsingEvent;
-        private boolean parsingImage;
-        private boolean parsingParent;
+        private boolean parsingProperties;
         private Event curEvent;
         private Actor actor;
 
@@ -236,9 +337,6 @@ public class Actor extends BehaviorObject {
                 } else {
                     parsing = true;
                 }
-                actor.z = Float.valueOf(atts.getValue("z"));
-                actor.renderAutomatically = Boolean.valueOf(atts.getValue("render-automatically"));
-                actor.barren = Boolean.valueOf(atts.getValue("barren"));
                 return;
             }
 
@@ -250,14 +348,22 @@ public class Actor extends BehaviorObject {
                 parsingFields = true;
             } else if (localName.equalsIgnoreCase("events")) {
                 parsingEvents = true;
-            } else if (localName.equalsIgnoreCase("image")) {
-                parsingImage = true;
-            } else if (localName.equalsIgnoreCase("parent")) {
-                parsingParent = true;
+            } else if (localName.equalsIgnoreCase("properties")) {
+                parsingProperties = true;
             }
 
-            if (parsingImage) {
-            } else if (parsingParent) {
+            if (parsingProperties && localName.equalsIgnoreCase("property")) {
+                String name, value;
+                name = atts.getValue("name");
+                value = atts.getValue("value");
+                if (name != null && value != null) {
+                    actor.properties.put(name, propertyValue(name, value));
+                } else if (name == null) {
+                    System.err.println("Warning: null property name. Property ignored");
+                } else {
+                    System.err.println("Warning: null property value. Property ignored");
+                }
+                
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
                 name = atts.getValue("name");
@@ -290,16 +396,15 @@ public class Actor extends BehaviorObject {
             if (!parsing) {
                 return;
             }
-            if (localName.equalsIgnoreCase("actor") && parsing && !parsingEvents && !parsingEvent && !parsingFields && !parsingImage && !parsingParent) {
+            if (localName.equalsIgnoreCase("actor") && parsing &&
+                    !parsingEvents && !parsingEvent && !parsingFields && !parsingProperties) {
                 parsing = false;
                 return;
             }
             
 
-            if (parsingImage) {
-                parsingImage = false;
-            } else if (parsingParent) {
-                parsingParent = false;
+            if (parsingProperties && localName.equalsIgnoreCase("properties")) {
+                parsingProperties = false;
             } else if (parsingFields && localName.equalsIgnoreCase("fields")) {
                 parsingFields = false;
             } else if (parsingEvents && localName.equalsIgnoreCase("events")) {
@@ -329,35 +434,9 @@ public class Actor extends BehaviorObject {
 
         public void characters(char[] ch, int start, int length) throws SAXException {
             String s = new String(ch, start, length);
-            if (parsingImage) {
-                actor.image = getFile(s, PineappleCore.getProject());
-            } else if (parsingParent) {
-                actor.parent = getFile(s, PineappleCore.getProject());
-            } else if (parsingEvent) {
+            if (parsingEvent) {
                 curEvent.setPineDL(curEvent.getPineDL()+s);
             }
-        }
-
-        private BasicFile getFile(String s, Project p) {
-            for (ProjectElement e : p.getFiles()) {
-                if (e instanceof ProjectFolder) {
-                    return getFile(s, (ProjectFolder) e);
-                } else if (e.getFile().getPath().equals(s)) {
-                    return e.getFile();
-                }
-            }
-            return null;
-        }
-
-        private BasicFile getFile(String s, ProjectFolder p) {
-            for (ProjectElement e : p.getChildren()) {
-                if (e instanceof ProjectFolder) {
-                    return getFile(s, (ProjectFolder) e);
-                } else if (e.getFile().getPath().equals(s)) {
-                    return e.getFile();
-                }
-            }
-            return null;
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
@@ -372,5 +451,29 @@ public class Actor extends BehaviorObject {
             /* No one cares. */
         }
     }
+
     //</editor-fold>
+
+    private static String propertyString(Object value) {
+        if (value instanceof BasicFile) {
+            return ((BasicFile)value).getPath();
+        } else {
+            return value.toString();
+        }
+    }
+
+    private static Object propertyValue(String name, String value) {
+        if (name.equals("image") || name.equals("parent")) {
+            try {
+                return PineappleCore.getProject().getManager().getFile(value);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Actor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (name.equals("z")) {
+            return Float.valueOf(value);
+        } else if (name.equals("render-automatically") || name.equals("barren")) {
+            return Boolean.valueOf(value);
+        }
+        return value;
+    }
 }

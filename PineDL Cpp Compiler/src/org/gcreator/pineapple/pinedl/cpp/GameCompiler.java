@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -356,9 +356,9 @@ public class GameCompiler {
                 fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
-                if (a.image != null) {
+                if (a.getImage() != null) {
                     fos.write("\t\ttexture = new Texture(\"res/".getBytes());
-                    fos.write(a.image.getName().getBytes());
+                    fos.write(a.getImage().getName().getBytes());
                     fos.write("\");\n".getBytes());
                 }
                 fos.write(outputEvent(a, evt).getBytes());
@@ -401,9 +401,9 @@ public class GameCompiler {
 
         if (!hasCreate) {
             fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
-            if (a.image != null) {
+            if (a.getImage() != null) {
                 fos.write("\t\ttexture = new Texture(\"res/".getBytes());
-                fos.write(a.image.getName().getBytes());
+                fos.write(a.getImage().getName().getBytes());
                 fos.write("\");\n".getBytes());
             }
             fos.write("\t}\n".getBytes());
@@ -448,7 +448,7 @@ public class GameCompiler {
         fos.write(("\t\tsetBackground(new Color(" + cs + "));\n").getBytes());
 
         for (Scene.ActorInScene a : scene.actors) {
-            String aname = a.bf.getName();
+            String aname = a.file.getName();
             aname = aname.substring(0, aname.lastIndexOf('.'));
             fos.write(("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + "));\n").getBytes());
         }

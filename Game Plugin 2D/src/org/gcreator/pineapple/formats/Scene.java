@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,11 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,10 +48,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.gcreator.pineapple.events.Event;
 import org.gcreator.pineapple.core.PineappleCore;
-import org.gcreator.pineapple.project.Project;
-import org.gcreator.pineapple.project.ProjectElement;
-import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.util.ListeningVector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -60,24 +61,47 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * Core class for scene handling.
+ * Represents a Scene.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
-public class Scene extends BehaviorObject {
+public class Scene extends ClassResource {
 
-    public int width = 640;
-    public int height = 480;
-    public Color bgColor = Color.BLACK;
     public static final double MIN_VERSION = 1.0D;
     public static final double MAX_VERSION = 2.0D;
     public static final double VERSION = 1.0D;
-    public Vector<ActorInScene> actors = new Vector<ActorInScene>();
-
-    public Scene() {
+    public ListeningVector<ActorInScene> actors = new ListeningVector<ActorInScene>();
+    public Vector<Background> backgrounds = new Vector<Background>();
+    public Hashtable<String, Object> properties;
+    protected static BufferedImage unknownImage;
+    
+    static {
+        try {
+            unknownImage = ImageIO.read(Scene.class.getResource("/org/gcreator/pineapple/images/null.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    /**
+     * Creates a new scene.
+     */
+    public Scene() {
+        properties = new Hashtable<String, Object>();
+        properties.put("width", new Integer(640));
+        properties.put("height", new Integer(480));
+        properties.put("draw-background-color", Boolean.TRUE);
+        properties.put("background-color", Color.GRAY);
+    }
+
+    /**
+     * Creates a new scene and loads data from a file.
+     * 
+     * @param file The file to read data from.
+     */
     public Scene(BasicFile file) {
+        this();
         try {
             new SceneImporter(this, new BufferedInputStream(file.getReader()));
         } catch (SAXException ex) {
@@ -87,33 +111,99 @@ public class Scene extends BehaviorObject {
         }
     }
 
-    public void setActor(ActorInScene unit, String path, Project p) {
-        for (ProjectElement e : p.getFiles()) {
-            if (e instanceof ProjectFolder) {
-                setActor(unit, path, (ProjectFolder) e);
-            } else if (e.getFile().getPath().equals(path)) {
-                unit.bf = e.getFile();
-                break;
-            }
-        }
+    /**
+     * Gets this scene's width.
+     *
+     * @return This scene's width.
+     */
+    public int getWidth() {
+        return (Integer)properties.get("width");
     }
 
-    public void setActor(ActorInScene unit, String path, ProjectFolder p) {
-        for (ProjectElement e : p.getChildren()) {
-            if (e instanceof ProjectFolder) {
-                setActor(unit, path, (ProjectFolder) e);
-            } else if (e.getFile().getPath().equals(path)) {
-                unit.bf = e.getFile();
-                break;
-            }
-        }
+    /**
+     * Sets this scene's width.
+     *
+     * @param width The new value for this scene's width.
+     */
+    public void setWidth(int width) {
+        properties.put("width", new Integer(width));
     }
 
+    /**
+     * Gets this scene's height.
+     *
+     * @return This scene's height.
+     */
+    public int getHeight() {
+        return (Integer)properties.get("height");
+    }
+
+    /**
+     * Sets this scene's height.
+     *
+     * @param height The new value for this scene's height.
+     */
+    public void setHeight(int height) {
+        properties.put("height", new Integer(height));
+    }
+
+    /**
+     * Gets the background color for this scene.
+     *
+     * @return This scene's background color.
+     */
+    public Color getBackgroundColor() {
+        return (Color)properties.get("background-color");
+    }
+
+    /**
+     * Sets the background color.
+     *
+     * @param color The new background color for this scene.
+     */
+    public void setBackgroundColor(Color color) {
+        properties.put("background-color", color);
+    }
+
+    /**
+     * Gets whether the background color is drawn for this scene.
+     *
+     * @return Whether the background color is drawn or not.
+     */
+    public boolean isBackgroundColorDrawn() {
+        return (Boolean)properties.get("draw-background-color");
+    }
+
+    /**
+     * Sets whether to draw the background color or not,
+     *
+     * @param draw Whether to draw the background color.
+     */
+    public void setDrawBackgroundColor(boolean draw) {
+        properties.put("draw-background-color", draw);
+    }
+
+    //<editor-fold  defaultstate="collapsed" desc="ActorInScene">
+    /**
+     * An actor inside a scene.
+     */
     public static class ActorInScene implements Comparable<ActorInScene> {
 
-        public BasicFile bf = null;
-        public int x = 0;
-        public int y = 0;
+        public BasicFile file;
+        public int x;
+        public int y;
+        public Actor actor;
+
+        public ActorInScene(BasicFile file) {
+            this.file = file;
+            try {
+                this.actor = new Actor(file);
+            } catch (SAXException ex) {
+                Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         public int compareTo(ActorInScene other) {
 
@@ -121,14 +211,12 @@ public class Scene extends BehaviorObject {
             float oz = 0;
 
             try {
-                Actor a = new Actor(bf);
-                z = a.z;
+                z = actor.getZ();
             } catch (Exception e) {
             }
 
             try {
-                Actor a = new Actor(other.bf);
-                oz = a.z;
+                oz = other.actor.getZ();
             } catch (Exception e) {
             }
 
@@ -140,17 +228,21 @@ public class Scene extends BehaviorObject {
         }
 
         public BufferedImage getImage() {
-            if (bf == null) {
-                return null;
+            BufferedImage img = null;
+            if (file != null) {
+                try {
+                    return ImageIO.read(actor.getImage().getReader());
+                } catch (Exception e) {
+                    img = null;
+                }
             }
-            try {
-                Actor a = new Actor(bf);
-                return ImageIO.read(a.image.getReader());
-            } catch (Exception e) {
-                return null;
+            if (img == null) {
+                img = unknownImage;
             }
+            return img;
         }
     }
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Scene Saving">
     /**
      * Saves the scene to a {@lin BasicFile}.
@@ -176,14 +268,6 @@ public class Scene extends BehaviorObject {
         Element root = doc.createElement("scene");
         root.setAttribute("version", Double.toString(VERSION));
 
-        Element size = doc.createElement("size");
-        size.setAttribute("width", String.valueOf(Scene.this.width));
-        size.setAttribute("height", String.valueOf(Scene.this.height));
-        root.appendChild(size);
-
-        Element bgcolor = doc.createElement("bgcolor");
-        bgcolor.setAttribute("rgb", String.valueOf(Scene.this.bgColor.getRGB()));
-        root.appendChild(bgcolor);
 
         /* Fields */
         Element fields = doc.createElement("fields");
@@ -212,15 +296,50 @@ public class Scene extends BehaviorObject {
         /* Actors */
         Element actors = doc.createElement("actors");
         for (ActorInScene a : this.actors) {
-            if (a.bf != null) {
+            if (a.file != null) {
                 Element actor = doc.createElement("actor");
                 actor.setAttribute("x", String.valueOf(a.x));
                 actor.setAttribute("y", String.valueOf(a.y));
-                actor.setAttribute("file", String.valueOf(a.bf.getPath()));
+                actor.setAttribute("file", String.valueOf(a.file.getPath()));
                 actors.appendChild(actor);
             }
         }
         root.appendChild(actors);
+
+        /* Backgrounds */
+        Element backgrounds = doc.createElement("backgrounds");
+        for (Background b : this.backgrounds) {
+            Element background = doc.createElement("background");
+            if (b.image != null) {
+                background.setAttribute("image", b.image.getPath());
+            }
+            
+            background.setAttribute("hspeed", Double.toString(b.hspeed));
+            background.setAttribute("vspeed", Double.toString(b.vspeed));
+            background.setAttribute("x", Integer.toString(b.x));
+            background.setAttribute("y", Integer.toString(b.y));
+            background.setAttribute("hrepeat", Boolean.toString(b.hrepeat));
+            background.setAttribute("vrepeat", Boolean.toString(b.vrepeat));
+            background.setAttribute("draw-image", Boolean.toString(b.drawImage));
+            
+            backgrounds.appendChild(background);
+        }
+        root.appendChild(backgrounds);
+
+        /* Properties */
+        Element properties = doc.createElement("properties");
+        Enumeration<Object> values = this.properties.elements();
+        for (String key : this.properties.keySet()) {
+            Object value = values.nextElement();
+            if (key.equals("background-color")) {
+                value = String.valueOf(((Color)value).getRGB());
+            }
+            Element property = doc.createElement("property");
+            property.setAttribute("name", key);
+            property.setAttribute("value", String.valueOf(value));
+            properties.appendChild(property);
+        }
+        root.appendChild(properties);
 
         doc.appendChild(root);
         // Prepare the DOM document for writing
@@ -237,7 +356,7 @@ public class Scene extends BehaviorObject {
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SceneImporter">
-    private final class SceneImporter implements ContentHandler {
+    private static final class SceneImporter implements ContentHandler {
 
         public SceneImporter(Scene s, InputStream in) throws SAXException, IOException {
             this.scene = s;
@@ -245,14 +364,16 @@ public class Scene extends BehaviorObject {
             r.setContentHandler(this);
             r.parse(new InputSource(in));
             in.close();
-
         }
+        
         private Locator locator;
         private boolean parsing;
         private boolean parsingActors;
         private boolean parsingEvents;
         private boolean parsingFields;
         private boolean parsingEvent;
+        private boolean parsingBackgrounds;
+        private boolean parsingProperties;
         private Event curEvent;
         private Scene scene;
 
@@ -261,7 +382,6 @@ public class Scene extends BehaviorObject {
         }
 
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-            System.out.println("parsing " + localName);
             if (localName.equalsIgnoreCase("scene")) {
                 String version = atts.getValue("version");
                 double v = Double.valueOf(version);
@@ -281,24 +401,6 @@ public class Scene extends BehaviorObject {
                 return;
             }
 
-            if (localName.equalsIgnoreCase("size")) {
-                String width = atts.getValue("width");
-                String height = atts.getValue("height");
-                if (width != null) {
-                    scene.width = Integer.parseInt(width);
-                }
-                if (height != null) {
-                    scene.height = Integer.parseInt(height);
-                }
-            }
-
-            if (localName.equalsIgnoreCase("bgcolor")) {
-                String color = atts.getValue("rgb");
-                if (color != null) {
-                    scene.bgColor = new Color(Integer.parseInt(color));
-                }
-            }
-
 
             if (localName.equalsIgnoreCase("fields")) {
                 parsingFields = true;
@@ -306,9 +408,35 @@ public class Scene extends BehaviorObject {
                 parsingEvents = true;
             } else if (localName.equalsIgnoreCase("actors")) {
                 parsingActors = true;
+            } else if (localName.equalsIgnoreCase("backgrounds")) {
+                parsingBackgrounds = true;
+            } else if (localName.equalsIgnoreCase("properties")) {
+                parsingProperties = true;
             }
 
-            if (parsingFields && localName.equalsIgnoreCase("field")) {
+            if (parsingProperties && localName.equalsIgnoreCase("property")) {
+                String name, value;
+                name = atts.getValue("name");
+                value = atts.getValue("value");
+                if (name != null && value != null) {
+                    Object v;
+                    if (name.equals("width") || name.equals("height")) {
+                        v = Integer.parseInt(value);
+                    } else if (name.equals("draw-background-color")) {
+                        v = Boolean.parseBoolean(value);
+                    } else if (name.equals("background-color")) {
+                        v = Color.decode(value);
+                    } else {
+                        v = value;
+                    }
+                    scene.properties.put(name, v);
+                } else if (name == null) {
+                    System.err.println("Warning: null property name. Property ignored");
+                } else {
+                    System.err.println("Warning: null property value. Property ignored");
+                }
+
+            } else if (parsingFields && localName.equalsIgnoreCase("field")) {
                 String name, type, defaultValue, isStatic, isFinal;
                 name = atts.getValue("name");
                 type = atts.getValue("type");
@@ -325,30 +453,58 @@ public class Scene extends BehaviorObject {
 
                 this.scene.fields.add(f);
             } else if (parsingEvents && localName.equalsIgnoreCase("event")) {
-                System.out.println("Starting");
                 String type = atts.getValue("type");
-                System.out.println("Type is " + type);
                 if (type == null) {
                     System.err.println("ERROR: No type for event.");
                     return;
                 }
                 curEvent = new Event(type);
-                System.out.println("Starting event" + curEvent.getType());
                 parsingEvent = true;
                 curEvent.setPineDL("");
             } else if (parsingActors && localName.equalsIgnoreCase("actor")) {
-                ActorInScene unit = new ActorInScene();
-                unit.x = Integer.parseInt(atts.getValue("x"));
-                unit.y = Integer.parseInt(atts.getValue("y"));
+                BasicFile file = null;
                 String path = atts.getValue("file");
-                setActor(unit, path, PineappleCore.getProject());
-                System.out.println("x=" + unit.x + ",y=" + unit.y + ",path=" + path);
-                actors.add(unit);
+                try {
+                    if (path != null) {
+                        file = PineappleCore.getProject().getManager().getFile(path);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (file != null) {
+                    ActorInScene unit = new ActorInScene(file);
+                    unit.x = Integer.parseInt(atts.getValue("x"));
+                    unit.y = Integer.parseInt(atts.getValue("y"));
+                    scene.actors.add(unit);
+                } else {
+                    System.err.println("Warning: error creating file. Tag ignored.");
+                }
+                
+            } else if (parsingBackgrounds && localName.equalsIgnoreCase("background")) {
+                Background b = new Background();
+                String s = atts.getValue("image");
+                if (s != null) {
+                    try {
+                        b.image = PineappleCore.getProject().getManager().getFile(s);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, "Could not load image "+s, ex);
+                    }
+                }
+                b.hspeed = Double.parseDouble(atts.getValue("hspeed"));
+                b.vspeed = Double.parseDouble(atts.getValue("vspeed"));
+                b.x = Integer.parseInt(atts.getValue("x"));
+                b.y = Integer.parseInt(atts.getValue("y"));
+                b.hrepeat = Boolean.parseBoolean(atts.getValue("hrepeat"));
+                b.vrepeat = Boolean.parseBoolean(atts.getValue("vrepeat"));
+                b.drawImage = Boolean.parseBoolean(atts.getValue("draw-image"));
+
+                scene.backgrounds.add(b);
             }
         }
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (localName.equalsIgnoreCase("actor") && !parsingEvents && !parsingEvent && !parsingFields && !parsingActors) {
+            if (localName.equalsIgnoreCase("actor") && !parsingEvents && !parsingEvent && 
+                    !parsingFields && !parsingActors && !parsingProperties) {
                 parsing = false;
                 return;
             }
@@ -356,15 +512,18 @@ public class Scene extends BehaviorObject {
                 return;
             }
 
-            if (parsingFields && localName.equalsIgnoreCase("fields")) {
+            if (parsingProperties && localName.equalsIgnoreCase("properties")) {
+                parsingProperties = false;
+            } else if (parsingFields && localName.equalsIgnoreCase("fields")) {
                 parsingFields = false;
-            } else if (parsingActors && localName.equalsIgnoreCase("actorss")) {
+            } else if (parsingActors && localName.equalsIgnoreCase("actors")) {
                 parsingActors = false;
             } else if (parsingEvents && localName.equalsIgnoreCase("events")) {
                 parsingEvents = false;
+            } else if (parsingBackgrounds && localName.equalsIgnoreCase("backgrounds")) {
+                parsingBackgrounds = false;
             } else if (parsingEvents && parsingEvent && localName.equalsIgnoreCase("event")) {
                 parsingEvent = false;
-                System.out.println("Add event");
                 scene.events.add(curEvent);
                 curEvent = null;
             }
@@ -389,7 +548,7 @@ public class Scene extends BehaviorObject {
         public void characters(char[] ch, int start, int length) throws SAXException {
             String s = new String(ch, start, length);
             if (parsingEvent) {
-                curEvent.setPineDL(curEvent.getPineDL()+s);
+                curEvent.setPineDL(curEvent.getPineDL() + s);
             }
         }
 
@@ -406,4 +565,17 @@ public class Scene extends BehaviorObject {
         }
     }
     //</editor-fold>
+
+    /**
+     * Stores background information.
+     */
+    public static class Background {
+
+        public BasicFile image;
+        public double hspeed, vspeed;
+        public int x, y;
+        public boolean hrepeat, vrepeat;
+        public boolean drawImage;
+
+    }
 }

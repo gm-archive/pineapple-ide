@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -438,6 +438,16 @@ public class DefaultProjectManager implements ProjectManager {
             }
         }
         return newFile;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BasicFile getFile(String path) throws FileNotFoundException {
+       DefaultFile f = new DefaultFile(new File(project.getProjectFolder(), path), null, project);
+       f.element = project.createElement(f);
+       return f;
     }
 
     private final class ProjectXMLHandler implements ContentHandler {

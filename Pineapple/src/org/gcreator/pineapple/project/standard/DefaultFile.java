@@ -200,4 +200,34 @@ public class DefaultFile implements BasicFile {
     public ProjectElement getElement() {
         return element;
     }
+
+    /**
+     * Gets the string value of this file.
+     *
+     * @return {@link #getPath()}
+     */
+    @Override
+    public String toString() {
+        return getPath();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof BasicFile)) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        return (this.hashCode() == o.hashCode());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.file != null ? this.file.hashCode() : 0);
+        hash = 67 * hash + (this.project != null ? this.project.hashCode() : 0);
+        hash = 67 * hash + (this.element != null ? this.element.hashCode() : 0);
+        return hash;
+    }
 }

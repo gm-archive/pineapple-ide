@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -54,15 +54,15 @@ public class ActorProperties extends javax.swing.JPanel {
         actorChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent evt) {
-                ActorProperties.this.a.bf = actorChooser.getSelectedFile();
+                ActorProperties.this.a.file = actorChooser.getSelectedFile();
                 ActorProperties.this.area.repaint();
-                ActorProperties.this.area.sceneEditor.setModified(true);
+                ActorProperties.this.area.editor.setModified(true);
             }
         });
     }
 
     public void update() {
-        actorChooser.setSelectedFile(a.bf);
+        actorChooser.setSelectedFile(a.file);
         xSpinner.setValue(new Integer(a.x));
         ySpinner.setValue(new Integer(a.y));
     }
@@ -145,13 +145,13 @@ public class ActorProperties extends javax.swing.JPanel {
 private void xSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_xSpinnerStateChanged
     ActorProperties.this.a.x = (Integer)xSpinner.getValue();
     ActorProperties.this.area.repaint();
-    area.sceneEditor.setModified(true);
+    area.editor.setModified(true);
 }//GEN-LAST:event_xSpinnerStateChanged
 
 private void ySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ySpinnerStateChanged
     ActorProperties.this.a.y = (Integer)ySpinner.getValue();
     ActorProperties.this.area.repaint();
-    area.sceneEditor.setModified(true);
+    area.editor.setModified(true);
 }//GEN-LAST:event_ySpinnerStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.gcreator.pineapple.gui.ResourceChooser actorChooser;

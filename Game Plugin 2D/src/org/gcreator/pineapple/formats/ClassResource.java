@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,24 @@ THE SOFTWARE.
 
 package org.gcreator.pineapple.formats;
 
-import java.util.Vector;
 import org.gcreator.pineapple.events.Event;
+import org.gcreator.pineapple.util.ListeningVector;
 
 /**
- * Represents an object with events and fields
- * @author luis
+ * Represents an object (class) with events and fields.
+ *
+ * @author  Luís Reis
+ * @author  Serge Humphrey
  */
-public class BehaviorObject {
+public class ClassResource {
     /**
      * The events(functions)
      */
-    public Vector<Event> events = new Vector<Event>();
+    public ListeningVector<Event> events = new ListeningVector<Event>();
     /**
      * The fields(variables)
      */
-    public Vector<Field> fields = new Vector<Field>();
+    public ListeningVector<Field> fields = new ListeningVector<Field>();
     
     //<editor-fold defaultstate="collapsed" desc="class Field">
     /**

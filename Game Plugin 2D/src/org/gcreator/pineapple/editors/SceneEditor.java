@@ -22,20 +22,29 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.editors;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.gcreator.pineapple.formats.Scene;
 import org.gcreator.pineapple.gui.BehaviourPanel;
 import org.gcreator.pineapple.gui.DocumentPane;
+import org.gcreator.pineapple.gui.SceneBackgroundProperties;
 import org.gcreator.pineapple.gui.SceneEditorArea;
 import org.gcreator.pineapple.gui.SceneProperties;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.util.ListeningVector.VectorChangeListener;
 
 /**
  * The editor of game scenes.
@@ -45,10 +54,12 @@ import org.gcreator.pineapple.project.io.BasicFile;
 public class SceneEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
-    public Scene scene = null;
-    private BehaviourPanel panel = null;
-    public SceneProperties sp = null;
-    public SceneEditorArea sea = null;
+    public Scene scene;
+    private BehaviourPanel panel;
+    public SceneProperties sp;
+    public SceneBackgroundProperties sbp;
+    public SceneEditorArea sea;
+    public JPanel settingsPanel;
 
     /** 
      * Creates new form SceneEditor
@@ -64,20 +75,69 @@ public class SceneEditor extends DocumentPane {
         tabs.add(panel, "Behavior");
         actorChooser.setResourceValidator(new ActorValidator());
         actorChooser.setVisible(true);
+        settingsPanel = new JPanel();
+        settingsTabs.add("Settings", settingsPanel);
         sp = new SceneProperties(this);
-        settingsPanel.add(sp, BorderLayout.CENTER);
-        sea = new SceneEditorArea();
+        settingsTabs.add("Scene Properties", sp);
+        sbp = new SceneBackgroundProperties(this);
+        settingsTabs.add("Background Properties", sbp);
+        sea = new SceneEditorArea(this);
         sea.setVisible(true);
-        sea.sceneEditor = this;
-        sea.updateUI();
         seaScrollPane.setViewportView(sea);
         seaScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         seaScrollPane.getVerticalScrollBar().setBlockIncrement(64);
         seaScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
         seaScrollPane.getHorizontalScrollBar().setBlockIncrement(64);
+        actorList.setModel(new ActorListModel());
+        actorList.setCellRenderer(new ActorListCellRenderer());
     }
 
+    private final class ActorListModel implements ListModel {
 
+        private Vector<ListDataListener> listeners = new Vector<ListDataListener>();
+        
+        {
+            scene.actors.addListener(new VectorChangeListener() {
+
+                public void vectorChanged() {
+                    for (ListDataListener l : listeners) {
+                        l.contentsChanged(null);
+                    }
+                }
+            });
+        }
+        public int getSize() {
+            return scene.actors.size();
+        }
+
+        public Object getElementAt(int index) {
+            return scene.actors.get(index);
+        }
+
+        public void addListDataListener(ListDataListener l) {
+            listeners.add(l);
+        }
+
+        public void removeListDataListener(ListDataListener l) {
+            listeners.remove(l);  
+        }
+    }
+
+    private static class ActorListCellRenderer extends DefaultListCellRenderer {
+
+        private static final long serialVersionUID = 2997455648L;
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel l = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof Scene.ActorInScene) {
+                Scene.ActorInScene s = (Scene.ActorInScene)value;
+                l.setText(s.actor.getName() + " (" + s.x + ", " + s.y + ")");
+            }
+
+            return l;
+        }
+    }
     /**
      * {@inheritDoc}
      */
@@ -118,20 +178,34 @@ public class SceneEditor extends DocumentPane {
 
         toolButtonGroup = new javax.swing.ButtonGroup();
         tabs = new javax.swing.JTabbedPane();
-        Splitter = new javax.swing.JSplitPane();
-        settingsPanel = new javax.swing.JPanel();
         environmentTab = new javax.swing.JPanel();
-        seaScrollPane = new javax.swing.JScrollPane();
+        leftSplit = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        actorList = new javax.swing.JList();
+        settingsTabs = new javax.swing.JTabbedPane();
         topToolBar = new javax.swing.JToolBar();
         actorChooser = new org.gcreator.pineapple.gui.ResourceChooser();
         addActorButton = new javax.swing.JToggleButton();
         editActorButton = new javax.swing.JToggleButton();
         deleteActorButton = new javax.swing.JToggleButton();
+        seaScrollPane = new javax.swing.JScrollPane();
 
-        setLayout(new java.awt.BorderLayout());
+        leftSplit.setDividerLocation(220);
+        leftSplit.setDividerSize(8);
+        leftSplit.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        leftSplit.setResizeWeight(0.8);
+        leftSplit.setContinuousLayout(true);
 
-        settingsPanel.setLayout(new java.awt.BorderLayout());
-        Splitter.setLeftComponent(settingsPanel);
+        actorList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        actorList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                actorListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(actorList);
+
+        leftSplit.setBottomComponent(jScrollPane1);
+        leftSplit.setLeftComponent(settingsTabs);
 
         topToolBar.setFloatable(false);
         topToolBar.setRollover(true);
@@ -178,23 +252,38 @@ public class SceneEditor extends DocumentPane {
         environmentTab.setLayout(environmentTabLayout);
         environmentTabLayout.setHorizontalGroup(
             environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(topToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-            .addComponent(seaScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, environmentTabLayout.createSequentialGroup()
+                .addComponent(leftSplit, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(topToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
+                .addContainerGap())
         );
         environmentTabLayout.setVerticalGroup(
             environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(environmentTabLayout.createSequentialGroup()
-                .addComponent(topToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, environmentTabLayout.createSequentialGroup()
+                .addGroup(environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(leftSplit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                    .addGroup(environmentTabLayout.createSequentialGroup()
+                        .addComponent(topToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        Splitter.setRightComponent(environmentTab);
+        tabs.addTab("Scene", environmentTab);
 
-        tabs.addTab("Environment", Splitter);
-
-        add(tabs, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 private void addActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActorButtonActionPerformed
@@ -212,15 +301,25 @@ private void deleteActorButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     sea.repaint();
 }//GEN-LAST:event_deleteActorButtonActionPerformed
 
+private void actorListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_actorListValueChanged
+    int i = actorList.getSelectedIndex();
+    if (i >= 0 && i < scene.actors.size()) {
+        sea.selection = scene.actors.get(i);
+        sea.repaint();
+    }
+}//GEN-LAST:event_actorListValueChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSplitPane Splitter;
     public org.gcreator.pineapple.gui.ResourceChooser actorChooser;
+    private javax.swing.JList actorList;
     private javax.swing.JToggleButton addActorButton;
     private javax.swing.JToggleButton deleteActorButton;
     private javax.swing.JToggleButton editActorButton;
     private javax.swing.JPanel environmentTab;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane leftSplit;
     public javax.swing.JScrollPane seaScrollPane;
-    public javax.swing.JPanel settingsPanel;
+    private javax.swing.JTabbedPane settingsTabs;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.ButtonGroup toolButtonGroup;
     private javax.swing.JToolBar topToolBar;

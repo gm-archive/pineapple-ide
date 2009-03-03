@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -78,37 +78,37 @@ public final class ActorEditor extends DocumentPane {
                 setModified(true);
             }
         });
-        depthSpinner.setValue(actor.z);
+        depthSpinner.setValue(actor.getZ());
         depthSpinner.addChangeListener(new ChangeListener() {
 
             public void stateChanged(ChangeEvent e) {
-                actor.z = (Integer) depthSpinner.getValue();
+                actor.setZ((Float) depthSpinner.getValue());
                 setModified(true);
             }
         });
         view.add(behaviour, "behavior");
         
         spriteChooser.setResourceValidator(new ImageValidator());
-        spriteChooser.setSelectedFile(actor.image);
+        spriteChooser.setSelectedFile(actor.getImage());
         spriteChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                actor.image = spriteChooser.getSelectedFile();
+                actor.setImage(spriteChooser.getSelectedFile());
                 setModified(true);
             }
         });
         
         parentChooser.setResourceValidator(new ActorValidator());
-        parentChooser.setSelectedFile(actor.parent);
+        parentChooser.setSelectedFile(actor.getParent());
         parentChooser.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                actor.parent = parentChooser.getSelectedFile();
+                actor.setParent(parentChooser.getSelectedFile());
                 setModified(true);
             }
         });
-        renderSpriteCheckBox.setSelected(actor.renderAutomatically);
-        barrenCheckBox.setSelected(actor.barren);
+        renderSpriteCheckBox.setSelected(actor.isRenderedAutomatically());
+        barrenCheckBox.setSelected(actor.isBarren());
     }
     
     /**
@@ -192,7 +192,7 @@ public final class ActorEditor extends DocumentPane {
 
         inGameRenderingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("In-Game Rendering"));
 
-        depthSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), null, null, Integer.valueOf(5)));
+        depthSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), null, null, Float.valueOf(5.0f)));
 
         depthLabel.setText("Depth (z):");
 
@@ -266,7 +266,7 @@ public final class ActorEditor extends DocumentPane {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(barrenCheckBox))
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         polymorhpismPanelLayout.setVerticalGroup(
             polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,12 +324,12 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_membersToggleActionPerformed
 
 private void renderSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renderSpriteCheckBoxActionPerformed
-    actor.renderAutomatically = renderSpriteCheckBox.isSelected();
+    actor.setRenderedAutomatically(renderSpriteCheckBox.isSelected());
     setModified(true);
 }//GEN-LAST:event_renderSpriteCheckBoxActionPerformed
 
 private void barrenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barrenCheckBoxActionPerformed
-    actor.barren = barrenCheckBox.isSelected();
+    actor.setBarren(barrenCheckBox.isSelected());
     setModified(true);
 }//GEN-LAST:event_barrenCheckBoxActionPerformed
 

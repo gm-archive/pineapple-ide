@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectFolder;
 
@@ -110,8 +111,11 @@ public interface ProjectManager {
      * 
      * @param f The file to import.
      * 
-     * @see #getImportFileTypes() 
+     * @see #getImportFileTypes()
+     *
+     * @deprecated Needs re-thinking.
      */
+    @Deprecated
     public void importFile(File f);
     
     /**
@@ -119,8 +123,11 @@ public interface ProjectManager {
      * 
      * @param f The file to export to.
      * 
-     * @see #getExportFileTypes() 
+     * @see #getExportFileTypes()
+     *
+     * @deprecated Needs re-thinking.
      */
+    @Deprecated
     public void exportFile(File f);
     
     /**
@@ -130,13 +137,32 @@ public interface ProjectManager {
      * 
      * @return An array containing all of the file types that this
      * manager can import.
+     *
+     * @deprecated Needs re-thinking.
      */
+    @Deprecated
     public String[] getImportFileTypes();
     
     /**
      * Returns a list of file types that the manager can export projects to.
+     *
      * @return An array containing all of the file types that this
      * manager can export.
+     *
+     * @deprecated Needs re-thinking.
      */
+    @Deprecated
     public String[] getExportFileTypes();
+
+    /**
+     * Creates a {@link BasicFile} from the given path
+     * like such as that from {@link BasicFile#getPath()}.
+     *
+     * @param path The relative path to the file.
+     * @return A new {@link BasicFile} as located in the given path.
+     *
+     * @throws java.io.FileNotFoundException If no file
+     * was found at the given path.
+     */
+    public BasicFile getFile(String path) throws FileNotFoundException;
 }

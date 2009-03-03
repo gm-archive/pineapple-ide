@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -64,6 +64,9 @@ public class ResourceChooser extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent evt) {
+                if (!isEnabled()) {
+                    return;
+                }
                 JPopupMenu menu = new JPopupMenu();
                 JMenuItem none = new JMenuItem("<none>");
                 none.setVisible(true);
@@ -195,5 +198,11 @@ public class ResourceChooser extends JPanel {
         public void actionPerformed(ActionEvent evt) {
             setSelectedFile(elem.getFile());
         }
+    }
+
+    @Override
+    public void setEnabled(boolean b) {
+        super.setEnabled(b);
+        label.setEnabled(b);
     }
 }

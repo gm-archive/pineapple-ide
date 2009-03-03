@@ -899,7 +899,7 @@ public class PineappleGUI implements EventHandler {
                 }
                 UIManager.setLookAndFeel(SettingsManager.get(key));
             } catch (Exception e) {
-                System.out.println("Failed to install Look&Feel: " + e.getMessage());
+                System.err.println("Failed to install Look&Feel: " + e.getMessage());
                 /* Set Look&Feel back to system Look&Feel
                  * just to annoy plug-in developers.
                  */
@@ -1038,11 +1038,12 @@ public class PineappleGUI implements EventHandler {
         } else if (evt.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
             if (PineappleCore.getProject() == null) {
                 treeModel.setRoot(null);
-                projectNew.setEnabled(false);
             } else {
                 treeModel.setRoot(PineappleCore.getProject().getTreeNode());
-                projectNew.setEnabled(true);
             }
+            boolean b = (PineappleCore.getProject() != null);
+            projectNew.setEnabled(b);
+            projectMenu.setEnabled(b);
             tree.updateUI();
         }
     }
