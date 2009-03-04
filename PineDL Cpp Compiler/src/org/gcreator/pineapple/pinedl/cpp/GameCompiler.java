@@ -439,7 +439,7 @@ public class GameCompiler {
         fos.write("){\n".getBytes());
 
 
-        Color c = scene.bgColor;
+        Color c = scene.getBackgroundColor();
         String cs = ((Integer) c.getRed()).toString();
         cs += ", ";
         cs += c.getGreen();
