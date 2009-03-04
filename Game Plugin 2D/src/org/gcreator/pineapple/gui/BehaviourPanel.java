@@ -368,16 +368,27 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
     Component[] cs = tabPane.getComponents();
     @SuppressWarnings("unchecked")
     Vector<Event> evec = (Vector<Event>) res.events.clone();
+    Object val = eventList.getSelectedValue();
 
     for (Event e : evec) {
-        if (e.getType().equals(eventList.getSelectedValue())) {
+        if (e.getType().equals(val)) {
             res.events.remove(e);
+            int compCount = tabPane.getTabCount();
+            tabLoop:
+            for(int i = 0; i < compCount; i++){
+                Component obj = tabPane.getComponentAt(i);
+                if(obj instanceof PineDLEditor&&tabPane.getTitleAt(i).equals(val)){
+                    tabPane.remove(i);
+                    break tabLoop;
+                }
+            }
             break;
         }
     }
     eventList.updateUI();
     this.setModified(true);
     deleteEventButton.setEnabled(false);
+    newEventButton.setEnabled(true);
 }//GEN-LAST:event_deleteEventButtonActionPerformed
 
 private void addFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFieldButtonActionPerformed

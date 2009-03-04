@@ -434,7 +434,7 @@ public class GameCompiler {
 
         fos.write("\tpublic this() : super".getBytes());
 
-        fos.write(("(" + scene.width + ", " + scene.height).getBytes());
+        fos.write(("(" + scene.getWidth() + ", " + scene.getHeight()).getBytes());
 
         fos.write("){\n".getBytes());
 
