@@ -1749,8 +1749,12 @@ public class PineappleGUI implements EventHandler {
         final JTextPane text = new JTextPane();
         text.setEditable(false);
 
+        JPanel top = new JPanel();
+        top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
+        top.add(new JLabel("You have chosen to open "+f.getName()));
+        top.add(new JScrollPane(list));
         JSplitPane pane = new JSplitPane(
-                JSplitPane.VERTICAL_SPLIT, new JScrollPane(list),
+                JSplitPane.VERTICAL_SPLIT, top,
                 new JScrollPane(text));
         d.add(pane);
 
