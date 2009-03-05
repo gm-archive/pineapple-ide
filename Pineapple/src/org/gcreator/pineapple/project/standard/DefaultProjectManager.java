@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -138,7 +139,7 @@ public class DefaultProjectManager implements ProjectManager {
         } else {
             folder.reload();
         }
-        PineappleGUI.tree.updateUI();
+        updateTreeUI();
         return ff;
     }
 
@@ -161,7 +162,7 @@ public class DefaultProjectManager implements ProjectManager {
         } else {
             folder.reload();
         }
-        PineappleGUI.tree.updateUI();
+        updateTreeUI();
         return ff;
     }
 
@@ -365,7 +366,7 @@ public class DefaultProjectManager implements ProjectManager {
                 Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        PineappleGUI.tree.updateUI();
+        updateTreeUI();
         return f;
     }
 
@@ -389,7 +390,7 @@ public class DefaultProjectManager implements ProjectManager {
                 Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        PineappleGUI.tree.updateUI();
+        updateTreeUI();
         return f;
     }
 
@@ -413,7 +414,7 @@ public class DefaultProjectManager implements ProjectManager {
                 while ((r = in.read()) != -1) {
                     out.write(r);
                 }
-                PineappleGUI.tree.updateUI();
+                updateTreeUI();
             } catch (IOException ex) {
                 Logger.getLogger(CopyFileDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -511,6 +512,7 @@ public class DefaultProjectManager implements ProjectManager {
          */
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            Thread.yield();
             if (localName.equalsIgnoreCase("pineapple-project")) {
 
                 String version = atts.getValue("version");
@@ -566,7 +568,7 @@ public class DefaultProjectManager implements ProjectManager {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    PineappleGUI.tree.updateUI();
+                    updateTreeUI();
                 }
             } else if (settings) {
                 String key = atts.getValue("key");
@@ -632,5 +634,14 @@ public class DefaultProjectManager implements ProjectManager {
         public void skippedEntity(String name) throws SAXException {
             System.out.println("NOTE: Skipped Entity '" + name + "'");
         }
+    }
+
+    private void updateTreeUI() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                PineappleGUI.tree.updateUI();
+            }
+        });
     }
 }
