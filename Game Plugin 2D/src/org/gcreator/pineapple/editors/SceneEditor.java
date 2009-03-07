@@ -56,7 +56,7 @@ import org.gcreator.pineapple.gui.SceneEditorArea;
 import org.gcreator.pineapple.gui.SceneProperties;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.project.io.BasicFile;
-import org.gcreator.pineapple.util.ListeningVector.VectorChangeListener;
+import org.gcreator.pineapple.util.VectorChangeListener;
 
 /**
  * The editor of game scenes.

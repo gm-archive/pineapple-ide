@@ -1,5 +1,6 @@
+/*
 Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -18,3 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+ */
+package org.gcreator.pineapple.util;
+
+/**
+ * A interface to listen for vector changes.
+ */
+public interface VectorChangeListener {
+
+    /**
+     * Called when the vector has been changed.
+     */
+    public void vectorChanged();
+}
