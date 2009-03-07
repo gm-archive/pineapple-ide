@@ -47,11 +47,11 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="topToolBar" max="32767" attributes="2"/>
+                      <Component id="topToolBar" pref="422" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Component id="seaScrollPane" alignment="0" pref="326" max="32767" attributes="2"/>
-                  <Component id="jScrollPane1" alignment="0" pref="326" max="32767" attributes="0"/>
+                  <Component id="seaScrollPane" alignment="0" pref="434" max="32767" attributes="2"/>
+                  <Component id="jScrollPane1" alignment="0" pref="434" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -132,6 +132,17 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scenePropertiesButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JToggleButton" name="fullscreenButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Fullscreen"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fullscreenButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

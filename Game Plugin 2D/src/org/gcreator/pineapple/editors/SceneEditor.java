@@ -23,6 +23,10 @@ THE SOFTWARE.
 package org.gcreator.pineapple.editors;
 
 import java.awt.Component;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -32,9 +36,11 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.border.BevelBorder;
@@ -69,6 +75,7 @@ public class SceneEditor extends DocumentPane {
     public JPanel settingsPanel;
     public JDialog actorDialog, settingsDialog;
     public JTabbedPane settingsTabs;
+    private JFrame fullScreenWindow;
 
     /** 
      * Creates new form SceneEditor
@@ -117,14 +124,30 @@ public class SceneEditor extends DocumentPane {
         settingsTabs.add("Background Properties", sbp);
         settingsDialog.add(settingsTabs);
         settingsDialog.pack();
-        
-        seaScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        seaScrollPane.getVerticalScrollBar().setBlockIncrement(64);
-        seaScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-        seaScrollPane.getHorizontalScrollBar().setBlockIncrement(64);
+
+        JScrollBar v =  seaScrollPane.getVerticalScrollBar();
+        v.setUnitIncrement(16);
+        v.setBlockIncrement(64);
+        JScrollBar h = seaScrollPane.getHorizontalScrollBar();
+        h.setUnitIncrement(16);
+        h.setBlockIncrement(64);
+        /* Bug fix. No idea why it happens */
+        v.addAdjustmentListener(new AdjustmentListener() {
+
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                seaScrollPane.updateUI();
+            }
+        });
+        h.addAdjustmentListener(new AdjustmentListener() {
+
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                seaScrollPane.updateUI();
+            }
+        });
+
         sea = new SceneEditorArea(this);
         seaScrollPane.setViewportView(sea);
-        
+
         actorList.setModel(new ActorListModel());
         actorList.setCellRenderer(new ActorListCellRenderer());
     }
@@ -222,6 +245,7 @@ public class SceneEditor extends DocumentPane {
         editActorButton = new javax.swing.JToggleButton();
         deleteActorButton = new javax.swing.JToggleButton();
         scenePropertiesButton = new javax.swing.JToggleButton();
+        fullscreenButton = new javax.swing.JToggleButton();
         seaScrollPane = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         actorList = new javax.swing.JList();
@@ -278,6 +302,17 @@ public class SceneEditor extends DocumentPane {
         });
         topToolBar.add(scenePropertiesButton);
 
+        fullscreenButton.setText("Fullscreen");
+        fullscreenButton.setFocusable(false);
+        fullscreenButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        fullscreenButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        fullscreenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fullscreenButtonActionPerformed(evt);
+            }
+        });
+        topToolBar.add(fullscreenButton);
+
         seaScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         seaScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -294,10 +329,10 @@ public class SceneEditor extends DocumentPane {
         environmentTabLayout.setHorizontalGroup(
             environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, environmentTabLayout.createSequentialGroup()
-                .addComponent(topToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(topToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+            .addComponent(seaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
         );
         environmentTabLayout.setVerticalGroup(
             environmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,14 +382,32 @@ private void actorListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
 }//GEN-LAST:event_actorListValueChanged
 
 private void scenePropertiesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scenePropertiesButtonActionPerformed
-    if (scenePropertiesButton.isSelected()) {
+    if (!settingsDialog.isVisible()) {
         settingsDialog.setLocation(scenePropertiesButton.getLocationOnScreen().x,
                 scenePropertiesButton.getLocationOnScreen().y + scenePropertiesButton.getHeight());
         settingsDialog.setVisible(true);
-    } else {
-        settingsDialog.dispose();
     }
 }//GEN-LAST:event_scenePropertiesButtonActionPerformed
+
+private void fullscreenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullscreenButtonActionPerformed
+
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    if (!gd.isFullScreenSupported()) {
+        return;
+    }
+    if (fullscreenButton.isSelected()) {
+        fullScreenWindow = new JFrame("Scene Editor");
+        fullScreenWindow.setContentPane(environmentTab);
+        gd.setFullScreenWindow(fullScreenWindow);
+    } else {
+        gd.setFullScreenWindow(null);
+        if (fullScreenWindow != null) {
+            tabs.insertTab("Scene", null, fullScreenWindow.getContentPane(),"Scene Editor", 0);
+            tabs.setSelectedIndex(0);
+            fullScreenWindow.dispose();
+        }
+    }
+}//GEN-LAST:event_fullscreenButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public org.gcreator.pineapple.gui.ResourceChooser actorChooser;
@@ -363,6 +416,7 @@ private void scenePropertiesButtonActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JToggleButton deleteActorButton;
     private javax.swing.JToggleButton editActorButton;
     private javax.swing.JPanel environmentTab;
+    private javax.swing.JToggleButton fullscreenButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToggleButton scenePropertiesButton;
     public javax.swing.JScrollPane seaScrollPane;

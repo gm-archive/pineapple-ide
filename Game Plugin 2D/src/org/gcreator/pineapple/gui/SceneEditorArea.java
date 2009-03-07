@@ -400,8 +400,9 @@ public class SceneEditorArea extends JPanel {
             return;
         }
         d.pack();
-        d.setLocation(this.getLocationOnScreen().x + selection.x,
-                this.getLocationOnScreen().y + selection.y + selection.getImage().getHeight());
+        int x = this.getLocationOnScreen().x + selection.x;
+        int y = this.getLocationOnScreen().y + selection.y + selection.getImage().getHeight();
+        d.setLocation(x, y);
         d.setVisible(true);
     }
 }
