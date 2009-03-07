@@ -62,7 +62,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
                     Background b = editor.scene.backgrounds.get(row);
                     b.image = backgroundImageCheckBox.getSelectedFile();
                 }
-                editor.sea.repaint();
+                updateBackgrounds();
             }
         });
     }
@@ -100,17 +100,17 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         backgroundsList = new javax.swing.JList();
         everythingPanel = new javax.swing.JPanel();
-        addButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
+        drawBackgroundImageCheckBox = new javax.swing.JCheckBox();
         backgroundPanel = new javax.swing.JPanel();
-        backgroundImageCheckBox = new org.gcreator.pineapple.gui.ResourceChooser();
         repeatHorizontalCheckBox = new javax.swing.JCheckBox();
         repeatVerticalCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         backgroundYSpinner = new javax.swing.JSpinner();
         backgroundXSpinner = new javax.swing.JSpinner();
-        drawBackgroundImageCheckBox = new javax.swing.JCheckBox();
+        backgroundImageCheckBox = new org.gcreator.pineapple.gui.ResourceChooser();
+        addButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         backgroundsList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -119,34 +119,13 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(backgroundsList);
 
-        javax.swing.GroupLayout everythingPanelLayout = new javax.swing.GroupLayout(everythingPanel);
-        everythingPanel.setLayout(everythingPanelLayout);
-        everythingPanelLayout.setHorizontalGroup(
-            everythingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        everythingPanelLayout.setVerticalGroup(
-            everythingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 207, Short.MAX_VALUE)
-        );
-
-        addButton.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        addButton.setText("+");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
+        drawBackgroundImageCheckBox.setText("<html>Draw Background<br/>Image</html>");
+        drawBackgroundImageCheckBox.setEnabled(false);
+        drawBackgroundImageCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
+                drawBackgroundImageCheckBoxActionPerformed(evt);
             }
         });
-
-        removeButton.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        removeButton.setText("-");
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-        });
-
-        backgroundImageCheckBox.setEnabled(false);
 
         repeatHorizontalCheckBox.setSelected(true);
         repeatHorizontalCheckBox.setText("Repeat Horizontal");
@@ -186,6 +165,8 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             }
         });
 
+        backgroundImageCheckBox.setEnabled(false);
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -193,7 +174,6 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(backgroundImageCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(repeatHorizontalCheckBox)
                     .addComponent(repeatVerticalCheckBox)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
@@ -203,7 +183,12 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(backgroundYSpinner)
-                            .addComponent(backgroundXSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(backgroundXSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(backgroundImageCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,11 +208,39 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
                     .addComponent(backgroundYSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        drawBackgroundImageCheckBox.setText("<html>Draw Background<br/>Image</html>");
-        drawBackgroundImageCheckBox.setEnabled(false);
-        drawBackgroundImageCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout everythingPanelLayout = new javax.swing.GroupLayout(everythingPanel);
+        everythingPanel.setLayout(everythingPanelLayout);
+        everythingPanelLayout.setHorizontalGroup(
+            everythingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, everythingPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(everythingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(drawBackgroundImageCheckBox))
+                .addContainerGap())
+        );
+        everythingPanelLayout.setVerticalGroup(
+            everythingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(everythingPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(drawBackgroundImageCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        addButton.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        addButton.setText("+");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                drawBackgroundImageCheckBoxActionPerformed(evt);
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        removeButton.setText("-");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
             }
         });
 
@@ -236,18 +249,12 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addButton)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(everythingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(drawBackgroundImageCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(backgroundPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)))
+            .addComponent(everythingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,15 +264,9 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
                         .addComponent(addButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(everythingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(drawBackgroundImageCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addComponent(everythingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -279,7 +280,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             c.setEnabled(db);
         }
         editor.setModified(true);
-        editor.sea.repaint();
+        updateBackgrounds();
 }//GEN-LAST:event_drawBackgroundImageCheckBoxActionPerformed
 
     private void backgroundsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_backgroundsListValueChanged
@@ -319,7 +320,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         for (ListDataListener l : listModel.listeners) {
             l.contentsChanged(e);
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
 }//GEN-LAST:event_addButtonActionPerformed
 
@@ -329,7 +330,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             Background b = editor.scene.backgrounds.get(row);
             b.hrepeat = rh;
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
     }//GEN-LAST:event_repeatHorizontalCheckBoxActionPerformed
 
@@ -339,7 +340,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             Background b = editor.scene.backgrounds.get(row);
             b.vrepeat = rv;
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
     }//GEN-LAST:event_repeatVerticalCheckBoxActionPerformed
 
@@ -348,7 +349,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             Background b = editor.scene.backgrounds.get(row);
             b.x = (Integer)backgroundXSpinner.getValue();
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
     }//GEN-LAST:event_backgroundXSpinnerStateChanged
 
@@ -357,7 +358,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             Background b = editor.scene.backgrounds.get(row);
             b.y = (Integer)backgroundYSpinner.getValue();
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
     }//GEN-LAST:event_backgroundYSpinnerStateChanged
 
@@ -371,10 +372,15 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
                 l.contentsChanged(e);
             }
         }
-        editor.sea.repaint();
+        updateBackgrounds();
         editor.setModified(true);
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    private void updateBackgrounds() {
+        editor.sea.renderBackgroundCache();
+        editor.sea.renderCache();
+        editor.sea.paint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

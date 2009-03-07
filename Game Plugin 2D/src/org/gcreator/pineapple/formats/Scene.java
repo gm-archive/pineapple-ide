@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -75,8 +76,10 @@ public class Scene extends ClassResource {
     public Vector<Background> backgrounds = new Vector<Background>();
     public Hashtable<String, Object> properties;
     protected static BufferedImage unknownImage;
+    protected static HashMap<BasicFile, BufferedImage> imageCache;
     
     static {
+        imageCache = new HashMap<BasicFile, BufferedImage>();
         try {
             unknownImage = ImageIO.read(Scene.class.getResource("/org/gcreator/pineapple/images/null.png"));
         } catch (IOException ex) {
@@ -174,6 +177,21 @@ public class Scene extends ClassResource {
         return (Boolean)properties.get("draw-background-color");
     }
 
+    protected static BufferedImage getImage(BasicFile f) {
+        if (!imageCache.containsKey(f)) {
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(f.getReader());
+            } catch (IOException ex) {
+                Logger.getLogger(Scene.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (img != null) {
+                imageCache.put(f, img);
+            }
+        }
+        return imageCache.get(f);
+    }
+
     /**
      * Sets whether to draw the background color or not,
      *
@@ -183,7 +201,7 @@ public class Scene extends ClassResource {
         properties.put("draw-background-color", draw);
     }
 
-    //<editor-fold  defaultstate="collapsed" desc="ActorInScene">
+    //<editor-fold  defaultstate="collapsed" desc="ActorInScene ">
     /**
      * An actor inside a scene.
      */
@@ -227,23 +245,27 @@ public class Scene extends ClassResource {
             return z < oz ? -1 : 1;
         }
 
+        /**
+         * Gets the image for this actor from the cache,
+         * or loads it into the cache if it's not there.
+         *
+         * @return This actor's image.
+         */
         public BufferedImage getImage() {
-            BufferedImage img = null;
-            if (file != null) {
-                try {
-                    return ImageIO.read(actor.getImage().getReader());
-                } catch (Exception e) {
-                    img = null;
+            BufferedImage img;
+            if (actor.getImage() != null) {
+                img = Scene.getImage(actor.getImage());
+                if (img == null) {
+                    img = unknownImage;
                 }
-            }
-            if (img == null) {
+            } else {
                 img = unknownImage;
             }
             return img;
         }
     }
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Scene Saving">
+    //<editor-fold defaultstate="collapsed" desc="Scene Saving ">
     /**
      * Saves the scene to a {@lin BasicFile}.
      * 
@@ -576,6 +598,16 @@ public class Scene extends ClassResource {
         public int x, y;
         public boolean hrepeat, vrepeat;
         public boolean drawImage;
+
+        /**
+         * Gets the image for this background from the cache,
+         * loading it if it isn't already there.
+         *
+         * @return This background's image.
+         */
+        public BufferedImage getImage() {
+            return Scene.getImage(image);
+        }
 
     }
 }
