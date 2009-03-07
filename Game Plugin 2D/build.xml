@@ -22,6 +22,12 @@
             <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
         </subant>
     </target>
+
+    <target name="compile-single">
+        <subant target="compile-single">
+            <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
+        </subant>
+    </target>
     
     <target name="jar">
 

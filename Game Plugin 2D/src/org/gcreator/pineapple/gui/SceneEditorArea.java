@@ -33,7 +33,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.gcreator.pineapple.editors.SceneEditor;
 import org.gcreator.pineapple.formats.Scene;
@@ -62,7 +61,7 @@ public class SceneEditorArea extends JPanel {
     private volatile long lastRenderC = -1L;
     private volatile long lastRenderO = -1L;
     private volatile long lastRenderP = -1L;
-    private volatile long lastRenderD = -1L;
+    private volatile long lastRenderU = -1L;
     ActorProperties ap;
     private Point dragOffset;
 
@@ -102,36 +101,6 @@ public class SceneEditorArea extends JPanel {
     }
 
     @Override
-    public int getWidth() {
-        return editor.scene.getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return editor.scene.getHeight();
-    }
-
-    @Override
-    public Dimension getSize() {
-        return new Dimension(getWidth(), getHeight());
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return getSize();
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return getSize();
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-        return getSize();
-    }
-
-    @Override
     public void paint(Graphics pg) {
         if (backgroundCache == null || actorCache == null) {
             return;
@@ -144,16 +113,15 @@ public class SceneEditorArea extends JPanel {
             buffer = newCache();
             lastRenderP = -1L;
         }
-        if (lastRenderC >= lastRenderP || lastRenderD >= lastRenderP) {
+        if (lastRenderC >= lastRenderP || lastRenderU >= lastRenderP) {
             Graphics2D g = buffer.createGraphics();
             g.setColor(this.getBackground());
             if (s.isBackgroundColorDrawn()) {
                 g.setColor(s.getBackgroundColor());
                 g.fillRect(0, 0, s.getWidth(), s.getHeight());
             } else {
-                g.setComposite(AlphaComposite.Clear);
+                g.setColor(Color.BLACK);
                 g.fillRect(0, 0, s.getWidth(), s.getHeight());
-                g.setComposite(AlphaComposite.SrcOver);
             }
             g.drawImage(cache, 0, 0, null);
 
@@ -168,9 +136,11 @@ public class SceneEditorArea extends JPanel {
             g.dispose();
             lastRenderP = System.currentTimeMillis();
         }
-        pg.drawImage(buffer, 0, 0, null);
+        if (pg != null) {
+            pg.drawImage(buffer, 0, 0, null);
+        }
     }
-
+    
     public void paint() {
         paint(this.getGraphics());
     }
@@ -259,10 +229,19 @@ public class SceneEditorArea extends JPanel {
         lastRenderC = System.currentTimeMillis();
     }
 
+    /**
+     * Re-renders caches and syncs the size of the
+     * scene editor area with the actual scene object.
+     */
     public void update() {
         if (editor == null || editor.scene == null) {
             return;
         }
+        Dimension size = new Dimension(editor.scene.getWidth(), editor.scene.getHeight());
+        this.setSize(size);
+        this.setPreferredSize(size);
+        this.setMinimumSize(size);
+
         if (actorCache == null || getWidth() != actorCache.getWidth() || getHeight() != actorCache.getHeight()) {
             actorCache = newCache();
         }
@@ -292,7 +271,6 @@ public class SceneEditorArea extends JPanel {
                 renderActorCache();
                 paint();
                 editor.setModified(true);
-                updateSelectionDialog();
             }
         } else if (mode == MODE_EDIT) {
             if (editor == null || editor.scene == null) {
@@ -332,11 +310,10 @@ public class SceneEditorArea extends JPanel {
                     renderActorCache();
                     renderCache();
                 }
-                lastRenderD = System.currentTimeMillis();
+                lastRenderU = System.currentTimeMillis();
                 paint();
                 editor.settingsPanel.updateUI();
             }
-            updateSelectionDialog();
         } else if (mode == MODE_DELETE) {
             if (editor == null || editor.scene == null) {
                 return;
@@ -371,7 +348,6 @@ public class SceneEditorArea extends JPanel {
                     ap.update();
                 }
             }
-            editor.actorDialog.dispose();
             //Need to render actors again
             renderActorCache();
             paint();
@@ -388,21 +364,17 @@ public class SceneEditorArea extends JPanel {
                 renderActorCache();
                 renderCache();
             }
-            lastRenderD = System.currentTimeMillis();
+            lastRenderU = System.currentTimeMillis();
             paint();
         }
     }
 
-    private void updateSelectionDialog() {
-        JDialog d = editor.actorDialog;
-        if (selection == null) {
-            d.dispose();
-            return;
-        }
-        d.pack();
-        int x = this.getLocationOnScreen().x + selection.x;
-        int y = this.getLocationOnScreen().y + selection.y + selection.getImage().getHeight();
-        d.setLocation(x, y);
-        d.setVisible(true);
+    /**
+     * Forces buffer to be re-drawn next time this
+     * scene editor area is painted.
+     */
+    public void forceUpdate() {
+        lastRenderU = System.currentTimeMillis();
     }
+
 }
