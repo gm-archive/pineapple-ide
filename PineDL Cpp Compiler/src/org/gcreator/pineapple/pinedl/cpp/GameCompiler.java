@@ -112,7 +112,7 @@ public class GameCompiler {
                             }
                             buildContext();
                             compFrame.writeLine("Generating C++ and header files");
-                            createTextureListScript();
+                            context.add("TextureList");
                             for (File script : pineScripts) {
                                 if (!worked) {
                                     return;
@@ -122,6 +122,7 @@ public class GameCompiler {
                             }
                             copyLib();
                             compFrame.writeLine("Compiling C++ code");
+                            generateTextureList();
                             generateMain();
                             compile();
                         } catch (Exception ex) {
@@ -138,22 +139,41 @@ public class GameCompiler {
             }
         }
     }
-
-    public void createTextureListScript() throws IOException {
-        File f = new File(outputFolder, "TextureList.pdl");
-        FileOutputStream fos = new FileOutputStream(f);
+    
+    public void generateTextureList() throws IOException{
+        File header = new File(outputFolder, "TextureList.h");
+        FileOutputStream fos = new FileOutputStream(header);
+        fos.write("#ifndef __PINEDL_TEXTURELIST_H__\n".getBytes());
+        fos.write("#define __PINEDL_TEXTURELIST_H__\n\n".getBytes());
+        fos.write("#include \"header.h\"\n".getBytes());
         
-        fos.write("package ".getBytes());
-        fos.write(gamePackage.getBytes());
-        fos.write(';');
+        fos.write(("namespace " + gamePackage + "{\n").getBytes());
+        fos.write("\tclass TextureList{\n".getBytes());
         
-        fos.write('\n');
-        fos.write('\n');
-        fos.write("class TextureList{\n".getBytes());
+        for(File image : imageFiles){
+            String fname = image.getName();
+            int index = fname.indexOf('.');
+            fname = fname.substring(0, index);
+            fos.write(("\t\tpublic: ::Pineapple::Texture* "+fname+";\n").getBytes());
+        }
         
+        fos.write(("\t};\n}\n").getBytes());
         
+        fos.write("\n#endif\n".getBytes());
+        fos.close();
         
-        fos.write("}\n".getBytes());
+        File cpp = new File(outputFolder, "TextureList.cpp");
+        fos = new FileOutputStream(cpp);
+        
+        fos.write("#include \"header.h\"\n\n".getBytes());
+        for(File image : imageFiles){
+            String fname = image.getName();
+            int index = fname.indexOf('.');
+            fname = fname.substring(0, index);
+            fos.write((gamePackage + "::TextureList::" + fname).getBytes());
+            fos.write((" = new Texture(\"res/"+image.getName()).getBytes());
+            fos.write("\");\n".getBytes());
+        }
         
         fos.close();
     }
@@ -193,34 +213,34 @@ public class GameCompiler {
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
         if (profile == CompilationProfile.UNIX_TO_UNIX) {
-            copyFile("/org/gcreator/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
         } else if (profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "SDL_image.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "jpeg.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "libpng12-0.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "libtiff-3.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", binFolder, "zlib1.dll");
-            copyFile("/org/gcreator/pinedl/cpp/res/windows/", outputFolder, "libPineapple.a");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "SDL_image.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "jpeg.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "libpng12-0.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "libtiff-3.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "zlib1.dll");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", outputFolder, "libPineapple.a");
         }
         compFrame.writeLine("Copying header files");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "actor.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "application.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "color.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "exceptions.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "io.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "keyboard.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "keycodes.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "pamath.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "scene.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "texture.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "timer.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "vector.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "view.h");
-        copyFile("/org/gcreator/pinedl/cpp/res/headers/", outputFolder, "window.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "actor.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "application.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "exceptions.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "io.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "keyboard.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "keycodes.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "pamath.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "scene.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "texture.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "timer.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "vector.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "view.h");
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "window.h");
         compFrame.writeLine("Copying runner files");
         if (profile == CompilationProfile.UNIX_TO_UNIX) {
-            copyFile("/org/gcreator/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
+            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
         }
     }
 
@@ -236,6 +256,7 @@ public class GameCompiler {
             String path = script.getAbsolutePath();
             command.add(path.substring(0, path.lastIndexOf('.')) + ".cpp");
         }
+        command.add((new File(outputFolder, "TextureList.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
 
@@ -290,7 +311,7 @@ public class GameCompiler {
     private void buildContext() {
         for (File script : pineScripts) {
             String fname = script.getName();
-            fname = fname.substring(0, fname.lastIndexOf('.'));
+            fname = fname.substring(0, fname.indexOf('.'));
             context.add(fname);
         }
     }
@@ -377,9 +398,11 @@ public class GameCompiler {
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
                 if (a.getImage() != null) {
-                    fos.write("\t\ttexture = new Texture(\"res/".getBytes());
-                    fos.write(a.getImage().getName().getBytes());
-                    fos.write("\");\n".getBytes());
+                    fos.write("\t\ttexture = TextureList.".getBytes());
+                    String iname = a.getImage().getName();
+                    iname = iname.substring(0, iname.indexOf('.'));
+                    fos.write(iname.getBytes());
+                    fos.write(";\n".getBytes());
                 }
                 fos.write(outputEvent(a, evt).getBytes());
 
@@ -422,9 +445,9 @@ public class GameCompiler {
         if (!hasCreate) {
             fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
             if (a.getImage() != null) {
-                fos.write("\t\ttexture = new Texture(\"res/".getBytes());
+                fos.write("\t\ttexture = TextureList.".getBytes());
                 fos.write(a.getImage().getName().getBytes());
-                fos.write("\");\n".getBytes());
+                fos.write(";\n".getBytes());
             }
             fos.write("\t}\n".getBytes());
         }
@@ -521,5 +544,6 @@ public class GameCompiler {
         headerH.write("#include \"vector.h\"\n".getBytes());
         headerH.write("#include \"view.h\"\n".getBytes());
         headerH.write("#include \"window.h\"\n".getBytes());
+        headerH.write("#include \"TextureList.h\"\n".getBytes());
     }
 }
