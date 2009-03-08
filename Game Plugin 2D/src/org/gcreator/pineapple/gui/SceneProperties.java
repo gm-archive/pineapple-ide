@@ -36,6 +36,7 @@ public class SceneProperties extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 5613L;
     private SceneEditor editor;
+    private boolean nochange = false;
 
     /**
      * Creates new form SceneProperties
@@ -45,12 +46,16 @@ public class SceneProperties extends javax.swing.JPanel {
     public SceneProperties(SceneEditor editor) {
         this.editor = editor;
         initComponents();
-        sceneWidthSpinner.setValue(new Integer(editor.scene.getWidth()));
-        sceneHeightSpinner.setValue(new Integer(editor.scene.getHeight()));
-        drawBackgroundCheckBox.setSelected(editor.scene.isBackgroundColorDrawn());
-        backgroundColorPanel.setBackground(editor.scene.getBackgroundColor());
+        synchronized (this) {
+            nochange = true;
+            sceneWidthSpinner.setValue(new Integer(editor.scene.getWidth()));
+            sceneHeightSpinner.setValue(new Integer(editor.scene.getHeight()));
+            drawBackgroundCheckBox.setSelected(editor.scene.isBackgroundColorDrawn());
+            backgroundColorPanel.setBackground(editor.scene.getBackgroundColor());
+            nochange = false;
+        }
     }
-    
+
     /**
      * Creates new form SceneProperties
      * 
@@ -61,7 +66,7 @@ public class SceneProperties extends javax.swing.JPanel {
         System.err.println("\n\nFATAL ERROR: SceneProperties empty constructor\n\n");
         System.exit(1);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -165,17 +170,21 @@ public class SceneProperties extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void sceneWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneWidthSpinnerStateChanged
-    editor.scene.setWidth((Integer)sceneWidthSpinner.getValue());
-    editor.sea.update();
-    editor.sea.paint();
-    editor.setModified(true);
+    if (!nochange) {
+        editor.scene.setWidth((Integer) sceneWidthSpinner.getValue());
+        editor.sea.update();
+        editor.sea.paint();
+        editor.setModified(true);
+    }
 }//GEN-LAST:event_sceneWidthSpinnerStateChanged
 
 private void sceneHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sceneHeightSpinnerStateChanged
-    editor.scene.setHeight((Integer)sceneHeightSpinner.getValue());
-    editor.sea.update();
-    editor.sea.paint();
-    editor.setModified(true);
+    if (!nochange) {
+        editor.scene.setHeight((Integer) sceneHeightSpinner.getValue());
+        editor.sea.update();
+        editor.sea.paint();
+        editor.setModified(true);
+    }
 }//GEN-LAST:event_sceneHeightSpinnerStateChanged
 
 private void backgroundColorPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundColorPanelMouseClicked
@@ -190,10 +199,12 @@ private void backgroundColorPanelMouseClicked(java.awt.event.MouseEvent evt) {//
 }//GEN-LAST:event_backgroundColorPanelMouseClicked
 
 private void drawBackgroundCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawBackgroundCheckBoxActionPerformed
-    editor.scene.setDrawBackgroundColor(drawBackgroundCheckBox.isSelected());
-    editor.sea.forceUpdate();
-    editor.sea.paint();
-    editor.setModified(true);
+    if (!nochange) {
+        editor.scene.setDrawBackgroundColor(drawBackgroundCheckBox.isSelected());
+        editor.sea.forceUpdate();
+        editor.sea.paint();
+        editor.setModified(true);
+    }
 }//GEN-LAST:event_drawBackgroundCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

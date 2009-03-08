@@ -23,7 +23,6 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -52,7 +51,7 @@ public class SceneEditorArea extends JPanel {
     public static final int MODE_DELETE = 2;
     public int mode = MODE_ADD;
     public SceneEditor editor = null;
-    public Scene.ActorInScene selection = null;
+    private Scene.ActorInScene selection = null;
     protected BufferedImage actorCache = null;
     protected BufferedImage backgroundCache = null;
     private BufferedImage cache = null;
@@ -248,6 +247,12 @@ public class SceneEditorArea extends JPanel {
         if (backgroundCache == null || getWidth() != backgroundCache.getWidth() || getHeight() != backgroundCache.getHeight()) {
             backgroundCache = newCache();
         }
+        if (cache == null || getWidth() != cache.getWidth() || getHeight() != cache.getHeight()) {
+            cache = newCache();
+        }
+        if (buffer == null || getWidth() != buffer.getWidth() || getHeight() != buffer.getHeight()) {
+            buffer = newCache();
+        }
         renderActorCache();
         renderBackgroundCache();
         renderCache();
@@ -266,7 +271,7 @@ public class SceneEditorArea extends JPanel {
                 a.x = evt.getX();
                 a.y = evt.getY();
                 s.actors.add(a);
-                selection = a;
+                setSelection(a);
                 //need to re-render actors now.
                 renderActorCache();
                 paint();
@@ -279,7 +284,7 @@ public class SceneEditorArea extends JPanel {
             Scene s = editor.scene;
             /* Select Actor */
             Scene.ActorInScene oldSelection = selection;
-            selection = null;
+            setSelection(null);
             int x = evt.getX();
             int y = evt.getY();
             for (Scene.ActorInScene actor : s.actors) {
@@ -294,17 +299,12 @@ public class SceneEditorArea extends JPanel {
                     continue;
                 }
                 if (x < actor.x + i.getWidth() && y < actor.y + i.getHeight()) {
-                    selection = actor;
+                    setSelection(actor);
                     dragOffset = new Point(actor.x - x, actor.y - y);
                     break;
                 }
             }
             if (oldSelection != selection) {
-                editor.settingsPanel.removeAll();
-                if (selection != null) {
-                    ap = new ActorProperties(selection, SceneEditorArea.this);
-                    editor.settingsPanel.add(ap, BorderLayout.CENTER);
-                }
                 //Might not need to re-render actors
                 if (notRendered != null) {
                     renderActorCache();
@@ -312,7 +312,6 @@ public class SceneEditorArea extends JPanel {
                 }
                 lastRenderU = System.currentTimeMillis();
                 paint();
-                editor.settingsPanel.updateUI();
             }
         } else if (mode == MODE_DELETE) {
             if (editor == null || editor.scene == null) {
@@ -341,9 +340,7 @@ public class SceneEditorArea extends JPanel {
             s.actors.remove(chosen);
             editor.setModified(true);
             if (selection == chosen) {
-                selection = null;
-                editor.settingsPanel.removeAll();
-                editor.settingsPanel.repaint();
+                setSelection(null);
                 if (ap != null) {
                     ap.update();
                 }
@@ -375,6 +372,38 @@ public class SceneEditorArea extends JPanel {
      */
     public void forceUpdate() {
         lastRenderU = System.currentTimeMillis();
+    }
+
+    /**
+     * Gets the selected actor, or <tt>null</tt> if
+     * no actor is currently selected.
+     *
+     * @return The selected actor.
+     */
+    public Scene.ActorInScene getSelection() {
+        return selection;
+    }
+
+    /**
+     * Sets the selected actor. Not that this <strong>does not</strong>
+     * repaint the scene or update any buffers.
+     *
+     * @param actor The new actor to be selected. May be <tt>null</tt>.
+     */
+    public void setSelection(Scene.ActorInScene actor) {
+        this.selection = actor;
+        int index = (actor != null) ? editor.scene.actors.indexOf(actor) : -1;
+        editor.actorList.setSelectedIndex(index);
+        if (index >=  0) {
+            editor.actorList.ensureIndexIsVisible(index);
+        }
+        editor.setActorTabEnabled(actor != null);
+        if (actor == null) {
+            editor.actorPanel.setVisible(false);
+        } else {
+            editor.actorPanel.setActor(actor);
+            editor.actorPanel.setVisible(true);
+        }
     }
 
 }

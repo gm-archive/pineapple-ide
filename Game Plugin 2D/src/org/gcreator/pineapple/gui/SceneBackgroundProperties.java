@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.gui;
 
 import java.awt.Component;
@@ -39,11 +38,12 @@ import org.gcreator.pineapple.validators.ImageValidator;
  * 
  * @author Serge Humphrey
  */
-public class SceneBackgroundProperties extends javax.swing.JPanel {
+public final class SceneBackgroundProperties extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 125046445356L;
     private SceneEditor editor;
     private BackgroundListModel listModel;
+    private boolean nochange = false;
 
     /**
      * Creates new form SceneBackgroundProperties
@@ -87,7 +87,7 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         }
 
         public Object getElementAt(int index) {
-            return new String("Background "+index);
+            return new String("Background " + index);
         }
 
         public void addListDataListener(ListDataListener l) {
@@ -288,37 +288,44 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
         for (Component c : backgroundPanel.getComponents()) {
             c.setEnabled(db);
         }
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
         updateBackgrounds();
 }//GEN-LAST:event_drawBackgroundImageCheckBoxActionPerformed
 
     private void backgroundsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_backgroundsListValueChanged
-        if (backgroundsList.getSelectedIndex() >= 0) {
-            removeButton.setEnabled(true);
-            backgroundImageCheckBox.setEnabled(true);
-            for (Component c : everythingPanel.getComponents()) {
-                c.setEnabled(true);
-            }
-            for (int row : backgroundsList.getSelectedIndices()) {
-                Background b = editor.scene.backgrounds.get(row);
-                drawBackgroundImageCheckBox.setSelected(b.drawImage);
-                for (Component c : backgroundPanel.getComponents()) {
-                    c.setEnabled(b.drawImage);
+        synchronized (this) {
+            this.nochange = true;
+            if (backgroundsList.getSelectedIndex() >= 0) {
+                removeButton.setEnabled(true);
+                backgroundImageCheckBox.setEnabled(true);
+                for (Component c : everythingPanel.getComponents()) {
+                    c.setEnabled(true);
                 }
-                repeatHorizontalCheckBox.setSelected(b.hrepeat);
-                repeatVerticalCheckBox.setSelected(b.vrepeat);
-                backgroundXSpinner.setValue(b.x);
-                backgroundYSpinner.setValue(b.y);
+                for (int row : backgroundsList.getSelectedIndices()) {
+                    Background b = editor.scene.backgrounds.get(row);
+                    drawBackgroundImageCheckBox.setSelected(b.drawImage);
+                    for (Component c : backgroundPanel.getComponents()) {
+                        c.setEnabled(b.drawImage);
+                    }
+                    repeatHorizontalCheckBox.setSelected(b.hrepeat);
+                    repeatVerticalCheckBox.setSelected(b.vrepeat);
+                    backgroundXSpinner.setValue(b.x);
+                    backgroundYSpinner.setValue(b.y);
+                    backgroundImageCheckBox.setSelectedFile(b.image);
+                }
+            } else {
+                removeButton.setEnabled(false);
+                backgroundImageCheckBox.setEnabled(false);
+                for (Component c : everythingPanel.getComponents()) {
+                    c.setEnabled(false);
+                }
+                for (Component c : backgroundPanel.getComponents()) {
+                    c.setEnabled(false);
+                }
             }
-        } else {
-            removeButton.setEnabled(false);
-            backgroundImageCheckBox.setEnabled(false);
-            for (Component c : everythingPanel.getComponents()) {
-                c.setEnabled(false);
-            }
-            for (Component c : backgroundPanel.getComponents()) {
-                c.setEnabled(false);
-            }
+            this.nochange = false;
         }
     }//GEN-LAST:event_backgroundsListValueChanged
 
@@ -330,7 +337,9 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             l.contentsChanged(e);
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
 }//GEN-LAST:event_addButtonActionPerformed
 
     private void repeatHorizontalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeatHorizontalCheckBoxActionPerformed
@@ -340,7 +349,9 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             b.hrepeat = rh;
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
     }//GEN-LAST:event_repeatHorizontalCheckBoxActionPerformed
 
     private void repeatVerticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeatVerticalCheckBoxActionPerformed
@@ -350,25 +361,31 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             b.vrepeat = rv;
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
     }//GEN-LAST:event_repeatVerticalCheckBoxActionPerformed
 
     private void backgroundXSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_backgroundXSpinnerStateChanged
         for (int row : backgroundsList.getSelectedIndices()) {
             Background b = editor.scene.backgrounds.get(row);
-            b.x = (Integer)backgroundXSpinner.getValue();
+            b.x = (Integer) backgroundXSpinner.getValue();
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
     }//GEN-LAST:event_backgroundXSpinnerStateChanged
 
     private void backgroundYSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_backgroundYSpinnerStateChanged
         for (int row : backgroundsList.getSelectedIndices()) {
             Background b = editor.scene.backgrounds.get(row);
-            b.y = (Integer)backgroundYSpinner.getValue();
+            b.y = (Integer) backgroundYSpinner.getValue();
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
     }//GEN-LAST:event_backgroundYSpinnerStateChanged
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -382,7 +399,9 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
             }
         }
         updateBackgrounds();
-        editor.setModified(true);
+        if (!nochange) {
+            editor.setModified(true);
+        }
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void updateBackgrounds() {
@@ -407,5 +426,4 @@ public class SceneBackgroundProperties extends javax.swing.JPanel {
     private javax.swing.JCheckBox repeatHorizontalCheckBox;
     private javax.swing.JCheckBox repeatVerticalCheckBox;
     // End of variables declaration//GEN-END:variables
-
 }

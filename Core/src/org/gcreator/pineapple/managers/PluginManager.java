@@ -1,6 +1,7 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
 Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+ * 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -46,7 +47,7 @@ public final class PluginManager {
 
     private static Vector<File> modules = new Vector<File>();
     private static URLClassLoader clsloader;
-    
+
     /** Don't allow instantation
      */
     private PluginManager() {
@@ -61,22 +62,22 @@ public final class PluginManager {
         importAppExePlugins();
         URL[] urls = new URL[modules.size()];
         int i = 0;
-        
+
         for (File file : modules) {
             try {
                 if (Core.DEBUG) {
-                System.out.println("Adding " + file);
+                    System.out.println("Adding " + file);
                 }
                 urls[i++] = file.toURI().toURL();
             } catch (Exception e) {
             }
-        
+
         }
         clsloader = new URLClassLoader(urls);
         if (Core.DEBUG) {
-        for (URL l : clsloader.getURLs()) {
-            System.out.println("Loaded " + l);
-        }
+            for (URL l : clsloader.getURLs()) {
+                System.out.println("Loaded " + l);
+            }
         }
         for (File file : modules) {
             String key = "plugins.enabled." + file.getPath();
@@ -91,7 +92,6 @@ public final class PluginManager {
      */
     public static void importAppDataPlugins() {
         File f = new File(Core.getStaticContext().getApplicationDataFolder().toString() + "/Plugins/");
-        System.out.println(f.toString());
         if (!f.exists()) {
             System.out.println("Creating " + f);
             f.mkdir();
@@ -101,7 +101,6 @@ public final class PluginManager {
             return;
         }
         File[] fs = f.listFiles();
-        System.out.println("Checking " + fs.length + " files.");
         for (File file : fs) {
             if (file.isFile() && file.getName().matches(".*\\.jar")) {
                 modules.add(file);
@@ -114,9 +113,8 @@ public final class PluginManager {
      */
     public static void importAppExePlugins() {
         File f = new File(Core.getStaticContext().getApplicationExecutableFolder().toString() + "/Plugins/");
-        System.out.println(f.toString());
         if (!f.exists()) {
-            System.out.println("Creating "+f);
+            System.out.println("Creating " + f);
             f.mkdir();
             return;
         }
@@ -125,7 +123,6 @@ public final class PluginManager {
             return;
         }
         File[] fs = f.listFiles();
-        System.out.println("Checking " + fs.length + " files.");
         for (File file : fs) {
             if (file.isFile() && file.getName().matches(".*\\.jar")) {
                 modules.add(file);
@@ -181,7 +178,7 @@ public final class PluginManager {
         }
         try {
             if (Core.DEBUG) {
-            System.out.println("Loading Plugin Class " + className + " in " + f.getName());
+                System.out.println("Loading Plugin Class " + className + " in " + f.getName());
             }
             Class c = loader.loadClass(className);
             Object o = c.getConstructor().newInstance();
@@ -190,14 +187,14 @@ public final class PluginManager {
             }
             Plugin p = (Plugin) o;
             if (Core.DEBUG) {
-            System.out.println("Installed Plugin '" + p.getName() + "'");
+                System.out.println("Installed Plugin '" + p.getName() + "'");
             }
             p.setJar(f);
             p.setEnabled(enabled);
             Core.getStaticContext().addPlugin(p);
             if (enabled) {
                 if (Core.DEBUG) {
-                System.out.println("Initializing '" + p.getName() + "'");
+                    System.out.println("Initializing '" + p.getName() + "'");
                 }
                 Method d = c.getMethod("initialize");
                 d.invoke(o);
@@ -213,7 +210,7 @@ public final class PluginManager {
             Logger.getLogger(PluginManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Gets the {@link URLClassLoader} that is used to load the plugins.
      * This will be <tt>null</tt> if {@link #loadPlugins()} has not yet been called.

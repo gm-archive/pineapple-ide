@@ -153,17 +153,20 @@
             </Container>
             <Container class="javax.swing.JSplitPane" name="leftSplitPane">
               <Properties>
-                <Property name="dividerLocation" type="int" value="100"/>
+                <Property name="dividerLocation" type="int" value="80"/>
                 <Property name="dividerSize" type="int" value="8"/>
                 <Property name="orientation" type="int" value="0"/>
-                <Property name="resizeWeight" type="double" value="0.5"/>
+                <Property name="resizeWeight" type="double" value="0.64"/>
                 <Property name="continuousLayout" type="boolean" value="true"/>
                 <Property name="oneTouchExpandable" type="boolean" value="true"/>
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="bottomLeftScrollPane">
+                <Container class="javax.swing.JScrollPane" name="actorListScrollPane">
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                       <JSplitPaneConstraints position="right"/>
@@ -184,6 +187,9 @@
                       <Events>
                         <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="actorListValueChanged"/>
                       </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>

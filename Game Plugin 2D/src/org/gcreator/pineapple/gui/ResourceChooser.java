@@ -107,6 +107,10 @@ public class ResourceChooser extends JPanel {
      * @param file The file to select.
      */
     public void setSelectedFile(BasicFile file) {
+        setSelectedFile(file, false);
+    }
+
+    protected void setSelectedFile(BasicFile file, boolean fireEvent) {
         BasicFile oldFile = selectedFile;
         selectedFile = file;
         if (file == null) {
@@ -114,7 +118,7 @@ public class ResourceChooser extends JPanel {
         } else {
             label.setText(file.getName());
         }
-        if (oldFile != file) {
+        if (fireEvent && oldFile != file) {
             ActionEvent e = new ActionEvent(this, curId++, "change-selected-file");
             for (ActionListener listener : listeners) {
                 listener.actionPerformed(e);

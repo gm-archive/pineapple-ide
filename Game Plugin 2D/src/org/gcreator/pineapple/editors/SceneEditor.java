@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,14 +36,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.ListDataListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.gcreator.pineapple.formats.Scene;
+import org.gcreator.pineapple.gui.ActorProperties;
 import org.gcreator.pineapple.gui.BehaviourPanel;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.gui.SceneBackgroundProperties;
@@ -66,7 +64,7 @@ public class SceneEditor extends DocumentPane {
     public Scene scene;
     private BehaviourPanel panel;
     public SceneEditorArea sea;
-    public JPanel settingsPanel;
+    public ActorProperties actorPanel;
     private JFrame fullScreenWindow;
     private SceneProperties sp;
     private SceneBackgroundProperties sbp;
@@ -86,19 +84,7 @@ public class SceneEditor extends DocumentPane {
         actorChooser.setResourceValidator(new ActorValidator());
         actorChooser.setVisible(true);
 
-        settingsPanel = new JPanel();
-        settingsPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-
-        sp = new SceneProperties(this);
-        settingsTabs.add("Scene Properties", new JScrollPane(sp, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-        sbp = new SceneBackgroundProperties(this);
-        settingsTabs.add("Background Properties", new JScrollPane(sbp, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-
-
-        settingsTabs = new JTabbedPane(JTabbedPane.BOTTOM);
-        settingsTabs.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
-
-        JScrollBar v =  seaScrollPane.getVerticalScrollBar();
+        JScrollBar v = seaScrollPane.getVerticalScrollBar();
         v.setUnitIncrement(16);
         v.setBlockIncrement(64);
         JScrollBar h = seaScrollPane.getHorizontalScrollBar();
@@ -107,6 +93,16 @@ public class SceneEditor extends DocumentPane {
 
         sea = new SceneEditorArea(this);
         seaScrollPane.setViewportView(sea);
+
+        sp = new SceneProperties(this);
+        settingsTabs.add("Scene Properties", new JScrollPane(sp, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        sbp = new SceneBackgroundProperties(this);
+        settingsTabs.add("Background Properties", new JScrollPane(sbp, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        actorPanel = new ActorProperties(sea);
+        settingsTabs.add("Actor Properties", new JScrollPane(actorPanel));
+        settingsTabs.setEnabledAt(2, false);
+
+        leftSplitPane.setDividerLocation(0.6D);
     }
 
     private final class ActorListModel implements ListModel {
@@ -184,6 +180,17 @@ public class SceneEditor extends DocumentPane {
         return save();
     }
 
+    /**
+     * Sets whether the Actor Properties tab should be enabled.
+     *
+     * @param b  whether the Actor Properties tab should be enabled or not.
+     */
+    public void setActorTabEnabled(boolean b) {
+        if (settingsTabs != null) {
+            settingsTabs.setEnabledAt(2, b);
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -204,7 +211,7 @@ public class SceneEditor extends DocumentPane {
         fullscreenButton = new javax.swing.JToggleButton();
         seaScrollPane = new javax.swing.JScrollPane();
         leftSplitPane = new javax.swing.JSplitPane();
-        bottomLeftScrollPane = new javax.swing.JScrollPane();
+        actorListScrollPane = new javax.swing.JScrollPane();
         actorList = new javax.swing.JList();
         settingsTabs = new javax.swing.JTabbedPane();
 
@@ -263,10 +270,10 @@ public class SceneEditor extends DocumentPane {
         seaScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         seaScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        leftSplitPane.setDividerLocation(100);
+        leftSplitPane.setDividerLocation(80);
         leftSplitPane.setDividerSize(8);
         leftSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        leftSplitPane.setResizeWeight(0.5);
+        leftSplitPane.setResizeWeight(0.64);
         leftSplitPane.setContinuousLayout(true);
         leftSplitPane.setOneTouchExpandable(true);
 
@@ -277,9 +284,9 @@ public class SceneEditor extends DocumentPane {
                 actorListValueChanged(evt);
             }
         });
-        bottomLeftScrollPane.setViewportView(actorList);
+        actorListScrollPane.setViewportView(actorList);
 
-        leftSplitPane.setRightComponent(bottomLeftScrollPane);
+        leftSplitPane.setRightComponent(actorListScrollPane);
         leftSplitPane.setLeftComponent(settingsTabs);
 
         javax.swing.GroupLayout environmentTabLayout = new javax.swing.GroupLayout(environmentTab);
@@ -353,7 +360,7 @@ private void fullscreenButtonActionPerformed(java.awt.event.ActionEvent evt) {//
 private void actorListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_actorListValueChanged
     int i = actorList.getSelectedIndex();
     if (i >= 0 && i < scene.actors.size()) {
-        sea.selection = scene.actors.get(i);
+        sea.setSelection(scene.actors.get(i));
         sea.renderActorCache();
         sea.renderCache();
         sea.paint();
@@ -362,9 +369,9 @@ private void actorListValueChanged(javax.swing.event.ListSelectionEvent evt) {//
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public org.gcreator.pineapple.gui.ResourceChooser actorChooser;
-    private javax.swing.JList actorList;
+    public javax.swing.JList actorList;
+    public javax.swing.JScrollPane actorListScrollPane;
     private javax.swing.JToggleButton addActorButton;
-    private javax.swing.JScrollPane bottomLeftScrollPane;
     private javax.swing.JToggleButton deleteActorButton;
     private javax.swing.JToggleButton editActorButton;
     private javax.swing.JPanel environmentTab;
