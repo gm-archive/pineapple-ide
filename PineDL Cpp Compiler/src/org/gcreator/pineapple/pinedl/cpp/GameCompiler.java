@@ -70,7 +70,7 @@ public class GameCompiler {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return CompilationProfile.WINDOWS_TO_WINDOWS;
-        } else { /* No one cares about BeOS, the only non-unix other platform */
+        } else { /* No one cares about any other non-unix other platform */
             
             return CompilationProfile.UNIX_TO_UNIX;
         }
@@ -288,9 +288,19 @@ public class GameCompiler {
         }
 
 
-
-        Process proc = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
+        String[] args = command.toArray(new String[command.size()]);
         compFrame.writeLine("Calling GCC C++ for executable generation");
+        StringBuffer cmd = new StringBuffer("<font color='green'><em>");
+        for (String s : args) {
+            s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+            if (s.contains(" ")) {
+                s = "\""+s+"\"";
+            }
+            cmd.append(" ").append(s);
+        }
+        cmd.append("</em></font>");
+        compFrame.writeLine(cmd.toString());
+        Process proc = Runtime.getRuntime().exec(args);
         String res = "";
         InputStream is = new BufferedInputStream(proc.getErrorStream());
         while ((c = is.read()) != -1) {
