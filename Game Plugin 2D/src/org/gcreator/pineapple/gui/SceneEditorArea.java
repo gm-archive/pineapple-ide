@@ -273,6 +273,7 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
         if (mode == MODE_ADD) {
             BasicFile f = editor.actorChooser.getSelectedFile();
             if (f != null) {
+                dragOffset = evt.getPoint();
                 Scene s = editor.scene;
                 Scene.ActorInScene a = new Scene.ActorInScene(f);
                 a.x = evt.getX();

@@ -556,7 +556,7 @@ public class DefaultProjectManager implements ProjectManager {
                 } else {
                     File file = new File(project.getProjectFolder(), path.substring(1));
                     if (!file.exists()) {
-                        System.err.println("ERROR: file " + file + " does not exist.");
+                        System.err.println("Warning: file " + file + " does not exist.");
                         return;
                     }
                     try {

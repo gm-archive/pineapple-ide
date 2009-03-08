@@ -127,6 +127,7 @@ public class GameCompiler {
                             compile();
                         } catch (Exception ex) {
                             compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + ex.getMessage() + "</font>");
+                            ex.printStackTrace();
                             worked = false;
                         }
                     }
@@ -134,7 +135,7 @@ public class GameCompiler {
 
                 t.start();
             } catch (Exception e) {
-                compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + e.getMessage() + "</font>");
+                compFrame.writeLine("<font color='red'>Compile Exception: " + e.getMessage() + "</font>");
                 worked = false;
             }
         }
