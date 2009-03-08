@@ -112,6 +112,7 @@ public class GameCompiler {
                             }
                             buildContext();
                             compFrame.writeLine("Generating C++ and header files");
+                            createTextureListScript();
                             for (File script : pineScripts) {
                                 if (!worked) {
                                     return;
@@ -138,6 +139,25 @@ public class GameCompiler {
         }
     }
 
+    public void createTextureListScript() throws IOException {
+        File f = new File(outputFolder, "TextureList.pdl");
+        FileOutputStream fos = new FileOutputStream(f);
+        
+        fos.write("package ".getBytes());
+        fos.write(gamePackage.getBytes());
+        fos.write(';');
+        
+        fos.write('\n');
+        fos.write('\n');
+        fos.write("class TextureList{\n".getBytes());
+        
+        
+        
+        fos.write("}\n".getBytes());
+        
+        fos.close();
+    }
+    
     public static void copyFile(String resFolder, File outFolder, String fname) throws IOException {
         File f = new File(outFolder, fname);
         FileOutputStream fos = new FileOutputStream(f);

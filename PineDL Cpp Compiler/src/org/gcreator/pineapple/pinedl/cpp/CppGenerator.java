@@ -176,7 +176,7 @@ public class CppGenerator {
                 return "Pineapple::Keyboard" + (reference ? "*" : "");
             }
         }
-        throwError("Unknown type " + t.toString());
+        throwError("In file " + fname + ": Unknown type " + t.toString());
         return "---";
     }
     
