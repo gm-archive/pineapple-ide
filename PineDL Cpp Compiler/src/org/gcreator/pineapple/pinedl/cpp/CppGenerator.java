@@ -39,6 +39,7 @@ import org.gcreator.pineapple.pinedl.PineDLLexer;
 import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
+import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
@@ -223,9 +224,14 @@ public class CppGenerator {
             String s = detokenize(cls.clsName) + "::" + detokenize(cls.clsName) + '(';
 
             boolean isFirst = true;
+            PineDLContext vars = new PineDLContext("<constructor>");
             for (Argument a : c.arguments) {
                 if (!isFirst) {
                     s += ", ";
+                }
+                if(vars.isVariableDeclared(a.name)){
+                    throw new Exception("In constructor: "
+                        + "Argument name " + a.name + " is used twice.");
                 }
                 s += retrieveType(a.type, true);
                 s += ' ';
@@ -244,7 +250,7 @@ public class CppGenerator {
                         s += ", ";
                     }
 
-                    s += leafToString(exp);
+                    s += leafToString(exp, vars);
 
                     isFirst = false;
                 }
@@ -253,7 +259,7 @@ public class CppGenerator {
 
             writeLine(s);
 
-            writeLine(leafToString(c.content));
+            writeLine(leafToString(c.content, vars));
 
             writeLine();
         }
@@ -266,13 +272,19 @@ public class CppGenerator {
                     detokenize(cls.clsName) + "::" + detokenize(method.name) + '(';
 
             boolean isFirst = true;
+            PineDLContext vars = new PineDLContext(method.name);
             for (Argument a : method.arguments) {
                 if (!isFirst) {
                     s += ", ";
                 }
+                if(vars.isVariableDeclared(a.name)){
+                    throw new Exception("In function " + vars.getFunctionName() + ": "
+                        + "Argument name " + a.name + " is used twice.");
+                }
                 s += retrieveType(a.type, true);
                 s += ' ';
                 s += detokenize(a.name);
+                vars.declareVariable(a.name, a.type);
                 isFirst = false;
             }
 
@@ -282,34 +294,40 @@ public class CppGenerator {
 
             System.out.println(method.content.toString());
             
-            writeLine(leafToString(method.content));
+            writeLine(leafToString(method.content, vars));
 
             writeLine();
         }
     }
 
-    private String leafToString(Leaf l) {
-        return leafToString(l, false);
+    private String leafToString(Leaf l, PineDLContext vars) throws Exception{
+        return leafToString(l, false, vars);
     }
     
-    private String leafToString(Leaf l, boolean statement) {
+    private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception{
         if (l instanceof Block) {
+            PineDLContext c = new PineDLContext(vars);
             String s = "{\n";
 
             for (Leaf leaf : ((Block) l).content) {
-                s += leafToString(leaf, true) + "\n";
+                s += leafToString(leaf, true, c) + "\n";
             }
 
             return s + "}";
         }
         if (l instanceof DeclAssign) {
             DeclAssign da = (DeclAssign) l;
+            if(vars.isVariableDeclared(da.name)){
+                throw new Exception("In function " + vars.getFunctionName() + ": "
+                        + "Redeclaring variable '" + da.name + "'");
+            }
+            vars.declareVariable(da.name, da.type);
             String s = retrieveType(da.type, true);
             s += ' ';
             s += detokenize(da.name);
             if (da.value != null) {
                 s += '=';
-                s += leafToString(da.value);
+                s += leafToString(da.value, vars);
             }
             if(statement){
                 s += ';';
@@ -318,7 +336,7 @@ public class CppGenerator {
         }
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
-            String s = leafToString(e.left) + "= (" + leafToString(e.right) + ")";
+            String s = leafToString(e.left, vars) + "= (" + leafToString(e.right, vars) + ")";
             if(statement){
                 s += ';';
             }
@@ -326,23 +344,23 @@ public class CppGenerator {
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
-            return "(" + leafToString(s.left) + ")+(" + leafToString(s.right) + ")";
+            return "(" + leafToString(s.left, vars) + ")+(" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
-            return "(" + leafToString(s.left) + ")-(" + leafToString(s.right) + ")";
+            return "(" + leafToString(s.left, vars) + ")-(" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof MultiplyOperation) {
             MultiplyOperation s = (MultiplyOperation) l;
-            return "(" + leafToString(s.left) + ")*(" + leafToString(s.right) + ")";
+            return "(" + leafToString(s.left, vars) + ")*(" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof DivisionOperation) {
             DivisionOperation s = (DivisionOperation) l;
-            return "(" + leafToString(s.left) + ")/(" + leafToString(s.right) + ")";
+            return "(" + leafToString(s.left, vars) + ")/(" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
-            return "(" + leafToString(s.left) + ")<(" + leafToString(s.right) + ")";
+            return "(" + leafToString(s.left, vars) + ")<(" + leafToString(s.right, vars) + ")";
         }
         else{
             System.out.println("not less");
@@ -365,7 +383,7 @@ public class CppGenerator {
                 if(!first){
                     s += ", ";
                 }
-                s += leafToString(e);
+                s += leafToString(e, vars);
                 first = false;
             }
             s += ')';
@@ -388,7 +406,7 @@ public class CppGenerator {
                 if(!first){
                     s += ", ";
                 }
-                s += leafToString(e);
+                s += leafToString(e, vars);
                 first = false;
             }
             
@@ -398,32 +416,19 @@ public class CppGenerator {
             }
             return s;
         }
-        if (l instanceof DeclAssign){
-            DeclAssign a = (DeclAssign) l;
-            String s = retrieveType(a.type, true);
-            s += ' ';
-            s += a.name;
-            if(a.value!=null){
-                s += " = (";
-                s += leafToString(a.value);
-                s += ')';
-                if(statement){
-                    s += ';';
-                }
-            }
-            return s;
-        }
         if (l instanceof IfStatement){
             IfStatement i = (IfStatement) l;
             String s = "if(";
-            String le = leafToString(i.condition);
+            String le = leafToString(i.condition, vars);
             s += le;
             s += "){";
-            s += leafToString(i.then, true);
+            PineDLContext cvars = new PineDLContext(vars);
+            s += leafToString(i.then, true, cvars);
             s += "}";
             if(i.elseCase!=null){
                 s += "else{";
-                s += leafToString(i.elseCase, true);
+                PineDLContext cvars2 = new PineDLContext(vars);
+                s += leafToString(i.elseCase, true, cvars2);
                 s += "}";
             }
             return s;
