@@ -73,7 +73,7 @@ public class ResourceChooser extends JPanel {
                 none.addActionListener(new ActionListener() {
 
                     public void actionPerformed(ActionEvent evt) {
-                        setSelectedFile(null);
+                        setSelectedFile(null, true);
                     }
                 });
                 menu.add(none);
@@ -200,7 +200,7 @@ public class ResourceChooser extends JPanel {
         }
 
         public void actionPerformed(ActionEvent evt) {
-            setSelectedFile(elem.getFile());
+            setSelectedFile(elem.getFile(), true);
         }
     }
 
