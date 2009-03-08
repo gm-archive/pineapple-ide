@@ -347,16 +347,27 @@ public class PineappleGUI implements EventHandler {
                     return;
                 }
                 Object o = tp.getLastPathComponent();
-                if (o == null || !(o instanceof FileTreeNode)) {
+
+                if (o == null) {
                     return;
                 }
-                FileTreeNode t = (FileTreeNode) o;
-                ProjectElement el = t.getElement();
+
+                if (!(o instanceof BaseTreeNode)) {
+                    return;
+                }
+
+                BaseTreeNode n = (BaseTreeNode) o;
+                ProjectElement el = n.getElement();
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    deleteFile(el);
+                }
+
+                if (!(n instanceof FileTreeNode)) {
+                    return;
+                }
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     openFile(el.getFile());
-                } else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    deleteFile(el);
                 }
             }
         });
@@ -2153,7 +2164,7 @@ public class PineappleGUI implements EventHandler {
         while (exists(fname+i, folder, project)) {
             i++;
         }
-        return fname+1;
+        return fname+i;
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="exists(String, ProjectFolder, Project)                    ">

@@ -39,6 +39,7 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
      * Creates a new TabbedInterfaceProvider.
      */
     public TabbedInterfaceProvider() {
+        this.setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         PineappleGUI.manager.setMainContent(this);
     }
 
