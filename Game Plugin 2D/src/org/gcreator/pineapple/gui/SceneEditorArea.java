@@ -36,6 +36,8 @@ import javax.swing.JPanel;
 import org.gcreator.pineapple.editors.SceneEditor;
 import org.gcreator.pineapple.formats.Scene;
 import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.util.ListeningVector;
+import org.gcreator.pineapple.util.VectorChangeListener;
 
 /**
  * Draws the components of scene.
@@ -43,7 +45,7 @@ import org.gcreator.pineapple.project.io.BasicFile;
  * @author Luís Reis
  * @author Serge Humphrey
  */
-public class SceneEditorArea extends JPanel {
+public class SceneEditorArea extends JPanel implements VectorChangeListener {
 
     private static final long serialVersionUID = -5905569070386863865L;
     public static final int MODE_ADD = 0;
@@ -63,6 +65,7 @@ public class SceneEditorArea extends JPanel {
     private volatile long lastRenderU = -1L;
     ActorProperties ap;
     private Point dragOffset;
+    private boolean sorting = false;
 
     /**
      * Creates a new {@link SceneEditorArea}
@@ -79,6 +82,9 @@ public class SceneEditorArea extends JPanel {
         this.backgroundCache = newCache();
         this.buffer = newCache();
         this.cache = newCache();
+        /* Sort actors by depth */
+        vectorChanged(editor.scene.actors);
+        editor.scene.actors.addListener(this);
 
         this.addMouseListener(new MouseAdapter() {
 
@@ -139,7 +145,7 @@ public class SceneEditorArea extends JPanel {
             pg.drawImage(buffer, 0, 0, null);
         }
     }
-    
+
     public void paint() {
         paint(this.getGraphics());
     }
@@ -184,14 +190,15 @@ public class SceneEditorArea extends JPanel {
 
 
         notRendered = selection;
-        Collections.sort(editor.scene.actors);
-        for (Scene.ActorInScene actor : editor.scene.actors) {
+        /* Draw backwards because biggest depth ones are at the end of the vector. */
+        for (int i = editor.scene.actors.size() - 1; i >= 0; i--) {
+            Scene.ActorInScene actor = editor.scene.actors.get(i);
             /* Don't draw selected actor because it moves too much */
             if (actor == selection) {
                 continue;
             }
-            BufferedImage i = actor.getImage();
-            g.drawImage(i, actor.x, actor.y, null);
+            BufferedImage img = actor.getImage();
+            g.drawImage(img, actor.x, actor.y, null);
         }
         g.dispose();
 
@@ -394,7 +401,7 @@ public class SceneEditorArea extends JPanel {
         this.selection = actor;
         int index = (actor != null) ? editor.scene.actors.indexOf(actor) : -1;
         editor.actorList.setSelectedIndex(index);
-        if (index >=  0) {
+        if (index >= 0) {
             editor.actorList.ensureIndexIsVisible(index);
         }
         editor.setActorTabEnabled(actor != null);
@@ -406,4 +413,14 @@ public class SceneEditorArea extends JPanel {
         }
     }
 
+    public void vectorChanged(ListeningVector v) {
+        if (sorting) {
+            return;
+        }
+        synchronized (v) {
+            sorting = true;
+            Collections.sort(v);
+            sorting = false;
+        }
+    }
 }

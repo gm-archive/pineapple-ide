@@ -29,6 +29,7 @@ public interface VectorChangeListener {
 
     /**
      * Called when the vector has been changed.
+     * @param v The {@link ListeningVector} that was changed.
      */
-    public void vectorChanged();
+    public void vectorChanged(ListeningVector v);
 }

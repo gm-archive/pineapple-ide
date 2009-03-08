@@ -50,6 +50,7 @@ import org.gcreator.pineapple.gui.SceneEditorArea;
 import org.gcreator.pineapple.gui.SceneProperties;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.util.ListeningVector;
 import org.gcreator.pineapple.util.VectorChangeListener;
 
 /**
@@ -112,7 +113,7 @@ public class SceneEditor extends DocumentPane {
         {
             scene.actors.addListener(new VectorChangeListener() {
 
-                public void vectorChanged() {
+                public void vectorChanged(ListeningVector v) {
                     for (ListDataListener l : listeners) {
                         l.contentsChanged(null);
                     }
@@ -145,7 +146,7 @@ public class SceneEditor extends DocumentPane {
             JLabel l = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof Scene.ActorInScene) {
                 Scene.ActorInScene s = (Scene.ActorInScene)value;
-                l.setText(s.actor.getName() + " (" + s.x + ", " + s.y + ")");
+                l.setText(s.actor.getName() + " (" + s.x + ", " + s.y + "), Z: " + s.actor.getZ());
             }
 
             return l;

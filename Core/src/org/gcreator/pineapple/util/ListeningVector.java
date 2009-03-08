@@ -56,7 +56,7 @@ public class ListeningVector<E> extends Vector<E> {
 
     protected void fireUpdate() {
         for (VectorChangeListener l : listeners) {
-            l.vectorChanged();
+            l.vectorChanged(this);
         }
     }
 
