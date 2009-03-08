@@ -25,6 +25,7 @@ package org.gcreator.pineapple.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -35,47 +36,46 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 
 /**
- * The about dialog, contains credits and license
+ * The about dialog, contains credits and license.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
 public class AboutDialog extends JDialog {
 
     private static final long serialVersionUID = -3046667469132936123L;
 
-    public AboutDialog(JFrame frame) {
-        super(frame);
+    public AboutDialog(JFrame parent) {
+        super(parent);
 
-        setTitle("About");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(500, 300);
-        setModalityType(ModalityType.APPLICATION_MODAL);
-
-        setLayout(new BorderLayout());
+        this.setTitle("About");
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setSize(640, 480);
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
+        this.setLayout(new BorderLayout());
 
         JSeparator sep = new JSeparator();
         sep.setVisible(true);
-        add(sep, BorderLayout.SOUTH);
+        this.add(sep, BorderLayout.SOUTH);
 
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(100, 30));
-        panel.setVisible(true);
-        add(panel, BorderLayout.SOUTH);
-        FlowLayout l = new FlowLayout();
-        panel.setLayout(l);
-        l.setAlignment(FlowLayout.RIGHT);
-        JButton ok = new JButton("OK");
-        ok.setVisible(true);
+        panel.setPreferredSize(new Dimension(100, 40));
+        panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+        JButton ok = new JButton("Close");
         ok.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 AboutDialog.this.dispose();
             }
         });
         panel.add(ok);
+        this.add(panel, BorderLayout.SOUTH);
+
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.add("Credits", createCreditsTab());
@@ -83,7 +83,7 @@ public class AboutDialog extends JDialog {
         tabs.add("MIT License", createMITTab());
         tabs.add("LGPL License", createLGPLTab());
         
-        add(tabs, BorderLayout.CENTER);
+        this.add(tabs, BorderLayout.CENTER);
     }
 
     public JScrollPane createCreditsTab() {
@@ -99,17 +99,13 @@ public class AboutDialog extends JDialog {
                 "</ul>"
                 );
         JScrollPane scroll = new JScrollPane(editor);
-        scroll.setVisible(true);
 
         return scroll;
     }
 
     public JScrollPane createLicenseTab() {
-        JEditorPane editor = new JEditorPane();
-        editor.setVisible(true);
-        editor.setEditable(false);
-        editor.setContentType("text/html");
-        editor.setText("Most of the source code is licensed as MIT, " +
+        JEditorPane editor = new JEditorPane("text/html", 
+                "Most of the source code is licensed as MIT, " +
                 "but this varies from module to module." +
                 "<br/><br/>" +
                 "<table border=\"1\">"   +
@@ -146,19 +142,18 @@ public class AboutDialog extends JDialog {
                     " allows you to convert your PineDL into C++, and then compiles the C++," +
                     " and thus creates your game.</td>" + 
                  "</tr>" +
-                "</table>"
-                );
+                "</table>");
+        editor.setEditable(false);
+        editor.setCaretPosition(0);
         JScrollPane scroll = new JScrollPane(editor);
-        scroll.setVisible(true);
 
         return scroll;
     }
     
     public JScrollPane createMITTab() {
-        JTextPane p = new JTextPane();
-        p.setText(
+        JTextArea p = new JTextArea(
 "Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>\n"+
-"Copyright (C) 2008, 2009 Serge Humphrey <bob@bobtheblueberry.com>\n"+
+"Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>\n"+
 "\n"+
 "Permission is hereby granted, free of charge, to any person obtaining a copy\n"+
 "of this software and associated documentation files (the \"Software\"), to deal\n"+
@@ -177,14 +172,14 @@ public class AboutDialog extends JDialog {
 "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"+
 "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"+
 "THE SOFTWARE.");
+        p.setEditable(false);
         return new JScrollPane(p);
     }
     
     public JScrollPane createLGPLTab() {
-        JTextPane p = new JTextPane();
-        p.setText(
-"		   GNU LESSER GENERAL PUBLIC LICENSE\n"+
-"                       Version 3, 29 June 2007\n"+
+        JTextArea p = new JTextArea(
+"                    GNU LESSER GENERAL PUBLIC LICENSE\n"+
+"                         Version 3, 29 June 2007\n"+
 "\n"+
 " Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>\n"+
 " Everyone is permitted to copy and distribute verbatim copies\n"+
@@ -348,7 +343,8 @@ public class AboutDialog extends JDialog {
 "apply, that proxy's public statement of acceptance of any version is\n"+
 "permanent authorization for you to choose that version for the\n"+
 "Library.");
-        
+
+        p.setEditable(false);
         return new JScrollPane(p);
     }
 }
