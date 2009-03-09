@@ -25,8 +25,6 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project.io;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import org.gcreator.pineapple.project.ProjectElement;
 
 /**

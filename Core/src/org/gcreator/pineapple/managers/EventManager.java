@@ -38,7 +38,7 @@ import java.util.Vector;
  * 
  * @author Luís Reis
  */
-public class EventManager {
+public final  class EventManager {
 
     private static Vector<EventObject> highPriority = new Vector<EventObject>();
     private static Vector<EventObject> mediumPriority = new Vector<EventObject>();
@@ -109,33 +109,9 @@ public class EventManager {
      */
     @SuppressWarnings("unchecked")
     public static void fireEvent(Object sender, String type, Object... arguments) {
-        if (type != null && !type.equals("all")) { /* Event type 'all' can not be thrown. */
-            Event evt = new Event(sender, type, arguments);
-            for (EventObject o : (Vector<EventObject>) highPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
-            }
-            for (EventObject o : (Vector<EventObject>) mediumPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
-            }
-            for (EventObject o : (Vector<EventObject>) lowPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
-            }
-        }
+        CannonBall ball = new CannonBall(sender, type, arguments);
+        Thread cannon = new Thread(ball, "Cannon Firing event " + type);
+        cannon.start();
     }
 
     private static class EventObject {
@@ -171,5 +147,51 @@ public class EventManager {
     }
 
     private EventManager() {
+    }
+
+    private static final class CannonBall implements Runnable {
+
+        private Object sender;
+        private String type;
+        private Object[] arguments;
+
+        public CannonBall(Object sender, String type, Object[] arguments) {
+            this.sender = sender;
+            this.type = type;
+            this.arguments = arguments;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void run() {
+            if (type != null && !type.equals("all")) { /* Event type 'all' can not be thrown. */
+            Event evt = new Event(sender, type, arguments);
+            for (EventObject o : (Vector<EventObject>) highPriority.clone()) {
+                if (o.type.equals(type) || o.type.equals("all")) {
+                    o.handler.handleEvent(evt);
+                }
+                if (evt.isHandled()) {
+                    return;
+                }
+            }
+            for (EventObject o : (Vector<EventObject>) mediumPriority.clone()) {
+                if (o.type.equals(type) || o.type.equals("all")) {
+                    o.handler.handleEvent(evt);
+                }
+                if (evt.isHandled()) {
+                    return;
+                }
+            }
+            for (EventObject o : (Vector<EventObject>) lowPriority.clone()) {
+                if (o.type.equals(type) || o.type.equals("all")) {
+                    o.handler.handleEvent(evt);
+                }
+                if (evt.isHandled()) {
+                    return;
+                }
+            }
+        }
+        }
+
     }
 }

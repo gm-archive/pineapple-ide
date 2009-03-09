@@ -26,6 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.gcreator.pineapple.core.Core;
+import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
@@ -38,15 +40,31 @@ public abstract class DocumentPane extends JPanel {
     private static final long serialVersionUID = 1L;
     protected BasicFile file;
     protected boolean modified;
+    protected Project project;
     
     /**
-     * Creates a DocumentPane for a specific file.
-     * @param file The file
+     * Creates a DocumentPane for a specific file
+     * and sets the project to the currently opened project.
+     * 
+     * @param file The file.
      */
     public DocumentPane(BasicFile file) {
-        this.file = file;
+        this(file, (file.getElement() == null) ? null : PineappleCore.getProject());
     }
 
+    /**
+     * Creates a DocumentPane for a specific file
+     * and sets project for this document.
+     * 
+     * @param file The file.
+     * @param p The {@link Project} to which this document
+     * is part of. May be <tt>null</tt>.
+     */
+    public DocumentPane(BasicFile file, Project p) {
+        this.file = file;
+        this.project = p;
+    }
+    
     /**
      * @return The file that this pane edits.
      */
@@ -164,5 +182,16 @@ public abstract class DocumentPane extends JPanel {
         }
         PineappleGUI.dip.remove(this);
         return true;
+    }
+
+    /**
+     * Gets the {@link Project} which this {@link DocumentPane} belongs to,
+     * or <tt>null</tt> if it does not belong to any project.
+     *
+     * @return The {@link Project} that this document belongs to,
+     * or null if it is belongs to no project.
+     */
+    public Project getProject() {
+        return project;
     }
 }

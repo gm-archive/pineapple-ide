@@ -285,7 +285,7 @@ public class PineappleGUI implements EventHandler {
         SwingUtilities.updateComponentTreeUI(f);
         f.setTitle("Pineapple IDE");
         f.setIconImage(new ImageIcon(getClass().getResource(
-                "/org/gcreator/pineapple/pineapple.png")).getImage());
+                "/org/gcreator/pineapple/core/pineapple.png")).getImage());
 
         manager = new MyDoggyToolWindowManager(Locale.getDefault(), PluginManager.getClassLoader());
         f.getContentPane().add(manager);
@@ -902,7 +902,7 @@ public class PineappleGUI implements EventHandler {
      * @param evt The sent event
      */
     @Override
-    public void handleEvent(Event evt) {
+    public void handleEvent(final Event evt) {
         //<editor-fold defaultstate="collapsed" desc="APPLICATION_INITIALIZED">
         if (evt.getEventType().equals(DefaultEventTypes.APPLICATION_INITIALIZED)) {
             
@@ -1065,6 +1065,12 @@ public class PineappleGUI implements EventHandler {
                 public void run() {
                     if (PineappleCore.getProject() == null) {
                         treeModel.setRoot(null);
+                        /* Close tabs */
+                        for (DocumentPane p : dip.getDocuments()) {
+                            if (p.getProject() == evt.getArguments()[0]) {
+                                p.dispose();
+                            }
+                        }
                     } else {
                         treeModel.setRoot(PineappleCore.getProject().getTreeNode());
                     }
@@ -1822,6 +1828,8 @@ public class PineappleGUI implements EventHandler {
         d.add(south, "South");
         d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         d.setSize(360, 280);
+        pane.setContinuousLayout(true);
+        pane.setDividerLocation(60);
         d.setVisible(true);
 
         if (cbox.isSelected() && format != null) {

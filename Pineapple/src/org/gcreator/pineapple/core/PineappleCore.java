@@ -99,6 +99,9 @@ public final class PineappleCore {
 
     /**
      * Event called when the project is changed.
+     *
+     * @param arg0 The old project.
+     * @param arg1 the new project.
      */
     public static final String PROJECT_CHANGED = "project-changed";
     
