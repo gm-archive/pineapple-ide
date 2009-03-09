@@ -1705,6 +1705,12 @@ public class PineappleGUI implements EventHandler {
                 "<html>Are you sure you want to delete this file from your file system?<br/>This will be permanent.</html>") == JOptionPane.YES_OPTION) {
             e.getFile().delete();
             PineappleCore.getProject().remove(e);
+            /* Remove any open documents for this file.*/
+            for (DocumentPane d : dip.getDocuments()) {
+                if (d.getFile() == e.getFile()) {
+                    dip.remove(d);
+                }
+            }
             EventManager.fireEvent(this, FILE_DELETED, e);
         }
     }
