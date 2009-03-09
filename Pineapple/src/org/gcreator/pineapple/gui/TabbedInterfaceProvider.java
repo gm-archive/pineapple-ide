@@ -59,16 +59,10 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
 
     @Override
     public void add(final String title, final DocumentPane pane) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                addTab(title, pane);
-                int index = indexOfComponent(pane);
-                setTabComponentAt(index, new TabRenderer(TabbedInterfaceProvider.this));
-                setSelectedIndex(index);
-            }
-        });
+        addTab(title, pane);
+        int index = indexOfComponent(pane);
+        setTabComponentAt(index, new TabRenderer(TabbedInterfaceProvider.this));
+        setSelectedIndex(index);
     }
 
     /**

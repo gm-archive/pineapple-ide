@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -182,7 +183,9 @@ public class PineappleGUI implements EventHandler {
      */
     public static MyDoggyToolWindowManager manager;
     private DefaultTreeModel treeModel;
-    protected static final DataFlavor ELEMENT_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Project Element");    //</editor-fold>
+    protected static final DataFlavor ELEMENT_FLAVOR =
+            new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Project Element");
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Events                       ">
     /**
      * Event when a file is deleted from the filesystem.
@@ -1085,7 +1088,7 @@ public class PineappleGUI implements EventHandler {
     }
         //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="openFile(BasicFile)          ">
-        /**
+    /**
      * Opens a given file
      * @param f The file to open
      */
@@ -1114,7 +1117,6 @@ public class PineappleGUI implements EventHandler {
                     } catch (Exception e) {
                     }
                     EventManager.fireEvent(this, FILE_OPENED, f, format);
-                    dip.updateUI();
                 }
             };
             t.start();
