@@ -23,7 +23,10 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,16 +40,16 @@ public class CompilerFrame extends javax.swing.JFrame {
 
         public void write(int c) {
             if (c == '\n') {
-                jEditorPane1.setText(jEditorPane1.getText() + "<br>\n");
+                output.setText(output.getText() + "<br>\n");
             } else {
-                jEditorPane1.setText(jEditorPane1.getText() + ((char) c));
+                output.setText(output.getText() + ((char) c));
             }
         }
     }
 
     public void writeLine(String s) {
-        String txt = jEditorPane1.getText();
-        jEditorPane1.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br>\n") + "<br>\n");
+        String txt = output.getText();
+        output.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br>\n") + "<br>\n");
     }
     GameCompiler c;
 
@@ -66,68 +69,68 @@ public class CompilerFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        openFolderButton = new javax.swing.JButton();
+        runGameButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
+        output = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(300, 200));
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
-        jButton1.setText("Open Folder");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        openFolderButton.setText("Open Folder");
+        openFolderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                openFolderButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(openFolderButton);
 
-        jButton2.setText("Run Game");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        runGameButton.setText("Run Game");
+        runGameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                runGameButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2);
+        jPanel1.add(runGameButton);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
-        jEditorPane1.setContentType("text/html");
-        jEditorPane1.setEditable(false);
-        jEditorPane1.setText("<html><b>Compiling... </b><br/>");
-        jScrollPane1.setViewportView(jEditorPane1);
+        output.setBackground(java.awt.Color.white);
+        output.setContentType("text/html");
+        output.setEditable(false);
+        output.setText("<html><b>Compiling... </b><br/>");
+        jScrollPane1.setViewportView(output);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String ap = c.binFolder.getAbsolutePath();
-    if (tryRun("explorer", ap)) { // Windows
-        return;
-    }
-    if (tryRun("nautilus", ap)) { //GNOME
-        return;
-    }
-    if (tryRun("dolphin", ap)) { //KDE
-        return;
-    }
-    if (tryRun("thunar", ap)) { // Xfce
-        return;
-    }
-    if (tryRun("open", ap)) { // Mac OS X
-        return;
-    }
-    JOptionPane.showMessageDialog(this,
-            "No  file browser command to open " + ap);
-}//GEN-LAST:event_jButton1ActionPerformed
+    private void openFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFolderButtonActionPerformed
+        String ap = c.binFolder.getAbsolutePath();
+        if (tryRun("explorer", ap)) { // Windows
+            return;
+        }
+        if (tryRun("nautilus", ap)) { //GNOME
+            return;
+        }
+        if (tryRun("dolphin", ap)) { //KDE
+            return;
+        }
+        if (tryRun("thunar", ap)) { // Xfce
+            return;
+        }
+        if (tryRun("open", ap)) { // Mac OS X
+            return;
+        }
+        JOptionPane.showMessageDialog(this,
+                "No  file browser command to open " + ap);
+}//GEN-LAST:event_openFolderButtonActionPerformed
 
     public boolean tryRun(String cmd1, String cmd2) {
         try {
-            System.out.println(cmd1 + "\n" + cmd2);
             Runtime.getRuntime().exec(new String[]{cmd1, cmd2});
             return true;
         } catch (Exception e) {
@@ -136,19 +139,32 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     }
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    if (!tryRun("/bin/sh", "\"" + (new File(c.binFolder, "rungame.sh")).getAbsolutePath() + "\"")) {
-        try {
-            Runtime.getRuntime().exec("game.exe", null, c.binFolder);
-        } catch (Exception e) {
+    private void runGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runGameButtonActionPerformed
+        if (c.profile == CompilationProfile.UNIX_TO_UNIX) {
+            ProcessBuilder b = new ProcessBuilder("/bin/sh", "rungame.sh");
+            b.directory(c.binFolder);
+            try {
+                b.start();
+            } catch (IOException ex) {
+                Logger.getLogger(CompilerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (c.profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
+            ProcessBuilder b = new ProcessBuilder("game.exe");
+            b.directory(c.binFolder);
+            try {
+                b.start();
+            } catch (IOException ex) {
+                Logger.getLogger(CompilerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("Unknown Profile: " + c.profile);
         }
-    }
-}//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_runGameButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton openFolderButton;
+    private javax.swing.JEditorPane output;
+    private javax.swing.JButton runGameButton;
     // End of variables declaration//GEN-END:variables
 }
