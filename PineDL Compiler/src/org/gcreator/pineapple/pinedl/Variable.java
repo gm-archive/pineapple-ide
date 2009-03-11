@@ -33,6 +33,15 @@ public class Variable {
     public Type type = null;
     public String name = "";
     
+    public Variable(){}
+    
+    public Variable(AccessControlKeyword access, boolean isStatic, Type type, String name){
+        this.access = access;
+        this.isStatic = isStatic;
+        this.type = type;
+        this.name = name;
+    }
+    
     @Override
     public String toString(){
         return access.toString() + (isStatic?" static ":" ")

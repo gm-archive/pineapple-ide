@@ -23,6 +23,7 @@ THE SOFTWARE.
 
 package org.gcreator.pineapple.pinedl;
 
+import java.util.Collections;
 import java.util.Vector;
 import org.gcreator.pineapple.pinedl.statements.Block;
 
@@ -37,6 +38,18 @@ public class Function {
     public String name = "";
     public Vector<Argument> arguments = new Vector<Argument>();
     public Block content = new Block();
+    
+    public Function(){
+        
+    }
+    
+    public Function(AccessControlKeyword access, boolean isStatic, Type returnType, String name, Argument... arguments){
+        this.access = access;
+        this.returnType = returnType;
+        this.isStatic = isStatic;
+        this.name = name;
+        Collections.addAll(this.arguments, arguments);
+    }
     
     @Override
     public String toString(){

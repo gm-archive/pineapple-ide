@@ -34,6 +34,15 @@ public class Argument {
     public String name = "";
     public Constant defaultValue = null;
     
+    public Argument(){
+        
+    }
+    
+    public Argument(Type type, String name){
+        this.type = type;
+        this.name = name;
+    }
+    
     @Override
     public String toString(){
         return defaultValue==null?

@@ -52,6 +52,7 @@ import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
+import org.gcreator.pineapple.pinedl.statements.Reference;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
@@ -198,6 +199,13 @@ public class CppGenerator {
                 return true;
             }
         }
+        for (String s : context){
+            if(t.equals(s)||t.equals("Game."+s)){
+                System.out.println("match");
+                return true;
+            }
+            System.out.println("no match");
+        }
         if(t.equals("Texture")||t.equals("Pineapple.Texture")){
             return true;
         }
@@ -215,6 +223,20 @@ public class CppGenerator {
         }
         if(t.equals("Keyboard")||t.equals("Pineapple.Keyboard")){
             return true;
+        }
+        return false;
+    }
+    
+    public boolean isType(Reference e){
+        if(e instanceof VariableReference){
+            if(isType(((VariableReference) e).name)){
+                return true;
+            }
+        }
+        else if(e instanceof RetrieverExpression){
+            if(isType(e.toString())){
+                return true;
+            }
         }
         return false;
     }
@@ -305,6 +327,10 @@ public class CppGenerator {
     }
     
     private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception{
+        return leafToString(l, statement, vars, true);
+    }
+    
+    private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception{
         if (l instanceof Block) {
             PineDLContext c = new PineDLContext(vars);
             String s = "{\n";
@@ -361,9 +387,6 @@ public class CppGenerator {
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
             return "(" + leafToString(s.left, vars) + ")<(" + leafToString(s.right, vars) + ")";
-        }
-        else{
-            System.out.println("not less");
         }
         if (l instanceof IntConstant) {
             return l.toString();
@@ -433,9 +456,61 @@ public class CppGenerator {
             }
             return s;
         }
+        if(l instanceof FunctionReference){
+            FunctionReference e = (FunctionReference) l;
+            String x = e.name;
+            x += '(';
+            boolean isFirst = true;
+            for(Expression exp : e.arguments){
+                if(isFirst) {
+                    isFirst = false;
+                }
+                else{
+                    x += ", ";
+                }
+                
+                x += leafToString(exp, false, vars);
+            }
+            x += ')';
+            if(statement){
+                x += ';';
+            }
+            return x;
+        }
+        if(l instanceof VariableReference){
+            if(isType((VariableReference) l)&&isLeft){
+                return ((VariableReference) l).name.replaceAll("\\.","::");
+            }
+            return ((VariableReference) l).name;
+        }
         if(l instanceof RetrieverExpression){
             RetrieverExpression e = (RetrieverExpression) l;
-            return "\"" + e.toString() + "\"";
+            if(isType(e)&&isLeft){
+                return "::" + e.toString().replaceAll("\\.", "::");
+            }
+            else if(e.left instanceof RetrieverExpression){
+                boolean istype = isType(e.left)&&isLeft;
+                return leafToString(e.left, false, vars) + (istype?"::":"->") + 
+                        leafToString(e.right, false, vars, false);
+            }
+            else if(e.left instanceof VariableReference){
+                boolean istype = isType(e.left)&&isLeft;
+                return "::" + leafToString(e.left, false, vars) + (istype?"::":"->") + 
+                        leafToString(e.right, false, vars, false);
+            }
+            return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
+            /*RetrieverExpression e = (RetrieverExpression) l;
+            if(isType(e.toString())){
+                Type t = new Type();
+                t.typeCategory = TypeCategory.CLASS;
+                t.type = e.left.toString().split("\\.");
+                return retrieveType(t, false) + "::" + e.right.toString();
+            }
+            else if(e.left instanceof FunctionReference){
+                
+            }
+            return "[Failed to parse Statement] : \"" + e.toString() + "\", \n" +
+                    "with left="+e.left.toString()+" and right="+e.right.toString();*/
         }
         return "";
     }

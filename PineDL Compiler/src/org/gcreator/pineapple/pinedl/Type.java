@@ -28,6 +28,23 @@ package org.gcreator.pineapple.pinedl;
  * @author Luís Reis
  */
 public class Type {
+    public static final Type INT = new Type(NativeType.INT);
+    public static final Type BOOL = new Type(NativeType.BOOL);
+    public static final Type VOID = new Type(NativeType.VOID);
+    public static final Type STRING = new Type(NativeType.STRING);
+    
+    public Type(){
+        
+    }
+    
+    public Type(NativeType type){
+        nativeType = type;
+    }
+    
+    public Type(String type){
+        this.type = type.split("\\.");
+    }
+            
     public TypeCategory typeCategory = TypeCategory.NATIVE;
     
     /**

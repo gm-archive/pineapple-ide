@@ -155,7 +155,10 @@ public class GameCompiler {
             String fname = image.getName();
             int index = fname.indexOf('.');
             fname = fname.substring(0, index);
-            fos.write(("\t\tpublic: ::Pineapple::Texture* "+fname+";\n").getBytes());
+            fos.write(("\t\tpublic: static ::Pineapple::Texture* "+fname
+                    //+"= new ::Pineapple::Texture(\"res/"
+                    //+ image.getName() +"\")"
+                    + ";\n").getBytes());
         }
         
         fos.write(("\t};\n}\n").getBytes());
@@ -171,8 +174,9 @@ public class GameCompiler {
             String fname = image.getName();
             int index = fname.indexOf('.');
             fname = fname.substring(0, index);
+            fos.write("::Pineapple::Texture* ".getBytes());
             fos.write((gamePackage + "::TextureList::" + fname).getBytes());
-            fos.write((" = new Texture(\"res/"+image.getName()).getBytes());
+            fos.write((" = new ::Pineapple::Texture(\"res/"+image.getName()).getBytes());
             fos.write("\");\n".getBytes());
         }
         
@@ -409,7 +413,7 @@ public class GameCompiler {
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
                 if (a.getImage() != null) {
-                    fos.write("\t\ttexture = TextureList.".getBytes());
+                    fos.write(("\t\ttexture = "+gamePackage+".TextureList.").getBytes());
                     String iname = a.getImage().getName();
                     iname = iname.substring(0, iname.indexOf('.'));
                     fos.write(iname.getBytes());
@@ -457,7 +461,9 @@ public class GameCompiler {
             fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
             if (a.getImage() != null) {
                 fos.write("\t\ttexture = TextureList.".getBytes());
-                fos.write(a.getImage().getName().getBytes());
+                String iname = a.getImage().getName();
+                iname = iname.substring(0, iname.indexOf('.'));
+                fos.write(iname.getBytes());
                 fos.write(";\n".getBytes());
             }
             fos.write("\t}\n".getBytes());
