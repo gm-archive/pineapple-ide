@@ -33,7 +33,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
@@ -156,7 +155,7 @@ public class SceneEditor extends DocumentPane {
      * {@inheritDoc}
      */
     @Override
-    public boolean save() {
+    public boolean saveBackend() {
         boolean success = false;
         try {
             scene.save(file);
@@ -170,15 +169,8 @@ public class SceneEditor extends DocumentPane {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.setModified(success);
         return success;
-    }
-    
-    /**
-     * Saves the file
-     */
-    @Override
-    public boolean saveBackend() {
-        return save();
     }
 
     /**

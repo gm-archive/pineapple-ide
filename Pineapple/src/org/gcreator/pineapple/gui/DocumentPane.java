@@ -73,11 +73,15 @@ public abstract class DocumentPane extends JPanel {
     }
 
     /**
-     * Saves the file.
-     * 
+     * Saves the file using any necessary
+     * graphical user interface requests.
+     * <br/><br/>
+     * <strong>NOTE:</strong><br/>
+     * You can not override this method, you must override {@link #saveBackend()}.
+     *
      * @return Whether or not the file was saved.
      */
-    public boolean save() {
+    public final boolean save() {
         if (file == null) {
             if (!saveas()) {
                 return false;
@@ -130,6 +134,8 @@ public abstract class DocumentPane extends JPanel {
      * @param modified Whether or not the file was modified.
      */
     public void setModified(boolean modified) {
+        System.out.println("M: "+modified);
+        Thread.dumpStack();
         this.modified = modified;
         if (PineappleGUI.dip.getSelectedDocument() == this) {
             PineappleGUI.fileSave.setEnabled(canSave());

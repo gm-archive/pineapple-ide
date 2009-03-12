@@ -38,6 +38,7 @@ public final class ActorProperties extends javax.swing.JPanel {
     private static final long serialVersionUID = -3017742931775563622L;
     private Scene.ActorInScene actor;
     private SceneEditorArea area;
+    private boolean updating = false;
     
     
     /**
@@ -72,9 +73,13 @@ public final class ActorProperties extends javax.swing.JPanel {
     }
 
     public void update() {
-        actorChooser.setSelectedFile(actor.file);
-        xSpinner.setValue(new Integer(actor.x));
-        ySpinner.setValue(new Integer(actor.y));
+        synchronized (this) {
+            updating = true;
+            actorChooser.setSelectedFile(actor.file);
+            xSpinner.setValue(new Integer(actor.x));
+            ySpinner.setValue(new Integer(actor.y));
+            updating = false;
+        }
     }
 
     private void updateSEA() {
@@ -155,12 +160,18 @@ public final class ActorProperties extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void xSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_xSpinnerStateChanged
+    if (updating) {
+        return;
+    }
     ActorProperties.this.actor.x = (Integer)xSpinner.getValue();
     updateSEA();
     area.editor.setModified(true);
 }//GEN-LAST:event_xSpinnerStateChanged
 
 private void ySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ySpinnerStateChanged
+    if (updating) {
+        return;
+    }
     ActorProperties.this.actor.y = (Integer)ySpinner.getValue();
     updateSEA();
     area.editor.setModified(true);
