@@ -134,8 +134,6 @@ public abstract class DocumentPane extends JPanel {
      * @param modified Whether or not the file was modified.
      */
     public void setModified(boolean modified) {
-        System.out.println("M: "+modified);
-        Thread.dumpStack();
         this.modified = modified;
         if (PineappleGUI.dip.getSelectedDocument() == this) {
             PineappleGUI.fileSave.setEnabled(canSave());
