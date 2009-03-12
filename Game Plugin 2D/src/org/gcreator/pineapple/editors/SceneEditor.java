@@ -169,7 +169,9 @@ public class SceneEditor extends DocumentPane {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SceneEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.setModified(success);
+        if (success) {
+            this.setModified(true);
+        }
         return success;
     }
 
