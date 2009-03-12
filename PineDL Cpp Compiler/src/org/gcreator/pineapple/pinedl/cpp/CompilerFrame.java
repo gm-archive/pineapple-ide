@@ -22,7 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.pinedl.cpp;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;

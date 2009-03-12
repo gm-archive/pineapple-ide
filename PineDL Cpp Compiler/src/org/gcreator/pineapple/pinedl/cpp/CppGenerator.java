@@ -113,7 +113,6 @@ public class CppGenerator {
     }
 
     private void writeImports() throws Exception {
-        Vector<String> iclass = new Vector<String>();
 
         writeLine("#include \"header.h\"");
         writeLine("using namespace Pineapple;");
@@ -180,61 +179,60 @@ public class CppGenerator {
         throwError("In file " + fname + ": Unknown type " + t.toString());
         return "---";
     }
-    
-    private String merge(String[] x, char c){
+
+    private String merge(String[] x, char c) {
         String res = x[0];
-        for(int i = 1; i < x.length; i++){
+        for (int i = 1; i < x.length; i++) {
             res += c;
             res += x[i];
         }
         return res;
     }
-    
-    public boolean isType(String t){
+
+    public boolean isType(String t) {
         for (Type type : cls.importStmt) {
-            if(merge(type.type,'.').equals(t)){
+            if (merge(type.type, '.').equals(t)) {
                 return true;
             }
-            if(type.type[type.type.length - 1].equals(t)){
+            if (type.type[type.type.length - 1].equals(t)) {
                 return true;
             }
         }
-        for (String s : context){
-            if(t.equals(s)||t.equals("Game."+s)){
+        for (String s : context) {
+            if (t.equals(s) || t.equals("Game." + s)) {
                 System.out.println("match");
                 return true;
             }
             System.out.println("no match");
         }
-        if(t.equals("Texture")||t.equals("Pineapple.Texture")){
+        if (t.equals("Texture") || t.equals("Pineapple.Texture")) {
             return true;
         }
-        if(t.equals("Actor")||t.equals("Pineapple.Actor")){
+        if (t.equals("Actor") || t.equals("Pineapple.Actor")) {
             return true;
         }
-        if(t.equals("Scene")||t.equals("Pineapple.Scene")){
+        if (t.equals("Scene") || t.equals("Pineapple.Scene")) {
             return true;
         }
-        if(t.equals("Math")||t.equals("Pineapple.Math")){
+        if (t.equals("Math") || t.equals("Pineapple.Math")) {
             return true;
         }
-        if(t.equals("Key")||t.equals("Pineapple.Key")){
+        if (t.equals("Key") || t.equals("Pineapple.Key")) {
             return true;
         }
-        if(t.equals("Keyboard")||t.equals("Pineapple.Keyboard")){
+        if (t.equals("Keyboard") || t.equals("Pineapple.Keyboard")) {
             return true;
         }
         return false;
     }
-    
-    public boolean isType(Reference e){
-        if(e instanceof VariableReference){
-            if(isType(((VariableReference) e).name)){
+
+    public boolean isType(Reference e) {
+        if (e instanceof VariableReference) {
+            if (isType(((VariableReference) e).name)) {
                 return true;
             }
-        }
-        else if(e instanceof RetrieverExpression){
-            if(isType(e.toString())){
+        } else if (e instanceof RetrieverExpression) {
+            if (isType(e.toString())) {
                 return true;
             }
         }
@@ -251,9 +249,8 @@ public class CppGenerator {
                 if (!isFirst) {
                     s += ", ";
                 }
-                if(vars.isVariableDeclared(a.name)){
-                    throw new Exception("In constructor: "
-                        + "Argument name " + a.name + " is used twice.");
+                if (vars.isVariableDeclared(a.name)) {
+                    throw new Exception("In constructor: " + "Argument name " + a.name + " is used twice.");
                 }
                 s += retrieveType(a.type, true);
                 s += ' ';
@@ -299,9 +296,8 @@ public class CppGenerator {
                 if (!isFirst) {
                     s += ", ";
                 }
-                if(vars.isVariableDeclared(a.name)){
-                    throw new Exception("In function " + vars.getFunctionName() + ": "
-                        + "Argument name " + a.name + " is used twice.");
+                if (vars.isVariableDeclared(a.name)) {
+                    throw new Exception("In function " + vars.getFunctionName() + ": " + "Argument name " + a.name + " is used twice.");
                 }
                 s += retrieveType(a.type, true);
                 s += ' ';
@@ -315,22 +311,22 @@ public class CppGenerator {
             writeLine(s);
 
             System.out.println(method.content.toString());
-            
+
             writeLine(leafToString(method.content, vars));
 
             writeLine();
         }
     }
 
-    private String leafToString(Leaf l, PineDLContext vars) throws Exception{
+    private String leafToString(Leaf l, PineDLContext vars) throws Exception {
         return leafToString(l, false, vars);
     }
-    
-    private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception{
+
+    private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception {
         return leafToString(l, statement, vars, true);
     }
-    
-    private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception{
+
+    private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         if (l instanceof Block) {
             PineDLContext c = new PineDLContext(vars);
             String s = "{\n";
@@ -343,9 +339,8 @@ public class CppGenerator {
         }
         if (l instanceof DeclAssign) {
             DeclAssign da = (DeclAssign) l;
-            if(vars.isVariableDeclared(da.name)){
-                throw new Exception("In function " + vars.getFunctionName() + ": "
-                        + "Redeclaring variable '" + da.name + "'");
+            if (vars.isVariableDeclared(da.name)) {
+                throw new Exception("In function " + vars.getFunctionName() + ": " + "Redeclaring variable '" + da.name + "'");
             }
             vars.declareVariable(da.name, da.type);
             String s = retrieveType(da.type, true);
@@ -355,7 +350,7 @@ public class CppGenerator {
                 s += '=';
                 s += leafToString(da.value, vars);
             }
-            if(statement){
+            if (statement) {
                 s += ';';
             }
             return s;
@@ -363,7 +358,7 @@ public class CppGenerator {
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
             String s = leafToString(e.left, vars) + "= (" + leafToString(e.right, vars) + ")";
-            if(statement){
+            if (statement) {
                 s += ';';
             }
             return s;
@@ -402,15 +397,15 @@ public class CppGenerator {
             String s = f.name;
             s += '(';
             boolean first = true;
-            for(Expression e : f.arguments){
-                if(!first){
+            for (Expression e : f.arguments) {
+                if (!first) {
                     s += ", ";
                 }
                 s += leafToString(e, vars);
                 first = false;
             }
             s += ')';
-            if(statement){
+            if (statement) {
                 s += ';';
             }
             return s;
@@ -423,23 +418,23 @@ public class CppGenerator {
             String s = "new ";
             s += typeToString(n.type, false);
             s += '(';
-            
+
             boolean first = true;
-            for(Expression e : n.arguments){
-                if(!first){
+            for (Expression e : n.arguments) {
+                if (!first) {
                     s += ", ";
                 }
                 s += leafToString(e, vars);
                 first = false;
             }
-            
+
             s += ')';
-            if(statement){
+            if (statement) {
                 s += ';';
             }
             return s;
         }
-        if (l instanceof IfStatement){
+        if (l instanceof IfStatement) {
             IfStatement i = (IfStatement) l;
             String s = "if(";
             String le = leafToString(i.condition, vars);
@@ -448,7 +443,7 @@ public class CppGenerator {
             PineDLContext cvars = new PineDLContext(vars);
             s += leafToString(i.then, true, cvars);
             s += "}";
-            if(i.elseCase!=null){
+            if (i.elseCase != null) {
                 s += "else{";
                 PineDLContext cvars2 = new PineDLContext(vars);
                 s += leafToString(i.elseCase, true, cvars2);
@@ -456,61 +451,58 @@ public class CppGenerator {
             }
             return s;
         }
-        if(l instanceof FunctionReference){
+        if (l instanceof FunctionReference) {
             FunctionReference e = (FunctionReference) l;
             String x = e.name;
             x += '(';
             boolean isFirst = true;
-            for(Expression exp : e.arguments){
-                if(isFirst) {
+            for (Expression exp : e.arguments) {
+                if (isFirst) {
                     isFirst = false;
-                }
-                else{
+                } else {
                     x += ", ";
                 }
-                
+
                 x += leafToString(exp, false, vars);
             }
             x += ')';
-            if(statement){
+            if (statement) {
                 x += ';';
             }
             return x;
         }
-        if(l instanceof VariableReference){
-            if(isType((VariableReference) l)&&isLeft){
-                return ((VariableReference) l).name.replaceAll("\\.","::");
+        if (l instanceof VariableReference) {
+            if (isType((VariableReference) l) && isLeft) {
+                return ((VariableReference) l).name.replaceAll("\\.", "::");
             }
             return ((VariableReference) l).name;
         }
-        if(l instanceof RetrieverExpression){
+        if (l instanceof RetrieverExpression) {
             RetrieverExpression e = (RetrieverExpression) l;
-            if(isType(e)&&isLeft){
+            if (isType(e) && isLeft) {
                 return "::" + e.toString().replaceAll("\\.", "::");
-            }
-            else if(e.left instanceof RetrieverExpression){
-                boolean istype = isType(e.left)&&isLeft;
-                return leafToString(e.left, false, vars) + (istype?"::":"->") + 
+            } else if (e.left instanceof RetrieverExpression) {
+                boolean istype = isType(e.left) && isLeft;
+                return leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
-            }
-            else if(e.left instanceof VariableReference){
-                boolean istype = isType(e.left)&&isLeft;
-                return "::" + leafToString(e.left, false, vars) + (istype?"::":"->") + 
+            } else if (e.left instanceof VariableReference) {
+                boolean istype = isType(e.left) && isLeft;
+                return "::" + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
             }
             return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
-            /*RetrieverExpression e = (RetrieverExpression) l;
-            if(isType(e.toString())){
-                Type t = new Type();
-                t.typeCategory = TypeCategory.CLASS;
-                t.type = e.left.toString().split("\\.");
-                return retrieveType(t, false) + "::" + e.right.toString();
-            }
-            else if(e.left instanceof FunctionReference){
-                
-            }
-            return "[Failed to parse Statement] : \"" + e.toString() + "\", \n" +
-                    "with left="+e.left.toString()+" and right="+e.right.toString();*/
+        /*RetrieverExpression e = (RetrieverExpression) l;
+        if(isType(e.toString())){
+        Type t = new Type();
+        t.typeCategory = TypeCategory.CLASS;
+        t.type = e.left.toString().split("\\.");
+        return retrieveType(t, false) + "::" + e.right.toString();
+        }
+        else if(e.left instanceof FunctionReference){
+
+        }
+        return "[Failed to parse Statement] : \"" + e.toString() + "\", \n" +
+        "with left="+e.left.toString()+" and right="+e.right.toString();*/
         }
         return "";
     }

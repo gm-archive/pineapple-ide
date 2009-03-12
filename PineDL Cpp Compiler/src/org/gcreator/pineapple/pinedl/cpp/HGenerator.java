@@ -57,6 +57,10 @@ public class HGenerator {
     public HGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
             Vector<String> context) {
         try {
+            if (in.available() == 0) {
+                System.out.println("Empty file! skipping");
+                return;
+            }
             this.in = in;
             this.out = out;
             this.cmp = cmp;
@@ -64,7 +68,7 @@ public class HGenerator {
             parse();
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
-                throw new Exception("Invalid class name! " + fname + " vs " + cls.clsName);
+                throw new Exception("Invalid class name: " + fname + "  (should be '" + this.fname+"')");
             }
             write();
         } catch (Exception e) {

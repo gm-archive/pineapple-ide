@@ -355,6 +355,10 @@ public class GameCompiler {
         fname = fname.substring(0, fname.lastIndexOf('.'));
         File output = new File(outputFolder, fname + ".cpp");
         FileOutputStream fos = new FileOutputStream(output);
+        if (is.available() == 0) {
+            System.out.println("Blank file: "+fname+"; skipping");
+            return;
+        }
         CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
         if (!gen.wasSuccessful()) {
             worked = false;
