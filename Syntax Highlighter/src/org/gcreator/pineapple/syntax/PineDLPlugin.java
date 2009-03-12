@@ -81,13 +81,13 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
         styles.put("sas", RSyntaxTextArea.SAS_SYNTAX_STYLE);
         names.put(RSyntaxTextArea.SAS_SYNTAX_STYLE, "SAS");
         styles.put("sql", RSyntaxTextArea.SQL_SYNTAX_STYLE);
-        names.put(RSyntaxTextArea.SAS_SYNTAX_STYLE, "SQL");
+        names.put(RSyntaxTextArea.SQL_SYNTAX_STYLE, "SQL");
         styles.put("tcl", RSyntaxTextArea.TCL_SYNTAX_STYLE);
         names.put(RSyntaxTextArea.TCL_SYNTAX_STYLE, "TCL");
         styles.put("sh", RSyntaxTextArea.UNIX_SHELL_SYNTAX_STYLE);
-        names.put(RSyntaxTextArea.UNIX_SHELL_SYNTAX_STYLE, "Bourne [UNIX] Shell Script");
+        names.put(RSyntaxTextArea.UNIX_SHELL_SYNTAX_STYLE, "Bourne Shell");
         styles.put("bat", RSyntaxTextArea.WINDOWS_BATCH_SYNTAX_STYLE);
-        names.put(RSyntaxTextArea.WINDOWS_BATCH_SYNTAX_STYLE, "BAT (Windows Batch)");
+        names.put(RSyntaxTextArea.WINDOWS_BATCH_SYNTAX_STYLE, "BAT (Windows BATCH)");
         styles.put("xml", RSyntaxTextArea.XML_SYNTAX_STYLE);
         names.put(RSyntaxTextArea.XML_SYNTAX_STYLE, "XML");
     }

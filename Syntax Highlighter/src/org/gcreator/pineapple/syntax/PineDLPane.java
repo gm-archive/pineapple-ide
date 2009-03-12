@@ -115,7 +115,6 @@ public class PineDLPane extends DocumentPane {
             }
 
             public void changedUpdate(DocumentEvent evt) {
-                setModified(true);
             }
         });
         this.add(editor, BorderLayout.CENTER);
