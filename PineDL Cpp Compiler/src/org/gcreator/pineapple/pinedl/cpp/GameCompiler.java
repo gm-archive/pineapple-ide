@@ -71,7 +71,7 @@ public class GameCompiler {
         if (os.startsWith("Windows")) {
             return CompilationProfile.WINDOWS_TO_WINDOWS;
         } else { /* No one cares about any other non-unix other platform */
-            
+
             return CompilationProfile.UNIX_TO_UNIX;
         }
     }
@@ -140,49 +140,56 @@ public class GameCompiler {
             }
         }
     }
-    
-    public void generateTextureList() throws IOException{
+
+    public void generateTextureList() throws IOException {
         File header = new File(outputFolder, "TextureList.h");
         FileOutputStream fos = new FileOutputStream(header);
         fos.write("#ifndef __PINEDL_TEXTURELIST_H__\n".getBytes());
         fos.write("#define __PINEDL_TEXTURELIST_H__\n\n".getBytes());
         fos.write("#include \"header.h\"\n".getBytes());
-        
+
         fos.write(("namespace " + gamePackage + "{\n").getBytes());
         fos.write("\tclass TextureList{\n".getBytes());
-        
-        for(File image : imageFiles){
+
+        for (File image : imageFiles) {
             String fname = image.getName();
             int index = fname.indexOf('.');
             fname = fname.substring(0, index);
-            fos.write(("\t\tpublic: static ::Pineapple::Texture* "+fname
-                    //+"= new ::Pineapple::Texture(\"res/"
+            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname //+"= new ::Pineapple::Texture(\"res/"
                     //+ image.getName() +"\")"
                     + ";\n").getBytes());
         }
-        
+        fos.write("\t\tpublic: static void init();".getBytes());
+
         fos.write(("\t};\n}\n").getBytes());
-        
+
         fos.write("\n#endif\n".getBytes());
         fos.close();
-        
+
         File cpp = new File(outputFolder, "TextureList.cpp");
         fos = new FileOutputStream(cpp);
-        
+
         fos.write("#include \"header.h\"\n\n".getBytes());
-        for(File image : imageFiles){
+        fos.write("using namespace Game;\n\n".getBytes());
+        for (File image : imageFiles) {
             String fname = image.getName();
             int index = fname.indexOf('.');
             fname = fname.substring(0, index);
             fos.write("::Pineapple::Texture* ".getBytes());
-            fos.write((gamePackage + "::TextureList::" + fname).getBytes());
-            fos.write((" = new ::Pineapple::Texture(\"res/"+image.getName()).getBytes());
+            fos.write((gamePackage + "::TextureList::" + fname + ";").getBytes());
+        }
+        fos.write("void TextureList::init() {".getBytes());
+        for (File image : imageFiles) {
+            String fname = image.getName();
+            int index = fname.indexOf('.');
+            fname = fname.substring(0, index);
+            fos.write(("\t"+gamePackage + "::TextureList::" + fname +" = new ::Pineapple::Texture(\"res/" + image.getName()).getBytes());
             fos.write("\");\n".getBytes());
         }
-        
+        fos.write("}\n".getBytes());
         fos.close();
     }
-    
+
     public static void copyFile(String resFolder, File outFolder, String fname) throws IOException {
         File f = new File(outFolder, fname);
         FileOutputStream fos = new FileOutputStream(f);
@@ -203,6 +210,7 @@ public class GameCompiler {
         fos.write("\tPineapple::Application::init();\n".getBytes());
         fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
+        fos.write("\tGame::TextureList::init();\n".getBytes());
         Hashtable<String, String> hs = PineappleCore.getProject().getSettings();
         if (hs.containsKey(("scene-order"))) {
             String scene = hs.get("scene-order").split(";")[0];
@@ -298,7 +306,7 @@ public class GameCompiler {
         for (String s : args) {
             s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
             if (s.contains(" ")) {
-                s = "\""+s+"\"";
+                s = "\"" + s + "\"";
             }
             cmd.append(" ").append(s);
         }
@@ -356,7 +364,7 @@ public class GameCompiler {
         File output = new File(outputFolder, fname + ".cpp");
         FileOutputStream fos = new FileOutputStream(output);
         if (is.available() == 0) {
-            System.out.println("Blank file: "+fname+"; skipping");
+            System.out.println("Blank file: " + fname + "; skipping");
             return;
         }
         CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
@@ -417,7 +425,7 @@ public class GameCompiler {
 
                 fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
                 if (a.getImage() != null) {
-                    fos.write(("\t\ttexture = "+gamePackage+".TextureList.").getBytes());
+                    fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
                     String iname = a.getImage().getName();
                     iname = iname.substring(0, iname.indexOf('.'));
                     fos.write(iname.getBytes());
