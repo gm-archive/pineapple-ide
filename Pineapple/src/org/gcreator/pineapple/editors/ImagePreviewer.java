@@ -23,13 +23,15 @@ THE SOFTWARE.
 package org.gcreator.pineapple.editors;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.File;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -42,8 +44,7 @@ import org.gcreator.pineapple.project.io.BasicFile;
 public final class ImagePreviewer extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
-    private JLabel label;
-    private ImageIcon image;
+    private BufferedImage image;
 
     /**
      * Creates an ImagePreviewer from a {@link File}.
@@ -52,30 +53,20 @@ public final class ImagePreviewer extends DocumentPane {
      */
     public ImagePreviewer(BasicFile file) {
         super(file);
+        this.setLayout(new BorderLayout());
         try {
             BufferedInputStream s = new BufferedInputStream(file.getReader());
-            BufferedImage img = ImageIO.read(s);
+            image = ImageIO.read(s);
             s.close();
-            if (img == null) {
+            if (image == null) {
                 PineappleGUI.dip.remove(this);
                 return;
             }
-            image = new ImageIcon(img);
         } catch (Exception e) {
-            System.out.println("Exception while reading image " + file.getPath() + ": " + e);
+            System.err.println("Exception while reading image " + file.getPath() + " : " + e);
         }
-        this.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 3));
-        label = new JLabel(image);
-        this.add(new JScrollPane(label), BorderLayout.CENTER);
-    }
-
-    /**
-     * Gets the display image.
-     * 
-     * @return The {@link java.awt.ImageIcon} that stores the diaply image data.
-     */
-    public ImageIcon getImage() {
-        return image;
+        JScrollPane p = new JScrollPane(new ImageComponent());
+        this.add(p);
     }
 
     /**
@@ -84,5 +75,20 @@ public final class ImagePreviewer extends DocumentPane {
     @Override
     public boolean canSave() {
         return false;
+    }
+
+    private class ImageComponent extends JComponent {
+
+        private static final long serialVersionUID = 244363643;
+
+        public ImageComponent() {
+            Dimension d = new Dimension(image.getWidth(), image.getHeight());
+            setPreferredSize(d);
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            g.drawImage(image, 0, 0, null);
+        }
     }
 }
