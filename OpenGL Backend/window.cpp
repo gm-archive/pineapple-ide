@@ -21,7 +21,7 @@ void Window::setSize(int width, int height, bool fullscreen)
     Window::width = width;
     Window::height = height;
     Window::fullscreen = fullscreen;
-    update();
+    Window::update();
 }
 
 //
@@ -30,7 +30,7 @@ void Window::setSize(int width, int height, bool fullscreen)
 void Window::setFullscreen(bool fullscreen)
 {
     Window::fullscreen = fullscreen;
-    update();
+    Window::update();
 }
 
 //
@@ -47,7 +47,7 @@ void Window::setCaption(const std::string title)
 void Window::setResizable(bool resizable)
 {
     Window::resizable = resizable;
-    update();
+    Window::update();
 }
 
 //
@@ -62,6 +62,7 @@ inline void Window::update()
         flags |= SDL_RESIZABLE;
 
     SDL_SetVideoMode(width, height, 32, flags);
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
     glEnable(GL_TEXTURE_2D);
 }
 
