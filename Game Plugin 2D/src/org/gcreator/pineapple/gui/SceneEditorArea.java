@@ -273,7 +273,7 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
         if (mode == MODE_ADD) {
             BasicFile f = editor.actorChooser.getSelectedFile();
             if (f != null) {
-                dragOffset = evt.getPoint();
+                dragOffset = new Point();
                 Scene s = editor.scene;
                 Scene.ActorInScene a = new Scene.ActorInScene(f);
                 a.x = evt.getX();
@@ -414,6 +414,7 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void vectorChanged(ListeningVector v) {
         if (sorting) {
             return;
