@@ -171,7 +171,11 @@ public class Actor extends ClassResource {
      * @return This actor's image.
      */
     public BasicFile getImage() {
-        return (BasicFile)properties.get("image");
+        try {
+            return (BasicFile)properties.get("image");
+        } catch (ClassCastException exc) {
+            return null;
+        }
     }
 
     /**
