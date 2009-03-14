@@ -18,7 +18,7 @@ private:
     void init(SDL_Surface* surface);
 public:
     Texture(const std::string file, int originx = 0, int originy = 0);
-    Texture(char* start, char* end, int originx, int originy);
+    Texture(char* start, char* end, int originx = 0, int originy = 0);
     ~Texture();
 
     int getWidth() { return width; }
