@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Vector;
+import javax.imageio.ImageIO;
 import org.gcreator.pineapple.events.Event;
 import org.gcreator.pineapple.formats.Actor;
 import org.gcreator.pineapple.formats.Scene;
@@ -161,7 +163,7 @@ public class GameCompiler {
         }
         fos.write("\t\tpublic: static void init();".getBytes());
 
-        fos.write(("\t};\n}\n").getBytes());
+        fos.write(("\n};\n}\n").getBytes());
 
         fos.write("\n#endif\n".getBytes());
         fos.close();
@@ -176,9 +178,9 @@ public class GameCompiler {
             int index = fname.indexOf('.');
             fname = fname.substring(0, index);
             fos.write("::Pineapple::Texture* ".getBytes());
-            fos.write((gamePackage + "::TextureList::" + fname + ";").getBytes());
+            fos.write((gamePackage + "::TextureList::" + fname + ";\n").getBytes());
         }
-        fos.write("void TextureList::init() {".getBytes());
+        fos.write("void TextureList::init() {\n".getBytes());
         for (File image : imageFiles) {
             String fname = image.getName();
             int index = fname.indexOf('.');
@@ -375,15 +377,17 @@ public class GameCompiler {
     }
 
     private void copyImage(ProjectElement e) throws Exception {
-        File f = new File(resFolder, e.getName());
-        FileOutputStream fos = new FileOutputStream(f);
-        InputStream is = e.getFile().getReader();
-        int c = 0;
-        while ((c = is.read()) != -1) {
-            fos.write(c);
+        String fn = e.getName();
+        if (!fn.toLowerCase().endsWith(".png")) {
+            fn = fn.substring(0, fn.lastIndexOf('.')) + ".png";
         }
+        File f = new File(resFolder, fn);
+        // Convert to PNG!
+        BufferedImage img = ImageIO.read(e.getFile().getReader());
+        BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        copy.getGraphics().drawImage(img, 0, 0, null);
+        ImageIO.write(copy, "PNG", f);
         imageFiles.add(f);
-        fos.close();
     }
 
     private void copyScript(ProjectElement e) throws Exception {

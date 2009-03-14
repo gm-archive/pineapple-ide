@@ -200,10 +200,8 @@ public class CppGenerator {
         }
         for (String s : context) {
             if (t.equals(s) || t.equals("Game." + s)) {
-                System.out.println("match");
                 return true;
             }
-            System.out.println("no match");
         }
         if (t.equals("Texture") || t.equals("Pineapple.Texture")) {
             return true;
