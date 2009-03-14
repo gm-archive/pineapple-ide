@@ -15,6 +15,21 @@ Texture::Texture(const std::string file, int originx, int originy)
     SDL_Surface* surface = IMG_Load(file.c_str());
     if (surface == NULL)
         throw new IOException("Could not load image");
+    init(surface);
+}
+
+Texture::Texture(char* start, char* end, int originx, int originy)
+{
+    SDL_RWops* rw = SDL_RWFromMem(start, (int) (end-start));
+
+    //load the image
+    SDL_Surface* surface = IMG_Load_RW(rw, 1);
+    if (surface == NULL)
+        throw new IOException("Could not load image");
+    init(surface);
+}
+
+void Texture::init(SDL_Surface* surface) {
     GLuint texture;
 
     //set up a gl texture
@@ -61,6 +76,7 @@ Texture::Texture(const std::string file, int originx, int originy)
     //free the image
     SDL_FreeSurface(surface);
 }
+
 
 Texture::~Texture()
 {

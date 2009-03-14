@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "SDL/SDL_opengl.h"
+#include "SDL/SDL.h"
 #include <string>
 
 namespace Pineapple {
@@ -14,8 +15,10 @@ private:
     int originx;
     int originy;
     GLuint textureid;
+    void init(SDL_Surface* surface);
 public:
     Texture(const std::string file, int originx = 0, int originy = 0);
+    Texture(char* start, char* end, int originx, int originy);
     ~Texture();
 
     int getWidth() { return width; }
