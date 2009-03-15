@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.imageio.ImageIO;
@@ -41,6 +42,9 @@ import org.gcreator.pineapple.game2d.GameProjectType;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
+import org.gcreator.pineapple.project.io.BasicFile;
+import org.gcreator.pineapple.validators.Glob;
+import org.gcreator.pineapple.validators.UniversalValidator;
 
 /**
  * This class is used to compile the game.
@@ -53,6 +57,7 @@ public class GameCompiler {
     File outputFolder;
     File binFolder;
     File resFolder;
+    File objresFolder;
     CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
@@ -63,6 +68,8 @@ public class GameCompiler {
     OutputStream headerH = null;
     File outputFile = null;
     CompilationProfile profile = null;
+    int resIndex = 0;
+    HashMap<File, String> imageNames = new HashMap<File, String>();
 
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
@@ -90,7 +97,11 @@ public class GameCompiler {
                     @Override
                     public void run() {
                         try {
-                            for (ProjectElement e : p.getFiles()) {
+                            for (BasicFile f : Glob.glob(new UniversalValidator(), true)) {
+                                ProjectElement e = f.getElement();
+                                if (e.getFile() == null) {
+                                    continue;
+                                }
                                 String name = e.getFile().getName();
                                 String format = name.substring(name.lastIndexOf('.') + 1);
                                 format = format.toLowerCase();
@@ -154,11 +165,10 @@ public class GameCompiler {
         fos.write("\tclass TextureList{\n".getBytes());
 
         for (File image : imageFiles) {
-            String fname = image.getName();
-            int index = fname.indexOf('.');
+            String fname = imageNames.get(image);
+            int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index);
-            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname //+"= new ::Pineapple::Texture(\"res/"
-                    //+ image.getName() +"\")"
+            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname
                     + ";\n").getBytes());
         }
         fos.write("\t\tpublic: static void init();".getBytes());
@@ -175,18 +185,35 @@ public class GameCompiler {
         fos.write("using namespace Game;\n\n".getBytes());
         for (File image : imageFiles) {
             String fname = image.getName();
-            int index = fname.indexOf('.');
+            int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index);
+            String varname = fname.replaceAll("\\W", "_");
+            if (varname.length() >= 26) {
+                varname = varname.substring(0, 26);
+            }
+            fname = imageNames.get(image);
+            index = fname.lastIndexOf('.');
+            fname = fname.substring(0, index);
+            fos.write(("extern char _binary_"+varname+"_start;\n").getBytes());
+            fos.write(("extern char _binary_"+varname+"_end;\n").getBytes());
             fos.write("::Pineapple::Texture* ".getBytes());
             fos.write((gamePackage + "::TextureList::" + fname + ";\n").getBytes());
         }
         fos.write("void TextureList::init() {\n".getBytes());
         for (File image : imageFiles) {
             String fname = image.getName();
-            int index = fname.indexOf('.');
+            int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index);
-            fos.write(("\t"+gamePackage + "::TextureList::" + fname +" = new ::Pineapple::Texture(\"res/" + image.getName()).getBytes());
-            fos.write("\");\n".getBytes());
+            String varname = fname.replaceAll("\\W", "_");
+            if (varname.length() >= 26) {
+                varname = varname.substring(0, 26);
+            }
+            fname = imageNames.get(image);
+            index = fname.lastIndexOf('.');
+            fname = fname.substring(0, index);
+            fos.write(("\t"+gamePackage + "::TextureList::" + fname +
+    " = new ::Pineapple::Texture(&_binary_"+varname+"_start, &_binary_"+varname+"_end").getBytes());
+            fos.write(");\n".getBytes());
         }
         fos.write("}\n".getBytes());
         fos.close();
@@ -253,10 +280,6 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "vector.h");
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "view.h");
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "window.h");
-        compFrame.writeLine("Copying runner files");
-        if (profile == CompilationProfile.UNIX_TO_UNIX) {
-            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/linux/", binFolder, "rungame.sh");
-        }
     }
 
     private void compile() throws Exception {
@@ -274,6 +297,10 @@ public class GameCompiler {
         command.add((new File(outputFolder, "TextureList.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
+
+        for (File f : imageFiles) {
+            command.add(f.getAbsolutePath());
+        }
 
         int c;
         if (profile == CompilationProfile.UNIX_TO_UNIX) {
@@ -377,17 +404,43 @@ public class GameCompiler {
     }
 
     private void copyImage(ProjectElement e) throws Exception {
-        String fn = e.getName();
-        if (!fn.toLowerCase().endsWith(".png")) {
-            fn = fn.substring(0, fn.lastIndexOf('.')) + ".png";
-        }
+        String fn = "i" + resIndex++ + ".png";
         File f = new File(resFolder, fn);
         // Convert to PNG!
+        compFrame.writeLine("Converting image to PNG " + e.getName());
         BufferedImage img = ImageIO.read(e.getFile().getReader());
         BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         copy.getGraphics().drawImage(img, 0, 0, null);
         ImageIO.write(copy, "PNG", f);
-        imageFiles.add(f);
+        File obj = new File(objresFolder.getAbsolutePath(), fn+".o");
+        compFrame.writeLine("Making object file of " + e.getName());
+        if (profile == CompilationProfile.UNIX_TO_UNIX) {
+            ProcessBuilder pb = new ProcessBuilder(new String[] {
+            "objcopy",
+            "--input", "binary",
+            "--output", "elf32-i386",
+            "--binary-architecture", "i386",
+            f.getName(), obj.getAbsolutePath() });
+            pb.directory(f.getParentFile());
+            StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
+            for (String s : pb.command()) {
+                s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                if (s.contains(" ")) {
+                    s = "\"" + s + "\"";
+                }
+                cmd.append(" ").append(s);
+            }
+            cmd.append("</em></font>");
+            compFrame.writeLine(cmd.toString());
+            Process pr = pb.start();
+            pr.waitFor();
+        } else {
+            //TODO: Windows objcopy -- must be done soon!
+            System.out.println("ERROR! Don't know how to use objcopy!");
+            return;
+        }
+        imageFiles.add(obj);
+        imageNames.put(obj, e.getName());
     }
 
     private void copyScript(ProjectElement e) throws Exception {
@@ -544,22 +597,28 @@ public class GameCompiler {
     private void prepare() throws Exception {
         compFrame = new CompilerFrame(this);
         compFrame.writeLine("<b>Preparing game compilation</b>");
+        compFrame.setSize(640, 480);
         compFrame.setVisible(true);
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
         if (outputFolder.exists()) {
             outputFolder.delete();
         }
         outputFolder.mkdirs();
-        binFolder = new File(outputFolder, "bin/"); // OUTPUT/bin
+        binFolder = new File(outputFolder, "bin"); // OUTPUT/bin
         if (binFolder.exists()) {
             binFolder.delete();
         }
         binFolder.mkdir();
-        resFolder = new File(binFolder, "res/"); // OUTPUT/bin/res
+        resFolder = new File(outputFolder, "res"); // OUTPUT/res
         if (resFolder.exists()) {
             resFolder.delete();
         }
         resFolder.mkdir();
+        objresFolder = new File(outputFolder, "res_obj"); // OUTPUT/res_obj
+        if (objresFolder.exists()) {
+            objresFolder.delete();
+        }
+        objresFolder.mkdir();
         headerH = new FileOutputStream(new File(outputFolder, "header.h"));
         headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
         headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
