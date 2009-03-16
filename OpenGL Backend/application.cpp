@@ -6,7 +6,7 @@
 #ifdef WIN32
     #include <direct.h>
     #include <windows.h>
-    #define GetCurrentDir _getcwd
+    #define GetCurrentDir _wgetcwd
 #else
     #include <unistd.h>
     #define GetCurrentDir getcwd
@@ -37,12 +37,23 @@ void Application::setScene(Scene* scene)
 
 std::string Application::getCurrentDirectory()
 {
-    char cPath[FILENAME_MAX+1];
+    #ifdef WIN32
+      wchar_t cPath[FILENAME_MAX+1];
+    #else
+      char cPath[FILENAME_MAX+1];
+    #endif
 	if(!GetCurrentDir(cPath, sizeof(cPath))){
 	    return "";
 	}
 	cPath[sizeof(cPath) - 1] = '\0';
-	std::string s = cPath;
+
+	#ifdef WIN32
+	  char fPath[FILENAME_MAX+1];
+	  wcstombs(fPath, cPath, FILENAME_MAX+1);
+	  std::string s = fPath;
+    #else
+      std::string s = cPath;
+    #endif
     return s;
 }
 
