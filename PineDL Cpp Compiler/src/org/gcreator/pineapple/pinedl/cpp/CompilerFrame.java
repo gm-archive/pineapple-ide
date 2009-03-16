@@ -49,6 +49,7 @@ public class CompilerFrame extends javax.swing.JFrame {
     public void writeLine(String s) {
         String txt = output.getText();
         output.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br>\n") + "<br>\n");
+        output.setCaretPosition(output.getDocument().getLength());
     }
     GameCompiler c;
 
@@ -74,6 +75,7 @@ public class CompilerFrame extends javax.swing.JFrame {
         output = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Compiling Game");
         setMinimumSize(new java.awt.Dimension(300, 200));
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
@@ -87,6 +89,7 @@ public class CompilerFrame extends javax.swing.JFrame {
         jPanel1.add(openFolderButton);
 
         runGameButton.setText("Run Game");
+        runGameButton.setEnabled(false);
         runGameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 runGameButtonActionPerformed(evt);
@@ -139,15 +142,15 @@ public class CompilerFrame extends javax.swing.JFrame {
     }
 
     private void runGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runGameButtonActionPerformed
-        if (c.profile == CompilationProfile.UNIX_TO_UNIX) {
-            ProcessBuilder b = new ProcessBuilder("/bin/sh", "rungame.sh");
+        if (c.profile == CompilationProfile.UNIX_GCC) {
+            ProcessBuilder b = new ProcessBuilder("./game");
             b.directory(c.binFolder);
             try {
                 b.start();
             } catch (IOException ex) {
                 Logger.getLogger(CompilerFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (c.profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
+        } else if (c.profile == CompilationProfile.MINGW_WINDOWS) {
             ProcessBuilder b = new ProcessBuilder("game.exe");
             b.directory(c.binFolder);
             try {
@@ -164,6 +167,6 @@ public class CompilerFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton openFolderButton;
     private javax.swing.JEditorPane output;
-    private javax.swing.JButton runGameButton;
+    protected javax.swing.JButton runGameButton;
     // End of variables declaration//GEN-END:variables
 }

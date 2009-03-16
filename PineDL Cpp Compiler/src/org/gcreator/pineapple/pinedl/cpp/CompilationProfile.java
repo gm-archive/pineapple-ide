@@ -29,12 +29,11 @@ package org.gcreator.pineapple.pinedl.cpp;
  */
 public enum CompilationProfile {
     /**
-     * Used to create Unix or Linux executables on a
-     * Unix or Linux system (bascially everything but Windows).
+     * We're compiling on UNIX using GCC.
      */
-    UNIX_TO_UNIX,
+    UNIX_GCC,
     /**
-     * Used to create Windows executables on a Windows system.
+     * We're compiling on Windows using MinGW.
      */
-    WINDOWS_TO_WINDOWS
+    MINGW_WINDOWS
 }

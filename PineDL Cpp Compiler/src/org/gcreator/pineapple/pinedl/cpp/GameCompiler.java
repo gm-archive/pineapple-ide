@@ -71,17 +71,18 @@ public class GameCompiler {
     int resIndex = 0;
     HashMap<File, String> imageNames = new HashMap<File, String>();
 
+
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
     }
 
     public static CompilationProfile getDefaultProfile() {
+        // TODO: Non-GCC compiler support.
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CompilationProfile.WINDOWS_TO_WINDOWS;
-        } else { /* No one cares about any other non-unix other platform */
-
-            return CompilationProfile.UNIX_TO_UNIX;
+            return CompilationProfile.MINGW_WINDOWS;
+        } else {
+            return CompilationProfile.UNIX_GCC;
         }
     }
 
@@ -254,9 +255,9 @@ public class GameCompiler {
 
     private void copyLib() throws IOException {
         compFrame.writeLine("Copying static library");
-        if (profile == CompilationProfile.UNIX_TO_UNIX) {
+        if (profile == CompilationProfile.UNIX_GCC) {
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/linux/", outputFolder, "libPineapple.a");
-        } else if (profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
+        } else if (profile == CompilationProfile.MINGW_WINDOWS) {
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "SDL.dll");
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "SDL_image.dll");
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "jpeg.dll");
@@ -303,7 +304,7 @@ public class GameCompiler {
         }
 
         int c;
-        if (profile == CompilationProfile.UNIX_TO_UNIX) {
+        if (profile == CompilationProfile.UNIX_GCC) {
             Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
             InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
             String sdlout = "";
@@ -318,7 +319,7 @@ public class GameCompiler {
             command.add("-lSDL_image");
             command.add("-lGL");
             command.add("-lGLU");
-        } else if (profile == CompilationProfile.WINDOWS_TO_WINDOWS) {
+        } else if (profile == CompilationProfile.MINGW_WINDOWS) {
             command.add("-lmingw32");
             command.add("-lSDLmain");
             command.add("-lSDL");
@@ -353,10 +354,12 @@ public class GameCompiler {
             }
         }
         int x = proc.waitFor();
-        compFrame.writeLine("Finished!");
         if (x != 0) {
-            compFrame.writeLine("There seems to have been some errors with the compiler");
-            compFrame.writeLine("Please report them to the G-Creator team");
+            compFrame.writeLine("<font color='red;'>There seems to have been some errors with the compiler<br/> "+
+            "Please report them to the G-Creator team</font>");
+        } else {
+            compFrame.writeLine("Finished!");
+            compFrame.runGameButton.setEnabled(true);
         }
     }
 
@@ -414,13 +417,13 @@ public class GameCompiler {
         ImageIO.write(copy, "PNG", f);
         File obj = new File(objresFolder.getAbsolutePath(), fn+".o");
         compFrame.writeLine("Making object file of " + e.getName());
-        if (profile == CompilationProfile.UNIX_TO_UNIX) {
+        /* Works with UNIX_GCC or MinGW */
+        if (profile == CompilationProfile.UNIX_GCC || profile == CompilationProfile.MINGW_WINDOWS) {
             ProcessBuilder pb = new ProcessBuilder(new String[] {
-            "objcopy",
-            "--input", "binary",
-            "--output", "elf32-i386",
-            "--binary-architecture", "i386",
-            f.getName(), obj.getAbsolutePath() });
+            "ld", "-r",
+            "-b", "binary",
+            "-o", obj.getAbsolutePath(),
+            f.getName() });
             pb.directory(f.getParentFile());
             StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
             for (String s : pb.command()) {
@@ -435,8 +438,7 @@ public class GameCompiler {
             Process pr = pb.start();
             pr.waitFor();
         } else {
-            //TODO: Windows objcopy -- must be done soon!
-            System.out.println("ERROR! Don't know how to use objcopy!");
+            System.out.println("ERROR! Don't know how to use linker!");
             return;
         }
         imageFiles.add(obj);
@@ -597,7 +599,7 @@ public class GameCompiler {
     private void prepare() throws Exception {
         compFrame = new CompilerFrame(this);
         compFrame.writeLine("<b>Preparing game compilation</b>");
-        compFrame.setSize(640, 480);
+        compFrame.setSize(330, 460);
         compFrame.setVisible(true);
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
         if (outputFolder.exists()) {
