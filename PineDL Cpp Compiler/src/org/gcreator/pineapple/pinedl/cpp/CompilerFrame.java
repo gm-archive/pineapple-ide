@@ -46,11 +46,26 @@ public class CompilerFrame extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Writes a new line to the output box.
+     *
+     * @param s The text for the new line.
+     */
     public void writeLine(String s) {
+       write(s+"<br/>");
+    }
+
+    /**
+     * Writes some text to the output box.
+     *
+     * @param s The text to write.
+     */
+    public void write(String s) {
         String txt = output.getText();
-        output.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br>\n") + "<br>\n");
+        output.setText(txt.substring(0, txt.indexOf("</body>")) + s.replaceAll("\n", "<br/>\n"));
         output.setCaretPosition(output.getDocument().getLength());
     }
+
     GameCompiler c;
 
     /** Creates new form CompilerFrame */
@@ -166,7 +181,7 @@ public class CompilerFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton openFolderButton;
-    private javax.swing.JEditorPane output;
+    protected javax.swing.JEditorPane output;
     protected javax.swing.JButton runGameButton;
     // End of variables declaration//GEN-END:variables
 }

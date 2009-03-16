@@ -23,6 +23,8 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -35,11 +37,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import org.gcreator.pineapple.events.Event;
 import org.gcreator.pineapple.formats.Actor;
 import org.gcreator.pineapple.formats.Scene;
 import org.gcreator.pineapple.game2d.GameProjectType;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.game2d.GamePlugin;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -89,8 +93,30 @@ public class GameCompiler {
     public GameCompiler(final Project p, final CompilationProfile profile) {
         this.p = p;
         this.profile = profile;
+        compFrame = new CompilerFrame(this);
+        compFrame.setSize(330, 460);
+        compFrame.setVisible(true);
         if (p.getProjectType() instanceof GameProjectType) {
             try {
+                compFrame.write("Checking resource names... ");
+                if (GamePlugin.checkResourceNames()) {
+                    compFrame.writeLine("ok");
+                } else {
+                    compFrame.writeLine("<span style='color: red;'>bad!</span>");
+                    compFrame.writeLine("<span style='color: red;'>Cannot continue with bad resource names." +
+                            "<br/>Please correct them and re-compile the game.</span>");
+                    JButton fix = new JButton("Fix Resource Names");
+                    fix.setSize(164, 36);
+                    fix.setLocation(4, compFrame.output.getPreferredSize().height);
+                    fix.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent e) {
+                            GamePlugin.showCheckResourcesDialog();
+                        }
+                    });
+                    compFrame.output.add(fix);
+                    return;
+                }
                 prepare();
                 //Let's compile it!
                 Thread t = new Thread() {
@@ -355,7 +381,7 @@ public class GameCompiler {
         }
         int x = proc.waitFor();
         if (x != 0) {
-            compFrame.writeLine("<font color='red;'>There seems to have been some errors with the compiler<br/> "+
+            compFrame.writeLine("<font color='red'>There seems to have been some errors with the compiler<br/> "+
             "Please report them to the G-Creator team</font>");
         } else {
             compFrame.writeLine("Finished!");
@@ -597,10 +623,7 @@ public class GameCompiler {
     }
 
     private void prepare() throws Exception {
-        compFrame = new CompilerFrame(this);
         compFrame.writeLine("<b>Preparing game compilation</b>");
-        compFrame.setSize(330, 460);
-        compFrame.setVisible(true);
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
         if (outputFolder.exists()) {
             outputFolder.delete();

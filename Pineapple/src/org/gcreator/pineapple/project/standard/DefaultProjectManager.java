@@ -446,8 +446,12 @@ public class DefaultProjectManager implements ProjectManager {
      */
     @Override
     public BasicFile getFile(String path) throws FileNotFoundException {
-       DefaultFile f = new DefaultFile(new File(project.getProjectFolder(), path), null, project);
-       f.element = project.createElement(f);
+       return getFile(path, project);
+    }
+
+    private BasicFile getFile(String path, Project p) throws FileNotFoundException {
+       DefaultFile f = new DefaultFile(new File(p.getProjectFolder(), path), null, p);
+       f.element = p.createElement(f);
        return f;
     }
 
@@ -554,16 +558,9 @@ public class DefaultProjectManager implements ProjectManager {
                 if (path == null) {
                     System.err.println("ERROR: No path attribute for file.");
                 } else {
-                    File file = new File(project.getProjectFolder(), path.substring(1));
-                    if (!file.exists()) {
-                        System.err.println("Warning: file " + file + " does not exist.");
-                        return;
-                    }
                     try {
-                        DefaultFile f = new DefaultFile(file, null, project);
-                        ProjectElement e = project.createElement(f);
-                        f.element = e;
-                        project.add(e);
+                        BasicFile f = getFile(path, this.project);
+                        project.add(f.getElement());
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -176,7 +176,7 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         }
     }
     
-    private class FindListCellRender extends DefaultListCellRenderer {
+    public static class FindListCellRender extends DefaultListCellRenderer {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -184,7 +184,7 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof ProjectElement) {
                 ProjectElement e = (ProjectElement) value;
-                this.setText(e.getFile().getName());
+                this.setText(e.getName());
                 if (e.getIcon() != null) {
                     this.setIcon(e.getIcon());
                 } else {

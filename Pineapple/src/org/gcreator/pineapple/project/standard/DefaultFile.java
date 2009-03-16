@@ -200,6 +200,14 @@ public class DefaultFile implements BasicFile {
     public ProjectElement getElement() {
         return element;
     }
+        
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setElement(ProjectElement newElement) {
+        this.element = newElement;
+    }
 
     /**
      * Gets the string value of this file.

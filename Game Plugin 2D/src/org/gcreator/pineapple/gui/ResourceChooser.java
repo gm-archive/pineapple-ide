@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui;
 
+import java.awt.FlowLayout;
 import org.gcreator.pineapple.validators.ResourceValidator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,8 +57,9 @@ public class ResourceChooser extends JPanel {
     private ResourceValidator validator = new UniversalValidator();
 
     public ResourceChooser() {
-        label = new JLabel();
+        super(new FlowLayout(FlowLayout.LEFT));
 
+        label = new JLabel();
         label.setText("<none>");
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter() {

@@ -130,4 +130,12 @@ public interface BasicFile extends Register {
      * or <tt>null</tt> if it does not belong to any element.
      */
     public ProjectElement getElement();
+
+    /**
+     * Sets the {@link ProjectElement} for this file. You should
+     * strictly avoid using this.
+     *
+     * @param newElement The new {@link ProjectElement} for this file.
+     */
+    public void setElement(ProjectElement newElement);
 }

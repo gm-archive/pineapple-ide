@@ -105,7 +105,8 @@ public abstract class Project {
 
     /**
      * Creates an element, either a {@link ProjectFile} or {@link ProjectFolder}, depending on
-     * whether the given file is a directory or not.
+     * whether the given file is a directory or not.<br/>
+     * This also sets the given file's element to the newly crated one.
      * 
      * @param f The {@link java.io.File} which the element must exist.
      * @return An element that represents the given file.
@@ -122,6 +123,7 @@ public abstract class Project {
         } else {
             e = new ProjectFile(f, this);
         }
+        f.setElement(e);
         return e;
     }
 

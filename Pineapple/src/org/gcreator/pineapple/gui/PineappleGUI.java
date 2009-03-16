@@ -1284,7 +1284,7 @@ public class PineappleGUI implements EventHandler {
             menu.add(tfileSaveProject);
 
             menu.add("Rename").addActionListener(new ActionListener() {
-
+//TODO: allow project renaming in tree
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     if (!((JMenuItem) evt.getSource()).isEnabled()) {
@@ -1566,11 +1566,12 @@ public class PineappleGUI implements EventHandler {
                     if (!((JMenuItem) evt.getSource()).isEnabled()) {
                         return;
                     }
+                    //TODO: File renaming in tree
                     String s = JOptionPane.showInputDialog(
                             Core.getStaticContext().getMainFrame(),
                             "New name:",
                             t.getElement().getName());
-                    if (s != null) {
+                    if (s != null && s != "") {
                         try {
                             PineappleCore.getProject().rename(t.getElement().getFile(), s);
                         } catch (Exception ex) {

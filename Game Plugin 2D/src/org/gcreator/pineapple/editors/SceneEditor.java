@@ -342,6 +342,7 @@ private void fullscreenButtonActionPerformed(java.awt.event.ActionEvent evt) {//
     }
     if (fullscreenButton.isSelected()) {
         fullScreenWindow = new JFrame("Scene Editor");
+        fullScreenWindow.setUndecorated(true);
         fullScreenWindow.setContentPane(environmentTab);
         gd.setFullScreenWindow(fullScreenWindow);
     } else {

@@ -22,8 +22,10 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.game2d;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -37,12 +39,15 @@ import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.CheckResourceNamesPanel;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.Plugin;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.FormatSupporter;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
+import org.gcreator.pineapple.validators.Glob;
+import org.gcreator.pineapple.validators.UniversalValidator;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
 
@@ -62,6 +67,14 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     public static ToolWindow palette = null;
     public static JPanel palettePanel = null;
     public static JMenuItem gameSettings;
+    public static JMenuItem checkres;
+    /**
+     * Regular expression to test on filenames to see
+     * if they are valid.
+     * 
+     * @see String#matches(java.lang.String) 
+     */
+    public static final String FNAME_REGEX = "\\w+(\\..+)?";
 
     /**
      * {@inheritDoc}
@@ -126,7 +139,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     /**
      * An array of the formats supported by the 2D Game Plug-in.
      */
-    public static final String[] formats = new String[] {
+    public static final String[] formats = new String[]{
         "actor",
         "scene"
     };
@@ -202,10 +215,25 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                     ToolWindowAnchor.RIGHT);
             palette.setAvailable(false);
             EventManager.fireEvent(this, PALETTE_CREATED, palette, palettePanel);
-            
+
+            /* Check resource names menu item */
+            checkres = new JMenuItem("Check Resource Names");
+            checkres.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    showCheckResourcesDialog();
+                }
+            });
+            PineappleGUI.projectMenu.insertSeparator(2);
+            PineappleGUI.projectMenu.insert(checkres, 3);
+
         } else if (e.getEventType().equals(PineappleCore.PROJECT_CHANGED)) {
             if (gameSettings != null) {
-                gameSettings.setEnabled(PineappleCore.getProject() != null && 
+                gameSettings.setEnabled(PineappleCore.getProject() != null &&
+                        PineappleCore.getProject().getProjectType() instanceof GameProjectType);
+            }
+            if (checkres != null) {
+                checkres.setEnabled(PineappleCore.getProject() != null &&
                         PineappleCore.getProject().getProjectType() instanceof GameProjectType);
             }
         }
@@ -236,5 +264,40 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     @Override
     public String getAuthor() {
         return "Luís Reis, Serge Humphrey";
+    }
+
+    /**
+     * Checks all resource names and returns whether they
+     * are all valid.
+     *
+     * @return <tt>true</tt> if all resource names are valid,
+     * <tt>false</tt> otherwise.
+     */
+    public static boolean checkResourceNames() {
+        boolean good = true;
+        for (BasicFile f : Glob.glob(new UniversalValidator(), true)) {
+            String s = f.getName();
+            if (!s.matches(FNAME_REGEX)) {
+                good = false;
+            }
+        }
+        return good;
+    }
+
+    /**
+     * Displays a new dialog that allows the user to check for bad resource names.
+     * 
+     * @return The dialog that was created.
+     */
+    public static JDialog showCheckResourcesDialog() {
+        JDialog d = new JDialog(Core.getStaticContext().getMainFrame());
+        d.setContentPane(new CheckResourceNamesPanel());
+        Dimension s = new Dimension(400, 300);
+        d.setSize(s);
+        d.setMinimumSize(s);
+        d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        d.setLocationRelativeTo(Core.getStaticContext().getMainFrame());
+        d.setVisible(true);
+        return d;
     }
 }
