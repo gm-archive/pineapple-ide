@@ -25,7 +25,6 @@ package org.gcreator.pineapple.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -53,7 +52,8 @@ public class AboutDialog extends JDialog {
 
         this.setTitle("About");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setSize(640, 480);
+        this.setSize(520, 420);
+        this.setLocationRelativeTo(parent);
         this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setLayout(new BorderLayout());
 
@@ -93,9 +93,9 @@ public class AboutDialog extends JDialog {
         editor.setContentType("text/html");
         editor.setText("Development Team: <br/>" +
                 "<ul>" +
-                "<li>" +   "Luís Reis"  + "</li>" +
-                "<li>" +   "Serge Humphrey"         + "</li>" +
-                "<li>" +   "Russel"                 + "</li>" +
+                "<li>" +   "Luís Reis (2008-2009)"  + "</li>" +
+                "<li>" +   "Serge Humphrey (2008-2009)"         + "</li>" +
+                "<li>" +   "Russell (2008)"                 + "</li>" +
                 "</ul>"
                 );
         JScrollPane scroll = new JScrollPane(editor);
