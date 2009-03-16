@@ -164,6 +164,7 @@ public class PineappleGUI implements EventHandler {
     public static JMenuItem fileSave;
     public static JMenuItem fileExit;
     public static JMenuItem toolsPlugins;
+    public static JMenuItem toolsOptions;
     public static JMenuItem projectRemove;
     public static JMenu     projectNew;
     public static JMenuItem projectOpen;
@@ -185,6 +186,11 @@ public class PineappleGUI implements EventHandler {
     private DefaultTreeModel treeModel;
     protected static final DataFlavor ELEMENT_FLAVOR =
             new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Project Element");
+
+    /**
+     * The setting key for Look&Feel class name.
+     */
+    public static final String LOOK_AND_FEEL_KEY = "graphics.swing.look&feel";
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Events                       ">
     /**
@@ -796,6 +802,20 @@ public class PineappleGUI implements EventHandler {
         });
         toolsMenu.add(toolsPlugins);
 
+        toolsOptions = new JMenuItem("Options");
+        toolsOptions.setMnemonic('O');
+        toolsOptions.setEnabled(true);
+        toolsOptions.setVisible(true);
+        toolsOptions.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                new OptionsDialog();
+            }
+        });
+        toolsMenu.add(toolsOptions);
+        toolsMenu.addSeparator();
+
         menubar.add(toolsMenu);
         //</editor-fold>
 
@@ -909,22 +929,21 @@ public class PineappleGUI implements EventHandler {
         //<editor-fold defaultstate="collapsed" desc="APPLICATION_INITIALIZED">
         if (evt.getEventType().equals(DefaultEventTypes.APPLICATION_INITIALIZED)) {
             
-            String key = "graphics.swing.look&feel";
             // Uncomment to set look&feel to Nimbus Look&Feel.
             // SettingsManager.set(key, "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
             try {
-                if (!SettingsManager.exists(key)) {
-                    SettingsManager.set(key, UIManager.getSystemLookAndFeelClassName());
+                if (!SettingsManager.exists(LOOK_AND_FEEL_KEY)) {
+                    SettingsManager.set(LOOK_AND_FEEL_KEY, UIManager.getSystemLookAndFeelClassName());
                 }
-                UIManager.setLookAndFeel(SettingsManager.get(key));
+                UIManager.setLookAndFeel(SettingsManager.get(LOOK_AND_FEEL_KEY));
             } catch (Exception e) {
                 System.err.println("Failed to install Look&Feel: " + e.getMessage());
                 /* Set Look&Feel back to system Look&Feel
                  * just to annoy plug-in developers.
                  */
-                SettingsManager.set(key, UIManager.getSystemLookAndFeelClassName());
+                SettingsManager.set(LOOK_AND_FEEL_KEY, UIManager.getSystemLookAndFeelClassName());
                 try {
-                    UIManager.setLookAndFeel(SettingsManager.get(key));
+                    UIManager.setLookAndFeel(SettingsManager.get(LOOK_AND_FEEL_KEY));
                 } catch (Exception exc) {
                     /* Don't bother.. */
                 }
