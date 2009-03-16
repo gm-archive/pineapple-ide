@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -103,6 +104,7 @@ public class SceneEditor extends DocumentPane {
         settingsTabs.setEnabledAt(2, false);
 
         leftSplitPane.setDividerLocation(0.6D);
+        topToolBar.add(Box.createHorizontalGlue());
     }
 
     private final class ActorListModel implements ListModel {
