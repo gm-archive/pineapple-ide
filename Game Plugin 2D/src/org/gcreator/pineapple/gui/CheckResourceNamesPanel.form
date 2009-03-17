@@ -27,10 +27,10 @@
               <Component id="renameButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="fixAllButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="20" max="32767" attributes="0"/>
           </Group>
-          <Component id="statusmsg" alignment="0" pref="392" max="32767" attributes="0"/>
-          <Component id="jScrollPane1" alignment="0" pref="392" max="32767" attributes="0"/>
+          <Component id="statusmsg" alignment="0" pref="400" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="400" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -74,7 +74,7 @@
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
             <Property name="cellRenderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new FindResourcePanel.FindListCellRender()" type="code"/>
+              <Connection code="new FileNameListCellRenderer()" type="code"/>
             </Property>
           </Properties>
           <Events>

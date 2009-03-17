@@ -70,11 +70,12 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     public static JMenuItem checkres;
     /**
      * Regular expression to test on filenames to see
-     * if they are valid.
+     * if they are valid.<br/>
+     * Note: Duplicate filenames are also illegal.
      * 
      * @see String#matches(java.lang.String) 
      */
-    public static final String FNAME_REGEX = "\\w+(\\..+)?";
+    public static final String FNAME_REGEX = "[a-zA-z]\\w*(\\.\\w+)?";
 
     /**
      * {@inheritDoc}
@@ -279,9 +280,36 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             String s = f.getName();
             if (!s.matches(FNAME_REGEX)) {
                 good = false;
+                break;
+            } else if (!checkDuplicate(f)) {
+                good = false;
+                break;
             }
         }
         return good;
+    }
+
+    /**
+     * Checks whether there is no duplicate filenames for the given file.
+     * 
+     * @param f The {@link BasicFile} to check.
+     * @return <tt>true</tt> if there are no other files with the same name
+     * as the given file, otherwise <tt>false</tt>.
+     */
+    public static boolean checkDuplicate(BasicFile f) {
+        if (f.isDirectory()) {
+            // No one cares about directories
+            return true;
+        }
+        for (BasicFile bf : Glob.glob(new UniversalValidator(), true)) {
+            if (bf.isDirectory()) {
+                continue;
+            }
+            if (f != bf && f.getName().equals(bf.getName())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

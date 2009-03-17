@@ -22,19 +22,27 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui;
 
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.game2d.GamePlugin;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.project.ProjectElement;
+import org.gcreator.pineapple.project.ProjectFile;
+import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.validators.Glob;
 import org.gcreator.pineapple.validators.UniversalValidator;
@@ -48,7 +56,10 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 328345656;
     private Vector<ProjectElement> results = new Vector<ProjectElement>();
-    private final String congrats = "Congrats! All resource names are valid";
+    private HashMap<ProjectElement, Integer> errorCodes = new HashMap<ProjectElement, Integer>();
+    private static final Integer FILENAME_INVALID = new Integer(0);
+    private static final Integer FILENAME_DUPLICATE = new Integer(1);
+    private static final String congrats = "Congrats! All resource names are valid";
 
     /** Creates new form CheckResourceNamesPanel */
     public CheckResourceNamesPanel() {
@@ -59,9 +70,19 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
     public void search() {
         statusmsg.setText("Checking...");
         results.clear();
+        errorCodes.clear();
+        boolean invalid_filenames = false;
         for (BasicFile f : Glob.glob(new UniversalValidator(), true)) {
+            // Check invalid filenames
             if (!f.getName().matches(GamePlugin.FNAME_REGEX)) {
                 results.add(f.getElement().getFile().getElement());
+                errorCodes.put(f.getElement(), FILENAME_INVALID);
+                invalid_filenames = true;
+            }
+            // check duplicate filenames
+            else if (!GamePlugin.checkDuplicate(f)) {
+                results.add(f.getElement().getFile().getElement());
+                errorCodes.put(f.getElement(), FILENAME_DUPLICATE);
             }
         }
         if (results.size() == 0) {
@@ -71,7 +92,7 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
         }
         resList.setSelectedIndex(-1);
         resList.updateUI();
-        fixAllButton.setEnabled(results.size() > 0);
+        fixAllButton.setEnabled(results.size() > 0 && invalid_filenames);
     }
 
     private class ResourceListModel extends AbstractListModel {
@@ -126,9 +147,43 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
             recName = recName.substring(0, dot) + "." +
                     ((dot + 1 < recName.length()) ? recName.substring(dot + 1) : "");
         }
+        if (!recName.matches(GamePlugin.FNAME_REGEX)) {
+            recName = "_"+recName;
+        }
         return recName;
     }
 
+    private class FileNameListCellRenderer extends DefaultListCellRenderer {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof ProjectElement) {
+                ProjectElement e = (ProjectElement) value;
+                Integer code = errorCodes.get(value);
+                String s = "??? ";
+                if (code == FILENAME_INVALID) {
+                    s = "Invalid filename: ";
+                } else if (code == FILENAME_DUPLICATE) {
+                    s = "Duplicate filename: ";
+                }
+                s += e.getFile().getPath();
+                this.setText(s);
+                if (e.getIcon() != null) {
+                    this.setIcon(e.getIcon());
+                } else {
+                    if (value instanceof ProjectFile) {
+                       this.setIcon((Icon) UIManager.get("Tree.leafIcon"));
+                    } else if (value instanceof ProjectFolder) {
+                       this.setIcon((Icon) UIManager.get("Tree.closedIcon"));
+                    }
+                }
+            }
+            return this;
+        }
+
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -154,7 +209,7 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
 
         resList.setModel(new ResourceListModel());
         resList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        resList.setCellRenderer(new FindResourcePanel.FindListCellRender());
+        resList.setCellRenderer(new FileNameListCellRenderer());
         resList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 resListMousePressed(evt);
@@ -205,9 +260,9 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
                 .addComponent(renameButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fixAllButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(statusmsg, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE))
+            .addComponent(statusmsg, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +305,8 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
     private void fixAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fixAllButtonActionPerformed
         for (ProjectElement e : results) {
             try {
-                e.getFile().rename(getRecommenededName(e.getName()));
+                String rec = getRecommenededName(e.getName());
+                e.getFile().rename(rec);
             } catch (IOException ex) {
                 Logger.getLogger(CheckResourceNamesPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
