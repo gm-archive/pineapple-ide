@@ -75,7 +75,6 @@ public class GameCompiler {
     int resIndex = 0;
     HashMap<File, String> imageNames = new HashMap<File, String>();
 
-
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
     }
@@ -138,16 +137,13 @@ public class GameCompiler {
                                     createSceneScript(e);
                                 } else if (format.equals("pdl")) {
                                     copyScript(e);
-                                } else if (format.equals("png")) {
-                                    copyImage(e);
-                                } else if (format.equals("jpg")) {
-                                    copyImage(e);
-                                } else if (format.equals("jpeg")) {
-                                    copyImage(e);
-                                } else if (format.equals("gif")) {
-                                    copyImage(e);
-                                } else if (format.equals("bmp")) {
-                                    copyImage(e);
+                                } else {
+                                    for (String s : ImageIO.getReaderFileSuffixes()) {
+                                        if (s.equalsIgnoreCase(format)) {
+                                            copyImage(e, format);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                             buildContext();
@@ -194,9 +190,8 @@ public class GameCompiler {
         for (File image : imageFiles) {
             String fname = imageNames.get(image);
             int index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index);
-            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname
-                    + ";\n").getBytes());
+            fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
+            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname + ";\n").getBytes());
         }
         fos.write("\t\tpublic: static void init();".getBytes());
 
@@ -215,14 +210,11 @@ public class GameCompiler {
             int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index);
             String varname = fname.replaceAll("\\W", "_");
-            if (varname.length() >= 26) {
-                varname = varname.substring(0, 26);
-            }
             fname = imageNames.get(image);
             index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index);
-            fos.write(("extern char _binary_"+varname+"_start;\n").getBytes());
-            fos.write(("extern char _binary_"+varname+"_end;\n").getBytes());
+            fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
+            fos.write(("extern char _binary_" + varname + "_start;\n").getBytes());
+            fos.write(("extern char _binary_" + varname + "_end;\n").getBytes());
             fos.write("::Pineapple::Texture* ".getBytes());
             fos.write((gamePackage + "::TextureList::" + fname + ";\n").getBytes());
         }
@@ -232,14 +224,11 @@ public class GameCompiler {
             int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index);
             String varname = fname.replaceAll("\\W", "_");
-            if (varname.length() >= 26) {
-                varname = varname.substring(0, 26);
-            }
             fname = imageNames.get(image);
             index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index);
-            fos.write(("\t"+gamePackage + "::TextureList::" + fname +
-    " = new ::Pineapple::Texture(&_binary_"+varname+"_start, &_binary_"+varname+"_end").getBytes());
+            fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
+            fos.write(("\t" + gamePackage + "::TextureList::" + fname +
+                    " = new ::Pineapple::Texture(&_binary_" + varname + "_start, &_binary_" + varname + "_end").getBytes());
             fos.write(");\n".getBytes());
         }
         fos.write("}\n".getBytes());
@@ -381,8 +370,8 @@ public class GameCompiler {
         }
         int x = proc.waitFor();
         if (x != 0) {
-            compFrame.writeLine("<font color='red'>There seems to have been some errors with the compiler<br/> "+
-            "Please report them to the G-Creator team</font>");
+            compFrame.writeLine("<font color='red'>There seems to have been some errors with the compiler<br/> " +
+                    "Please report them to the G-Creator team</font>");
         } else {
             compFrame.writeLine("Finished!");
             compFrame.runGameButton.setEnabled(true);
@@ -432,24 +421,24 @@ public class GameCompiler {
         fos.close();
     }
 
-    private void copyImage(ProjectElement e) throws Exception {
-        String fn = "i" + resIndex++ + ".png";
+    private void copyImage(ProjectElement e, String ext) throws Exception {
+        String fn = ext + resIndex++ + ".png";
         File f = new File(resFolder, fn);
         // Convert to PNG!
-        compFrame.writeLine("Converting image to PNG " + e.getName());
+  /*      compFrame.writeLine("Converting image to PNG " + e.getName());
         BufferedImage img = ImageIO.read(e.getFile().getReader());
         BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         copy.getGraphics().drawImage(img, 0, 0, null);
         ImageIO.write(copy, "PNG", f);
-        File obj = new File(objresFolder.getAbsolutePath(), fn+".o");
-        compFrame.writeLine("Making object file of " + e.getName());
-        /* Works with UNIX_GCC or MinGW */
+ */       File obj = new File(objresFolder.getAbsolutePath(), fn + ".o");
+   /*     compFrame.writeLine("Making object file of " + e.getName());
+        /* Works with GCC and MinGW */
         if (profile == CompilationProfile.UNIX_GCC || profile == CompilationProfile.MINGW_WINDOWS) {
-            ProcessBuilder pb = new ProcessBuilder(new String[] {
-            "ld", "-r",
-            "-b", "binary",
-            "-o", obj.getAbsolutePath(),
-            f.getName() });
+  /*          ProcessBuilder pb = new ProcessBuilder(new String[]{
+                        "ld", "-r",
+                        "-b", "binary",
+                        "-o", obj.getAbsolutePath(),
+                        f.getName()});
             pb.directory(f.getParentFile());
             StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
             for (String s : pb.command()) {
@@ -462,7 +451,7 @@ public class GameCompiler {
             cmd.append("</em></font>");
             compFrame.writeLine(cmd.toString());
             Process pr = pb.start();
-            pr.waitFor();
+            pr.waitFor();*/
         } else {
             System.out.println("ERROR! Don't know how to use linker!");
             return;
@@ -506,19 +495,7 @@ public class GameCompiler {
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
                 hasCreate = true;
-                fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
-
-                fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
-                if (a.getImage() != null) {
-                    fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
-                    String iname = a.getImage().getName();
-                    iname = iname.substring(0, iname.indexOf('.'));
-                    fos.write(iname.getBytes());
-                    fos.write(";\n".getBytes());
-                }
-                fos.write(outputEvent(a, evt).getBytes());
-
-                fos.write("\t}\n".getBytes());
+                writeCreate(fos, a, evt);
             }
 
             if (evt.getType().equals(Event.TYPE_UPDATE)) {
@@ -555,21 +532,32 @@ public class GameCompiler {
         }
 
         if (!hasCreate) {
-            fos.write("\tpublic this(float x, float y) : super(x,y){\n".getBytes());
-            if (a.getImage() != null) {
-                fos.write("\t\ttexture = TextureList.".getBytes());
-                String iname = a.getImage().getName();
-                iname = iname.substring(0, iname.indexOf('.'));
-                fos.write(iname.getBytes());
-                fos.write(";\n".getBytes());
-            }
-            fos.write("\t}\n".getBytes());
+            writeCreate(fos, a, null);
         }
 
         fos.write('}');
         fos.write('\n');
         pineScripts.add(f);
         fos.close();
+    }
+
+    private void writeCreate(FileOutputStream fos, Actor a, Event evt) throws IOException {
+        fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
+
+                fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
+                if (a.getImage() != null) {
+                    fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
+                    String iname = a.getImage().getName();
+                    int index = iname.indexOf('.');
+                    iname = iname.substring(0, index) + "_" + iname.substring(index + 1);
+                    fos.write(iname.getBytes());
+                    fos.write(";\n".getBytes());
+                }
+                if (evt != null) {
+                    fos.write(outputEvent(a, evt).getBytes());
+                }
+
+                fos.write("\t}\n".getBytes());
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
