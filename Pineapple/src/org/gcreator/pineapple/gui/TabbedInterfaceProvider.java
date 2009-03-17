@@ -22,8 +22,13 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui;
 
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
+import java.util.HashMap;
+import org.noos.xing.mydoggy.Content;
+import org.noos.xing.mydoggy.ContentManager;
+import org.noos.xing.mydoggy.ContentManagerListener;
+import org.noos.xing.mydoggy.event.ContentManagerEvent;
+import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 
 /**
  * Provides a tabbed document interface provider.
@@ -31,27 +36,31 @@ import javax.swing.SwingUtilities;
  * @author Luís Reis
  * @author Serge Humphrey
  */
-public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInterfaceProvider {
+public class TabbedInterfaceProvider implements DocumentInterfaceProvider, ContentManagerListener {
 
     private static final long serialVersionUID = 1L;
+    protected ContentManager content;
+    protected HashMap<DocumentPane, Content> contentMap;
 
     /**
      * Creates a new TabbedInterfaceProvider.
      */
     public TabbedInterfaceProvider() {
-        this.setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
-        PineappleGUI.manager.setMainContent(this);
+        contentMap = new HashMap<DocumentPane, Content>();
+        content = PineappleGUI.manager.getContentManager();
+        content.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        content.addContentManagerListener(this);
     }
 
     @Override
     public int getDocumentCount() {
-        return this.getTabCount();
+        return contentMap.size();
     }
 
     @Override
     public DocumentPane getDocumentAt(int index) {
         try {
-            return (DocumentPane) super.getComponentAt(index);
+            return (DocumentPane) content.getContent(index);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
@@ -59,10 +68,8 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
 
     @Override
     public void add(final String title, final DocumentPane pane) {
-        addTab(title, pane);
-        int index = indexOfComponent(pane);
-        setTabComponentAt(index, new TabRenderer(TabbedInterfaceProvider.this));
-        setSelectedIndex(index);
+        Content c = content.addContent(pane.getFile().getName(), title, null, pane);
+        contentMap.put(pane, c);
     }
 
     /**
@@ -70,12 +77,31 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
      */
     @Override
     public DocumentPane getSelectedDocument() {
-        return (DocumentPane) super.getSelectedComponent();
+        if (content.getSelectedContent() == null) {
+            return null;
+        }
+        for (DocumentPane d : contentMap.keySet()) {
+            if (contentMap.get(d) == content.getSelectedContent()) {
+                return d;
+            }
+        }
+        return null;
     }
 
     @Override
     public void removeDocumentAt(int index) {
-        super.remove(index);
+        Content c = content.getContent(index);
+        if (c == null) {
+            return;
+        }
+        for (DocumentPane d : contentMap.keySet()) {
+            if (contentMap.get(d) == c) {
+                contentMap.remove(d);
+                break;
+            }
+        }
+        content.removeContent(index);
+        
     }
 
     /**
@@ -83,7 +109,15 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
      */
     @Override
     public void remove(DocumentPane pane) {
-        super.remove(pane);
+        if (pane == null) {
+            return;
+        }
+        Content c = contentMap.get(pane);
+        if (c == null) {
+            return;
+        }
+        contentMap.remove(pane);
+        content.removeContent(c);
     }
 
     /**
@@ -91,15 +125,71 @@ public class TabbedInterfaceProvider extends JTabbedPane implements DocumentInte
      */
     @Override
     public int getDocumentIndex(DocumentPane pane) {
-        return super.indexOfComponent(pane);
+        Content c = contentMap.get(pane);
+        for (int i = 0; i < content.getContentCount(); i++) {
+            if (c == content.getContents()[i]) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     public DocumentPane[] getDocuments() {
-        DocumentPane[] p = new DocumentPane[this.getDocumentCount()];
-        for (int i = 0; i < p.length; i++) {
-            p[i] = getDocumentAt(i);
+        DocumentPane[] panes = new DocumentPane[this.getDocumentCount()];
+        int i = 0;
+        for (DocumentPane p : contentMap.keySet()) {
+            panes[i++] = p;
         }
-        return p;
+        return panes;
+    }
+
+    @Override
+    public int getSelectedIndex() {
+        int i = 0;
+        for (Content c : contentMap.values()) {
+            if (c == content.getSelectedContent()) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    @Override
+    public void setSelectedIndex(int index) {
+        MyDoggyTabbedContentManagerUI ui = ((MyDoggyTabbedContentManagerUI) content.getContentManagerUI());
+        ui.setSelected(content.getContent(index), true);
+    }
+
+    @Override
+    public String getTitleAt(int index) {
+        return content.getContent(index).getTitle();
+    }
+
+    @Override
+    public void setTitleAt(int index, String title) {
+        content.getContent(index).setTitle(title);
+    }
+
+    @Override
+    public void contentAdded(ContentManagerEvent event) {
+    }
+
+    @Override
+    public void contentRemoved(ContentManagerEvent event) {
+        Content c = event.getContent();
+        if (contentMap.containsValue(c)) {
+            for (DocumentPane d : contentMap.keySet()) {
+                if (contentMap.get(d) == c) {
+                    contentMap.remove(d);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void contentSelected(ContentManagerEvent event) {
     }
 }

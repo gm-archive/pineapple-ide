@@ -138,7 +138,6 @@ public abstract class DocumentPane extends JPanel {
         if (PineappleGUI.dip.getSelectedDocument() == this) {
             PineappleGUI.fileSave.setEnabled(canSave());
         }
-        PineappleGUI.dip.updateUI();
     }
 
     /**
