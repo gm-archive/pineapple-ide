@@ -138,6 +138,8 @@ public abstract class DocumentPane extends JPanel {
         if (PineappleGUI.dip.getSelectedDocument() == this) {
             PineappleGUI.fileSave.setEnabled(canSave());
         }
+        PineappleGUI.dip.setTitleAt(PineappleGUI.dip.getDocumentIndex(this), getTitle());
+        PineappleGUI.dip.updateUI();
     }
 
     /**
@@ -167,9 +169,27 @@ public abstract class DocumentPane extends JPanel {
 
     /**
      * Destroys, but asks whether or not to save the document first.
+     *
      * @return whether or not is was disposed.
      */
     public boolean dispose() {
+        if (!userRequestDispose()) {
+            return false;
+        }
+        PineappleGUI.dip.remove(this);
+        return true;
+    }
+    
+    /**
+     * Asks the user if to save the document if it is not saved
+     * and returns false if the document did not save or the user
+     * canceled the action.
+     *
+     * @return Whether the or not the document should be disposed.
+     *
+     * @see #dispose()
+     */
+    public boolean userRequestDispose() {
         if (canSave()) {
             String title = getTitle();
             int res = JOptionPane.showConfirmDialog(Core.getStaticContext().getMainFrame(),
@@ -183,7 +203,6 @@ public abstract class DocumentPane extends JPanel {
                 }
             }
         }
-        PineappleGUI.dip.remove(this);
         return true;
     }
 

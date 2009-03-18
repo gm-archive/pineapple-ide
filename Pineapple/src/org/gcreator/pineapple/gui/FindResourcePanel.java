@@ -86,7 +86,7 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         
         list = new JList(new FindListModel());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setCellRenderer(new FindListCellRender());
+        list.setCellRenderer(new FindListCellRenderer());
         list.addMouseListener(this);
         this.add(new JScrollPane(list), BorderLayout.CENTER);
     }
@@ -176,7 +176,7 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         }
     }
     
-    public static class FindListCellRender extends DefaultListCellRenderer {
+    private static class FindListCellRenderer extends DefaultListCellRenderer {
         private static final long serialVersionUID = 1L;
 
         @Override

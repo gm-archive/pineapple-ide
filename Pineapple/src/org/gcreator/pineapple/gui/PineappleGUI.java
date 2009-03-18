@@ -1008,14 +1008,23 @@ public class PineappleGUI implements EventHandler {
             } catch (Exception e) {
             }
 
-            for (DocumentPane doc : dip.getDocuments()) {
-                if (doc != null) {
-                    if (!doc.dispose()) {
-                        evt.handleEvent();
-                        return;
+            // Close tabs
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    for (DocumentPane doc : dip.getDocuments()) {
+                        if (doc != null) {
+                            if (!doc.dispose()) {
+                                evt.handleEvent();
+                                return;
+                            }
+                        }
                     }
                 }
-            }
+                
+            });
+            
             try {
                 File pf = new File(Core.getStaticContext().getApplicationDataFolder(), "projects.xml");
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

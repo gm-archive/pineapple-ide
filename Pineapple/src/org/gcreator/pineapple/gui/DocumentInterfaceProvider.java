@@ -120,4 +120,10 @@ public interface DocumentInterfaceProvider {
      * @return An array of the documents.
      */
     public DocumentPane[] getDocuments();
+    
+    /**
+     * Updates the providers UI, assuming that it is
+     * a Swing component.
+     */
+    public void updateUI();
 }

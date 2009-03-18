@@ -24,10 +24,9 @@ package org.gcreator.pineapple.gui;
 
 import java.util.HashMap;
 import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.event.ContentManagerUIEvent;
+import org.noos.xing.mydoggy.plaf.MyDoggyContentManager;
 import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 
 /**
@@ -39,7 +38,7 @@ import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyTabbedContentManagerUI;
 public class TabbedInterfaceProvider implements DocumentInterfaceProvider, ContentManagerListener {
 
     private static final long serialVersionUID = 1L;
-    protected ContentManager content;
+    protected MyDoggyContentManager content;
     protected HashMap<DocumentPane, Content> contentMap;
 
     /**
@@ -47,8 +46,11 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
      */
     public TabbedInterfaceProvider() {
         contentMap = new HashMap<DocumentPane, Content>();
-        content = PineappleGUI.manager.getContentManager();
-        content.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        content = (MyDoggyContentManager) PineappleGUI.manager.getContentManager();
+        MyDoggyTabbedContentManagerUI ui = new MyDoggyTabbedContentManagerUI();
+        content.setContentManagerUI(ui);
+        ui.setShowAlwaysTab(true);
+        ui.updateUI();
         content.addContentManagerListener(this);
     }
 
@@ -68,8 +70,10 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
 
     @Override
     public void add(final String title, final DocumentPane pane) {
-        Content c = content.addContent(pane.getFile().getName(), title, null, pane);
+        DocumentPaneContent c = new DocumentPaneContent(content, pane);
+        content._addContent(c);
         contentMap.put(pane, c);
+        this.setSelectedIndex(this.getDocumentIndex(pane));
     }
 
     /**
@@ -167,9 +171,22 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
         return content.getContent(index).getTitle();
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void setTitleAt(int index, String title) {
-        content.getContent(index).setTitle(title);
+        Content c = content.getContent(index);
+        if (c == null) {
+            return;
+        }
+        c.setTitle(title);
+    }
+
+    
+    @Override
+    public void updateUI() {
+        ((MyDoggyTabbedContentManagerUI)content.getContentManagerUI()).updateUI();
     }
 
     @Override

@@ -31,7 +31,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.project.io.BasicFile;
