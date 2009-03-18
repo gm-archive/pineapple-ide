@@ -27,15 +27,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import org.gcreator.pineapple.events.Event;
@@ -62,6 +69,7 @@ public class GameCompiler {
     File binFolder;
     File resFolder;
     File objresFolder;
+    File compConf;
     CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
@@ -74,6 +82,7 @@ public class GameCompiler {
     CompilationProfile profile = null;
     int resIndex = 0;
     HashMap<File, String> imageNames = new HashMap<File, String>();
+    HashMap<String, String> config = new HashMap<String, String>();
 
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
@@ -376,6 +385,7 @@ public class GameCompiler {
             compFrame.writeLine("Finished!");
             compFrame.runGameButton.setEnabled(true);
         }
+        saveConfig();
     }
 
     private void buildContext() {
@@ -424,37 +434,52 @@ public class GameCompiler {
     private void copyImage(ProjectElement e, String ext) throws Exception {
         String fn = ext + resIndex++ + ".png";
         File f = new File(resFolder, fn);
-        // Convert to PNG!
-  /*      compFrame.writeLine("Converting image to PNG " + e.getName());
-        BufferedImage img = ImageIO.read(e.getFile().getReader());
-        BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        copy.getGraphics().drawImage(img, 0, 0, null);
-        ImageIO.write(copy, "PNG", f);
- */       File obj = new File(objresFolder.getAbsolutePath(), fn + ".o");
-   /*     compFrame.writeLine("Making object file of " + e.getName());
-        /* Works with GCC and MinGW */
-        if (profile == CompilationProfile.UNIX_GCC || profile == CompilationProfile.MINGW_WINDOWS) {
-  /*          ProcessBuilder pb = new ProcessBuilder(new String[]{
-                        "ld", "-r",
-                        "-b", "binary",
-                        "-o", obj.getAbsolutePath(),
-                        f.getName()});
-            pb.directory(f.getParentFile());
-            StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
-            for (String s : pb.command()) {
-                s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-                if (s.contains(" ")) {
-                    s = "\"" + s + "\"";
-                }
-                cmd.append(" ").append(s);
+        File obj = new File(objresFolder.getAbsolutePath(), fn + ".o");
+        /* Convert to PNG if needed */
+        boolean copy = true;
+        if (f.exists() && config.containsKey(f.getName())) {
+            long modified = Long.parseLong(config.get(f.getName()));
+            if (modified >= f.lastModified()) {
+                copy = false;
             }
-            cmd.append("</em></font>");
-            compFrame.writeLine(cmd.toString());
-            Process pr = pb.start();
-            pr.waitFor();*/
-        } else {
-            System.out.println("ERROR! Don't know how to use linker!");
-            return;
+        }
+        if (copy) {
+            convertImage(e.getFile(), f);
+            config.put(f.getName(), String.valueOf(f.lastModified()));
+            compFrame.writeLine("Making object file of " + e.getName());
+            /* Works with GCC and MinGW
+            Doesn't link in MinGW! Needs to be fixed.
+             */
+            if (profile == CompilationProfile.UNIX_GCC || profile == CompilationProfile.MINGW_WINDOWS) {
+                String arch;
+                if (profile == CompilationProfile.UNIX_GCC) {
+                    arch = "elf32-i386";
+                } else {
+                    arch = "pe-i386";
+                }
+                ProcessBuilder pb = new ProcessBuilder(new String[]{
+                            "objcopy",
+                            "-I", "binary",
+                            "-O", arch,
+                            "--binary-architecture", "i386",
+                            f.getName(), obj.getAbsolutePath()});
+                pb.directory(f.getParentFile());
+                StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
+                for (String s : pb.command()) {
+                    s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                    if (s.contains(" ")) {
+                        s = "\"" + s + "\"";
+                    }
+                    cmd.append(" ").append(s);
+                }
+                cmd.append("</em></font>");
+                compFrame.writeLine(cmd.toString());
+                Process pr = pb.start();
+                pr.waitFor();
+            } else {
+                System.out.println("ERROR! Don't know how to use linker!");
+                return;
+            }
         }
         imageFiles.add(obj);
         imageNames.put(obj, e.getName());
@@ -544,20 +569,20 @@ public class GameCompiler {
     private void writeCreate(FileOutputStream fos, Actor a, Event evt) throws IOException {
         fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
 
-                fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
-                if (a.getImage() != null) {
-                    fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
-                    String iname = a.getImage().getName();
-                    int index = iname.indexOf('.');
-                    iname = iname.substring(0, index) + "_" + iname.substring(index + 1);
-                    fos.write(iname.getBytes());
-                    fos.write(";\n".getBytes());
-                }
-                if (evt != null) {
-                    fos.write(outputEvent(a, evt).getBytes());
-                }
+        fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
+        if (a.getImage() != null) {
+            fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
+            String iname = a.getImage().getName();
+            int index = iname.indexOf('.');
+            iname = iname.substring(0, index) + "_" + iname.substring(index + 1);
+            fos.write(iname.getBytes());
+            fos.write(";\n".getBytes());
+        }
+        if (evt != null) {
+            fos.write(outputEvent(a, evt).getBytes());
+        }
 
-                fos.write("\t}\n".getBytes());
+        fos.write("\t}\n".getBytes());
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
@@ -613,25 +638,19 @@ public class GameCompiler {
     private void prepare() throws Exception {
         compFrame.writeLine("<b>Preparing game compilation</b>");
         outputFolder = new File(p.getProjectFolder(), "output/cpp-opengl/");
-        if (outputFolder.exists()) {
-            outputFolder.delete();
-        }
         outputFolder.mkdirs();
         binFolder = new File(outputFolder, "bin"); // OUTPUT/bin
-        if (binFolder.exists()) {
-            binFolder.delete();
-        }
         binFolder.mkdir();
         resFolder = new File(outputFolder, "res"); // OUTPUT/res
-        if (resFolder.exists()) {
-            resFolder.delete();
-        }
         resFolder.mkdir();
         objresFolder = new File(outputFolder, "res_obj"); // OUTPUT/res_obj
-        if (objresFolder.exists()) {
-            objresFolder.delete();
-        }
         objresFolder.mkdir();
+        compConf = new File(outputFolder, "compile.conf");
+
+        compFrame.writeLine("Loading config...");
+        loadConfig();
+
+        compFrame.writeLine("Generating header...");
         headerH = new FileOutputStream(new File(outputFolder, "header.h"));
         headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
         headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
@@ -650,5 +669,75 @@ public class GameCompiler {
         headerH.write("#include \"view.h\"\n".getBytes());
         headerH.write("#include \"window.h\"\n".getBytes());
         headerH.write("#include \"TextureList.h\"\n".getBytes());
+    }
+
+    private void loadConfig() {
+        if (!compConf.exists()) {
+            return;
+        }
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new FileReader(compConf));
+            String l;
+            while ((l = r.readLine()) != null) {
+                if (l.matches("\\W*#.*")) {
+                    continue;
+                }
+                String[] line = l.split("=");
+                if (line.length < 2) {
+                    System.out.println("Error: invalid line: " + l);
+                    continue;
+                }
+                String var = line[0];
+                String value = line[1];
+                for (int i = 2; i < line.length; i++) {
+                    value += line[i];
+                }
+                config.put(var, value);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GameCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (r != null) {
+                try {
+                    r.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(GameCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    private void saveConfig() {
+        BufferedWriter w = null;
+        try {
+            w = new BufferedWriter(new FileWriter(compConf));
+            for (String s : config.keySet()) {
+                w.write(s);
+                w.write("=");
+                w.write(config.get(s));
+                w.newLine();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GameCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (w != null) {
+                try {
+                    w.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(GameCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    private void convertImage(BasicFile src, File dest) throws IOException {
+        compFrame.writeLine("Converting image to PNG " + src.getName());
+        BufferedImage img = ImageIO.read(src.getReader());
+        BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        copy.getGraphics().drawImage(img, 0, 0, null);
+        ImageIO.write(copy, "PNG", dest);
     }
 }
