@@ -253,7 +253,7 @@ public class Scene extends ClassResource {
          */
         public BufferedImage getImage() {
             BufferedImage img;
-            if (actor.getImage() != null) {
+            if (actor != null && actor.getImage() != null) {
                 img = Scene.getImage(actor.getImage());
                 if (img == null) {
                     img = unknownImage;

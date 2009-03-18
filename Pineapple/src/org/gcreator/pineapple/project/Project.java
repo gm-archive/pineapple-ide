@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.ProjectManager;
 import org.gcreator.pineapple.project.standard.DefaultProject;
@@ -187,7 +188,8 @@ public abstract class Project {
     public abstract boolean allowsSave();
 
     /**
-     * Renames a child file
+     * Renames a child file which fires a
+     * {@link PineappleGUI#FILE_RENAMED} event.
      * 
      * @param f The file to rename
      * @param newName The new file name

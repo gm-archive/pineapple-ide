@@ -78,8 +78,7 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
                 results.add(f.getElement().getFile().getElement());
                 errorCodes.put(f.getElement(), FILENAME_INVALID);
                 invalid_filenames = true;
-            }
-            // check duplicate filenames
+            } // check duplicate filenames
             else if (!GamePlugin.checkDuplicate(f)) {
                 results.add(f.getElement().getFile().getElement());
                 errorCodes.put(f.getElement(), FILENAME_DUPLICATE);
@@ -129,14 +128,13 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
         if (s != null && s != "") {
             try {
                 PineappleCore.getProject().rename(e.getFile(), s);
+
+                if (s.matches(GamePlugin.FNAME_REGEX)) {
+                    results.remove(e);
+                }
+                resList.updateUI();
             } catch (Exception ex) {
             }
-
-            if (s.matches(GamePlugin.FNAME_REGEX)) {
-                results.remove(e);
-            }
-            resList.updateUI();
-            EventManager.fireEvent(this, PineappleGUI.FILE_RENAMED, e, s);
         }
     }
 
@@ -148,12 +146,13 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
                     ((dot + 1 < recName.length()) ? recName.substring(dot + 1) : "");
         }
         if (!recName.matches(GamePlugin.FNAME_REGEX)) {
-            recName = "_"+recName;
+            recName = "_" + recName;
         }
         return recName;
     }
 
     private class FileNameListCellRenderer extends DefaultListCellRenderer {
+
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -174,16 +173,16 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
                     this.setIcon(e.getIcon());
                 } else {
                     if (value instanceof ProjectFile) {
-                       this.setIcon((Icon) UIManager.get("Tree.leafIcon"));
+                        this.setIcon((Icon) UIManager.get("Tree.leafIcon"));
                     } else if (value instanceof ProjectFolder) {
-                       this.setIcon((Icon) UIManager.get("Tree.closedIcon"));
+                        this.setIcon((Icon) UIManager.get("Tree.closedIcon"));
                     }
                 }
             }
             return this;
         }
-
     }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

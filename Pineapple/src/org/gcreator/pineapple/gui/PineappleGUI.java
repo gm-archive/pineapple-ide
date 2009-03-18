@@ -202,7 +202,11 @@ public class PineappleGUI implements EventHandler {
      */
     public static final String FILE_REMOVED = "file-removed";
     /**
-     * Event when a file is renamed.
+     * Event when a file is renamed.<br/>
+     * Note: automatically called by {@link BasicFile#rename(java.lang.String)}.
+     *
+     * @param arg0 The relative old file path.
+     * @param arg1 The new file.
      */
     public static final String FILE_RENAMED = "file-renamed";
     /**
@@ -1450,6 +1454,7 @@ public class PineappleGUI implements EventHandler {
                             return;
                         }
                         DocumentPane p = s.load(n.getElement().getFile());
+                        //TODO: What if the file is opened in another editor?
                         dip.add(p.getFile().getName(), p);
                     }
                 });
@@ -1605,7 +1610,6 @@ public class PineappleGUI implements EventHandler {
                         } catch (Exception ex) {
                         }
                     }
-                    EventManager.fireEvent(this, FILE_RENAMED, t.getElement(), s);
                 }
             });
         }

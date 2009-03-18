@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.PineappleGUI;
+import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -158,11 +160,13 @@ public class DefaultFile implements BasicFile {
      */
     @Override
     public void rename(String newName) throws IOException {
+        String oldPath = getPath();
         File dest = new File(file.getParentFile(), newName);
         if (!file.renameTo(dest)) {
             throw new IOException("Renaming failed for " + this.file);
         }
         this.file = dest;
+        EventManager.fireEvent(this, PineappleGUI.FILE_RENAMED, oldPath, this);
         if (PineappleCore.getProject() != null && PineappleCore.getProject().getManager() instanceof DefaultProjectManager) {
             ((DefaultProjectManager) PineappleCore.getProject().getManager()).saveToManifest();
         }

@@ -25,6 +25,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project.io;
 
 import java.io.IOException;
+import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.project.ProjectElement;
 
 /**
@@ -92,7 +93,7 @@ public interface BasicFile extends Register {
     public BasicFile[] list();
     
     /**
-     * Renames the file
+     * Renames the file and fires a {@link PineappleGUI#FILE_RENAMED} event.
      * 
      * @param newName The new name for the file
      * @throws java.io.IOException If an errors occurs while renaming the file

@@ -25,6 +25,14 @@ package org.gcreator.pineapple.game2d;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -46,7 +54,9 @@ import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.FormatSupporter;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
+import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.validators.Glob;
+import org.gcreator.pineapple.validators.SceneValidator;
 import org.gcreator.pineapple.validators.UniversalValidator;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
@@ -237,6 +247,45 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                 checkres.setEnabled(PineappleCore.getProject() != null &&
                         PineappleCore.getProject().getProjectType() instanceof GameProjectType);
             }
+        } else if (e.getEventType().equals(PineappleGUI.FILE_RENAMED)) {
+            String fname = (String) e.getArguments()[0];
+            BasicFile file = (BasicFile) e.getArguments()[1];
+
+            //TODO: Refactor Progress Dialog.
+
+            String regex = "\"" + Pattern.quote(fname) + "\"";
+            String replacement = "\"" + Matcher.quoteReplacement(file.getPath()) + "\"";
+            /* Actors */
+            for (BasicFile f : Glob.glob(new ActorValidator(), true)) {
+                replaceAll(f, regex, replacement);
+            }
+            /* Scenes */
+            for (BasicFile f : Glob.glob(new SceneValidator(), true)) {
+                replaceAll(f, regex, replacement);
+            }
+        }
+    }
+
+    private void replaceAll(BasicFile f, String regex, String replacement) {
+        try {
+            InputStream in = f.getReader();
+            byte[] data = new byte[in.available() + 20];
+            int i = -1;
+            byte read;
+            while ((read = (byte) in.read()) != -1) {
+                if (++i >= data.length) {
+                    data = Arrays.copyOf(data, data.length + 140);
+                }
+                data[i] = read;
+            }
+            in.close();
+            String s = new String(data, 0, i + 1);
+            s = s.replaceAll(regex, replacement);
+            OutputStream out = f.getWriter();
+            out.write(s.getBytes());
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(GamePlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -246,6 +295,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     @Override
     public void initialize() {
         EventManager.addEventHandler(this, PineappleGUI.FILE_CHANGED);
+        EventManager.addEventHandler(this, PineappleGUI.FILE_RENAMED);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
         EventManager.addEventHandler(this, PineappleGUI.TREE_MENU_INVOKED);
