@@ -47,10 +47,8 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
     public TabbedInterfaceProvider() {
         contentMap = new HashMap<DocumentPane, Content>();
         content = (MyDoggyContentManager) PineappleGUI.manager.getContentManager();
-        MyDoggyTabbedContentManagerUI ui = new MyDoggyTabbedContentManagerUI();
-        content.setContentManagerUI(ui);
-        ui.setShowAlwaysTab(true);
-        ui.updateUI();
+        content.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
+        ((MyDoggyTabbedContentManagerUI)content.getContentManagerUI()).setShowAlwaysTab(true);
         content.addContentManagerListener(this);
     }
 
