@@ -42,4 +42,8 @@ public final class DefaultEventTypes {
     public static final String WINDOW_DISPOSED = "window-disposed";
     public static final String ALL = "all";
     public static final String PLUGINS_LOADED = "plugins-loaded";
+    /**
+     * Called when Pineapple is about to terminate.
+     */
+    public static final String HALT = "halt";
 }

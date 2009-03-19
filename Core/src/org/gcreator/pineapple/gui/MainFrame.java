@@ -66,9 +66,8 @@ public class MainFrame extends JFrame implements EventHandler {
     @Override
     public void handleEvent(Event event) {
         if (event.getEventType().equals(DefaultEventTypes.WINDOW_DISPOSED)) {
-            System.out.println("Performing final disposal");
             super.dispose();
-            System.exit(0);
+            EventManager.fireEvent(this, DefaultEventTypes.HALT);
         }
     }
 }

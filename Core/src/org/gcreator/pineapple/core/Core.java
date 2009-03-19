@@ -22,6 +22,8 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.core;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import org.gcreator.pineapple.gui.MainFrame;
 import org.gcreator.pineapple.managers.DefaultUncaughtExceptionHandler;
 import org.gcreator.pineapple.managers.SettingsManager;
@@ -37,7 +39,7 @@ import org.gcreator.pineapple.managers.PluginManager;
  * 
  * @author Serge Humphrey
  */
-public class Core {
+public final class Core {
 
     /* 0.97... -> Alpha
      * ...006 -> 6       */
@@ -48,7 +50,13 @@ public class Core {
      * Whether to print debuging information.
      */
     public static final boolean DEBUG = false;
-    
+
+    private static Timer timer;
+
+    static {
+        timer = new Timer("Core Timer", false);
+    }
+
     /**
      * Don't allow instantation */
     private Core() {
@@ -97,6 +105,8 @@ public class Core {
                 SettingsManager.unload();
             }
         }, DefaultEventTypes.WINDOW_DISPOSED, EventPriority.HIGH);
+
+        EventManager.addEventHandler(new CoreEventHandler(), DefaultEventTypes.HALT);
 
         EventManager.fireEvent(null, DefaultEventTypes.APPLICATION_INITIALIZED);
     }
@@ -173,5 +183,21 @@ public class Core {
             System.exit(0);
         }
         load();
+    }
+
+    private static class CoreEventHandler extends TimerTask implements EventHandler {
+
+        @Override
+        public void handleEvent(Event event) {
+            if (event.getEventType().equals(DefaultEventTypes.HALT)) {
+                timer.schedule(this, 800);
+            }
+        }
+
+        @Override
+        public void run() {
+            System.exit(0);
+        }
+
     }
 }
