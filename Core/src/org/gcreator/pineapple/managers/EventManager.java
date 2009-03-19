@@ -38,7 +38,7 @@ import java.util.Vector;
  * 
  * @author Luís Reis
  */
-public final  class EventManager {
+public final class EventManager {
 
     private static Vector<EventObject> highPriority = new Vector<EventObject>();
     private static Vector<EventObject> mediumPriority = new Vector<EventObject>();
@@ -164,34 +164,28 @@ public final  class EventManager {
         @Override
         @SuppressWarnings("unchecked")
         public void run() {
-            if (type != null && !type.equals("all")) { /* Event type 'all' can not be thrown. */
-            Event evt = new Event(sender, type, arguments);
-            for (EventObject o : (Vector<EventObject>) highPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
+            if (type != null && !type.equals("all")) { /* Event type 'all' can not be fired. */
+                Event evt = new Event(sender, type, arguments);
+                fireEvent((Vector<EventObject>) highPriority.clone(), type, evt);
+                fireEvent((Vector<EventObject>) mediumPriority.clone(), type, evt);
+                fireEvent((Vector<EventObject>) lowPriority.clone(), type, evt);
             }
-            for (EventObject o : (Vector<EventObject>) mediumPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
-            }
-            for (EventObject o : (Vector<EventObject>) lowPriority.clone()) {
-                if (o.type.equals(type) || o.type.equals("all")) {
-                    o.handler.handleEvent(evt);
-                }
-                if (evt.isHandled()) {
-                    return;
-                }
-            }
-        }
         }
 
+        private void fireEvent(Vector<EventObject> evts, String type, Event evt) {
+            synchronized (evts) {
+                for (EventObject o : evts) {
+                    if (o.handler == null) {
+                        continue;
+                    }
+                    if (o.type.equals(type) || o.type.equals("all")) {
+                        o.handler.handleEvent(evt);
+                    }
+                    if (evt.isHandled()) {
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
