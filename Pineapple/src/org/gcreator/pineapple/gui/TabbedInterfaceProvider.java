@@ -23,6 +23,9 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import java.util.HashMap;
+import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.plugins.Event;
+import org.gcreator.pineapple.plugins.EventHandler;
 import org.noos.xing.mydoggy.Content;
 import org.noos.xing.mydoggy.ContentManagerListener;
 import org.noos.xing.mydoggy.event.ContentManagerEvent;
@@ -50,6 +53,13 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
         content.setContentManagerUI(new MyDoggyTabbedContentManagerUI());
         ((MyDoggyTabbedContentManagerUI)content.getContentManagerUI()).setShowAlwaysTab(true);
         content.addContentManagerListener(this);
+        EventManager.addEventHandler(new EventHandler() {
+
+            @Override
+            public void handleEvent(Event event) {
+                updateUI();
+            }
+        }, PineappleGUI.FILE_RENAMED);
     }
 
     @Override
