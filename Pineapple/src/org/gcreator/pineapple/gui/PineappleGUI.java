@@ -1205,7 +1205,7 @@ public class PineappleGUI implements EventHandler {
      */
     public void openProject() {
 
-        File f = showFileChooserSingle(createFileChooser("Select the project to open", getSupportedProjectFormats(), "open-project"));
+        File f = showFileChooserSingle(createFileChooser("Select the project to open", getSupportedProjectFormats(), "open-project", false));
         if (f != null) {
             if (PineappleCore.getProject() != null) {
                 closeProject();
@@ -1224,7 +1224,7 @@ public class PineappleGUI implements EventHandler {
      */
     public void importFile() {
         File f = showFileChooserSingle(createFileChooser("Select the file to import",
-                PineappleCore.getProject().getManager().getImportFileTypes(), "import-file"));
+                PineappleCore.getProject().getManager().getImportFileTypes(), "import-file", false));
         if (f != null && f.exists()) {
             EventManager.fireEvent(this, PROJECT_IMPORTED, f);
             updateTreeUI();
@@ -1237,7 +1237,7 @@ public class PineappleGUI implements EventHandler {
      * Exports the porject to a file.
      */
     public void exportFile() {
-        File f = showFileChooserSingle(createFileChooser("Export...", PineappleCore.getProject().getManager().getExportFileTypes(), "export-file"));
+        File f = showFileChooserSingle(createFileChooser("Export...", PineappleCore.getProject().getManager().getExportFileTypes(), "export-file", false));
         if (f != null) {
             EventManager.fireEvent(this, PROJECT_EXPORTED, f);
             updateTreeUI();
@@ -1252,7 +1252,7 @@ public class PineappleGUI implements EventHandler {
         if (PineappleCore.getProject() == null) {
             return;
         }
-        File f = showFileChooserSingle(createFileChooser("Save Project", PineappleCore.getProject().getProjectType().getProjectFileTypes(), "save-project"));
+        File f = showFileChooserSingle(createFileChooser("Save Project", PineappleCore.getProject().getProjectType().getProjectFileTypes(), "save-project", false));
         if (f != null) {
             if (!f.getName().contains(".")) {
                 System.err.println(f + " no good");
@@ -1652,7 +1652,7 @@ public class PineappleGUI implements EventHandler {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="openFile(boolean, boolean, ProjectFolder, boolean)        ">
     private void openFile(boolean addFile, boolean allowFolder, ProjectFolder defaultFolder, boolean allowBrowse) {
-        JFileChooser fc = createFileChooser("Select files to open", null, "open-file");
+        JFileChooser fc = createFileChooser("Select files to open", null, "open-file", false);
         fc.setFileSelectionMode((allowFolder) ? JFileChooser.FILES_AND_DIRECTORIES : JFileChooser.FILES_ONLY);
         fc.addChoosableFileFilter(new FileFilter() {
 
@@ -2064,7 +2064,7 @@ public class PineappleGUI implements EventHandler {
     }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="createFileChooser(String, String[], String)               ">
-    private JFileChooser createFileChooser(String title, final String[] formats, final String action) {
+    private JFileChooser createFileChooser(String title, final String[] formats, final String action, final boolean allowDirs) {
         String dir = SettingsManager.get("filechooser.remeber.path." + action);
         if (dir != null && !(new File(dir).exists())) {
             dir = null;
@@ -2091,7 +2091,7 @@ public class PineappleGUI implements EventHandler {
                 @Override
                 public boolean accept(File f) {
                     if (f.isDirectory()) {
-                        return true;
+                        return allowDirs;
                     }
                     for (String s : formats) {
                         if (f.getName().matches(".+\\." + s)) {
