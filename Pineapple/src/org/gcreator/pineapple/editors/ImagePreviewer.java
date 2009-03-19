@@ -30,6 +30,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.gui.PineappleGUI;
@@ -65,6 +66,12 @@ public final class ImagePreviewer extends DocumentPane {
             System.err.println("Exception while reading image " + file.getPath() + " : " + e);
         }
         JScrollPane p = new JScrollPane(new ImageComponent());
+        JScrollBar v = p.getVerticalScrollBar();
+        v.setUnitIncrement(16);
+        v.setBlockIncrement(64);
+        JScrollBar h = p.getHorizontalScrollBar();
+        h.setUnitIncrement(16);
+        h.setBlockIncrement(64);
         this.add(p);
     }
 
