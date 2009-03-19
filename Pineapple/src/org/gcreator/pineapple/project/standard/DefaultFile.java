@@ -162,8 +162,11 @@ public class DefaultFile implements BasicFile {
     public void rename(String newName) throws IOException {
         String oldPath = getPath();
         File dest = new File(file.getParentFile(), newName);
+        if (dest.exists()) {
+            throw new IOException("File "+dest.getName()+" already exists.");
+        }
         if (!file.renameTo(dest)) {
-            throw new IOException("Renaming failed for " + this.file);
+            throw new IOException("Renaming failed for " + this.file+"\n Cannot rename to "+newName);
         }
         this.file = dest;
         EventManager.fireEvent(this, PineappleGUI.FILE_RENAMED, oldPath, this);

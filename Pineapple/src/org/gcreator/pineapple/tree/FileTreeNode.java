@@ -61,7 +61,7 @@ public class FileTreeNode extends DefaultMutableTreeNode implements BaseTreeNode
      * @return The {@link ProjectFile} that this node belongs to.
      */
     @Override
-    public ProjectElement getElement() {
+    public ProjectFile getElement() {
         return file;
     }
 

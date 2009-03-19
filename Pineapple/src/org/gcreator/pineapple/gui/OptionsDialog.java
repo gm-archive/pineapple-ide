@@ -30,11 +30,13 @@ import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JTabbedPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.managers.PluginManager;
 import org.gcreator.pineapple.managers.SettingsManager;
 
 /**
@@ -83,15 +85,29 @@ public final class OptionsDialog extends javax.swing.JDialog {
             for (UIManager.LookAndFeelInfo i : UIManager.getInstalledLookAndFeels()) {
                 if (i.getName().equals(anItem)) {
                     try {
-                        UIManager.setLookAndFeel(i.getClassName());
+                        // Try to load it from a plugin first.
+
+                        try {
+                            UIManager.setLookAndFeel(i.getClassName());
+                        } catch (ClassNotFoundException ex) {
+                            try {
+                                // Bother. It didn't work. Perhaps it's a plugin look and feel.
+                                Class c = PluginManager.getClassLoader().loadClass(i.getClassName());
+                                LookAndFeel f = (LookAndFeel) c.newInstance();
+                                
+                                UIManager.setLookAndFeel(f);
+                            } catch (ClassNotFoundException ex1) {
+                                // Crap.
+                                Logger.getLogger(OptionsDialog.class.getName()).log(Level.SEVERE, "Bother.", ex1);
+                            }
+                        }
+
                         for (Window w : Window.getWindows()) {
                             for (Component c : w.getComponents()) {
                                 SwingUtilities.updateComponentTreeUI(c);
                             }
                         }
                         SettingsManager.set(PineappleGUI.LOOK_AND_FEEL_KEY, i.getClassName());
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(OptionsDialog.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (InstantiationException ex) {
                         Logger.getLogger(OptionsDialog.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IllegalAccessException ex) {

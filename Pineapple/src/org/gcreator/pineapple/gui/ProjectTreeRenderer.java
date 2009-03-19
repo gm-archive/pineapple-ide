@@ -54,7 +54,7 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
         if (val instanceof ProjectTreeNode) {
             try {
                 ProjectTreeNode n = (ProjectTreeNode) val;
-                
+
                 Project p = n.getProject();
                 String name = p.getSettings().get("name");
                 if (name != null) {
@@ -67,13 +67,14 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
             }
         } else if (val instanceof BaseTreeNode) {
             BaseTreeNode node = (BaseTreeNode) val;
+            this.setText(node.getElement().getName());
             ProjectElement el = node.getElement();
             if (el.getIcon() != null) {
                 this.setIcon(el.getIcon());
             }
             String s = this.getText();
             int index = s.lastIndexOf('.');
-            if(index!=-1&&!isSelected){
+            if (index != -1 && !isSelected) {
                 String name = s.substring(0, index);
                 String format = s.substring(index);
                 name = name.replaceAll("&", "&amp");
@@ -82,7 +83,7 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
                 format = format.replaceAll("&", "&amp");
                 format = format.replaceAll("<", "&lt;");
                 format = format.replaceAll(">", "&gt;");
-                setText("<html>"+name+"<font color='gray'>"+format);
+                setText("<html>" + name + "<font color='gray'>" + format);
             }
         }
 

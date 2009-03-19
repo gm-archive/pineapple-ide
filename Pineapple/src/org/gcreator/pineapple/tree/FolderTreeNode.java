@@ -123,7 +123,7 @@ public class FolderTreeNode extends DefaultMutableTreeNode implements BaseTreeNo
      * {@inheritDoc}
      */
     @Override
-    public ProjectElement getElement() {
+    public ProjectFolder getElement() {
         return folder;
     }
     

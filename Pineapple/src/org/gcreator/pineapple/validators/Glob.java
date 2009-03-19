@@ -68,25 +68,27 @@ public final class Glob {
      */
     public static Vector<BasicFile> glob(ResourceValidator validator, ProjectFolder root, boolean rescursive) {
         Vector<BasicFile> glob = new Vector<BasicFile>();
-         Iterable<ProjectElement> children;
+        Iterable<ProjectElement> children;
         if (root != null) {
             children = root.getChildren();
         } else {
             children = PineappleCore.getProject().getFiles();
         }
-        for (ProjectElement e : children) {
-            if (e instanceof ProjectFolder) {
-                if (rescursive) {
-                    for (BasicFile f : glob(validator, (ProjectFolder) e, true)) {
-                        glob.add(f);
+        synchronized (children) {
+            for (ProjectElement e : children) {
+                if (e instanceof ProjectFolder) {
+                    if (rescursive) {
+                        for (BasicFile f : glob(validator, (ProjectFolder) e, true)) {
+                            glob.add(f);
+                        }
+                    }
+                } else {
+                    if (validator.isValid((ProjectFile)e)) {
+                        glob.add(e.getFile());
                     }
                 }
-            } else {
-                if (validator.isValid((ProjectFile)e)) {
-                    glob.add(e.getFile());
-                }
             }
+            return glob;
         }
-        return glob;
     }
 }

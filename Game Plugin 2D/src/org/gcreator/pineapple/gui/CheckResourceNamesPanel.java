@@ -307,7 +307,13 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
                 String rec = getRecommenededName(e.getName());
                 e.getFile().rename(rec);
             } catch (IOException ex) {
-                Logger.getLogger(CheckResourceNamesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                String msg = ex.getLocalizedMessage();
+                        if (msg == null) {
+                            msg = "<Unknown reason>";
+                        }
+                        JOptionPane.showMessageDialog(Core.getStaticContext().getMainFrame(),
+                                "Error renaming file: " + msg, "File Renaming Error",
+                                JOptionPane.ERROR_MESSAGE);
             }
         }
         search();

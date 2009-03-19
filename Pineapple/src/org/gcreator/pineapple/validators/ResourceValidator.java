@@ -33,5 +33,20 @@ import org.gcreator.pineapple.project.ProjectFile;
  */
 public interface ResourceValidator {
 
-    boolean isValid(ProjectFile file);
+    /**
+     * Whether the given file matches the validation.
+     *
+     * @param file The file.
+     *
+     * @return Whether the given file matches the validation.
+     */
+    public boolean isValid(ProjectFile file);
+
+    /**
+     * Whether the given file name matches the validation.
+     *
+     * @param fname The file name.
+     * @return Whether the given file name matches the validation.
+     */
+    public boolean isValid(String fname);
 }

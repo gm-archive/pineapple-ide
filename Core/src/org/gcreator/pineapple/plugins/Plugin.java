@@ -60,8 +60,7 @@ public abstract class Plugin implements EventHandler {
 
     /**
      * The initialize() event.
-     * THIS METHOD SHOULD NOT CONTAIN ANY APPLICATION LOGIC EXCEPT
-     * addEventHandler statements.
+     * <br/><br/>
      * For logic on application's initialization, just handle
      * "application-initialized" events.
      * 

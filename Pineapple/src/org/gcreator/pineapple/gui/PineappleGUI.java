@@ -23,10 +23,8 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 //<editor-fold defaultstate="collapsed" desc="Import Statements">
-import java.lang.reflect.InvocationTargetException;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -44,7 +42,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -67,7 +64,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
@@ -75,12 +71,15 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -308,7 +307,8 @@ public class PineappleGUI implements EventHandler {
         tree = new JTree(treeModel);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setVisible(true);
-        tree.setCellRenderer(new ProjectTreeRenderer());
+        ProjectTreeRenderer ren = new ProjectTreeRenderer();
+        tree.setCellRenderer(ren);
         tree.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -373,6 +373,8 @@ public class PineappleGUI implements EventHandler {
                 ProjectElement el = n.getElement();
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                     deleteFile(el);
+                } else if (e.getKeyCode() == KeyEvent.VK_F2) {
+                    tree.startEditingAtPath(tp);
                 }
 
                 if (!(n instanceof FileTreeNode)) {
@@ -410,6 +412,47 @@ public class PineappleGUI implements EventHandler {
         tree.setScrollsOnExpand(true);
         tree.setShowsRootHandles(true);
         tree.setToggleClickCount(3);
+        tree.setEditable(true);
+        ProjectCellEditor pce = new ProjectCellEditor(ren, null);
+        DefaultTreeCellEditor editor = new DefaultTreeCellEditor(tree, ren, pce);
+        tree.setCellEditor(editor);
+        pce.editor = editor;
+        editor.addCellEditorListener(new CellEditorListener() {
+
+            @Override
+            public void editingStopped(ChangeEvent e) {
+                TreePath tp = tree.getSelectionPath();
+                if (tp == null) {
+                    return;
+                }
+                Object o = tp.getLastPathComponent();
+                if (o == null) {
+                    return;
+                }
+                if  (o instanceof ProjectTreeNode) {
+                    ((ProjectTreeNode)o).getProject().setName(tree.getCellEditor().getCellEditorValue().toString());
+                    return;
+                } else if (o instanceof BaseTreeNode) {
+                    try {
+                        ((BaseTreeNode) o).getElement().getFile().rename(tree.getCellEditor().getCellEditorValue().toString());
+                    } catch (IOException ex) {
+                        String msg = ex.getLocalizedMessage();
+                        if (msg == null) {
+                            msg = "<Unknown reason>";
+                        }
+                        JOptionPane.showMessageDialog(Core.getStaticContext().getMainFrame(),
+                                "Error renaming file: " + msg, "File Renaming Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
+                }
+            }
+
+            @Override
+            public void editingCanceled(ChangeEvent e) {
+            }
+        });
+
         ToolWindow treeWindow = manager.registerToolWindow("Project", "Project", null, new JScrollPane(tree),
                 ToolWindowAnchor.LEFT);
         treeWindow.setVisible(true);
@@ -561,6 +604,7 @@ public class PineappleGUI implements EventHandler {
 
         //<editor-fold defaultstate="collapsed" desc="Project menu">
         projectMenu = new JMenu("Project");
+        projectMenu.setMnemonic('P');
 
         /* New > submenu*/
         projectNew = createNewFileMenu(null);
@@ -1316,19 +1360,16 @@ public class PineappleGUI implements EventHandler {
             menu.add(tfileSaveProject);
 
             menu.add("Rename").addActionListener(new ActionListener() {
-//TODO: allow project renaming in tree
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     if (!((JMenuItem) evt.getSource()).isEnabled()) {
                         return;
                     }
-                    String s = JOptionPane.showInputDialog(
-                            Core.getStaticContext().getMainFrame(),
-                            "New name:",
-                            PineappleCore.getProject().getName());
-                    if (s != null && !s.equals("")) {
-                        PineappleCore.getProject().setName(s);
+                    TreePath tp = tree.getSelectionPath();
+                    if (tp == null) {
+                        return;
                     }
+                    tree.startEditingAtPath(tp);
                 }
             });
 
@@ -1590,7 +1631,6 @@ public class PineappleGUI implements EventHandler {
         }
 
         if (o instanceof BaseTreeNode) {
-            final BaseTreeNode t = (BaseTreeNode) o;
 
             menu.add("Rename").addActionListener(new ActionListener() {
 
@@ -1599,17 +1639,11 @@ public class PineappleGUI implements EventHandler {
                     if (!((JMenuItem) evt.getSource()).isEnabled()) {
                         return;
                     }
-                    //TODO: File renaming in tree
-                    String s = JOptionPane.showInputDialog(
-                            Core.getStaticContext().getMainFrame(),
-                            "New name:",
-                            t.getElement().getName());
-                    if (s != null && s != "") {
-                        try {
-                            PineappleCore.getProject().rename(t.getElement().getFile(), s);
-                        } catch (Exception ex) {
-                        }
+                    TreePath tp = tree.getSelectionPath();
+                    if (tp == null) {
+                        return;
                     }
+                    tree.startEditingAtPath(tp);
                 }
             });
         }

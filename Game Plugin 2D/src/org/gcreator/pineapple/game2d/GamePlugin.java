@@ -167,7 +167,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      * {@inheritDoc}
      */
     @Override
-    public void handleEvent(Event e) {
+    public void handleEvent(final Event e) {
         if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
             DocumentPane p = PineappleGUI.dip.getSelectedDocument();
             if (p != null && p instanceof PaletteUser) {
@@ -248,30 +248,36 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                         PineappleCore.getProject().getProjectType() instanceof GameProjectType);
             }
         } else if (e.getEventType().equals(PineappleGUI.FILE_RENAMED)) {
-            String fname = (String) e.getArguments()[0];
-            BasicFile file = (BasicFile) e.getArguments()[1];
+            Runnable r = new Runnable() {
 
-            String[] s = fname.split("/");
-            String stripFname = (s[s.length-1].equals("/")) ? s[s.length-2] : s[s.length-1];
-            //TODO: Refactor Progress Dialog.
+                public void run() {
+                    String fname = (String) e.getArguments()[0];
+                    BasicFile file = (BasicFile) e.getArguments()[1];
 
-            String regex = "\"" + Pattern.quote(fname) + "\"";
-            String replacement = "\"" + Matcher.quoteReplacement(file.getPath()) + "\"";
-            
-            ActorValidator av = new ActorValidator();
-            SceneValidator sv = new SceneValidator();
-            if (av.isValid(stripFname)) {
-                replaceAll(file, stripFname.substring(0, stripFname.indexOf('.')),
-                        file.getName().substring(0, file.getName().indexOf('.')));
-            }
-            /* Actors */
-            for (BasicFile f : Glob.glob(av, true)) {
-                replaceAll(f, regex, replacement);
-            }
-            /* Scenes */
-            for (BasicFile f : Glob.glob(sv, true)) {
-                replaceAll(f, regex, replacement);
-            }
+                    String[] s = fname.split("/");
+                    String stripFname = (s[s.length - 1].equals("/")) ? s[s.length - 2] : s[s.length - 1];
+                    //TODO: Refactor Progress Dialog.
+
+                    String regex = "\"" + Pattern.quote(fname) + "\"";
+                    String replacement = "\"" + Matcher.quoteReplacement(file.getPath()) + "\"";
+
+                    ActorValidator av = new ActorValidator();
+                    SceneValidator sv = new SceneValidator();
+                    if (av.isValid(stripFname)) {
+                        replaceAll(file, stripFname.substring(0, stripFname.indexOf('.')),
+                                file.getName().substring(0, file.getName().indexOf('.')));
+                    }
+                    /* Actors */
+                    for (BasicFile f : Glob.glob(av, true)) {
+                        replaceAll(f, regex, replacement);
+                    }
+                    /* Scenes */
+                    for (BasicFile f : Glob.glob(sv, true)) {
+                        replaceAll(f, regex, replacement);
+                    }
+                }
+            };
+            new Thread(r, "Refacor").start();
         }
     }
 
