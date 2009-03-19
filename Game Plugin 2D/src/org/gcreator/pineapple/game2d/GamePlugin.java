@@ -251,16 +251,25 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             String fname = (String) e.getArguments()[0];
             BasicFile file = (BasicFile) e.getArguments()[1];
 
+            String[] s = fname.split("/");
+            String stripFname = (s[s.length-1].equals("/")) ? s[s.length-2] : s[s.length-1];
             //TODO: Refactor Progress Dialog.
 
             String regex = "\"" + Pattern.quote(fname) + "\"";
             String replacement = "\"" + Matcher.quoteReplacement(file.getPath()) + "\"";
+            
+            ActorValidator av = new ActorValidator();
+            SceneValidator sv = new SceneValidator();
+            if (av.isValid(stripFname)) {
+                replaceAll(file, stripFname.substring(0, stripFname.indexOf('.')),
+                        file.getName().substring(0, file.getName().indexOf('.')));
+            }
             /* Actors */
-            for (BasicFile f : Glob.glob(new ActorValidator(), true)) {
+            for (BasicFile f : Glob.glob(av, true)) {
                 replaceAll(f, regex, replacement);
             }
             /* Scenes */
-            for (BasicFile f : Glob.glob(new SceneValidator(), true)) {
+            for (BasicFile f : Glob.glob(sv, true)) {
                 replaceAll(f, regex, replacement);
             }
         }

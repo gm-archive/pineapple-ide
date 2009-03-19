@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.validators;
 
 import org.gcreator.pineapple.project.ProjectFile;
@@ -29,15 +28,19 @@ import org.gcreator.pineapple.project.ProjectFile;
  * A validator that matches only actors
  * @author Luís Reis
  */
-public class ActorValidator implements ResourceValidator{
+public class ActorValidator implements ResourceValidator {
+
     public boolean isValid(ProjectFile file) {
-        String name = file.getName();
+        return isValid(file.getName());
+    }
+
+    public boolean isValid(String name) {
         int indexOfDot = name.lastIndexOf('.');
-        if(indexOfDot==-1){
+        if (indexOfDot == -1) {
             return false;
         }
-        String format = name.substring(indexOfDot+1);
-        if(format.equals("actor")){
+        String format = name.substring(indexOfDot + 1);
+        if (format.equals("actor")) {
             return true;
         }
         return false;
