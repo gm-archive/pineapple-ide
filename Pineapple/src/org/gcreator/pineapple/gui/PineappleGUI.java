@@ -2063,7 +2063,7 @@ public class PineappleGUI implements EventHandler {
         return formats.toArray(new String[formats.size()]);
     }
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="createFileChooser(String, String[], String)               ">
+    //<editor-fold defaultstate="collapsed" desc="createFileChooser(String, String[], String, boolean)        ">
     private JFileChooser createFileChooser(String title, final String[] formats, final String action, final boolean allowDirs) {
         String dir = SettingsManager.get("filechooser.remeber.path." + action);
         if (dir != null && !(new File(dir).exists())) {
@@ -2086,12 +2086,13 @@ public class PineappleGUI implements EventHandler {
             }
             final String desc = b.toString();
 
+            chooser.setFileSelectionMode((allowDirs) ? JFileChooser.FILES_AND_DIRECTORIES : JFileChooser.FILES_ONLY);
             chooser.addChoosableFileFilter(new FileFilter() {
 
                 @Override
                 public boolean accept(File f) {
                     if (f.isDirectory()) {
-                        return allowDirs;
+                        return true;
                     }
                     for (String s : formats) {
                         if (f.getName().matches(".+\\." + s)) {
