@@ -150,4 +150,13 @@ public class ProjectFile extends ProjectElement {
     public String getName() {
         return file.getName();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public int compareTo(Object o) {
+        if (file == null || !(o instanceof ProjectElement)) {
+            return 0;
+        }
+        return file.compareTo(((ProjectElement)o).getFile());
+    }
 }

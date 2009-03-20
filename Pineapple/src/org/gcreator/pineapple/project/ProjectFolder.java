@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,6 +66,7 @@ public class ProjectFolder extends ProjectElement {
     /**
      * Reloads all of the files inside the folder.
      */
+    @SuppressWarnings("unchecked")
     public void reload() {
         children.clear();
         for (BasicFile f : folder.list()) {
@@ -76,6 +78,7 @@ public class ProjectFolder extends ProjectElement {
                 Logger.getLogger(ProjectFolder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        Collections.sort(children);
         modified = folder.lastModified();
     }
 
@@ -172,5 +175,14 @@ public class ProjectFolder extends ProjectElement {
      */
     public int indexOf(ProjectElement e) {
         return children.indexOf(e);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public int compareTo(Object o) {
+        if (folder == null || !(o instanceof ProjectElement)) {
+            return 0;
+        }
+        return folder.compareTo(((ProjectElement)o).getFile());
     }
 }

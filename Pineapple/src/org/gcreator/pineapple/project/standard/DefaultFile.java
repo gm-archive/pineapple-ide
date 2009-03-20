@@ -245,4 +245,12 @@ public class DefaultFile implements BasicFile {
         hash = 67 * hash + (this.element != null ? this.element.hashCode() : 0);
         return hash;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof BasicFile) {
+            return getName().compareTo(((BasicFile)o).getName());
+        }
+        return 0;
+    }
 }

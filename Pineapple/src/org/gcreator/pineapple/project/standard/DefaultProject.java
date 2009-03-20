@@ -23,6 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project.standard;
 
 import java.io.File;
+import java.util.Collections;
 import org.gcreator.pineapple.project.io.ProjectManager;
 import java.util.Hashtable;
 import java.util.Map;
@@ -118,8 +119,10 @@ public class DefaultProject extends Project {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void add(ProjectElement e) {
         files.add(e);
+        Collections.sort(files);
         e.setParent(null);
         manager.saveToManifest();
     }

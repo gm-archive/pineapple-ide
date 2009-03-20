@@ -35,7 +35,7 @@ import org.gcreator.pineapple.project.ProjectElement;
  * 
  * @author Serge Humphrey
  */
-public interface BasicFile extends Register {
+public interface BasicFile extends Register, Comparable {
     
     /**
      * Gets the file's name.

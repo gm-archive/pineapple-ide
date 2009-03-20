@@ -32,7 +32,7 @@ import org.gcreator.pineapple.tree.BaseTreeNode;
  *  
  * @author Serge Humphrey
  */
-public abstract class ProjectElement {
+public abstract class ProjectElement implements Comparable {
 
     /**
      * This file's parent.
