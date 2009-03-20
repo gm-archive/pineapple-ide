@@ -85,7 +85,7 @@ public class PineDLEditor extends JPanel {
         this.add(scroll, BorderLayout.CENTER);
     }
 
-    protected boolean setupEditMenu(JMenu editMenu) {
+    public boolean setupEditMenu(JMenu editMenu) {
         JMenuItem cut = new JMenuItem("Cut");
         cut.setMnemonic('t');
         cut.setVisible(true);

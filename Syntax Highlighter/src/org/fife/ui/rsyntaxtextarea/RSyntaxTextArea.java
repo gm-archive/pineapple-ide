@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.EventListenerList;
@@ -56,6 +57,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
+import org.gcreator.pineapple.syntax.PineDLEditor;
 
 /**
  * An extension of <code>RTextArea</code> that adds syntax highlighting
@@ -313,7 +315,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
         lineHeight = maxAscent = 0;
 
-        // Each tokeh style.
+        // Each token style.
         for (int i = 0; i < colorScheme.syntaxSchemes.length; i++) {
             SyntaxScheme ss = colorScheme.syntaxSchemes[i];
             if (ss != null && ss.font != null) {
@@ -1553,5 +1555,11 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
                 }
             }
         }
+    }
+
+    @Override
+    protected void addMenuItems(JPopupMenu menu) {
+          menu.addSeparator();
+          menu.add(PineDLEditor.createStyleMenu(this));
     }
 }

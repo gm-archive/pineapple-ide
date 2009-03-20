@@ -65,9 +65,7 @@ import javax.swing.undo.UndoableEdit;
 import javax.swing.undo.UndoManager;
 
 import org.fife.print.RPrintUtilities;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.Macro.MacroRecord;
-import org.gcreator.pineapple.syntax.PineDLEditor;
 
 /**
  * An extension of <code>JTextArea</code> that adds the following features:
@@ -326,15 +324,14 @@ public class RTextArea extends RTextAreaBase
         menuItem.setToolTipText(null);
         rightClickMenu.add(menuItem);
 
-        rightClickMenu.addSeparator();
-
-        if (RTextArea.this instanceof RSyntaxTextArea) {
-            rightClickMenu.add(PineDLEditor.createStyleMenu((RSyntaxTextArea) this));
-        }
+        addMenuItems(rightClickMenu);
 
         ComponentOrientation orientation = ComponentOrientation.getOrientation(Locale.getDefault());
         rightClickMenu.applyComponentOrientation(orientation);
 
+    }
+
+    protected void addMenuItems(JPopupMenu menu) {
     }
 
     /**
@@ -1260,9 +1257,7 @@ public class RTextArea extends RTextAreaBase
          * @param e The mouse event that caused this method to be called.
          */
         private void showPopup(MouseEvent e) {
-            if (RTextArea.rightClickMenu == null) {
-                createRightClickMenu();
-            }
+            createRightClickMenu();
             RTextArea.rightClickMenu.show(e.getComponent(),
                     e.getX(), e.getY());
         }

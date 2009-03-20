@@ -30,6 +30,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -133,6 +134,11 @@ public class PineDLPane extends DocumentPane {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean setupEditMenu(JMenu editMenu) {
+        return editor.setupEditMenu(editMenu);
     }
 
 }

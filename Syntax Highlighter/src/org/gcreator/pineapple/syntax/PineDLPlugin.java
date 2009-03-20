@@ -90,6 +90,10 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
         names.put(RSyntaxTextArea.WINDOWS_BATCH_SYNTAX_STYLE, "BAT (Windows BATCH)");
         styles.put("xml", RSyntaxTextArea.XML_SYNTAX_STYLE);
         names.put(RSyntaxTextArea.XML_SYNTAX_STYLE, "XML");
+        styles.put("actor", RSyntaxTextArea.XML_SYNTAX_STYLE);
+        styles.put("image", RSyntaxTextArea.XML_SYNTAX_STYLE);
+        styles.put("gpt", RSyntaxTextArea.XML_SYNTAX_STYLE);
+        styles.put("pmf", RSyntaxTextArea.XML_SYNTAX_STYLE);
     }
 
     /**

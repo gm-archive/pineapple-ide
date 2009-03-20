@@ -216,9 +216,9 @@ public class PineappleGUI implements EventHandler {
      */
     public static final String FILE_OPENED = "file-opened";
     /**
-     * When a file changes.
+     * Called when the selected document changes.
      */
-    public static final String FILE_CHANGED = "file-changed";
+    public static final String DOCUMENT_CHANGED = "document-changed";
     /**
      * When the user requests that a file be opened as a project.
      * 
@@ -276,7 +276,7 @@ public class PineappleGUI implements EventHandler {
         /* Custom Events */
 
         EventManager.addEventHandler(this, FILE_OPENED, EventPriority.LOW);
-        EventManager.addEventHandler(this, FILE_CHANGED, EventPriority.LOW);
+        EventManager.addEventHandler(this, DOCUMENT_CHANGED, EventPriority.LOW);
         EventManager.addEventHandler(this, FILE_DELETED, EventPriority.LOW);
         EventManager.addEventHandler(this, FILE_REMOVED, EventPriority.LOW);
         EventManager.addEventHandler(this, FILE_RENAMED, EventPriority.LOW);
@@ -1007,8 +1007,8 @@ public class PineappleGUI implements EventHandler {
                 }
             });
         //</editor-fold>
-        //<editor-fold defaultstate="collapsed" desc="FILE_CHANGED">
-        } else if (evt.getEventType().equals(FILE_CHANGED)) {
+        //<editor-fold defaultstate="collapsed" desc="DOCUMENT_CHANGED">
+        } else if (evt.getEventType().equals(DOCUMENT_CHANGED)) {
 
             DocumentPane pane = dip.getSelectedDocument();
             editMenu.removeAll();

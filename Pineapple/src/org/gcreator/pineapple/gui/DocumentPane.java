@@ -114,8 +114,8 @@ public abstract class DocumentPane extends JPanel {
     }
 
     /**
-     * Sets the content of the 'edit' menu.
-     * @param editMenu The 'edit' menu
+     * Sets the content of the Edit menu.
+     * @param editMenu The Edit menu
      * @return Whether or not the edit menu should be disabled.
      */
     public boolean setupEditMenu(JMenu editMenu) {

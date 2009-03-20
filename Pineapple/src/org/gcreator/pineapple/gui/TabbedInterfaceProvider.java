@@ -82,6 +82,7 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
         content._addContent(c);
         contentMap.put(pane, c);
         this.setSelectedIndex(this.getDocumentIndex(pane));
+        EventManager.fireEvent(this, PineappleGUI.DOCUMENT_CHANGED);
     }
 
     /**
@@ -199,6 +200,7 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
 
     @Override
     public void contentAdded(ContentManagerEvent event) {
+        // Don't fire an event here. It's too soon.
     }
 
     @Override
@@ -212,9 +214,11 @@ public class TabbedInterfaceProvider implements DocumentInterfaceProvider, Conte
                 }
             }
         }
+        EventManager.fireEvent(this, PineappleGUI.DOCUMENT_CHANGED);
     }
 
     @Override
     public void contentSelected(ContentManagerEvent event) {
+        EventManager.fireEvent(this, PineappleGUI.DOCUMENT_CHANGED);
     }
 }

@@ -168,7 +168,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void handleEvent(final Event e) {
-        if (e.getEventType().equals(PineappleGUI.FILE_CHANGED)) {
+        if (e.getEventType().equals(PineappleGUI.DOCUMENT_CHANGED)) {
             DocumentPane p = PineappleGUI.dip.getSelectedDocument();
             if (p != null && p instanceof PaletteUser) {
                 palette.setAvailable(((PaletteUser) p).doPalette(palette, palettePanel));
@@ -309,7 +309,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void initialize() {
-        EventManager.addEventHandler(this, PineappleGUI.FILE_CHANGED);
+        EventManager.addEventHandler(this, PineappleGUI.DOCUMENT_CHANGED);
         EventManager.addEventHandler(this, PineappleGUI.FILE_RENAMED);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
