@@ -24,12 +24,17 @@ package org.gcreator.pineapple.project.standard;
 
 import java.io.File;
 import java.util.Collections;
+import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.project.io.ProjectManager;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
+import org.gcreator.pineapple.gui.PineappleGUI;
+import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.plugins.EventHandler;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
+import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.ProjectType;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
 
@@ -38,7 +43,7 @@ import org.gcreator.pineapple.tree.ProjectTreeNode;
  * 
  * @author Serge Humphrey
  */
-public class DefaultProject extends Project {
+public class DefaultProject extends Project implements EventHandler {
 
     protected Vector<ProjectElement> files;
     protected Hashtable<String, String> settings;
@@ -64,6 +69,7 @@ public class DefaultProject extends Project {
         this.type = ((type != null) ? type : new DefaultProjectType());
         this.treeNode = new ProjectTreeNode(this);
         this.settings.put("name", ((name != null) ? name : "Project"));
+        EventManager.addEventHandler(this, PineappleGUI.TREE_SORT_MODE_CHANGED);
         if (save) {
             saveLater();
         }
@@ -225,6 +231,21 @@ public class DefaultProject extends Project {
     @Override
     public File getProjectFile() {
         return new File(getProjectFolder().getPath() + File.separator + "project." + getProjectType().getProjectFileTypes()[0]);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void handleEvent(Event event) {
+        if (event.getEventType().equals(PineappleGUI.TREE_SORT_MODE_CHANGED)) {
+            Collections.sort(files);
+            // Outdate all folders
+            for (ProjectElement e : files) {
+                if (e instanceof ProjectFolder) {
+                    ((ProjectFolder)e).outdate();
+                }
+            }
+            PineappleGUI.tree.updateUI();
+        }
     }
 
     private class ProjectSettings<K, V> extends Hashtable<K, V> {

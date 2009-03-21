@@ -185,4 +185,12 @@ public class ProjectFolder extends ProjectElement {
         }
         return folder.compareTo(((ProjectElement)o).getFile());
     }
+
+    /**
+     * Outdates this folder and forces it to reload next time
+     * its children are requested.
+     */
+    public void outdate() {
+        this.modified = -1L;
+    }
 }

@@ -248,8 +248,63 @@ public class DefaultFile implements BasicFile {
 
     @Override
     public int compareTo(Object o) {
+        if (o == null) {
+            return 0;
+        }
+        if (o == this) {
+            return 0;
+        }
         if (o instanceof BasicFile) {
-            return getName().compareTo(((BasicFile)o).getName());
+            BasicFile f = (BasicFile)o;
+            // Directories go first
+            if (this.isDirectory() == f.isDirectory()) {
+                /* Different sort modes */
+                if (PineappleGUI.sortMode == PineappleGUI.TreeSortMode.FILE_TYPE) {
+                    // Find file extension
+                    int tindex = this.getName().lastIndexOf('.');
+                    int findex = f.getName().lastIndexOf('.');
+                    if (tindex < 0 && findex >= 0) {
+                        /* Since we have no extension and the other
+                         * file does, we'll put this file above the other one.
+                         */
+                        return -1;
+                    } else if (tindex >= 0 && findex < 0) {
+                        /* Since we have an extension, adn the other
+                         * file does not, we will put this file below
+                         * the other one.
+                         */
+                        return 1;
+                    } else if (tindex < 0 && findex < 0) {
+                        /* Since no files have an extension,
+                         * we will just sort them aphabetically.
+                         */
+                        return getName().compareTo(f.getName());
+                    }
+                    /* We now know that both files have an extension. */
+                    String text = this.getName().substring(tindex);
+                    String fext = f.getName().substring(findex);
+                    if (text.equalsIgnoreCase(fext)) {
+                        /* Both files are of the same type.
+                             Sort alphabetically.
+                         */
+                        String tsname = this.getName().substring(0, tindex);
+                        String fsname = f.getName().substring(0, findex);
+                        return tsname.compareTo(fsname);
+                    } else {
+                        /* Files are not the same type.
+                         * Sort by type alphabetically.
+                         */
+                        return text.compareTo(fext);
+                    }
+                } else {
+                    // Must be TreeSortMode.FILE_NAME
+                    return getName().compareTo(f.getName());
+                }
+            } else if (this.isDirectory()) {
+                return -1; // Directories >> above files
+            } else {
+                return 1; // Files >> below directories
+            }
         }
         return 0;
     }

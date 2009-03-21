@@ -119,7 +119,6 @@ public final class CheckResourceNamesPanel extends javax.swing.JPanel {
         if (e == null) {
             return;
         }
-        //TODO: Better renaming.
         String recName = getRecommenededName(e.getName());
         String s = JOptionPane.showInputDialog(
                 Core.getStaticContext().getMainFrame(),
