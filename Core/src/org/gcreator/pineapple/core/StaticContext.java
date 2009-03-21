@@ -49,10 +49,9 @@ public final class StaticContext {
     protected StaticContext() {
         String s = System.getProperty("APPDATA");
         if (s == null) {
-            s = System.getProperty("user.home") + "/.config/";
-        } else {
-            s += "/Pineapple/";
+            s = System.getProperty("user.home") + "/.config";
         }
+        s += "/Pineapple/";
         appDataFolder = new File(s);
         if (!appDataFolder.exists()) {
             appDataFolder.mkdir();
