@@ -133,8 +133,9 @@ public class TabbedContentPane extends JTabbedPane implements PropertyChangeList
     }
 
     protected void paintChildren(Graphics g) {
-        super.paintChildren(g);
-
+        try {
+            super.paintChildren(g);
+        } catch (Exception exc) {}
         if (tabPointerLocation.x < 0)
             return;
 

@@ -244,7 +244,7 @@ public class DefaultProject extends Project implements EventHandler {
                     ((ProjectFolder)e).outdate();
                 }
             }
-            PineappleGUI.tree.updateUI();
+            PineappleGUI.updateTreeUI();
         }
     }
 

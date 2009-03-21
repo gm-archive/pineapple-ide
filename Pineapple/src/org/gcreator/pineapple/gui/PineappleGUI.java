@@ -1084,22 +1084,15 @@ public class PineappleGUI implements EventHandler {
             }
 
             // Close tabs
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    for (DocumentPane doc : dip.getDocuments()) {
-                        if (doc != null) {
-                            if (!doc.dispose()) {
-                                evt.handleEvent();
-                                return;
-                            }
-                        }
+            for (DocumentPane doc : dip.getDocuments()) {
+                if (doc != null) {
+                    if (!doc.dispose()) {
+                        evt.handleEvent();
+                        return;
                     }
                 }
-                
-            });
-            
+            }
+
             try {
                 File pf = new File(Core.getStaticContext().getApplicationDataFolder(), "projects.xml");
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -2334,7 +2327,8 @@ public class PineappleGUI implements EventHandler {
         }
         return false;
     }//</editor-fold>
-    private void updateTreeUI() {
+    
+    public static void updateTreeUI() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
