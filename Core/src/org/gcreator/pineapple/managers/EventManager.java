@@ -114,6 +114,28 @@ public final class EventManager {
         cannon.start();
     }
 
+    /**
+     * Fires a new event and notifies all listeners.
+     *
+     * @param sender The event sender. Typically, just use the keyword 'this'
+     * @param type The type of the event. Must not be null nor "all"
+     * @param waitfor Whether to hold the current thread until the event has
+     * called all listeners.
+     * @param arguments The arguments of the event. May be of any type and in any number.
+     */
+    @SuppressWarnings("unchecked")
+    public static void fireEvent(Object sender, String type, boolean waitfor, Object... arguments) {
+        CannonBall ball = new CannonBall(sender, type, arguments);
+        if (waitfor) {
+            /* Yeay! No threading required.*/
+            ball.run();
+        } else {
+            /* Some threading to do here. */
+            Thread cannon = new Thread(ball, "Cannon Firing event " + type);
+            cannon.start();
+        }
+    }
+    
     private static class EventObject {
 
         EventHandler handler;

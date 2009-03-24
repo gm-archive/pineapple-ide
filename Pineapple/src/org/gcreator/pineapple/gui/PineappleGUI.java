@@ -26,11 +26,13 @@ package org.gcreator.pineapple.gui;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -70,8 +72,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -121,6 +125,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import sun.swing.SwingUtilities2;
 //</editor-fold>
 /**
  * This deals with the main GUI stuff.
@@ -185,8 +190,7 @@ public class PineappleGUI implements EventHandler {
      */
     public static MyDoggyToolWindowManager manager;
     private DefaultTreeModel treeModel;
-    protected static final DataFlavor ELEMENT_FLAVOR =
-            new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Project Element");
+    protected DataFlavor ELEMENT_FLAVOR;
 
     private static final String TREE_SORT_MODE_KEY = "pineapple.tree.sort_mode";
     /**
@@ -279,6 +283,12 @@ public class PineappleGUI implements EventHandler {
      * Created and initilizes a new Pineapple GUI.
      */
     public PineappleGUI() {
+        try {
+            ELEMENT_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=\"" + ProjectElement.class.getName() + "\"", "Project Element", PluginManager.getClassLoader());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         initialize();
     }
     //</editor-fold>
@@ -349,8 +359,9 @@ public class PineappleGUI implements EventHandler {
                         openFile(node.getElement().getFile());
                     }
                 } else if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
+                    tree.setSelectionPath(trp);
                     JPopupMenu menu = new JPopupMenu("Tree");
-                    EventManager.fireEvent(this, TREE_MENU_INVOKED, menu, o);
+                    EventManager.fireEvent(this, TREE_MENU_INVOKED, true, menu, o);
                     menu.show(tree, e.getX(), e.getY());
                 }
             }
@@ -1147,9 +1158,8 @@ public class PineappleGUI implements EventHandler {
             if (evt.getArguments().length < 2 || !(evt.getArguments()[0] instanceof JPopupMenu)) {
                 return;
             }
-            JPopupMenu menu = (JPopupMenu) evt.getArguments()[0];
-            Object o = evt.getArguments()[1];
-
+            final JPopupMenu menu = (JPopupMenu) evt.getArguments()[0];
+            final Object o = evt.getArguments()[1];
             popupTreeMenu(menu, o);
         } else if (evt.getEventType().equals(PROJECT_SAVED)) {
             if (evt.getArguments().length < 1) {
@@ -1595,9 +1605,57 @@ public class PineappleGUI implements EventHandler {
             });
         }
 
+        /* Copy, Cut, and Paste */
+        JMenuItem copy = new JMenuItem("Copy");
+        copy.setEnabled(!(o instanceof ProjectTreeNode));
+        copy.setMnemonic('C');
+        copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+        copy.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tree.getTransferHandler().exportToClipboard(tree, getClipboard(tree), TransferHandler.COPY);
+            }
+        });
+        menu.add(copy);
+
+        JMenuItem cut = new JMenuItem("Cut");
+        cut.setEnabled(!(o instanceof ProjectTreeNode));
+        cut.setMnemonic('u');
+        cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+        cut.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tree.getTransferHandler().exportToClipboard(tree, getClipboard(tree), TransferHandler.MOVE);
+            }
+        });
+        menu.add(cut);
+
+        final JMenuItem paste = new JMenuItem("Paste");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                paste.setEnabled(tree.getTransferHandler().canImport(new TransferHandler.TransferSupport(tree, getClipboard(tree).getContents(this))));
+            }
+        });
+        paste.setMnemonic('P');
+        paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK));
+        paste.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tree.getTransferHandler().importData(new TransferSupport(tree, getClipboard(tree).getContents(this)));
+            }
+        });
+        menu.add(paste);
+
+
         if (o instanceof BaseTreeNode &&
                 PineappleCore.getProject().indexOf(((BaseTreeNode) o).getElement()) >= 0) {
             final BaseTreeNode t = (BaseTreeNode) o;
+            
+            menu.addSeparator();
             menu.add("Remove from Project").addActionListener(new ActionListener() {
 
                 @Override
@@ -1707,6 +1765,8 @@ public class PineappleGUI implements EventHandler {
 
         menu.addSeparator();
         menu.add(viewOptions);
+
+        menu.updateUI();
     }
     //<>/editor-fold>
     //<>editor-fold defaultstate="collapsed" desc="openFile(boolean, boolean, ProjectFolder, boolean)        ">
@@ -2373,14 +2433,30 @@ public class PineappleGUI implements EventHandler {
         PineappleCore.setProject(p);
         d.dispose();
     }
-    
+
+    private static Object SandboxClipboardKey = new Object();
+    private Clipboard getClipboard(JComponent c) {
+	    if (SwingUtilities2.canAccessSystemClipboard()) {
+		return c.getToolkit().getSystemClipboard();
+	    }
+	    Clipboard clipboard = (Clipboard) sun.awt.AppContext.getAppContext().get(SandboxClipboardKey);
+	    if (clipboard == null) {
+		clipboard = new Clipboard("Sandboxed Component Clipboard");
+		sun.awt.AppContext.getAppContext().put(SandboxClipboardKey,
+						       clipboard);
+	    }
+	    return clipboard;
+    }
     //<>editor-fold defaultstate="collapsed" desc="TreeTransferHandler">
     private class TreeTransferHandler extends TransferHandler {
 
         private static final long serialVersionUID = 1;
+        private ProjectElement cutFile = null;
+
         //<>editor-fold desc="createTransferable(JComponent)" defaultstate="collapsed">
         @Override
         protected Transferable createTransferable(JComponent c) {
+            System.out.println("Transfer");
             Object o = tree.getLastSelectedPathComponent();
 
             if (o instanceof BaseTreeNode) {
@@ -2410,6 +2486,7 @@ public class PineappleGUI implements EventHandler {
             return null;
         }
         //</editor-fold>
+
         @Override
         public int getSourceActions(JComponent c) {
             return COPY_OR_MOVE;
@@ -2418,6 +2495,7 @@ public class PineappleGUI implements EventHandler {
         //<>editor-fold desc="canImport(TransferHandler.TransferSupport)" defaultstate="collapsed">
         @Override
         public boolean canImport(TransferHandler.TransferSupport support) {
+            System.out.println("Test Import");
             Object o = null;
             try {
                 o = support.getTransferable().getTransferData(ELEMENT_FLAVOR);
@@ -2427,14 +2505,23 @@ public class PineappleGUI implements EventHandler {
             if (o == null) {
                 return false;
             }
-
-            JTree.DropLocation drop = (JTree.DropLocation) support.getDropLocation();
-            if (drop.getPath() == null) {
-                return false;
+            Object last;
+            if (support.isDrop()) {
+                JTree.DropLocation drop = (JTree.DropLocation) support.getDropLocation();
+                if (drop.getPath() == null) {
+                    return false;
+                }
+                last = drop.getPath().getLastPathComponent();
+            } else {
+                TreePath path = tree.getSelectionPath();
+                if (path == null) {
+                    return false;
+                }
+                last = path.getLastPathComponent();
             }
-            Object last = drop.getPath().getLastPathComponent();
-
-            if (!(last instanceof FolderTreeNode || last instanceof ProjectTreeNode)) {
+            if (!(last instanceof FolderTreeNode ||
+                  last instanceof ProjectTreeNode ||
+                  last instanceof FileTreeNode)) {
                 return false;
             }
 
@@ -2444,87 +2531,139 @@ public class PineappleGUI implements EventHandler {
                 if (last == e.getTreeNode()) {
                     return false;
                 }
-                /* Don't allow the object ot be dragged back into its own folder. */
-                if ((e.getParent() == null && last instanceof ProjectTreeNode) || e.getParent() == last) {
-                    return false;
-                }
                 return true;
             }
+            
             return false;
         }
         //</editor-fold>
         //<>editor-fold desc="importData(TransferHandler.TransferSupport)" defaultstate="collapsed">
         @Override
         public boolean importData(TransferHandler.TransferSupport support) {
+            System.out.println("Import");
             if (!canImport(support)) {
                 return false;
             }
-            JTree.DropLocation drop = (JTree.DropLocation) support.getDropLocation();
-            int dropIndex = drop.getChildIndex();
             ProjectElement e = null;
             try {
                 e = (ProjectElement) support.getTransferable().getTransferData(ELEMENT_FLAVOR);
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, "not supported", ex);
+            } catch (IOException ex) {
+                Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, "I/O error", ex);
+            }
+            if (e == null) {
+                return false;
+            }
+            Object last;
+            if (support.isDrop()) {
+                JTree.DropLocation drop = (JTree.DropLocation) support.getDropLocation();
+                last = drop.getPath().getLastPathComponent();
+            } else {
+                last = tree.getSelectionPath().getLastPathComponent();
+            }
+            if (last instanceof FileTreeNode) {
+                FileTreeNode f = (FileTreeNode) last;
+                last = (f.getElement().getParent() != null)
+                        ? f.getElement().getParent().getTreeNode()
+                        : null;
+                if (last == null) { // project root
+                    last = f.getElement().getProject().getTreeNode();
+                }
+            }
+            Iterable<ProjectElement> children = null;
+            ProjectFolder f = null;
+            Project p = null;
+            if (last instanceof ProjectTreeNode) {
+                p = ((ProjectTreeNode) last).getProject();
+                children = p.getFiles();
+            } else if (last instanceof FolderTreeNode) {
+                f = ((FolderTreeNode) last).getElement();
+                children = f.getChildren();
+            }
+            if (children == null) {
+                System.err.println("What?? How did we get "+ last.getClass().getName()+"???");
+                return false;
+            }
+            String newName = e.getName();
+            boolean done = false, changed;
+            int i = 1;
+            while (!done) {
+                changed = false;
+                for (ProjectElement el : children) {
+                    if (el.getName().equals(newName)) {
+                        String s, l;
+                        int dot = e.getName().indexOf('.');
+                        if (dot < 0) {
+                            l = "";
+                        } else {
+                            l = e.getName().substring(dot);
+                        }
+                        s = e.getName().substring(0, dot);
+                        if (s.matches(".*_\\d+")) {
+                            newName = s.replaceAll("(.*)_\\d+", "$1_") +
+                                    (Integer.parseInt(s.replaceAll(".*_(\\d+)", "$1"))+i++)+l;
+                        } else {
+                            newName = s + "_" + i++ + l;
+                        }
+                        changed = true;
+                        break;
+                    }
+                }
+                done = !changed;
+            }
+            BasicFile nf = e.getProject().getManager().copyFile(e.getFile(), f, newName);
+
+            if (cutFile != null) {
+                delete(e);
+                cutFile = null;
+                getClipboard(tree).setContents(new Transferable() {
+
+                    @Override
+                    public DataFlavor[] getTransferDataFlavors() {
+                        return new DataFlavor[0];
+                    }
+
+                    @Override
+                    public boolean isDataFlavorSupported(DataFlavor flavor) {
+                        return false;
+                    }
+
+                    @Override
+                    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+                        throw new UnsupportedFlavorException(flavor);
+                    }
+                }, null);
+
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void exportDone(JComponent source, Transferable data, int action) {
+            if (action != MOVE) {
+                cutFile = null;
+                return;
+            }
+            try {
+                cutFile = (ProjectElement) data.getTransferData(ELEMENT_FLAVOR);
             } catch (UnsupportedFlavorException ex) {
                 Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (e == null) {
-                return false;
-            }
-            Object last = drop.getPath().getLastPathComponent();
-            if (last instanceof FolderTreeNode || last instanceof ProjectTreeNode) {
-                Iterable<ProjectElement> children;
-                ProjectFolder f = null;
-                Project p = null;
-                if (last instanceof ProjectTreeNode) {
-                    p = ((ProjectTreeNode) last).getProject();
-                    children = p.getFiles();
-                } else { // FolderTreeNode
-                    f = (ProjectFolder) ((FolderTreeNode) last).getElement();
-                    children = f.getChildren();
-                }
-                String newName = e.getName();
-                boolean done = false, changed;
-                int i = 1;
-                while (!done) {
-                    changed = false;
-                    for (ProjectElement el : children) {
-                        if (el.getName().equals(newName)) {
-                            String s, l;
-                            int dot = e.getName().indexOf('.');
-                            if (dot < 0) {
-                                l = "";
-                            } else {
-                                l = e.getName().substring(dot);
-                            }
-                            s = e.getName().substring(0, dot);
-                            newName = s + "_" + i++ + l;
-                            changed = true;
-                            break;
-                        }
-                    }
-                    done = !changed;
-                }
-                BasicFile nf = e.getProject().getManager().copyFile(e.getFile(), f, newName);
-                if (last instanceof ProjectTreeNode) {
-                    updateTreeUI();
-                }
-            }
+            return;
+        }
 
-            /* Delete file if necessary */
-            if (support.getDropAction() == TransferHandler.MOVE) {
-                /* Assume that if the parent is null, then the element is
-                at the project root. */
-                e.getFile().delete();
-                if (e.getParent() == null) {
-                    e.getProject().remove(e);
-                } else {
-                    e.getParent().reload();
-                }
-                updateTreeUI();
+        private void delete(ProjectElement e) {
+            e.getFile().delete();
+            if (e.getParent() == null) {
+                e.getProject().remove(e);
+            } else {
+                e.getParent().reload();
             }
-            return true;
+            updateTreeUI();
         }
         //</editor-fold>
     }
