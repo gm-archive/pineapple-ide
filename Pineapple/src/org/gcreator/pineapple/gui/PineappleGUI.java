@@ -2456,7 +2456,6 @@ public class PineappleGUI implements EventHandler {
         //<>editor-fold desc="createTransferable(JComponent)" defaultstate="collapsed">
         @Override
         protected Transferable createTransferable(JComponent c) {
-            System.out.println("Transfer");
             Object o = tree.getLastSelectedPathComponent();
 
             if (o instanceof BaseTreeNode) {
@@ -2495,7 +2494,6 @@ public class PineappleGUI implements EventHandler {
         //<>editor-fold desc="canImport(TransferHandler.TransferSupport)" defaultstate="collapsed">
         @Override
         public boolean canImport(TransferHandler.TransferSupport support) {
-            System.out.println("Test Import");
             Object o = null;
             try {
                 o = support.getTransferable().getTransferData(ELEMENT_FLAVOR);
@@ -2540,7 +2538,6 @@ public class PineappleGUI implements EventHandler {
         //<>editor-fold desc="importData(TransferHandler.TransferSupport)" defaultstate="collapsed">
         @Override
         public boolean importData(TransferHandler.TransferSupport support) {
-            System.out.println("Import");
             if (!canImport(support)) {
                 return false;
             }
