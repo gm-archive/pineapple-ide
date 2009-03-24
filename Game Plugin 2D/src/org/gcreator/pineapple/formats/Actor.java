@@ -180,7 +180,11 @@ public class Actor extends ClassResource {
      * @param image The new image for this actor.
      */
     public void setImage(BasicFile image) {
-        properties.put("image", image);
+        if (image == null) {
+            properties.remove("image");
+        } else {
+            properties.put("image", image);
+        }
     }
 
     /**

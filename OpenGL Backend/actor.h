@@ -4,6 +4,7 @@
 #include "vector.h"
 #include "texture.h"
 #include "keyboard.h"
+#include <iostream>
 
 namespace Pineapple {
 
@@ -17,8 +18,10 @@ protected:
     float angle;
     float width, height;
     float x, y;
+    float depth;
+
 public:
-    Actor(float x = 0, float y = 0);
+    Actor(float x = 0, float y = 0, float depth = 0);
     virtual ~Actor();
 
     float getX() { return x; }
@@ -46,6 +49,9 @@ public:
     void setGravity(float g) { gravity->setSpeed(g); }
     void setGravity(float g, float d) { gravity->setSpeed(g); gravity->setDirection(d); }
     void setGravityDirection(float d) { gravity->setDirection(d); }
+
+    float getDepth() { return depth; }
+    void setDepth(float depth) { this->depth = depth; }
 
     void loop();
 

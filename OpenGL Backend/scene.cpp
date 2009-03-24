@@ -1,12 +1,14 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_opengl.h"
 #include <vector>
+#include <list>
 #include "application.h"
 #include "actor.h"
 #include "scene.h"
 #include "scene.h"
-using namespace Pineapple;
 
+using namespace Pineapple;
+using namespace std;
 //
 //Scene base constructor
 //
@@ -23,9 +25,11 @@ Scene::Scene(int width, int height)
 //
 Scene::~Scene()
 {
-    for (unsigned int i = 0; i < actors.size(); i++)
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
     {
-        delete actors[i];
+        delete *i;
+        i++;
     }
     for (unsigned int i = 0; i < views.size(); i++)
     {
@@ -39,10 +43,12 @@ Scene::~Scene()
 //
 void Scene::update()
 {
-    for (unsigned int i = 0; i < actors.size(); i++)
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
     {
-        actors[i]->update();
-        actors[i]->move();
+        (*i)->update();
+        (*i)->move();
+        i++;
     }
 }
 
@@ -70,14 +76,22 @@ void Scene::draw()
     }
 }
 
+bool compareActors(Actor*& a, Actor*& b)
+{
+    return a->getDepth() > b->getDepth();
+}
 //
 //Draw this scene's actors
 //
 void Scene::drawActors()
 {
-    for (unsigned int i = 0; i < actors.size(); i++)
+    actors.sort(compareActors);
+
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
     {
-        actors[i]->draw();
+        (*i)->draw();
+        i++;
     }
 }
 
@@ -96,16 +110,20 @@ void Scene::onKeyDown(Key key)
     if (key == KeyEscape)
         Application::exit();
 
-    for (unsigned int i = 0; i < actors.size(); i++)
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
     {
-        actors[i]->onKeyDown(key);
+        (*i)->onKeyDown(key);
+        i++;
     }
 }
 
 void Scene::onKeyUp(Key key)
 {
-    for (unsigned int i = 0; i < actors.size(); i++)
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
     {
-        actors[i]->onKeyUp(key);
+        (*i)->onKeyUp(key);
+        i++;
     }
 }

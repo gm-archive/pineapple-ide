@@ -5,13 +5,14 @@
 #include "view.h"
 #include "keyboard.h"
 #include <vector>
+#include <list>
 
 namespace Pineapple {
 
 class Scene
 {
 protected:
-    std::vector<Actor*> actors;
+    std::list<Actor*> actors;
     std::vector<View*> views;
     Color* bgColor;
 

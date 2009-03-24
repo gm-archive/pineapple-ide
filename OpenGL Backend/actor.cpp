@@ -6,10 +6,11 @@ using namespace Pineapple;
 //
 //Set actor defaults
 //
-Actor::Actor(float x, float y)
+Actor::Actor(float x, float y, float depth)
 {
     this->x = x;
     this->y = y;
+    this->depth = depth;
 
     angle = 0;
     width = height = 1;

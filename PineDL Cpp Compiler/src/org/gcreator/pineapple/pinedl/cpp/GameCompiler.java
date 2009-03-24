@@ -83,6 +83,7 @@ public class GameCompiler {
     int resIndex = 0;
     HashMap<File, String> imageNames = new HashMap<File, String>();
     HashMap<String, String> config = new HashMap<String, String>();
+    static boolean copiedLib = false;
 
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
@@ -165,7 +166,12 @@ public class GameCompiler {
                                 generateHeader(script);
                                 generateCppFile(script);
                             }
-                            copyLib();
+                            /* Only copy lib once every time
+                                 Pineapple is run. */
+                            if (!copiedLib) {
+                                copyLib();
+                                copiedLib = true;
+                            }
                             compFrame.writeLine("Compiling C++ code");
                             generateTextureList();
                             generateMain();
@@ -222,8 +228,8 @@ public class GameCompiler {
             fname = imageNames.get(image);
             index = fname.lastIndexOf('.');
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            fos.write(("extern char _binary_" + varname + "_start;\n").getBytes());
-            fos.write(("extern char _binary_" + varname + "_end;\n").getBytes());
+            fos.write(("extern int _binary_" + varname + "_start;\n").getBytes());
+            fos.write(("extern int _binary_" + varname + "_size;\n").getBytes());
             fos.write("::Pineapple::Texture* ".getBytes());
             fos.write((gamePackage + "::TextureList::" + fname + ";\n").getBytes());
         }
@@ -237,7 +243,7 @@ public class GameCompiler {
             index = fname.lastIndexOf('.');
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
             fos.write(("\t" + gamePackage + "::TextureList::" + fname +
-                    " = new ::Pineapple::Texture(&_binary_" + varname + "_start, &_binary_" + varname + "_end").getBytes());
+                    " = new ::Pineapple::Texture((char*)&_binary_" + varname + "_start, (int)&_binary_" + varname + "_size").getBytes());
             fos.write(");\n".getBytes());
         }
         fos.write("}\n".getBytes());
@@ -246,6 +252,9 @@ public class GameCompiler {
 
     public static void copyFile(String resFolder, File outFolder, String fname) throws IOException {
         File f = new File(outFolder, fname);
+        if (f.exists() && !f.canWrite()) {
+            return;
+        }
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = GameCompiler.class.getResourceAsStream(resFolder + fname);
         int c;
@@ -567,9 +576,9 @@ public class GameCompiler {
     }
 
     private void writeCreate(FileOutputStream fos, Actor a, Event evt) throws IOException {
-        fos.write("\tpublic this(float x, float y) : super(x, y){\n".getBytes());
+        fos.write("\tpublic this(float x, float y, float depth) : super(x, y, depth) {\n".getBytes());
 
-        fos.write("\t\tsetX(x);\n\t\tsetY(y);\n".getBytes());
+        fos.write("\t\tsetX(x);\n\t\tsetY(y);\n\t\tsetDepth(depth);\n".getBytes());
         if (a.getImage() != null) {
             fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
             String iname = a.getImage().getName();
@@ -620,7 +629,7 @@ public class GameCompiler {
         for (Scene.ActorInScene a : scene.actors) {
             String aname = a.file.getName();
             aname = aname.substring(0, aname.lastIndexOf('.'));
-            fos.write(("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + "));\n").getBytes());
+            fos.write(("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + ", " + a.actor.getZ() +"));\n").getBytes());
         }
 
         fos.write("\t}\n".getBytes());

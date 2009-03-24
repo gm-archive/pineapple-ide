@@ -18,9 +18,9 @@ Texture::Texture(const std::string file, int originx, int originy)
     init(surface);
 }
 
-Texture::Texture(char* start, char* end, int originx, int originy)
+Texture::Texture(char* start, int size, int originx, int originy)
 {
-    SDL_RWops* rw = SDL_RWFromMem(start, (int) (end-start));
+    SDL_RWops* rw = SDL_RWFromMem(start, size);
 
     //load the image
     SDL_Surface* surface = IMG_Load_RW(rw, 1);

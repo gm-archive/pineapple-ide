@@ -17,8 +17,10 @@ protected:
     float angle;
     float width, height;
     float x, y;
+    float depth;
+
 public:
-    Actor(float x = 0, float y = 0);
+    Actor(float x = 0, float y = 0, float depth = 0);
     virtual ~Actor();
 
     float getX() { return x; }
@@ -47,6 +49,9 @@ public:
     void setGravity(float g, float d) { gravity->setSpeed(g); gravity->setDirection(d); }
     void setGravityDirection(float d) { gravity->setDirection(d); }
 
+    float getDepth() { return depth; }
+    void setDepth(float depth) { this->depth = depth; }
+
     void loop();
 
     enum Motion { MotionXY, MotionRV };
@@ -58,6 +63,11 @@ public:
 
     virtual void onKeyDown(Key key) {}
     virtual void onKeyUp(Key key) {}
+
+    bool operator>(Actor& a) { return this->depth > a.depth; }
+    bool operator<(Actor& a) { return this->depth < a.depth; }
+    bool operator==(Actor& a) { return this-> depth == a.depth; }
+
 };
 
 }
