@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -59,8 +59,8 @@ tokens{
 
 @header{
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -80,17 +80,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-package org.gcreator.pinedl;
+package org.gcreator.pineapple.pinedl;
 
 import java.util.Vector;
-import org.gcreator.pinedl.statements.*;
+import org.gcreator.pineapple.pinedl.statements.*;
 
 }
 
 @lexer::header{
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -110,8 +110,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-package org.gcreator.pinedl;
+package org.gcreator.pineapple.pinedl;
 
+}
+
+@lexer::members{
+	private int line = 0;
+	
+	protected void newLine() {
+	    line++;
+	}
+	
+	public int getLine() {
+	    return line;
+	}
 }
 
 @members{
@@ -352,18 +364,17 @@ STRINGCONST_PRIVATE
 doubleconst returns [DoubleConstant d = null]
 	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
 
-//No negative number support due to https://sourceforge.net/tracker2/index.php?func=detail&aid=2526252&group_id=242839&atid=1120759
 DOUBLECONST_PRIVATE
-	: (DIGIT* '.' DIGIT+);
+	: MINUS?(DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
 	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
 
 
-//No negative number support due to https://sourceforge.net/tracker2/index.php?func=detail&aid=2526252&group_id=242839&atid=1120759
+
 INTCONST_PRIVATE
 	:	(
-			(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
+			MINUS?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
@@ -415,4 +426,16 @@ SLCOMMENT
 MLCOMMENT 
 	:	'/*' ( options {greedy=false;} : . )* '*/' { $channel = HIDDEN; };
 
-WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ { $channel = HIDDEN; };
+WHITESPACE : ( 
+    (' ' | '\t' | '\f')+
+  |
+    // handle newlines
+    ( '\r\n'  // DOS/Windows
+      | '\r'    // Macintosh
+      | '\n'    // Unix
+    )
+      // increment the line count in the scanner; useful for syntax errors
+      { newLine(); }
+    )
+ { $channel = HIDDEN; };
+
