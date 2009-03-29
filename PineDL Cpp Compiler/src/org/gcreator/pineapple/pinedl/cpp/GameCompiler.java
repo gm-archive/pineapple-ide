@@ -577,9 +577,9 @@ public class GameCompiler {
     }
 
     private void writeCreate(FileOutputStream fos, Actor a, Event evt) throws IOException {
-        fos.write("\tpublic this(float x, float y, float depth) : super(x, y, depth) {\n".getBytes());
+        fos.write("\tpublic this(float __x, float __y, float depth) : super(_P___x, _P___y, depth) {\n".getBytes());
 
-        fos.write("\t\tsetX(x);\n\t\tsetY(y);\n\t\tsetDepth(depth);\n".getBytes());
+        fos.write("\t\tsetDepth(depth);\n".getBytes());
         if (a.getImage() != null) {
             fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
             String iname = a.getImage().getName();
