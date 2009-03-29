@@ -33,7 +33,10 @@ import org.gcreator.pineapple.project.ProjectFile;
 public class ImageValidator implements ResourceValidator {
 
     public boolean isValid(ProjectFile file) {
-        String name = file.getName();
+        return isValid(file.getName());
+    }
+    
+    public boolean isValid(String name) {
         int i = name.lastIndexOf('.');
         if (i == -1 || i == name.length()) {
             return false;

@@ -30,6 +30,10 @@ import org.gcreator.pineapple.project.ProjectFile;
  */
 public class UniversalValidator implements ResourceValidator {
 
+    public boolean isValid(String name){
+        return true;
+    }
+    
     public boolean isValid(ProjectFile file) {
         return true;
     }

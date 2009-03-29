@@ -30,8 +30,11 @@ import org.gcreator.pineapple.project.ProjectFile;
  */
 public class SceneValidator implements ResourceValidator {
 
-    public boolean isValid(ProjectFile file) {
-        String name = file.getName();
+    public boolean isValid(ProjectFile file){
+        return isValid(file.getName());
+    }
+    
+    public boolean isValid(String name) {
         int indexOfDot = name.lastIndexOf('.');
         if (indexOfDot == -1) {
             return false;
