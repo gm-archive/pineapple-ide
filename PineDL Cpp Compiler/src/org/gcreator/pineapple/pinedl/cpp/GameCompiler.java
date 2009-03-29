@@ -350,7 +350,8 @@ public class GameCompiler {
                 command.add(cmd);
             }
             command.add("-lSDL_image");
-            command.add("-lGL");
+            // Doesn't compile with this option
+            // command.add("-lGL");
             command.add("-lGLU");
         } else if (profile == CompilationProfile.MINGW_WINDOWS) {
             command.add("-lmingw32");
