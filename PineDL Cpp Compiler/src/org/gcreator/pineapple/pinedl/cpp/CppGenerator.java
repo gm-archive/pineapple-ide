@@ -327,6 +327,7 @@ public class CppGenerator {
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         if (l instanceof Block) {
             PineDLContext c = new PineDLContext(vars);
+            c.declareVariable("this", new Type(fname));
             String s = "{\n";
 
             for (Leaf leaf : ((Block) l).content) {
@@ -408,9 +409,6 @@ public class CppGenerator {
             }
             return s;
         }
-        if (l instanceof VariableReference) {
-            return ((VariableReference) l).name;
-        }
         if (l instanceof NewCall) {
             NewCall n = (NewCall) l;
             String s = "new ";
@@ -470,6 +468,7 @@ public class CppGenerator {
             return x;
         }
         if (l instanceof VariableReference) {
+            System.out.println("vr="+l.toString());
             if (isType((VariableReference) l) && isLeft) {
                 return ((VariableReference) l).name.replaceAll("\\.", "::");
             }
@@ -478,14 +477,18 @@ public class CppGenerator {
         if (l instanceof RetrieverExpression) {
             RetrieverExpression e = (RetrieverExpression) l;
             if (isType(e) && isLeft) {
+                System.out.println("e is Type!");
                 return "::" + e.toString().replaceAll("\\.", "::");
             } else if (e.left instanceof RetrieverExpression) {
                 boolean istype = isType(e.left) && isLeft;
                 return leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
             } else if (e.left instanceof VariableReference) {
+                System.out.println("got here");
+                System.out.println("cls="+e.left.getClass().toString());
                 boolean istype = isType(e.left) && isLeft;
-                return "::" + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
+                boolean declared = vars.isVariableDeclared(e.left.toString());
+                return (declared?"":"::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
             }
             return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
