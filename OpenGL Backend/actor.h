@@ -14,7 +14,7 @@ class Actor
     Vector* gravity;
     float friction;
 protected:
-    Texture* texture;
+    int texture;
     float angle;
     float width, height;
     float x, y;

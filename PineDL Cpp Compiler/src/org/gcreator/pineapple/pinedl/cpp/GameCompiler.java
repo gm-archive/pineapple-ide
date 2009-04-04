@@ -27,8 +27,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,12 +39,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.DeflaterOutputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import org.gcreator.pineapple.events.Event;
@@ -68,8 +75,9 @@ public class GameCompiler {
     File outputFolder;
     File binFolder;
     File resFolder;
-    File objresFolder;
+    File resoutFolder;
     File compConf;
+    File imageArchive;
     CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
@@ -77,7 +85,7 @@ public class GameCompiler {
     Vector<String> context = new Vector<String>();
     String gamePackage = "Game";
     boolean worked = true;
-    OutputStream headerH = null;
+    PrintWriter headerH = null;
     File outputFile = null;
     CompilationProfile profile = null;
     int resIndex = 0;
@@ -156,6 +164,7 @@ public class GameCompiler {
                                     }
                                 }
                             }
+                            createImageArchive();
                             buildContext();
                             compFrame.writeLine("Generating C++ and header files");
                             context.add("TextureList");
@@ -194,60 +203,54 @@ public class GameCompiler {
 
     public void generateTextureList() throws IOException {
         File header = new File(outputFolder, "TextureList.h");
-        FileOutputStream fos = new FileOutputStream(header);
-        fos.write("#ifndef __PINEDL_TEXTURELIST_H__\n".getBytes());
-        fos.write("#define __PINEDL_TEXTURELIST_H__\n\n".getBytes());
-        fos.write("#include \"header.h\"\n".getBytes());
-
-        fos.write(("namespace " + gamePackage + "{\n").getBytes());
-        fos.write("\tclass TextureList{\n".getBytes());
-
+        PrintWriter w = new PrintWriter(header);
+        w.println("#ifndef __PINEDL_TEXTURELIST_H__");
+        w.println("#define __PINEDL_TEXTURELIST_H__");
+        w.println();
+        w.println();
+        int imgn = 0;
         for (File image : imageFiles) {
             String fname = imageNames.get(image);
             int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            fos.write(("\t\tpublic: static ::Pineapple::Texture* " + fname + ";\n").getBytes());
+            w.println(("#define " + fname + "\t\t\t" +imgn++));
         }
-        fos.write("\t\tpublic: static void init();".getBytes());
+        w.println();
+        w.println("#include \"header.h\"");
+        w.println();
+        w.println("using namespace Pineapple;");
+        w.println();
+        w.println("namespace " + gamePackage + "{");
+        w.println("\tclass TextureList {");
 
-        fos.write(("\n};\n}\n").getBytes());
+        w.println("\t    public:");
+        w.println("\t\tstatic void init();");
+        w.println("\t\tstatic Texture* Get_Texture(int);");
 
-        fos.write("\n#endif\n".getBytes());
-        fos.close();
+        w.println("\t};\n}");
+
+        w.println("\n#endif");
+        w.close();
+
+        
 
         File cpp = new File(outputFolder, "TextureList.cpp");
-        fos = new FileOutputStream(cpp);
+        w = new PrintWriter(cpp);
 
-        fos.write("#include \"header.h\"\n\n".getBytes());
-        fos.write("using namespace Game;\n\n".getBytes());
-        for (File image : imageFiles) {
-            String fname = image.getName();
-            int index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index);
-            String varname = fname.replaceAll("\\W", "_");
-            fname = imageNames.get(image);
-            index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            fos.write(("extern int _binary_" + varname + "_start;\n").getBytes());
-            fos.write(("extern int _binary_" + varname + "_size;\n").getBytes());
-            fos.write("::Pineapple::Texture* ".getBytes());
-            fos.write((gamePackage + "::TextureList::" + fname + ";\n").getBytes());
+        w.println("long archive_size = " + imageArchive.length() + ";");
+        //TODO: game-start images (important!)
+        w.println("const int START_IMAGES[0] = {};");
+        w.println("const int START_IMAGE_COUNT = 0;");
+        w.println();
+        w.println();
+        LineNumberReader r = new LineNumberReader(new InputStreamReader(GameCompiler.class.getResourceAsStream("/org/gcreator/pineapple/pinedl/cpp/res/misc/TextureList.cpp")));
+        String l;
+        while ((l = r.readLine()) != null) {
+            w.println(l);
         }
-        fos.write("void TextureList::init() {\n".getBytes());
-        for (File image : imageFiles) {
-            String fname = image.getName();
-            int index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index);
-            String varname = fname.replaceAll("\\W", "_");
-            fname = imageNames.get(image);
-            index = fname.lastIndexOf('.');
-            fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            fos.write(("\t" + gamePackage + "::TextureList::" + fname +
-                    " = new ::Pineapple::Texture((char*)&_binary_" + varname + "_start, (int)&_binary_" + varname + "_size").getBytes());
-            fos.write(");\n".getBytes());
-        }
-        fos.write("}\n".getBytes());
-        fos.close();
+        r.close();
+        w.println();
+        w.close();
     }
 
     public static void copyFile(String resFolder, File outFolder, String fname) throws IOException {
@@ -257,6 +260,9 @@ public class GameCompiler {
         }
         FileOutputStream fos = new FileOutputStream(f);
         InputStream is = GameCompiler.class.getResourceAsStream(resFolder + fname);
+        if (is == null) {
+            throw new IOException("Resource "+resFolder + fname + " does not exist!");
+        }
         int c;
         while ((c = is.read()) != -1) {
             fos.write(c);
@@ -269,7 +275,8 @@ public class GameCompiler {
         File f = new File(outputFolder, "main.cpp");
         FileOutputStream fos = new FileOutputStream(f);
         fos.write("#include \"header.h\"\n\n".getBytes());
-        fos.write("int main(int argc, char** argv){\n".getBytes());
+        fos.write("int main(int argc, char** argv) {\n".getBytes());
+        fos.write("\tPineapple::Application::exename = *argv;\n".getBytes());
         fos.write("\tPineapple::Application::init();\n".getBytes());
         fos.write("\tPineapple::Window::setSize(640, 480);\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
@@ -317,9 +324,8 @@ public class GameCompiler {
     }
 
     private void compile() throws Exception {
-        headerH.write("#endif\n".getBytes());
+        headerH.println("#endif");
         headerH.close();
-        outputFile = new File(binFolder, "game");
         Vector<String> command = new Vector<String>();
         command.add("g++");
         command.add("-o");
@@ -331,10 +337,6 @@ public class GameCompiler {
         command.add((new File(outputFolder, "TextureList.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
-
-        for (File f : imageFiles) {
-            command.add(f.getAbsolutePath());
-        }
 
         int c;
         if (profile == CompilationProfile.UNIX_GCC) {
@@ -381,7 +383,7 @@ public class GameCompiler {
         InputStream is = new BufferedInputStream(proc.getErrorStream());
         while ((c = is.read()) != -1) {
             if (c != '\n') {
-                res += (char) c;
+                res += (char)c;
             } else {
                 compFrame.writeLine(res);
                 res = "";
@@ -392,6 +394,7 @@ public class GameCompiler {
             compFrame.writeLine("<font color='red'>There seems to have been some errors with the compiler<br/> " +
                     "Please report them to the G-Creator team</font>");
         } else {
+            appendArchive();
             compFrame.writeLine("Finished!");
             compFrame.runGameButton.setEnabled(true);
         }
@@ -413,9 +416,9 @@ public class GameCompiler {
         fname = fname.substring(0, fname.lastIndexOf('.'));
         System.out.println("new fname=" + fname);
         File output = new File(outputFolder, fname + ".h");
-        headerH.write("#include \"".getBytes());
-        headerH.write(fname.getBytes());
-        headerH.write(".h\"\n".getBytes());
+        headerH.print("#include \"");
+        headerH.print(fname);
+        headerH.println(".h\"");
         FileOutputStream fos = new FileOutputStream(output);
         HGenerator gen = new HGenerator(is, fos, this, fname, context);
         if (!gen.wasSuccessful()) {
@@ -443,56 +446,112 @@ public class GameCompiler {
 
     private void copyImage(ProjectElement e, String ext) throws Exception {
         String fn = ext + resIndex++ + ".png";
-        File f = new File(resFolder, fn);
-        File obj = new File(objresFolder.getAbsolutePath(), fn + ".o");
+        File img = new File(resFolder, fn);
+        File imgz = new File(resoutFolder.getAbsolutePath(), fn + ".zlib");
         /* Convert to PNG if needed */
         boolean copy = true;
-        if (f.exists() && config.containsKey(f.getName())) {
-            long modified = Long.parseLong(config.get(f.getName()));
-            if (modified >= f.lastModified()) {
+        if (img.exists() && config.containsKey(img.getName())) {
+            long modified = Long.parseLong(config.get(img.getName()));
+            if (modified >= img.lastModified()) {
                 copy = false;
             }
         }
         if (copy) {
-            convertImage(e.getFile(), f);
-            config.put(f.getName(), String.valueOf(f.lastModified()));
-            compFrame.writeLine("Making object file of " + e.getName());
-            /* Works with GCC and MinGW
-            Doesn't link in MinGW! Needs to be fixed.
-             */
-            if (profile == CompilationProfile.UNIX_GCC || profile == CompilationProfile.MINGW_WINDOWS) {
-                String arch;
-                if (profile == CompilationProfile.UNIX_GCC) {
-                    arch = "elf32-i386";
-                } else {
-                    arch = "pe-i386";
-                }
-                ProcessBuilder pb = new ProcessBuilder(new String[]{
-                            "objcopy",
-                            "-I", "binary",
-                            "-O", arch,
-                            "--binary-architecture", "i386",
-                            f.getName(), obj.getAbsolutePath()});
-                pb.directory(f.getParentFile());
-                StringBuffer cmd = new StringBuffer("<font color='blue'><em>");
-                for (String s : pb.command()) {
-                    s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-                    if (s.contains(" ")) {
-                        s = "\"" + s + "\"";
-                    }
-                    cmd.append(" ").append(s);
-                }
-                cmd.append("</em></font>");
-                compFrame.writeLine(cmd.toString());
-                Process pr = pb.start();
-                pr.waitFor();
-            } else {
-                System.out.println("ERROR! Don't know how to use linker!");
-                return;
-            }
+            convertImage(e.getFile(), img);
+            config.put(img.getName(), String.valueOf(img.lastModified()));
         }
-        imageFiles.add(obj);
-        imageNames.put(obj, e.getName());
+        DeflaterOutputStream out = new DeflaterOutputStream(new BufferedOutputStream(new FileOutputStream(imgz)));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(img));
+        int read;
+        while ((read = in.read()) != -1) {
+            out.write(read);
+        }
+        out.close();
+        in.close();
+        imageFiles.add(imgz);
+        imageNames.put(imgz, e.getName());
+    }
+
+    private void createImageArchive() throws Exception {
+        /* Create a cheap non-hierarchical archive of the images. */
+        /* Format:
+         *
+         * All files are ZLIB compressed.
+         * Endian is little-endian.
+         *
+         <4-byte int> number of files
+         {
+            <8-byte long> file data size
+            <8-byte long> file data size when decompressed
+         }
+         <number of files>
+         {
+            file data
+         }
+        */
+
+        imageArchive = new File(resoutFolder, "images.CrAr");
+
+        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(imageArchive)));
+
+        // Number of files
+        out.writeInt(toNativeEndian(imageFiles.size()));
+        for (int i = 0; i < imageFiles.size(); i++) {
+            File f = imageFiles.get(i);
+            // file data size
+            out.writeLong(toNativeEndian(f.length()));
+            // uncompressed data size
+            out.writeLong(toNativeEndian(new File(resFolder, f.getName().substring(0, f.getName().length()-5)).length()));
+        }
+
+        for (int i = 0; i < imageFiles.size(); i++) {
+            // File data
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(imageFiles.get(i)));
+            int read;
+            while ((read = in.read()) != -1) {
+                out.write(read);
+            }
+            in.close();
+        }
+        out.close();
+    }
+
+    private int toNativeEndian(int x) {
+        ByteBuffer b = ByteBuffer.allocate(4);
+        b.order(ByteOrder.BIG_ENDIAN);
+        b.putInt(x);
+        b.order(ByteOrder.nativeOrder());
+        return b.getInt(0);
+    }
+
+    private long toNativeEndian(long x) {
+        ByteBuffer b = ByteBuffer.allocate(8);
+        b.order(ByteOrder.BIG_ENDIAN);
+        b.putLong(x);
+        b.order(ByteOrder.nativeOrder());
+        return b.getLong(0);
+    }
+
+    private void appendArchive() throws Exception {
+
+        String cmd;
+        if (profile == CompilationProfile.UNIX_GCC) {
+            cmd = "cat";
+        } else if (profile == CompilationProfile.MINGW_WINDOWS) {
+            cmd = "type";
+        } else {
+            throw new Exception("Unknown cat equivalent for profile "+profile);
+        }
+        compFrame.writeLine("<span style='color: green;'>" + cmd + " \"" + imageArchive.getAbsolutePath() +
+                "\" >> \"" + outputFile.getAbsolutePath() + "\"</span>");
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile, true));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(imageArchive));
+        int read;
+        while ((read = in.read()) != -1) {
+            out.write(read);
+        }
+        in.close();
+        out.close();
     }
 
     private void copyScript(ProjectElement e) throws Exception {
@@ -581,7 +640,7 @@ public class GameCompiler {
 
         fos.write("\t\tsetDepth(depth);\n".getBytes());
         if (a.getImage() != null) {
-            fos.write(("\t\ttexture = " + gamePackage + ".TextureList.").getBytes());
+            fos.write(("\t\ttexture = ").getBytes());
             String iname = a.getImage().getName();
             int index = iname.indexOf('.');
             iname = iname.substring(0, index) + "_" + iname.substring(index + 1);
@@ -653,32 +712,40 @@ public class GameCompiler {
         binFolder.mkdir();
         resFolder = new File(outputFolder, "res"); // OUTPUT/res
         resFolder.mkdir();
-        objresFolder = new File(outputFolder, "res_obj"); // OUTPUT/res_obj
-        objresFolder.mkdir();
+        resoutFolder = new File(outputFolder, "res-output"); // OUTPUT/res-output
+        resoutFolder.mkdir();
         compConf = new File(outputFolder, "compile.conf");
+        
+        if (profile == CompilationProfile.UNIX_GCC) {
+            outputFile = new File(binFolder, "game");
+        } else if (profile == CompilationProfile.MINGW_WINDOWS) {
+            outputFile = new File(binFolder, "game.exe");
+        } else {
+            throw new Exception("Invalid Compilation Profile; output file not set");
+        }
 
         compFrame.writeLine("Loading config...");
         loadConfig();
 
         compFrame.writeLine("Generating header...");
-        headerH = new FileOutputStream(new File(outputFolder, "header.h"));
-        headerH.write("#ifndef _PINEAPPLE_HEADER_H_\n".getBytes());
-        headerH.write("#define _PINEAPPLE_HEADER_H_\n".getBytes());
-        headerH.write("#include \"actor.h\"\n".getBytes());
-        headerH.write("#include \"application.h\"\n".getBytes());
-        headerH.write("#include \"color.h\"\n".getBytes());
-        headerH.write("#include \"exceptions.h\"\n".getBytes());
-        headerH.write("#include \"io.h\"\n".getBytes());
-        headerH.write("#include \"keyboard.h\"\n".getBytes());
-        headerH.write("#include \"keycodes.h\"\n".getBytes());
-        headerH.write("#include \"pamath.h\"\n".getBytes());
-        headerH.write("#include \"scene.h\"\n".getBytes());
-        headerH.write("#include \"texture.h\"\n".getBytes());
-        headerH.write("#include \"timer.h\"\n".getBytes());
-        headerH.write("#include \"vector.h\"\n".getBytes());
-        headerH.write("#include \"view.h\"\n".getBytes());
-        headerH.write("#include \"window.h\"\n".getBytes());
-        headerH.write("#include \"TextureList.h\"\n".getBytes());
+        headerH = new PrintWriter(new File(outputFolder, "header.h"));
+        headerH.println("#ifndef _PINEAPPLE_HEADER_H_");
+        headerH.println("#define _PINEAPPLE_HEADER_H_");
+        headerH.println("#include \"actor.h\"");
+        headerH.println("#include \"application.h\"");
+        headerH.println("#include \"color.h\"");
+        headerH.println("#include \"exceptions.h\"");
+        headerH.println("#include \"io.h\"");
+        headerH.println("#include \"keyboard.h\"");
+        headerH.println("#include \"keycodes.h\"");
+        headerH.println("#include \"pamath.h\"");
+        headerH.println("#include \"scene.h\"");
+        headerH.println("#include \"texture.h\"");
+        headerH.println("#include \"timer.h\"");
+        headerH.println("#include \"vector.h\"");
+        headerH.println("#include \"view.h\"");
+        headerH.println("#include \"window.h\"");
+        headerH.println("#include \"TextureList.h\"");
     }
 
     private void loadConfig() {

@@ -1,6 +1,7 @@
 #include "application.h"
 #include "vector.h"
 #include "actor.h"
+#include "texturelist.h"
 using namespace Pineapple;
 
 //
@@ -11,6 +12,7 @@ Actor::Actor(float x, float y, float depth)
     this->x = x;
     this->y = y;
     this->depth = depth;
+    this->texture = -1;
 
     angle = 0;
     width = height = 1;
@@ -34,15 +36,17 @@ Actor::~Actor()
 //
 void Actor::loop()
 {
-    if (x > Application::getScene()->getWidth() + texture->getOriginX())
-        x = -texture->getOriginX();
-    if (x < -texture->getOriginX())
-        x = Application::getScene()->getWidth() + texture->getOriginX();
-
-    if (y > Application::getScene()->getHeight() + texture->getOriginY())
-        y = -texture->getOriginY();
-    if (y < -texture->getOriginY())
-        y = Application::getScene()->getHeight() + texture->getOriginY();
+    if (texture < 0)
+        return;
+    Texture* tex = ::Game::TextureList::Get_Texture(texture);
+    if (x > Application::getScene()->getWidth() + tex->getOriginX())
+        x = -tex->getOriginX();
+    if (x < -tex->getOriginX())
+        x = Application::getScene()->getWidth() + tex->getOriginX();
+    if (y > Application::getScene()->getHeight() + tex->getOriginY())
+        y = -tex->getOriginY();
+    if (y < -tex->getOriginY())
+        y = Application::getScene()->getHeight() + tex->getOriginY();
 }
 
 //
@@ -78,5 +82,8 @@ void Actor::move()
 //
 void Actor::draw()
 {
-    texture->draw(x, y, width, height, angle);
+    if (texture < 0)
+        return;
+    Texture* tex = ::Game::TextureList::Get_Texture(texture);
+    tex->draw(x, y, width, height, angle);
 }

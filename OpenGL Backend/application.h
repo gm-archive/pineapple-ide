@@ -23,6 +23,7 @@ public:
 
 	static void setScene(Scene* scene);
 	static Scene* getScene() { return currentScene; }
+	static char* exename;
 };
 
 }

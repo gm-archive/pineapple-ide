@@ -4,6 +4,7 @@
 #include "vector.h"
 #include "texture.h"
 #include "keyboard.h"
+#include <iostream>
 
 namespace Pineapple {
 
@@ -13,7 +14,7 @@ class Actor
     Vector* gravity;
     float friction;
 protected:
-    Texture* texture;
+    int texture;
     float angle;
     float width, height;
     float x, y;
@@ -63,11 +64,6 @@ public:
 
     virtual void onKeyDown(Key key) {}
     virtual void onKeyUp(Key key) {}
-
-    bool operator>(Actor& a) { return this->depth > a.depth; }
-    bool operator<(Actor& a) { return this->depth < a.depth; }
-    bool operator==(Actor& a) { return this-> depth == a.depth; }
-
 };
 
 }
