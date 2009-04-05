@@ -308,7 +308,6 @@ public class CppGenerator {
 
             writeLine(s);
 
-            System.out.println(method.content.toString());
 
             writeLine(leafToString(method.content, vars));
 
@@ -468,7 +467,6 @@ public class CppGenerator {
             return x;
         }
         if (l instanceof VariableReference) {
-            System.out.println("vr="+l.toString());
             if (isType((VariableReference) l) && isLeft) {
                 return ((VariableReference) l).name.replaceAll("\\.", "::");
             }
@@ -477,15 +475,12 @@ public class CppGenerator {
         if (l instanceof RetrieverExpression) {
             RetrieverExpression e = (RetrieverExpression) l;
             if (isType(e) && isLeft) {
-                System.out.println("e is Type!");
                 return "::" + e.toString().replaceAll("\\.", "::");
             } else if (e.left instanceof RetrieverExpression) {
                 boolean istype = isType(e.left) && isLeft;
                 return leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
             } else if (e.left instanceof VariableReference) {
-                System.out.println("got here");
-                System.out.println("cls="+e.left.getClass().toString());
                 boolean istype = isType(e.left) && isLeft;
                 boolean declared = vars.isVariableDeclared(e.left.toString());
                 return (declared?"":"::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +

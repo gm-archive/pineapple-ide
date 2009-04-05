@@ -63,7 +63,6 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
     private volatile long lastRenderO = -1L;
     private volatile long lastRenderP = -1L;
     private volatile long lastRenderU = -1L;
-    ActorProperties ap;
     private Point dragOffset;
     private boolean sorting = false;
 
@@ -349,8 +348,8 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
             editor.setModified(true);
             if (selection == chosen) {
                 setSelection(null);
-                if (ap != null) {
-                    ap.update();
+                if (editor.actorPanel != null) {
+                    editor.actorPanel.update();
                 }
             }
             //Need to render actors again
@@ -364,6 +363,9 @@ public class SceneEditorArea extends JPanel implements VectorChangeListener {
             selection.x = e.getX() + dragOffset.x;
             selection.y = e.getY() + dragOffset.y;
             editor.setModified(true);
+            if (editor.actorPanel != null) {
+                editor.actorPanel.update();
+            }
             // may need to render actors 
             if (selection != notRendered) {
                 renderActorCache();
