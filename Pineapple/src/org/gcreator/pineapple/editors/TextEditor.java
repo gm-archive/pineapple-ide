@@ -37,6 +37,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.gcreator.pineapple.gui.DocumentPane;
@@ -52,7 +53,7 @@ public class TextEditor extends DocumentPane {
 
     private static final long serialVersionUID = 1L;
     private JScrollPane scroll;
-    private JTextArea editor;
+    private JTextPane editor;
     public IntegratedUndoManager undo = new IntegratedUndoManager();
 
     /**
@@ -67,11 +68,10 @@ public class TextEditor extends DocumentPane {
         setBackground(Color.white);
         setLayout(new BorderLayout());
         this.scroll = new JScrollPane();
-        this.editor = new JTextArea();
+        this.editor = new JTextPane();
         this.editor.setVisible(true);
         this.scroll.setVisible(true);
         this.scroll.setViewportView(editor);
-        this.editor.setTabSize(5);
         this.add(scroll, BorderLayout.CENTER);
 
         if (e != null && e.exists()) {
