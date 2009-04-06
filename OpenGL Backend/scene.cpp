@@ -6,9 +6,11 @@
 #include "actor.h"
 #include "scene.h"
 #include "scene.h"
+#include "window.h"
 
 using namespace Pineapple;
 using namespace std;
+
 //
 //Scene base constructor
 //
@@ -17,6 +19,7 @@ Scene::Scene(int width, int height)
     glClearColor(0, 0, 0, 1);
     this->width = width;
     this->height = height;
+    Window::setSize(width, height);
     bgColor = Color::BLACK;
 }
 
@@ -61,18 +64,15 @@ void Scene::draw()
 
     if (views.size() == 0)
     {
-        static View* v = new View();
-        v->set(bgColor);
-        drawActors();
+        View* v = new View();
+        addView(v);
     }
-    else
+    for (unsigned int i = 0; i < views.size(); i++)
     {
-        for (unsigned int i = 0; i < views.size(); i++)
-        {
-            View* v = views[i];
-            v->set(bgColor);
-            drawActors();
-        }
+        View* v = views[i];
+        v->set(bgColor);
+        drawBackgrounds();
+        drawActors();
     }
 }
 
@@ -95,6 +95,17 @@ void Scene::drawActors()
     }
 }
 
+//
+//Draw this scene's backgrounds
+//
+void Scene::drawBackgrounds()
+{
+    for (unsigned int i = 0; i < backgrounds.size(); i++)
+    {
+        backgrounds[i]->draw(this);
+    }
+}
+
 void Scene::addActor(Actor* actor)
 {
     actors.push_back(actor);
@@ -103,6 +114,11 @@ void Scene::addActor(Actor* actor)
 void Scene::addView(View* view)
 {
     views.push_back(view);
+}
+
+void Scene::addBackground(Background* bg)
+{
+    backgrounds.push_back(bg);
 }
 
 void Scene::onKeyDown(Key key)

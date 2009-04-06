@@ -25,9 +25,9 @@ Texture* Load_Texture(char*, int);
 void TextureList::init()
 {
 	/* Initialize Image data */
-	FILE* exe = fopen(Pineapple::Application::exename, "rb");
+	FILE* exe = fopen(Pineapple::Application::getExecutablePath().c_str(), "rb");
 	/* Read and Store Archive Information */
-	fseek(exe,-archive_size,SEEK_END);
+	fseek(exe, -archive_size, SEEK_END);
 	int imgs;
 	fread(&imgs, 4, 1, exe);
 	for (int i = 0; i < imgs; i++)
@@ -84,7 +84,7 @@ Texture* TextureList::Get_Texture(int id)
 
 void Load_Textures(int* ids, int n)
 {
-	FILE* exe = fopen(Pineapple::Application::exename, "rb");
+	FILE* exe = fopen(Pineapple::Application::getExecutablePath().c_str(), "rb");
 	fseek(exe, archive_data_start, SEEK_SET);
 	for (int i = 0; i < images.size(); i++)
 	{

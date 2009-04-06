@@ -281,7 +281,6 @@ public class GameCompiler {
         FileOutputStream fos = new FileOutputStream(f);
         fos.write("#include \"header.h\"\n\n".getBytes());
         fos.write("int main(int argc, char** argv) {\n".getBytes());
-        fos.write("\tPineapple::Application::exename = *argv;\n".getBytes());
         fos.write("\tPineapple::Application::init();\n".getBytes());
         fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
         fos.write("\tGame::TextureList::init();\n".getBytes());
@@ -313,6 +312,7 @@ public class GameCompiler {
         compFrame.writeLine("Copying header files");
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "actor.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "application.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "background.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "exceptions.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "io.h", replace);
@@ -672,21 +672,21 @@ public class GameCompiler {
         fname = fname.replaceAll("\\s", "_");
         compFrame.writeLine("Creating PineDL Script for scene " + fname);
         File f = new File(outputFolder, fname + ".pdl");
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write("package ".getBytes());
-        fos.write(gamePackage.getBytes());
-        fos.write(';');
-        fos.write('\n');
-        fos.write('\n');
-        fos.write("class ".getBytes());
-        fos.write(fname.getBytes());
-        fos.write(" extends Scene{\n".getBytes());
+        PrintWriter w = new PrintWriter(f);
+        w.print("package ");
+        w.print(gamePackage);
+        w.println(';');
+        w.println();
+        w.print("class ");
+        w.print(fname);
+        w.print(" extends Scene {");
+        w.println();
 
-        fos.write("\tpublic this() : super".getBytes());
+        w.print("\tpublic this() : super");
 
-        fos.write(("(" + scene.getWidth() + ", " + scene.getHeight()).getBytes());
+        w.print("(" + scene.getWidth() + ", " + scene.getHeight());
 
-        fos.write("){\n".getBytes());
+        w.println("){");
 
 
         Color c = scene.getBackgroundColor();
@@ -695,20 +695,26 @@ public class GameCompiler {
         cs += c.getGreen();
         cs += ", ";
         cs += c.getBlue();
-        fos.write(("\t\tsetBackground(new Color(" + cs + "));\n").getBytes());
+        w.println("\t\tsetBackground(new Color(" + cs + "));");
 
         for (Scene.ActorInScene a : scene.actors) {
             String aname = a.file.getName();
             aname = aname.substring(0, aname.lastIndexOf('.'));
-            fos.write(("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + ", " + a.actor.getZ() + "));\n").getBytes());
+            w.println("\t\taddActor(new " + aname + "(" + a.x + ", " + a.y + ", " + a.actor.getZ() + "));");
         }
 
-        fos.write("\t}\n".getBytes());
+        for (Scene.Background b : scene.backgrounds) {
+            String iname = b.image.getName().replaceAll("\\.", "_");
+            w.println("\t\taddBackground(new Background(" + iname + ", " +
+                    b.x + ", " + b.y + ", " + b.drawImage + ", " +
+                    b.hrepeat + ", " + b.vrepeat  + "));");
+        }
 
-        fos.write('}');
-        fos.write('\n');
+        w.println("\t}");
+        w.println('}');
+        w.close();
+        
         pineScripts.add(f);
-        fos.close();
     }
 
     private String outputEvent(Actor a, Event evt) {
@@ -744,6 +750,7 @@ public class GameCompiler {
         headerH.println("#define _PINEAPPLE_HEADER_H_");
         headerH.println("#include \"actor.h\"");
         headerH.println("#include \"application.h\"");
+        headerH.println("#include \"background.h\"");
         headerH.println("#include \"color.h\"");
         headerH.println("#include \"exceptions.h\"");
         headerH.println("#include \"io.h\"");

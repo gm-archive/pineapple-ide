@@ -84,6 +84,6 @@ void Actor::draw()
 {
     if (texture < 0)
         return;
-    Texture* tex = ::Game::TextureList::Get_Texture(texture);
+    Texture* tex = Game::TextureList::Get_Texture(texture);
     tex->draw(x, y, width, height, angle);
 }

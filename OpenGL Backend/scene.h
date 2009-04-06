@@ -3,6 +3,7 @@
 
 #include "actor.h"
 #include "view.h"
+#include "background.h"
 #include "keyboard.h"
 #include <vector>
 #include <list>
@@ -14,12 +15,14 @@ class Scene
 protected:
     std::list<Actor*> actors;
     std::vector<View*> views;
+    std::vector<Background*> backgrounds;
     Color* bgColor;
 
     int width;
     int height;
 
     virtual void drawActors();
+    virtual void drawBackgrounds();
 public:
     Scene(int width, int height);
     virtual ~Scene();
@@ -30,8 +33,9 @@ public:
     virtual void update();
     virtual void draw();
 
-    void addActor(Actor* actor);
-    void addView(View* view);
+    virtual void addActor(Actor* actor);
+    virtual void addView(View* view);
+    virtual void addBackground(Background* bg);
 
     virtual void onKeyDown(Key key);
     virtual void onKeyUp(Key key);

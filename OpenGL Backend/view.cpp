@@ -4,6 +4,7 @@
 
 using namespace Pineapple;
 
+
 View::View(int swidth, int sheight, int pwidth, int pheight,
            int sx, int sy, int px, int py)
 {
@@ -20,7 +21,6 @@ View::View(int swidth, int sheight, int pwidth, int pheight,
 
 void View::set(const Color* bgColor)
 {
-    
     //viewport
     int width = pwidth;
     int height = pheight;
@@ -55,7 +55,6 @@ void View::set(const Color* bgColor)
     glLoadIdentity();
 
     glOrtho(sx, sx + sw, sy + sh, sy, -1.0f, 1.0f);
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 

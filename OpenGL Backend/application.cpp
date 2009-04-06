@@ -18,8 +18,6 @@ int Application::speed = 60;
 bool Application::running = true;
 Scene* Application::currentScene = NULL;
 
-char* Application::exename = "";
-
 void Application::init()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
