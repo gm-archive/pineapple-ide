@@ -20,22 +20,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 /**
- * Represents a boolean constant
+ * Represents a boolean constant.
+ * 
  * @author Luís Reis
  */
-public class BooleanConstant extends Constant{
+public class BooleanConstant extends Constant {
+
     public boolean value = false;
-    
-    public BooleanConstant(boolean value){
+
+    public BooleanConstant(boolean value) {
         this.value = value;
     }
-    
+
     @Override
-    public String toString(){
-        return ""+value;
+    public String toString() {
+        return "" + value;
     }
 }

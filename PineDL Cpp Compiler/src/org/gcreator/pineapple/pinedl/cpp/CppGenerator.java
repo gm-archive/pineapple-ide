@@ -41,6 +41,7 @@ import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.Block;
+import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
 import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
@@ -324,6 +325,9 @@ public class CppGenerator {
     }
 
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
+        if (l instanceof BooleanConstant) {
+            return String.valueOf(((BooleanConstant)l).value);
+        }
         if (l instanceof Block) {
             PineDLContext c = new PineDLContext(vars);
             c.declareVariable("this", new Type(fname));
@@ -483,7 +487,7 @@ public class CppGenerator {
             } else if (e.left instanceof VariableReference) {
                 boolean istype = isType(e.left) && isLeft;
                 boolean declared = vars.isVariableDeclared(e.left.toString());
-                return (declared?"":"::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
+                return (declared ? "" : "::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
                         leafToString(e.right, false, vars, false);
             }
             return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
@@ -572,7 +576,7 @@ public class CppGenerator {
          * has the right to use them
          */
         if (id.equals("do")) {
-            throwWarning("'do' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'do' is not a PineDL keyword, but may become in the future. Don't use it");
             return "_K_do";
         }
         if (id.equals("unsigned")) {
@@ -582,15 +586,15 @@ public class CppGenerator {
             return "_K_signed";
         }
         if (id.equals("switch")) {
-            throwWarning("'switch' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'switch' is not a PineDL keyword, but may become in the future. Don't use it");
             return "_K_switch";
         }
         if (id.equals("case")) {
-            throwWarning("'case' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'case' is not a PineDL keyword, but may become in the future. Don't use it");
             return "_K_case";
         }
         if (id.equals("default")) {
-            throwWarning("'default' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'default' is not a PineDL keyword, but may become in the future. Don't use it");
             return "_K_default";
         }
         if (id.equals("NULL")) {
@@ -609,11 +613,11 @@ public class CppGenerator {
             return "_K_" + id;
         }
         if (id.equals("lambda")) {
-            throwWarning("'lambda' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'lambda' is not a PineDL keyword, but may become in the future. Don't use it");
             return id;
         }
         if (id.equals("repeat")) {
-            throwWarning("'repeat' is not a PineDL keyword, but may become in the future. Avoid using it");
+            throwWarning("'repeat' is not a PineDL keyword, but may become in the future. Don't use it");
             return id;
         }
         if (id.equals("std")) {

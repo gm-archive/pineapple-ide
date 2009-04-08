@@ -334,6 +334,7 @@ public final class SceneBackgroundProperties extends javax.swing.JPanel {
         for (ListDataListener l : listModel.listeners) {
             l.contentsChanged(e);
         }
+        backgroundsListValueChanged(null);
         updateBackgrounds();
         if (!nochange) {
             editor.setModified(true);
@@ -396,6 +397,7 @@ public final class SceneBackgroundProperties extends javax.swing.JPanel {
                 l.contentsChanged(e);
             }
         }
+        backgroundsListValueChanged(null);
         updateBackgrounds();
         if (!nochange) {
             editor.setModified(true);

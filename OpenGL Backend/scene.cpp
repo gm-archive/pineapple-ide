@@ -102,7 +102,8 @@ void Scene::drawBackgrounds()
 {
     for (unsigned int i = 0; i < backgrounds.size(); i++)
     {
-        backgrounds[i]->draw(this);
+        if (backgrounds[i]->visible)
+            backgrounds[i]->draw(this);
     }
 }
 
