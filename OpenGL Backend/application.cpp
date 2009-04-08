@@ -16,6 +16,7 @@ using namespace Pineapple;
 
 int Application::speed = 60;
 bool Application::running = true;
+bool Application::playing = true;
 Scene* Application::currentScene = NULL;
 
 void Application::init()

@@ -4,6 +4,7 @@
 #include "timer.h"
 #include "scene.h"
 #include "application.h"
+#include "texturelist.h"
 
 using namespace Pineapple;
 
@@ -109,7 +110,7 @@ void Window::run()
         Keyboard::update();
 
         //update scene
-        if (s != NULL)
+        if (Application::isPlaying() && s != NULL)
         {
             s->update();
             s->draw();

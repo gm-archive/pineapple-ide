@@ -47,10 +47,10 @@ void TextureList::init()
 	archive_data_start = ftell(exe);
 
 	/* Load images that are needed at the game start. */
-	for (int i = 0; i < imgs; i++)
+        for (int i = 0; i < imgs; i++)
 	{
 		bool load = false;
-		for (int j = 0; j < START_IMAGE_COUNT; j++)
+		for (int j = 0; j < sizeof(START_IMAGES); j++)
 		{
 			if (START_IMAGES[j] == i)
 			{
@@ -70,7 +70,7 @@ void TextureList::init()
 	}
 
 	fclose(exe);
-
+        
 }
 
 Texture* TextureList::Get_Texture(int id)

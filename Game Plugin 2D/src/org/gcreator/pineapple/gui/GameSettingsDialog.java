@@ -1,9 +1,25 @@
 /*
- * GameSettingsDialog.java
- *
- * Created on 28 de Dezembro de 2008, 15:15
- */
+Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+ */
 package org.gcreator.pineapple.gui;
 
 import java.util.Arrays;
@@ -18,10 +34,12 @@ import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
- * Sets the settings of the game in a visually appealing way
+ * Sets the settings of the game in a visually appealing way.
+ * 
  * @author Luís Reis
  */
 public class GameSettingsDialog extends javax.swing.JDialog {
+
     private static final long serialVersionUID = 8008329836505148430L;
     private Project p = null;
     private Vector<BasicFile> sceneOrder = new Vector<BasicFile>();
@@ -37,69 +55,70 @@ public class GameSettingsDialog extends javax.swing.JDialog {
         this.p = p;
         Hashtable<String, String> settings = p.getSettings();
         String st = settings.get("game-fullscreen");
-        System.out.println("st="+st);
-        if(st!=null&&st.equals("true")){
+        System.out.println("st=" + st);
+        if (st != null && st.equals("true")) {
             System.out.println("enabling");
-            jCheckBox1.setSelected(true);
+            runInFS.setSelected(true);
         }
         st = settings.get("game-resizable");
-        if(st!=null&&st.equals("true")){
-            jCheckBox2.setSelected(true);
+        if (st != null && st.equals("true")) {
+            allowResize.setSelected(true);
         }
         st = settings.get("game-optimize");
-        if(st!=null&&st.equals("false")){
-            jCheckBox3.setSelected(false);
+        if (st != null && st.equals("false")) {
+            optimizeGame.setSelected(false);
         }
         String s = settings.get("scene-order");
-        if(s!=null){
+        if (s != null) {
             String[] scenes = s.split(";");
-            for(String scene : scenes){
+            for (String scene : scenes) {
                 BasicFile f = getScene(scene, p);
-                if(f!=null){
+                if (f != null) {
                     sceneOrder.add(f);
                 }
             }
         }
-        jList1.setModel(new AbstractListModel(){
+        sceneList.setModel(new AbstractListModel() {
+
             private static final long serialVersionUID = 1L;
-            public Object getElementAt(int index){
+
+            public Object getElementAt(int index) {
                 return sceneOrder.get(index);
             }
-            public int getSize(){
+
+            public int getSize() {
                 return sceneOrder.size();
             }
         });
-        jList1.setCellRenderer(new BasicFileRenderer());
-        resourceChooser1.setResourceValidator(new SceneValidator());
+        sceneList.setCellRenderer(new BasicFileRenderer());
+        actorSelector.setResourceValidator(new SceneValidator());
     }
-    
-    private BasicFile getScene(String scene, Project p){
-        for(ProjectElement elem : p.getFiles()){
-            if(elem instanceof ProjectFile){
-                if(elem.getFile().getPath().equals(scene)){
+
+    private BasicFile getScene(String scene, Project p) {
+        for (ProjectElement elem : p.getFiles()) {
+            if (elem instanceof ProjectFile) {
+                if (elem.getFile().getPath().equals(scene)) {
                     return elem.getFile();
                 }
-            }
-            else if(elem instanceof ProjectFolder){
+            } else if (elem instanceof ProjectFolder) {
                 BasicFile f = getScene(scene, (ProjectFolder) elem);
-                if(f!=null){
+                if (f != null) {
                     return f;
                 }
             }
         }
         return null;
     }
-    
-    private BasicFile getScene(String scene, ProjectFolder p){
-        for(ProjectElement elem : p.getChildren()){
-            if(elem instanceof ProjectFile){
-                if(elem.getFile().getPath().equals(scene)){
+
+    private BasicFile getScene(String scene, ProjectFolder p) {
+        for (ProjectElement elem : p.getChildren()) {
+            if (elem instanceof ProjectFile) {
+                if (elem.getFile().getPath().equals(scene)) {
                     return elem.getFile();
                 }
-            }
-            else if(elem instanceof ProjectFolder){
+            } else if (elem instanceof ProjectFolder) {
                 BasicFile f = getScene(scene, (ProjectFolder) elem);
-                if(f!=null){
+                if (f != null) {
                     return f;
                 }
             }
@@ -117,20 +136,20 @@ public class GameSettingsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
+        tabs = new javax.swing.JTabbedPane();
+        generalSettings = new javax.swing.JPanel();
+        runInFS = new javax.swing.JCheckBox();
+        allowResize = new javax.swing.JCheckBox();
+        optimizeGame = new javax.swing.JCheckBox();
+        sceneOrderPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        resourceChooser1 = new org.gcreator.pineapple.gui.ResourceChooser();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        actorSelector = new org.gcreator.pineapple.gui.ResourceChooser();
+        addScene = new javax.swing.JButton();
+        removeScene = new javax.swing.JButton();
+        moveUp = new javax.swing.JButton();
+        moveDown = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        sceneList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Game Settings");
@@ -138,186 +157,188 @@ public class GameSettingsDialog extends javax.swing.JDialog {
         jLabel1.setText("Changes to the game settings are applied automatically");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
-        jCheckBox1.setText("Run in fullscreen mode");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        runInFS.setText("Run in fullscreen mode");
+        runInFS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                runInFSActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setText("Allow the player to resize the window");
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+        allowResize.setText("Allow the player to resize the window");
+        allowResize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                allowResizeActionPerformed(evt);
             }
         });
 
-        jCheckBox3.setSelected(true);
-        jCheckBox3.setText("Optimize game executable");
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+        optimizeGame.setSelected(true);
+        optimizeGame.setText("Optimize game executable");
+        optimizeGame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
+                optimizeGameActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout generalSettingsLayout = new javax.swing.GroupLayout(generalSettings);
+        generalSettings.setLayout(generalSettingsLayout);
+        generalSettingsLayout.setHorizontalGroup(
+            generalSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalSettingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3))
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addGroup(generalSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(runInFS)
+                    .addComponent(allowResize)
+                    .addComponent(optimizeGame))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        generalSettingsLayout.setVerticalGroup(
+            generalSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalSettingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCheckBox1)
+                .addComponent(runInFS)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox2)
+                .addComponent(allowResize)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox3)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addComponent(optimizeGame)
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("General Settings", jPanel1);
+        tabs.addTab("General Settings", generalSettings);
 
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        sceneOrderPanel.setLayout(new java.awt.BorderLayout());
 
-        jPanel3.add(resourceChooser1);
+        jPanel3.add(actorSelector);
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addScene.setText("Add");
+        addScene.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addSceneActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1);
+        jPanel3.add(addScene);
 
-        jButton2.setText("Remove");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        removeScene.setText("Remove");
+        removeScene.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                removeSceneActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2);
+        jPanel3.add(removeScene);
 
-        jButton3.setText("Move Up");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        moveUp.setText("Move Up");
+        moveUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                moveUpActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton3);
+        jPanel3.add(moveUp);
 
-        jButton4.setText("Move Down");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        moveDown.setText("Move Down");
+        moveDown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                moveDownActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton4);
+        jPanel3.add(moveDown);
 
-        jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
+        sceneOrderPanel.add(jPanel3, java.awt.BorderLayout.PAGE_START);
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(sceneList);
 
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        sceneOrderPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Scene Order", jPanel2);
+        tabs.addTab("Scene Order", sceneOrderPanel);
 
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(tabs, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-    System.out.println("saving");
-    p.getSettings().put("game-fullscreen", jCheckBox1.isSelected()?"true":"false");
-}//GEN-LAST:event_jCheckBox1ActionPerformed
+    private void runInFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runInFSActionPerformed
+    p.getSettings().put("game-fullscreen", runInFS.isSelected() ? "true" : "false");
+}//GEN-LAST:event_runInFSActionPerformed
 
-private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-    p.getSettings().put("game-resizable", jCheckBox2.isSelected()?"true":"false");
-}//GEN-LAST:event_jCheckBox2ActionPerformed
+    private void allowResizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allowResizeActionPerformed
+    p.getSettings().put("game-resizable", allowResize.isSelected() ? "true" : "false");
+}//GEN-LAST:event_allowResizeActionPerformed
 
-private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-    p.getSettings().put("game-optimize", jCheckBox3.isSelected()?"true":"false");
-}//GEN-LAST:event_jCheckBox3ActionPerformed
+    private void optimizeGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeGameActionPerformed
+    p.getSettings().put("game-optimize", optimizeGame.isSelected() ? "true" : "false");
+}//GEN-LAST:event_optimizeGameActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    BasicFile f = resourceChooser1.getSelectedFile();
-    if(f!=null){
+private void addSceneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSceneActionPerformed
+    BasicFile f = actorSelector.getSelectedFile();
+    if (f != null) {
         sceneOrder.add(f);
-        jList1.updateUI();
+        sceneList.updateUI();
         updateSceneOrder();
     }
-}//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_addSceneActionPerformed
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    int indexes[] = jList1.getSelectedIndices();
+private void removeSceneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeSceneActionPerformed
+    int indexes[] = sceneList.getSelectedIndices();
     Arrays.sort(indexes);
     int shift = 0;
-    for(int index : indexes){
-        sceneOrder.remove(index-shift);
+    for (int index : indexes) {
+        sceneOrder.remove(index - shift);
         shift++;
     }
     updateSceneOrder();
-    jList1.updateUI();
-}//GEN-LAST:event_jButton2ActionPerformed
+    sceneList.updateUI();
+}//GEN-LAST:event_removeSceneActionPerformed
 
-private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    int selObj = jList1.getSelectedIndex();
-    if(selObj<1){ return; }
-    BasicFile o = sceneOrder.get(selObj-1);
-    sceneOrder.set(selObj-1, sceneOrder.get(selObj));
-    sceneOrder.set(selObj, o);
-    updateSceneOrder();
-    jList1.updateUI();
-}//GEN-LAST:event_jButton3ActionPerformed
-
-private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-    int selObj = jList1.getSelectedIndex();
-    if(selObj<0||selObj>=sceneOrder.size()-1){ return; }
-    BasicFile o = sceneOrder.get(selObj+1);
-    sceneOrder.set(selObj+1, sceneOrder.get(selObj));
-    sceneOrder.set(selObj, o);
-    updateSceneOrder();
-    jList1.updateUI();
-}//GEN-LAST:event_jButton4ActionPerformed
-
-public void updateSceneOrder(){
-    String sceneList = "";
-    boolean isFirst = true;
-    for(BasicFile f : sceneOrder){
-        if(!isFirst){
-            sceneList += ";";
-        }
-        sceneList += f.getPath();
-        isFirst = false;
+private void moveUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpActionPerformed
+    int selObj = sceneList.getSelectedIndex();
+    if (selObj < 1) {
+        return;
     }
-    p.getSettings().put("scene-order", sceneList);
-}
+    BasicFile o = sceneOrder.get(selObj - 1);
+    sceneOrder.set(selObj - 1, sceneOrder.get(selObj));
+    sceneOrder.set(selObj, o);
+    updateSceneOrder();
+    sceneList.updateUI();
+}//GEN-LAST:event_moveUpActionPerformed
+
+private void moveDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownActionPerformed
+    int selObj = sceneList.getSelectedIndex();
+    if (selObj < 0 || selObj >= sceneOrder.size() - 1) {
+        return;
+    }
+    BasicFile o = sceneOrder.get(selObj + 1);
+    sceneOrder.set(selObj + 1, sceneOrder.get(selObj));
+    sceneOrder.set(selObj, o);
+    updateSceneOrder();
+    sceneList.updateUI();
+}//GEN-LAST:event_moveDownActionPerformed
+
+    public void updateSceneOrder() {
+        String sceneList = "";
+        boolean isFirst = true;
+        for (BasicFile f : sceneOrder) {
+            if (!isFirst) {
+                sceneList += ";";
+            }
+            sceneList += f.getPath();
+            isFirst = false;
+        }
+        p.getSettings().put("scene-order", sceneList);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
+    private org.gcreator.pineapple.gui.ResourceChooser actorSelector;
+    private javax.swing.JButton addScene;
+    private javax.swing.JCheckBox allowResize;
+    private javax.swing.JPanel generalSettings;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jList1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private org.gcreator.pineapple.gui.ResourceChooser resourceChooser1;
+    private javax.swing.JButton moveDown;
+    private javax.swing.JButton moveUp;
+    private javax.swing.JCheckBox optimizeGame;
+    private javax.swing.JButton removeScene;
+    private javax.swing.JCheckBox runInFS;
+    private javax.swing.JList sceneList;
+    private javax.swing.JPanel sceneOrderPanel;
+    private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
-
 }

@@ -101,9 +101,7 @@ public interface BasicFile extends Register, Comparable {
     public void rename(String newName) throws IOException;
     
     /**
-     * Gets the relative path to the file.
-     * If the file is at the base of the project,
-     * it should always return '/'.
+     * Gets the relative path to the file, including the file's name.
      * 
      * @return The relative path to the file.
      */

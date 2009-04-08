@@ -10,12 +10,16 @@ class Application
 {
     static int speed;
     static bool running;
+    static bool playing;
     static Scene* currentScene;
 public:
 	static void init();
 	static void exit() { running = false; }
 	static bool isRunning() { return running; }
+	static bool isPlaying() { return playing; }
 	static int getSpeed() { return speed; }
+	static void play() { playing = true; }
+	static void pause() { playing = false; }
 
 	static std::string getCurrentDirectory();
 	static std::string getExecutablePath();

@@ -227,26 +227,6 @@ public class DefaultFile implements BasicFile {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof BasicFile)) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
-        return (this.hashCode() == o.hashCode());
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + (this.file != null ? this.file.hashCode() : 0);
-        hash = 67 * hash + (this.project != null ? this.project.hashCode() : 0);
-        hash = 67 * hash + (this.element != null ? this.element.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
     public int compareTo(Object o) {
         if (o == null) {
             return 0;
@@ -307,5 +287,17 @@ public class DefaultFile implements BasicFile {
             }
         }
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(o instanceof DefaultFile)) {
+            return false;
+        }
+        DefaultFile f = (DefaultFile)o;
+        return (f.project == this.project && f.getPath().equals(this.getPath()));
     }
 }

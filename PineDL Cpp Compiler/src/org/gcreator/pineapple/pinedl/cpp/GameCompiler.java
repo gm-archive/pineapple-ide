@@ -78,6 +78,7 @@ public class GameCompiler {
     File resoutFolder;
     File compConf;
     File imageArchive;
+    Scene mainScene;
     CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
@@ -235,10 +236,26 @@ public class GameCompiler {
         File cpp = new File(outputFolder, "TextureList.cpp");
         w = new PrintWriter(cpp);
 
+        w.println("#include \"TextureList.h\"");
+        w.println();
         w.println("long archive_size = " + imageArchive.length() + ";");
-        //TODO: game-start images (important!)
-        w.println("const int START_IMAGES[0] = {};");
-        w.println("const int START_IMAGE_COUNT = 0;");
+        /* Figure out what images needed to be loaded at the game start. */
+        Vector<BasicFile> simgs = new Vector<BasicFile>();
+        for (Scene.ActorInScene s : mainScene.actors) {
+            if (!simgs.contains(s.actor.getImage())) {
+                simgs.add(s.actor.getImage());
+            }
+        }
+        for (Scene.Background b : mainScene.backgrounds) {
+            if (b.drawImage && !simgs.contains(b.image)) {
+                simgs.add(b.image);
+            }
+        }
+        w.println("const int START_IMAGES[" + simgs.size() + "] = {");
+        for (BasicFile f : simgs) {
+            w.println("\t" + f.getName().replaceAll("\\.", "_") + ",");
+        }
+        w.println("};");
         w.println();
         w.println();
         LineNumberReader r = new LineNumberReader(new InputStreamReader(GameCompiler.class.getResourceAsStream("/org/gcreator/pineapple/pinedl/cpp/res/misc/TextureList.cpp")));
@@ -278,22 +295,28 @@ public class GameCompiler {
 
     private void generateMain() throws IOException {
         File f = new File(outputFolder, "main.cpp");
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write("#include \"header.h\"\n\n".getBytes());
-        fos.write("int main(int argc, char** argv) {\n".getBytes());
-        fos.write("\tPineapple::Application::init();\n".getBytes());
-        fos.write("\tPineapple::Window::setCaption(\"Pineapple Game\");\n".getBytes());
-        fos.write("\tGame::TextureList::init();\n".getBytes());
+        PrintWriter w = new PrintWriter(f);
+        w.println("#include \"header.h\"");
+        w.println();
+        w.println("int main(int argc, char** argv) {");
+        w.println("\tPineapple::Application::init();");
+        w.println("\tPineapple::Window::setCaption(\"Pineapple Game\");");
         Hashtable<String, String> hs = PineappleCore.getProject().getSettings();
         if (hs.containsKey(("scene-order"))) {
             String scene = hs.get("scene-order").split(";")[0];
             scene = scene.substring(scene.lastIndexOf('/') + 1);
             scene = scene.substring(0, scene.indexOf('.'));
-            fos.write(("\tPineapple::Application::setScene(new Game::" + scene + "());\n").getBytes());
+            w.println(("\tPineapple::Application::setScene(new Game::" + scene + "());"));
         }
-        fos.write("\tPineapple::Window::run();\n".getBytes());
-        fos.write("}\n".getBytes());
-        fos.close();
+        w.println("\t/* No idea why, but we got to call these here before we load textures. */");
+        w.println("\tSDL_GL_SwapBuffers();");
+        w.println("\tSDL_Delay(100);");
+        w.println("\tGame::TextureList::init();");
+        w.println("\tPineapple::Window::run();");
+        w.println("\t/* No code is executed beyod this point until after " +
+                "the game window has been closed. */");
+        w.println("}");
+        w.close();
     }
 
     private void copyLib(boolean replace) throws IOException {
@@ -416,9 +439,7 @@ public class GameCompiler {
     private void generateHeader(File script) throws IOException {
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
-        System.out.println("fname=" + fname);
         fname = fname.substring(0, fname.lastIndexOf('.'));
-        System.out.println("new fname=" + fname);
         File output = new File(outputFolder, fname + ".h");
         headerH.print("#include \"");
         headerH.print(fname);
@@ -585,88 +606,89 @@ public class GameCompiler {
         fname = fname.replaceAll("\\s", "_");
         compFrame.writeLine("Creating PineDL Script for actor " + fname);
         File f = new File(outputFolder, fname + ".pdl");
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write("package ".getBytes());
-        fos.write(gamePackage.getBytes());
-        fos.write(';');
-        fos.write('\n');
-        fos.write('\n');
-        fos.write("class ".getBytes());
-        fos.write(fname.getBytes());
-        fos.write(" extends Actor{\n".getBytes());
+        PrintWriter w = new PrintWriter(f);
+        w.print("package ");
+        w.print(gamePackage);
+        w.println(';');
+        w.println();
+        w.print("class ");
+        w.print(fname);
+        w.println(" extends Actor {");
 
         boolean hasCreate = false;
 
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
                 hasCreate = true;
-                writeCreate(fos, a, evt);
+                writeCreate(w, a, evt);
             }
 
             if (evt.getType().equals(Event.TYPE_UPDATE)) {
-                fos.write("\tpublic void update(){\n".getBytes());
+                w.println("\tpublic void update() {");
 
-                fos.write(outputEvent(a, evt).getBytes());
+                w.print(outputEvent(a, evt));
 
-                fos.write("\t}\n".getBytes());
+                w.println("\t}");
             }
 
             if (evt.getType().equals(Event.TYPE_DRAW)) {
-                fos.write("\tpublic void draw(){\n".getBytes());
+                w.println("\tpublic void draw() {");
 
-                fos.write(outputEvent(a, evt).getBytes());
+                w.print(outputEvent(a, evt));
 
-                fos.write("\t}\n".getBytes());
+                w.println("\t}");
             }
 
             if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
-                fos.write("\tpublic void onKeyUp(Key key){\n".getBytes());
+                w.print("\tpublic void onKeyUp(Key key) {");
 
-                fos.write(outputEvent(a, evt).getBytes());
+                w.print(outputEvent(a, evt));
 
-                fos.write("\t}\n".getBytes());
+                w.println("\t}");
             }
 
             if (evt.getType().equals(Event.TYPE_KEYRELEASE)) {
-                fos.write("\tpublic void onKeyDown(Key key){\n".getBytes());
+                w.println("\tpublic void onKeyDown(Key key) {");
 
-                fos.write(outputEvent(a, evt).getBytes());
+                w.print(outputEvent(a, evt));
 
-                fos.write("\t}\n".getBytes());
+                w.println("\t}");
             }
         }
 
         if (!hasCreate) {
-            writeCreate(fos, a, null);
+            writeCreate(w, a, null);
         }
 
-        fos.write('}');
-        fos.write('\n');
+        w.println('}');
         pineScripts.add(f);
-        fos.close();
+        w.close();
     }
 
-    private void writeCreate(FileOutputStream fos, Actor a, Event evt) throws IOException {
-        fos.write("\tpublic this(float __x, float __y, float depth) : super(_P___x, _P___y, depth) {\n".getBytes());
+    private void writeCreate(PrintWriter w, Actor a, Event evt) throws IOException {
+        w.println("\tpublic this(float __x, float __y, float depth) : super(_P___x, _P___y, depth) {");
 
-        fos.write("\t\tsetDepth(depth);\n".getBytes());
+        w.println("\t\tsetDepth(depth);");
         if (a.getImage() != null) {
-            fos.write(("\t\ttexture = ").getBytes());
+            w.print(("\t\ttexture = "));
             String iname = a.getImage().getName();
             int index = iname.indexOf('.');
             iname = iname.substring(0, index) + "_" + iname.substring(index + 1);
-            fos.write(iname.getBytes());
-            fos.write(";\n".getBytes());
+            w.print(iname);
+            w.println(";");
         }
         if (evt != null) {
-            fos.write(outputEvent(a, evt).getBytes());
+            w.print(outputEvent(a, evt));
         }
 
-        fos.write("\t}\n".getBytes());
+        w.println("\t}");
     }
 
     private void createSceneScript(ProjectElement e) throws Exception {
         Scene scene = new Scene(e.getFile());
+        if (e.getFile().getPath().equals(PineappleCore.getProject().getSettings().get("scene-order").split(";")[0])) {
+            mainScene = scene;
+        }
         String fname = e.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
         fname = fname.replaceAll("\\s", "_");
