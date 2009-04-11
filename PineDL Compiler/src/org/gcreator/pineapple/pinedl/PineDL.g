@@ -20,6 +20,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*
+
+Grammar guide
+	:	
+	
+ -- Categorizing by the number of operands --
+  
+Unary operators
+	: Operators that work with just one operand.
+	-x
+	x++
+	--x
+	They can be a prefix operator or a postfix operator:
+    	Prefix operator
+    	: operator operand
+    	
+    	Postfix operator
+    	: operand operator
+	
+Binary Operators
+	: Operators that work with two operands.
+	x + y
+	x * y
+	x < y
+	They are infix operators, which means they appear between the operands
+		:
+		operand1 operator operand2
+		
+Ternary operators
+	: Operators that work with three operands.
+	: PineDL has only one ternary operator, called the conditional operator.
+	: The conditional operator is also infix:
+	 operand1 ? operand2 : operand3
+	
+		
+
+
+*/
 grammar PineDL;
 
 options{
@@ -33,28 +72,28 @@ tokens{
 	DIV = '/';
 	MOD = '%';
 	DOT = '.';
-	RSHIFT = '>>';
-	LSHIFT = '<<';
+	SHIFT_R = '>>';
+	SHIFT_L = '<<';
 	NOT = '!';
 	EQUAL = '=';
 	LESS = '<';
 	MORE = '>';
-	LESSEQ = '<=';
-	MOREEQ = '>=';
+	LESS_EQ = '<=';
+	MORE_EQ = '>=';
 	EQUALS = '==';
-	NEQUAL = '!=';
-	STMTEND = ';';
-	BITWISEAND = '&';
-	BITWISEOR = '|';
-	BITWISEXOR = '^';
-	LOGAND = '&&';
-	LOGOR = '||';
-	BLKBEG = '{';
-	BLKEND = '}';
-	LPAREN = '(';
-	RPAREN = ')';
-	LARRAY = '[';
-	RARRAY = ']';
+	NOT_EQUAL = '!=';
+	STMT_END = ';';
+	BITWISE_AND = '&';
+	BITWISE_OR = '|';
+	BITWISE_XOR = '^';
+	LOG_AND = '&&';
+	LOG_OR = '||';
+	BLK_BEG = '{';
+	BLK_END = '}';
+	PAREN_L = '(';
+	PAREN_R = ')';
+	ARRAY_L = '[';
+	ARRAY_R = ']';
 }
 
 @header{
@@ -139,19 +178,19 @@ doc returns [PineClass t]
 		clsdecl
 		{t = target;};
 
-pkgstmt	:	'package' s=pkgname {target.packageName = s.split("\\."); } STMTEND;
+pkgstmt	:	'package' s=pkgname {target.packageName = s.split("\\."); } STMT_END;
 
 importstmt
-	:	'import' i=clstype {target.importStmt.add(i);} STMTEND;
+	:	'import' i=clstype {target.importStmt.add(i);} STMT_END;
 	
 clsdecl	:	'class' n=WORD {target.clsName = n.getText();} ('extends' e=clstype {target.superClass = e;})?
-		BLKBEG
+		BLK_BEG
 		(
 			f=field	{ target.variables.add(f); }	|
 			m=method { target.functions.add(m); }	|
 			c=constructor { target.constructors.add(c); }
 		)*
-		BLKEND STMTEND?; //STMTEND? means class X{} and class X{}; are both accepted
+		BLK_END STMT_END?; //STMTEND? means class X{} and class X{}; are both accepted
 
 field returns [Variable v = new Variable()]
 	:	a=accesscontrolkeyword {v.access = a;}
@@ -160,7 +199,7 @@ field returns [Variable v = new Variable()]
 		t=type {v.type = t;}
 		n=WORD {v.name = n.getText();}
 		(EQUAL d=expression {v.defaultValue = d;})?
-		STMTEND;
+		STMT_END;
 		
 method returns [Function f = new Function()]
 	:	a=accesscontrolkeyword {f.access = a;}
@@ -168,22 +207,22 @@ method returns [Function f = new Function()]
 		('final' {f.isFinal = true;})?
 		t=type {f.returnType = t;}
 		n=WORD {f.name = n.getText();}
-		LPAREN
+		PAREN_L
 		l=argumentlist {f.arguments = l;}
-		RPAREN
+		PAREN_R
 		b=block {f.content = b;};
 	
 constructor returns [Constructor c = new Constructor()]
 	:	a=accesscontrolkeyword {c.access = a;}
 		'this'
-		LPAREN
+		PAREN_L
 		l=argumentlist {c.arguments = l;}
-		RPAREN
+		PAREN_R
 		(':' 'super' {c.superArguments = new Vector<Expression>();}
-			LPAREN
+			PAREN_L
 			(e=expression {c.superArguments.add(e);}
 			(',' e=expression {c.superArguments.add(e);})*)?
-			RPAREN)?
+			PAREN_R)?
 		b=block {c.content = b;};
 
 argumentlist returns [Vector<Argument> v = new Vector<Argument>()]
@@ -194,11 +233,11 @@ argument returns [Argument a = new Argument()]
 	n=WORD {a.name = n.getText();};
 
 block	returns [Block b = new Block()]
-	:	(BLKBEG (s=stmt {b.content.add(s);})* BLKEND);
+	:	(BLK_BEG (s=stmt {b.content.add(s);})* BLK_END);
 	
 stmt returns [Leaf l = null]
-	:	(e=declAssign {l=e;})
-	| (a=expression STMTEND {l=a;})
+	:	(e=declaration {l=e;})
+	| (a=expression STMT_END {l=a;})
 	| (b=returnstmt {l=b;})
 	| (t=throwstmt {l=t;})
 	| (c=ifstmt {l=c;})
@@ -206,49 +245,49 @@ stmt returns [Leaf l = null]
 	| (f=forstmt {l=f;})
 	| (d=block {l=d;})
 	| (tr=trystmt {l=tr;})
-	| ('break' STMTEND {l=new BreakStatement();})
-	| ('continue' STMTEND {l=new ContinueStatement();})
-	| STMTEND;
+	| ('break' STMT_END {l=new BreakStatement();})
+	| ('continue' STMT_END {l=new ContinueStatement();})
+	| STMT_END;
 	
 ifstmt returns [IfStatement ifCase = new IfStatement()]
-	: 'if' LPAREN s=expression {ifCase.condition = s;} RPAREN
+	: 'if' PAREN_L s=expression {ifCase.condition = s;} PAREN_R
 		q=stmt {ifCase.then = q;}
 		('else' e=stmt {ifCase.elseCase = e;})?;
 		
 whilestmt returns [WhileStatement whileCase = new WhileStatement()]
-	: 'while' LPAREN s=expression {whileCase.condition = s;} RPAREN
+	: 'while' PAREN_L s=expression {whileCase.condition = s;} PAREN_R
 		q=stmt {whileCase.then = q;};
 		
 forstmt returns [ForStatement forCase = new ForStatement()]
-	: 'for' LPAREN ((a=expression {forCase.firstStatement = a;} STMTEND)|b=declAssign {forCase.firstStatement = b;}|STMTEND)
-		(s=expression {forCase.condition = s;}) STMTEND
-		(d=expression {forCase.loopStatement = d;}) RPAREN
+	: 'for' PAREN_L ((a=expression {forCase.firstStatement = a;} STMT_END)|b=declaration {forCase.firstStatement = b;}|STMT_END)
+		(s=expression {forCase.condition = s;}) STMT_END
+		(d=expression {forCase.loopStatement = d;}) PAREN_R
 		q=stmt {forCase.then = q;};
 
 trystmt returns [TryStatement tryStmt = new TryStatement()]
 	: 'try' b=stmt {tryStmt.then = b;}
-	('catch' LPAREN t=type n=WORD RPAREN b=stmt {Catch c = new Catch(); c.t = t; c.name = n.getText(); c.then = b; tryStmt.catchStmt.add(c);})+;
+	('catch' PAREN_L t=type n=WORD PAREN_R b=stmt {Catch c = new Catch(); c.t = t; c.name = n.getText(); c.then = b; tryStmt.catchStmt.add(c);})+;
 	
 returnstmt returns [ReturnStatement ret = new ReturnStatement()]
-	:	'return' (r=expression {ret.value = r;})? STMTEND;
+	:	'return' (r=expression {ret.value = r;})? STMT_END;
 	
 throwstmt returns [ThrowStatement ret = new ThrowStatement()]
-	:	'throw' (r=expression {ret.value = r;})? STMTEND;
+	:	'throw' (r=expression {ret.value = r;})? STMT_END;
 	
-declAssign returns [DeclAssign e = new DeclAssign()]
-	: t=type {e.type = t;} n=WORD {e.name = n.getText();} ('=' ex=expression {e.value=ex;})? STMTEND;
+declaration returns [DeclAssign e = new DeclAssign()]
+	: t=type {e.type = t;} n=WORD {e.name = n.getText();} ('=' ex=expression {e.value=ex;})? STMT_END;
 
 pkgname returns [String s = null]
 	:	(c=WORD {s = c.getText();} ('.' t=WORD {s += "." + t.getText();})*);
 
 reference returns [Reference r = null]
 	:	ref=(WORD|'this'|'super') {r = new VariableReference(ref.getText());}
-	(LPAREN {r = new FunctionReference(ref.getText());}
+	(PAREN_L {r = new FunctionReference(ref.getText());}
 		(e=expression {((FunctionReference) r).arguments.add(e);}
 			(',' e=expression {((FunctionReference) r).arguments.add(e);})*
 		)?
-	RPAREN)?
-	(LARRAY e=expression {r = new ArrayReference(r, e);} RARRAY)*;
+	PAREN_R)?
+	(ARRAY_L e=expression {r = new ArrayReference(r, e);} ARRAY_R)*;
 
 constant returns [Constant c = null]
 	: (i=intconst {c=i;})|(d=doubleconst {c=d;})|(b=boolconst {c=b;})|(s=stringconst {c=s;})|(n=nullconst {c=n;});
@@ -256,84 +295,104 @@ constant returns [Constant c = null]
 //Multiple operations, divided by priority levels:
 
 primitive returns [Expression e = null]
-	:	c=constant {e=c;}| (r=reference {e=r;} ('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*)
-		| (LPAREN x=expression {e=x;} RPAREN)|('new' t=clstype {e=new NewCall(t);}
-		LPAREN
-		(ex=expression {((NewCall) e).arguments.add(ex);}
-			(',' ex=expression {((NewCall) e).arguments.add(ex);})*
-		)? RPAREN)
+	:	
+	   /* 55 */
+	    c=constant {e=c;}
+	   /* 55.23 */
+	    |  (r=reference {e=r;} ('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*)
+	   /* (6 + 22) */
+		| (PAREN_L x=expression {e=x;} PAREN_R)
+	   /* new Class(1 , 2 , 3 , 4 , 5); */	
+		|
+	(
+		'new' t=clstype {e=new NewCall(t);}
+		 PAREN_L
+		/* First argument */
+		(ex=expression { ((NewCall) e).arguments.add(ex); }
+		/* additional arguments */
+		(',' ex=expression {((NewCall) e).arguments.add(ex);})*)?
+		PAREN_R
+	)
+		/* new int[] { 1 , 2 , 3 , 4 , 5} */
 		| ('new' t=clstype '[' x=expression ']' {e=new NewArray(t, x);});
 		
-prepostop returns [Expression e = null]
-	: (p=primitive {e=p;}
-	('++' {e=new PrePostFixOperator(false, true, e);}|'--' {e=new PrePostFixOperator(false, false, e);})?)
-	| ('++' q=primitive {e=new PrePostFixOperator(true, true, q);})
-	| ('--' q=primitive {e=new PrePostFixOperator(true, false, q);});
+pre_post_op returns [Expression e = null]
+	:
+	/* x++ x-- */
+  (p=primitive {e=p;}
+	(
+	  '++' {e=new PrePostFixOperator(false, true, e);}
+	 |'--' {e=new PrePostFixOperator(false, false, e);}
+	))
+	/* ++x --x */
+	|('++' q=primitive {e=new PrePostFixOperator(true, true, q);})
+	|('--' q=primitive {e=new PrePostFixOperator(true, false, q);}
+  );
 	
 notcastexpr returns [Expression e = null]
 @init{
 TypeCast cast = null;
 }
-	:	(p=prepostop {e=p;})
+	:	(p=pre_post_op {e=p;})
 		| (NOT p=notcastexpr {e=new NotOperation(p);})
-		| (LPAREN t=type RPAREN p=notcastexpr {e=new TypeCast(t, p);});
+		| (PAREN_L t=type PAREN_R p=notcastexpr {e=new TypeCast(t, p);});
 		
-multop returns [Expression e = null]
+mult_op returns [Expression e = null]
 	: t=notcastexpr {e=t;} (
 	(MULT q=notcastexpr {e=new MultiplyOperation(e, q);}
 	|DIV q=notcastexpr {e=new DivisionOperation(e, q);}
 	|MOD q=notcastexpr {e=new ModOperation(e, q);})
 	)*;
 
-sumop returns [Expression e = null]
-	: t=multop {e=t;} (
-	(PLUS q=multop {e=new SumOperation(e, q);}
-	|MINUS q=multop {e=new SubtractionOperation(e, q);})
+sum_op returns [Expression e = null]
+	: t=mult_op {e=t;} (
+	(PLUS q=mult_op {e=new SumOperation(e, q);}
+	|MINUS q=mult_op {e=new SubtractionOperation(e, q);})
 	)*;
 
-shiftop returns [Expression e = null]
-	: t=sumop {e=t;} (
-	(RSHIFT q=sumop {e=new RShiftOperation(e, q);}
-	|LSHIFT q=sumop {e=new LShiftOperation(e, q);})
+bitw_shift_op returns [Expression e = null]
+	: t=sum_op {e=t;} (
+	(SHIFT_R q=sum_op {e=new RShiftOperation(e, q);}
+	|SHIFT_L q=sum_op {e=new LShiftOperation(e, q);})
 	)*;
 	
 compop returns [Expression e = null]
-	: t=shiftop {e=t;} (
-	(LESS q=shiftop {e=new LessOperation(e, q);}
-	|MORE q=shiftop {e=new MoreOperation(e, q);}
-	|LESSEQ q=shiftop {e=new LessEqualOperation(e, q);}
-	|MOREEQ q=shiftop {e=new MoreEqualOperation(e, q);})
+	: t=bitw_shift_op {e=t;} (
+	(LESS q=bitw_shift_op {e=new LessOperation(e, q);}
+	|MORE q=bitw_shift_op {e=new MoreOperation(e, q);}
+	|LESS_EQ q=bitw_shift_op {e=new LessEqualOperation(e, q);}
+	|MORE_EQ q=bitw_shift_op {e=new MoreEqualOperation(e, q);})
 	)*;
 	
 comp2op returns [Expression e = null]
 	: t=compop {e=t;} (
 	(EQUALS q=compop {e=new EqualsOperation(e, q);}
-	|NEQUAL q=compop {e=new NequalOperation(e, q);})
+	|NOT_EQUAL q=compop {e=new NequalOperation(e, q);})
 	)*;
 
 bitwiseand returns [Expression e = null]
 	: t=comp2op {e=t;} (
-	(BITWISEAND q=comp2op {e=new BitwiseAndOperation(e, q);})
+	(BITWISE_AND q=comp2op {e=new BitwiseAndOperation(e, q);})
 	)*;
 
 bitwiseor returns [Expression e = null]
 	: t=bitwiseand {e=t;} (
-	(BITWISEOR q=bitwiseand {e=new BitwiseOrOperation(e, q);})
+	(BITWISE_OR q=bitwiseand {e=new BitwiseOrOperation(e, q);})
 	)*;
 	
 bitwisexor returns [Expression e = null]
 	: t=bitwiseor {e=t;} (
-	(BITWISEXOR q=bitwiseor {e=new BitwiseXorOperation(e, q);})
+	(BITWISE_XOR q=bitwiseor {e=new BitwiseXorOperation(e, q);})
 	)*;
 
 logicaland returns [Expression e = null]
 	: t=bitwisexor {e=t;} (
-	(LOGAND q=bitwisexor {e=new LogicalAndOperation(e, q);})
+	(LOG_AND q=bitwisexor {e=new LogicalAndOperation(e, q);})
 	)*;
 
 logicalor returns [Expression e = null]
 	: t=logicaland {e=t;} (
-	(LOGOR q=logicaland {e=new LogicalOrOperation(e, q);})
+	(LOG_OR q=logicaland {e=new LogicalOrOperation(e, q);})
 	)*;
 	
 ternary returns [Expression e = null]
@@ -342,7 +401,7 @@ ternary returns [Expression e = null]
 	)*;
 	
 expression returns [Expression e = null]
-	: (r=ternary {e=r;} (
+	: (MINUS|PLUS)? (r=ternary {e=r;} (
 	(EQUAL q=ternary {e=new EqualOperation(e, q);})
 	|('+=' q=ternary {e=new EqualOperation(e, new SumOperation(e,q));})
 	|('-=' q=ternary {e=new EqualOperation(e, new SubtractionOperation(e,q));})
@@ -354,7 +413,7 @@ expression returns [Expression e = null]
 	|('^=' q=ternary {e=new EqualOperation(e, new BitwiseXorOperation(e,q));})
 	|('<<=' q=ternary {e=new EqualOperation(e, new LShiftOperation(e,q));})
 	|('>>=' q=ternary {e=new EqualOperation(e, new RShiftOperation(e,q));})
-	)*) | (t=ternary {e=t;});
+	)*) | (MINUS|PLUS)? (t=ternary {e=t;});
 
 //End of operations
 
@@ -371,7 +430,7 @@ doubleconst returns [DoubleConstant d = null]
 	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
 
 DOUBLECONST_PRIVATE
-	: MINUS?(DIGIT* '.' DIGIT+);
+	:(MINUS|PLUS)?(DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
 	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
@@ -380,7 +439,7 @@ intconst returns [IntConstant i = null]
 
 INTCONST_PRIVATE
 	:	(
-			MINUS?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
+			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
@@ -444,6 +503,7 @@ WHITESPACE : (
       { newLine(); }
     )
  { $channel = HIDDEN; };
+
 
 
 
