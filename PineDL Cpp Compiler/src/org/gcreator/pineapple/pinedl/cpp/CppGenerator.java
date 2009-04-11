@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.util.Vector;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.gcreator.pineapple.formats.ClassResource;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
@@ -39,6 +40,7 @@ import org.gcreator.pineapple.pinedl.PineDLLexer;
 import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
+import org.gcreator.pineapple.pinedl.Variable;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
@@ -53,6 +55,7 @@ import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
+import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
 import org.gcreator.pineapple.pinedl.statements.Reference;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
@@ -61,7 +64,7 @@ import org.gcreator.pineapple.pinedl.statements.SumOperation;
 import org.gcreator.pineapple.pinedl.statements.VariableReference;
 
 /**
- * Creates a H file from a PineDL context.
+ * Creates a C++ file from a PineDL context.
  * 
  * @author Luís Reis
  */
@@ -108,6 +111,7 @@ public class CppGenerator {
     private void write() throws Exception {
 
         writeImports();
+        writeStaticFields();
         writeClass();
 
         writeLine();
@@ -140,6 +144,21 @@ public class CppGenerator {
         writeConstructors();
         writeMethods();
 
+    }
+
+    private void writeInitFields() throws IOException {
+        writeLine("/* Initialize variables */");
+        for (Variable v : cls.variables) {
+            if (v.isStatic) {
+                continue;
+            }
+            Expression e = v.defaultValue;
+            if (e != null) {
+                writeLine( v.name + " = " + e.toString() + ";");
+            } else {
+                writeLine("/* Note: no default value for field " + v.name + "*/");
+            }
+        }
     }
 
     private String retrieveType(Type t, boolean reference) {
@@ -276,8 +295,11 @@ public class CppGenerator {
             }
 
             writeLine(s);
-
-            writeLine(leafToString(c.content, vars));
+            String content = leafToString(c.content, vars);
+            int index = content.indexOf('{');
+            writeLine(content.substring(0, index+1));
+            writeInitFields();
+            writeLine(content.substring(index+1));
 
             writeLine();
         }
@@ -316,6 +338,27 @@ public class CppGenerator {
         }
     }
 
+    private void writeStaticFields() throws Exception {
+        for (Variable v : cls.variables) {
+            if (!v.isStatic) {
+                continue;
+            }
+            String s = v.type + " " + detokenize(cls.clsName) + "::" + detokenize(v.name);
+            ClassResource r = cmp.clsres.get(cls.clsName);
+            if (r != null) {
+                for (ClassResource.Field f : r.fields) {
+                    if (f.getName().equals(v.name)) {
+                        if (f.getDefaultValue() != null && f.getDefaultValue() != "") {
+                            s += " = " + f.getDefaultValue();
+                        }
+                        break;
+                    }
+                }
+            }
+            writeLine(s + ";");
+        }
+    }
+
     private String leafToString(Leaf l, PineDLContext vars) throws Exception {
         return leafToString(l, false, vars);
     }
@@ -326,7 +369,7 @@ public class CppGenerator {
 
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         if (l instanceof BooleanConstant) {
-            return String.valueOf(((BooleanConstant)l).value);
+            return String.valueOf(((BooleanConstant) l).value);
         }
         if (l instanceof Block) {
             PineDLContext c = new PineDLContext(vars);
@@ -346,11 +389,9 @@ public class CppGenerator {
             }
             vars.declareVariable(da.name, da.type);
             String s = retrieveType(da.type, true);
-            s += ' ';
-            s += detokenize(da.name);
+            s += " " + detokenize(da.name);
             if (da.value != null) {
-                s += '=';
-                s += leafToString(da.value, vars);
+                s += " = " + leafToString(da.value, vars);
             }
             if (statement) {
                 s += ';';
@@ -359,7 +400,7 @@ public class CppGenerator {
         }
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
-            String s = leafToString(e.left, vars) + "= (" + leafToString(e.right, vars) + ")";
+            String s = leafToString(e.left, vars) + " = " + leafToString(e.right, vars);
             if (statement) {
                 s += ';';
             }
@@ -367,23 +408,23 @@ public class CppGenerator {
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
-            return "(" + leafToString(s.left, vars) + ")+(" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " + " + leafToString(s.right, vars);
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
-            return "(" + leafToString(s.left, vars) + ")-(" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " - " + leafToString(s.right, vars);
         }
         if (l instanceof MultiplyOperation) {
             MultiplyOperation s = (MultiplyOperation) l;
-            return "(" + leafToString(s.left, vars) + ")*(" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " * " + leafToString(s.right, vars);
         }
         if (l instanceof DivisionOperation) {
             DivisionOperation s = (DivisionOperation) l;
-            return "(" + leafToString(s.left, vars) + ")/(" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " / " + leafToString(s.right, vars);
         }
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
-            return "(" + leafToString(s.left, vars) + ")<(" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " < " + leafToString(s.right, vars);
         }
         if (l instanceof IntConstant) {
             return l.toString();
@@ -435,15 +476,15 @@ public class CppGenerator {
         }
         if (l instanceof IfStatement) {
             IfStatement i = (IfStatement) l;
-            String s = "if(";
+            String s = "if (";
             String le = leafToString(i.condition, vars);
             s += le;
-            s += "){";
+            s += ")\n{";
             PineDLContext cvars = new PineDLContext(vars);
             s += leafToString(i.then, true, cvars);
-            s += "}";
+            s += "}\n";
             if (i.elseCase != null) {
-                s += "else{";
+                s += "else\n{";
                 PineDLContext cvars2 = new PineDLContext(vars);
                 s += leafToString(i.elseCase, true, cvars2);
                 s += "}";
@@ -479,7 +520,7 @@ public class CppGenerator {
         if (l instanceof RetrieverExpression) {
             RetrieverExpression e = (RetrieverExpression) l;
             if (isType(e) && isLeft) {
-                return "::" + e.toString().replaceAll("\\.", "::");
+                return e.toString().replaceAll("\\.", "::");
             } else if (e.left instanceof RetrieverExpression) {
                 boolean istype = isType(e.left) && isLeft;
                 return leafToString(e.left, false, vars) + (istype ? "::" : "->") +
@@ -491,20 +532,17 @@ public class CppGenerator {
                         leafToString(e.right, false, vars, false);
             }
             return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
-        /*RetrieverExpression e = (RetrieverExpression) l;
-        if(isType(e.toString())){
-        Type t = new Type();
-        t.typeCategory = TypeCategory.CLASS;
-        t.type = e.left.toString().split("\\.");
-        return retrieveType(t, false) + "::" + e.right.toString();
         }
-        else if(e.left instanceof FunctionReference){
 
+        if (l instanceof PrePostFixOperator) {
+            PrePostFixOperator p = (PrePostFixOperator) l;
+            //NOTE: should work, as long as all is working well
+            return p.content.toString();
         }
-        return "[Failed to parse Statement] : \"" + e.toString() + "\", \n" +
-        "with left="+e.left.toString()+" and right="+e.right.toString();*/
-        }
-        return "";
+
+        System.out.println("Oh NOES! No stuffles for " + l + " of class " + l.getClass().getName());
+        System.out.println("\t oh well just returning " + l.toString());
+        return l.toString();
     }
 
     private String accessToString(AccessControlKeyword k) {

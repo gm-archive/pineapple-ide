@@ -79,48 +79,53 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
         fieldsTable.setModel(new StupidTableModel());
         TableColumn t;
-        sorter = new TableRowSorter<TableModel>(new StupidTableModel(5));
+        sorter = new TableRowSorter<TableModel>(new StupidTableModel(6));
         fieldsTable.setRowSorter(sorter);
+        int i = 0;
 
-        t = new TableColumn(0, 20);
+        JComboBox accessBox = new JComboBox(new String[] {
+            "public", "private", "protected",
+        });
+        t = new TableColumn(i++, 12, null, new DefaultCellEditor(accessBox));
+        t.setHeaderValue("Access");
+        fieldsTable.addColumn(t);
+
+        t = new TableColumn(i++, 20);
         t.setHeaderValue("Name");
         fieldsTable.addColumn(t);
 
         JComboBox typeBox = new JComboBox();
-        String[] types = new String[]{
+        String[] types = new String[] {
             "int",
             "string",
             "double",
             "float",
             "long",
             "byte",
-            "short",};
+            "short",
+        };
         for (String s : types) {
             typeBox.addItem(s);
         }
-
         for (BasicFile f : Glob.glob(new ActorValidator(), true)) {
             String name = f.getName().substring(0, f.getName().lastIndexOf('.'));
             typeBox.addItem(name);
         }
-
-        t = new TableColumn(1, 14, null, new DefaultCellEditor(typeBox));
-
+        t = new TableColumn(i++, 14, null, new DefaultCellEditor(typeBox));
         t.setHeaderValue("Type");
-
         fieldsTable.addColumn(t);
-        t = new TableColumn(2, 2);
+
+
+        t = new TableColumn(i++, 2);
         t.setHeaderValue("Static");
-
         fieldsTable.addColumn(t);
-        t = new TableColumn(3, 2);
+
+        t = new TableColumn(i++, 2);
         t.setHeaderValue("Final");
-
         fieldsTable.addColumn(t);
-        t = new TableColumn(4, 20);
 
+        t = new TableColumn(i++, 20);
         t.setHeaderValue("Default Value");
-
         fieldsTable.addColumn(t);
 
     }
@@ -271,10 +276,12 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
                 case 1:
                     return String.class;
                 case 2:
-                    return Boolean.class;
+                    return String.class;
                 case 3:
                     return Boolean.class;
                 case 4:
+                    return Boolean.class;
+                case 5:
                     return String.class;
             }
             return null;
@@ -288,14 +295,16 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
             ClassResource.Field f = res.fields.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return f.getName();
+                    return f.getAccess().toString();
                 case 1:
-                    return f.getType();
+                    return f.getName();
                 case 2:
-                    return f.isStatic();
+                    return f.getType();
                 case 3:
-                    return f.isFinal();
+                    return f.isStatic();
                 case 4:
+                    return f.isFinal();
+                case 5:
                     return f.getDefaultValue();
                 default:
                     return null;
@@ -306,18 +315,21 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
             ClassResource.Field f = res.fields.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    f.setName(aValue.toString());
+                    f.setAccess(Field.Access.valueOf(aValue.toString().toUpperCase()));
                     break;
                 case 1:
-                    f.setType(aValue.toString());
+                    f.setName(aValue.toString());
                     break;
                 case 2:
-                    f.setStatic((Boolean) aValue);
+                    f.setType(aValue.toString());
                     break;
                 case 3:
-                    f.setFinal((Boolean) aValue);
+                    f.setStatic((Boolean) aValue);
                     break;
                 case 4:
+                    f.setFinal((Boolean) aValue);
+                    break;
+                case 5:
                     f.setDefaultValue(aValue.toString());
                     break;
             }

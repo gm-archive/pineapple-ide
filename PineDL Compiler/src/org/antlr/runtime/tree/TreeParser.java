@@ -128,6 +128,7 @@ public class TreeParser extends BaseRecognizer {
 	 *  the input tree not the user.
 	 */
 	public String getErrorHeader(RecognitionException e) {
+        e.printStackTrace();
 		return getGrammarFileName()+": node from "+
 			   (e.approximateLineInfo?"after ":"")+"line "+e.line+":"+e.charPositionInLine;
 	}

@@ -20,35 +20,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
 
-
 /**
- * Represents a = operation
+ * Represents a = operation.
+ * 
  * @author Luís Reis
  */
-public class EqualOperation extends Operation{
+public class EqualOperation extends Operation {
+
     public Expression left = null;
     public Expression right = null;
-    
-    public EqualOperation(){}
-    public EqualOperation(Expression left, Expression right){
+
+    public EqualOperation() {
+    }
+
+    public EqualOperation(Expression left, Expression right) {
         this.left = left;
         this.right = right;
     }
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         left = (Expression) left.optimize();
         right = (Expression) right.optimize();
         return this;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return "=[" + left.toString() + ", " + right.toString() + "]";
     }
 }

@@ -20,31 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl;
 
+import org.gcreator.pineapple.pinedl.statements.Expression;
+
 /**
- * Represents a variable
+ * Represents a variable.
+ *
  * @author Luís Reis
  */
 public class Variable {
+
     public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
     public boolean isStatic = false;
+    public boolean isFinal = false;
+    public Expression defaultValue;
     public Type type = null;
     public String name = "";
-    
-    public Variable(){}
-    
-    public Variable(AccessControlKeyword access, boolean isStatic, Type type, String name){
+
+    public Variable() {
+    }
+
+    public Variable(AccessControlKeyword access, boolean isStatic, Type type, String name, boolean isFinal, Expression defaultValue) {
         this.access = access;
         this.isStatic = isStatic;
         this.type = type;
         this.name = name;
+        this.isFinal = isFinal;
+        this.defaultValue = defaultValue;
     }
-    
+
     @Override
-    public String toString(){
-        return access.toString() + (isStatic?" static ":" ")
-                + type.toString() + " " + name;
+    public String toString() {
+        return access.toString() +  (isFinal ? " final " : " ") +
+                (isStatic ? " static " : " ") + type.toString() + " " + name;
     }
 }

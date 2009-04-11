@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.*;
@@ -29,6 +28,5 @@ import org.gcreator.pineapple.pinedl.*;
  * Represents an expression
  * @author Luís Reis
  */
-public class Expression extends Leaf{
-
+public abstract class Expression extends Leaf {
 }

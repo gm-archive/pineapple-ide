@@ -55,6 +55,7 @@ public class ClassResource {
         protected boolean isStatic;
         protected boolean isFinal;
         protected String defaultValue;
+        protected Access access;
 
         /**
          * Creates a new {@link Field} that is not static and has
@@ -100,11 +101,26 @@ public class ClassResource {
          * @param defaultValue The default value for the field.
          */
         public Field(String name, String type, boolean isStatic, boolean isFinal, String defaultValue) {
+            this(name, type, isStatic, isFinal, defaultValue, Access.PUBLIC);
+        }
+
+        /**
+         * Creates a new {@link Field}.
+         *
+         * @param name The field's name.
+         * @param type The field's type.
+         * @param isStatic Whether the field is static or not.
+         * @param isFinal Whether the field is final or not.
+         * @param defaultValue The default value for the field.
+         * @param access The {@link Access} of this field.
+         */
+        public Field(String name, String type, boolean isStatic, boolean isFinal, String defaultValue, Access access) {
             this.name = name;
             this.type = type;
             this.isStatic = isStatic;
             this.isFinal = isFinal;
             this.defaultValue = defaultValue;
+            this.access = access;
         }
         
         protected Field() {
@@ -144,6 +160,15 @@ public class ClassResource {
          */
         public String getDefaultValue() {
             return defaultValue;
+        }
+
+        /**
+         * Gets the {@link Access} for this field.
+         *
+         * @return This field's {@link Access}.
+         */
+        public Access getAccess() {
+            return access;
         }
 
         /**
@@ -201,7 +226,21 @@ public class ClassResource {
         public void setFinal(boolean isFinal) {
             this.isFinal = isFinal;
         }
-        
+
+        /**
+         * Sets this field's {@link Access}.
+         *
+         * @param access The new {@link Access} for this field.
+         */
+        public void setAccess(Access access) {
+            this.access = access;
+        }
+
+        public enum Access {
+            PUBLIC,
+            PROTECTED,
+            PRIVATE,
+        }
     }
     //</editor-fold>
 }

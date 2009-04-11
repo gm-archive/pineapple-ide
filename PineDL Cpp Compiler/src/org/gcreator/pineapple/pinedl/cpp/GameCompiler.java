@@ -57,6 +57,8 @@ import org.gcreator.pineapple.formats.Actor;
 import org.gcreator.pineapple.formats.Scene;
 import org.gcreator.pineapple.game2d.GameProjectType;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.formats.ClassResource;
+import org.gcreator.pineapple.formats.ClassResource.Field;
 import org.gcreator.pineapple.game2d.GamePlugin;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
@@ -68,6 +70,7 @@ import org.gcreator.pineapple.validators.UniversalValidator;
  * This class is used to compile the game.
  * 
  * @author Luís Reis
+ * @author Serge Humphrey
  */
 public class GameCompiler {
 
@@ -92,6 +95,7 @@ public class GameCompiler {
     int resIndex = 0;
     HashMap<File, String> imageNames = new HashMap<File, String>();
     HashMap<String, String> config = new HashMap<String, String>();
+    HashMap<String, ClassResource> clsres = new HashMap<String, ClassResource>();
     static boolean copiedLib = false;
 
     public GameCompiler(final Project p) {
@@ -195,6 +199,7 @@ public class GameCompiler {
                 t.start();
             } catch (Exception e) {
                 compFrame.writeLine("<font color='red'>Compile Exception: " + e.getMessage() + "</font>");
+                e.printStackTrace();
                 worked = false;
             }
         }
@@ -601,6 +606,7 @@ public class GameCompiler {
 
     private void createActorScript(ProjectElement e) throws Exception {
         Actor a = new Actor(e.getFile());
+        clsres.put(a.getName(), a);
         String fname = e.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
         fname = fname.replaceAll("\\s", "_");
@@ -615,12 +621,16 @@ public class GameCompiler {
         w.print(fname);
         w.println(" extends Actor {");
 
+        w.println();
+        printFields(a.fields, w);
+        w.println();
+        
         boolean hasCreate = false;
 
         for (Event evt : a.events) {
             if (evt.getType().equals(Event.TYPE_CREATE)) {
                 hasCreate = true;
-                writeCreate(w, a, evt);
+                printCreateEvent(w, a, evt);
             }
 
             if (evt.getType().equals(Event.TYPE_UPDATE)) {
@@ -657,7 +667,7 @@ public class GameCompiler {
         }
 
         if (!hasCreate) {
-            writeCreate(w, a, null);
+            printCreateEvent(w, a, null);
         }
 
         w.println('}');
@@ -665,9 +675,8 @@ public class GameCompiler {
         w.close();
     }
 
-    private void writeCreate(PrintWriter w, Actor a, Event evt) throws IOException {
+    private void printCreateEvent(PrintWriter w, Actor a, Event evt) throws IOException {
         w.println("\tpublic this(float __x, float __y, float depth) : super(_P___x, _P___y, depth) {");
-
         w.println("\t\tsetDepth(depth);");
         if (a.getImage() != null) {
             w.print(("\t\ttexture = "));
@@ -686,6 +695,7 @@ public class GameCompiler {
 
     private void createSceneScript(ProjectElement e) throws Exception {
         Scene scene = new Scene(e.getFile());
+        clsres.put(e.getName().substring(0, e.getName().indexOf('.')), scene);
         if (e.getFile().getPath().equals(PineappleCore.getProject().getSettings().get("scene-order").split(";")[0])) {
             mainScene = scene;
         }
@@ -701,15 +711,15 @@ public class GameCompiler {
         w.println();
         w.print("class ");
         w.print(fname);
-        w.print(" extends Scene {");
+        w.println(" extends Scene {");
         w.println();
-
+        printFields(scene.fields, w);
+        w.println();
         w.print("\tpublic this() : super");
 
         w.print("(" + scene.getWidth() + ", " + scene.getHeight());
 
-        w.println("){");
-
+        w.println(") {");
 
         Color c = scene.getBackgroundColor();
         String cs = ((Integer) c.getRed()).toString();
@@ -733,14 +743,14 @@ public class GameCompiler {
         }
 
         w.println("\t}");
-        w.println('}');
+        w.println("}");
         w.close();
         
         pineScripts.add(f);
     }
 
     private String outputEvent(Actor a, Event evt) {
-        return evt.getPineDL();
+        return evt.getPineDL() + "\n";
     }
 
     private void prepare() throws Exception {
@@ -856,5 +866,27 @@ public class GameCompiler {
         BufferedImage copy = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         copy.getGraphics().drawImage(img, 0, 0, null);
         ImageIO.write(copy, "PNG", dest);
+    }
+
+    private void printFields(Vector<Field> fields, PrintWriter w) {
+        for (Field v : fields) {
+            w.print("\t");
+            w.print(v.getAccess().toString().toLowerCase() + " ");
+            if (v.isStatic()) {
+                w.print("static ");
+            }
+            if (v.isFinal()) {
+                w.print("final ");
+            }
+            w.print(v.getType() + " " + v.getName());
+            if (v.getDefaultValue() != null && v.getDefaultValue() != "") {
+                if (v.getType().equals("string")) {
+                    w.print(" = \"" + v.getDefaultValue().replaceAll("\\\"", "\"") + "\"");
+                } else {
+                    w.print(" = " + v.getDefaultValue());
+                }
+            }
+            w.println(";");
+        }
     }
 }

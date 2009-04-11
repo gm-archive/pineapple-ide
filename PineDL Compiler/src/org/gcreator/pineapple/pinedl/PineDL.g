@@ -146,20 +146,26 @@ importstmt
 	
 clsdecl	:	'class' n=WORD {target.clsName = n.getText();} ('extends' e=clstype {target.superClass = e;})?
 		BLKBEG
-		(f=field {target.variables.add(f);}|
-		m=method {target.functions.add(m);}|c=constructor {target.constructors.add(c);})*
+		(
+			f=field	{ target.variables.add(f); }	|
+			m=method { target.functions.add(m); }	|
+			c=constructor { target.constructors.add(c); }
+		)*
 		BLKEND STMTEND?; //STMTEND? means class X{} and class X{}; are both accepted
 
 field returns [Variable v = new Variable()]
 	:	a=accesscontrolkeyword {v.access = a;}
 		('static' {v.isStatic = true;})?
+		('final' {v.isFinal = true;})?
 		t=type {v.type = t;}
 		n=WORD {v.name = n.getText();}
+		(EQUAL d=expression {v.defaultValue = d;})?
 		STMTEND;
 		
 method returns [Function f = new Function()]
 	:	a=accesscontrolkeyword {f.access = a;}
 		('static' {f.isStatic = true;})?
+		('final' {f.isFinal = true;})?
 		t=type {f.returnType = t;}
 		n=WORD {f.name = n.getText();}
 		LPAREN
@@ -419,7 +425,7 @@ fragment DIGIT
 
 fragment ALPHA
 	:	'_' | ('a'..'z') | ('A'..'Z');
-
+	
 SLCOMMENT
 	:	'//' (~('\r'|'\n'))* {$channel = HIDDEN; };
 
@@ -438,4 +444,6 @@ WHITESPACE : (
       { newLine(); }
     )
  { $channel = HIDDEN; };
+
+
 

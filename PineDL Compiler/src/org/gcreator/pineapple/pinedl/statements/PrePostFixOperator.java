@@ -20,29 +20,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 /**
  * Represents x++, ++x, x-- and --x operators
  * @author Luís Reis
  */
-public class PrePostFixOperator extends Operation{
-    public boolean pre = false; //true for --x, false for x--
-    public boolean sum = false; //true for x++, false for x--
+public class PrePostFixOperator extends Operation {
+
+    /**
+     * true for --x, false for x--
+     */
+    public boolean pre = false;
+    /**
+     * true for x++, false for x--
+     */
+    public boolean sum = false;
     public Expression content = null;
-    
-    public PrePostFixOperator(boolean pre, boolean sum, Expression content){
+
+    public PrePostFixOperator(boolean pre, boolean sum, Expression content) {
         this.pre = pre;
         this.sum = sum;
         this.content = content;
     }
-    
+
     @Override
-    public String toString(){
-        if(pre){
-            return (sum?"++":"--") + content.toString();
+    public String toString() {
+        if (pre) {
+            return (sum ? "++" : "--") + content.toString();
         }
-        return content.toString() + (sum?"++":"--");
+        return content.toString() + (sum ? "++" : "--");
     }
 }

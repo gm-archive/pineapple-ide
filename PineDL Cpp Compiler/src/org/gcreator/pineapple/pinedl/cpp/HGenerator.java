@@ -39,6 +39,7 @@ import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
 import org.gcreator.pineapple.pinedl.Variable;
+import org.gcreator.pineapple.pinedl.statements.IntConstant;
 
 /**
  * Creates a H file from a PineDL context
@@ -68,7 +69,7 @@ public class HGenerator {
             parse();
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
-                throw new Exception("Invalid class name: " + fname + "  (should be '" + this.fname+"')");
+                throw new Exception("Invalid class name: " + fname + "  (should be '" + this.fname + "')");
             }
             write();
         } catch (Exception e) {
@@ -146,7 +147,8 @@ public class HGenerator {
         for (Variable field : cls.variables) {
             writeLine(accessToString(field.access) +
                     (field.isStatic ? ": static " : ": ") +
-                    retrieveType(field.type, true) + ' ' +
+                    (field.isFinal ? "const " : "") +
+                    retrieveType(field.type, true) + " " +
                     detokenize(field.name) + ";");
         }
     }
@@ -171,7 +173,7 @@ public class HGenerator {
                 return typeToString(type, reference);
             }
         }
-        if(t.type.length==1){
+        if (t.type.length == 1) {
             if (t.type[0].equals("Texture")) {
                 return "Pineapple::Texture" + (reference ? "*" : "");
             } else if (t.type[0].equals("Actor")) {

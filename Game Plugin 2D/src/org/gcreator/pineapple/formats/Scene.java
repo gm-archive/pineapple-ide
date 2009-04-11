@@ -71,7 +71,7 @@ public class Scene extends ClassResource {
 
     public static final double MIN_VERSION = 1.0D;
     public static final double MAX_VERSION = 2.0D;
-    public static final double VERSION = 1.0D;
+    public static final double VERSION = 1.1D;
     public ListeningVector<ActorInScene> actors = new ListeningVector<ActorInScene>();
     public Vector<Background> backgrounds = new Vector<Background>();
     public Hashtable<String, Object> properties;
@@ -295,6 +295,7 @@ public class Scene extends ClassResource {
         Element fields = doc.createElement("fields");
         for (Field f : this.fields) {
             Element field = doc.createElement("field");
+            field.setAttribute("access", f.access.name());
             field.setAttribute("name", f.name);
             field.setAttribute("type", f.type);
             field.setAttribute("default-value", f.defaultValue);
@@ -459,7 +460,8 @@ public class Scene extends ClassResource {
                 }
 
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
-                String name, type, defaultValue, isStatic, isFinal;
+                String name, type, defaultValue, isStatic, isFinal, access;
+                access = atts.getValue("access");
                 name = atts.getValue("name");
                 type = atts.getValue("type");
                 defaultValue = atts.getValue("default-value");
@@ -467,6 +469,11 @@ public class Scene extends ClassResource {
                 isFinal = atts.getValue("final");
 
                 Field f = new Field();
+                if (access != null) {
+                    f.access = Field.Access.valueOf(access);
+                } else {
+                    f.access = Field.Access.PUBLIC;
+                }
                 f.name = name;
                 f.type = type;
                 f.defaultValue = defaultValue;

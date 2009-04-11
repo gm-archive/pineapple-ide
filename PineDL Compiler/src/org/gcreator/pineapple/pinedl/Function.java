@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl;
 
 import java.util.Collections;
@@ -28,52 +27,55 @@ import java.util.Vector;
 import org.gcreator.pineapple.pinedl.statements.Block;
 
 /**
- * Represents a function
+ * Represents a function.
+ *
  * @author Luís Reis
  */
 public class Function {
+
     public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
     public Type returnType = null;
     public boolean isStatic = false;
+    public boolean isFinal;
     public String name = "";
     public Vector<Argument> arguments = new Vector<Argument>();
     public Block content = new Block();
-    
-    public Function(){
-        
+
+    public Function() {
     }
-    
-    public Function(AccessControlKeyword access, boolean isStatic, Type returnType, String name, Argument... arguments){
+
+    public Function(AccessControlKeyword access, boolean isStatic, Type returnType, String name, boolean isFinal, Argument... arguments) {
         this.access = access;
         this.returnType = returnType;
         this.isStatic = isStatic;
         this.name = name;
+        this.isFinal = isFinal;
         Collections.addAll(this.arguments, arguments);
     }
-    
+
     @Override
-    public String toString(){
-        String s = access.toString() + (isStatic?" static ":" ") + returnType;
-        
+    public String toString() {
+        String s = access.toString() + (isFinal ? " final " : " ") + (isStatic ? " static " : " ") + returnType;
+
         s += " " + name + "(";
-        
+
         boolean first = true;
-        for(Argument a : arguments){
-            if(!first){
+        for (Argument a : arguments) {
+            if (!first) {
                 s += ", ";
             }
             s += a.toString();
             first = false;
         }
-        
+
         s += ")";
-        
+
         s += content.toString();
-        
+
         return s;
     }
-    
-    public Function optimize(){
+
+    public Function optimize() {
         content.optimize();
         return this;
     }

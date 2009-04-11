@@ -20,22 +20,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 /**
  * Represents the reference to a variable
  * @author Luís Reis
  */
-public class VariableReference extends Reference{
+public class VariableReference extends Reference {
+
     public String name;
-    
-    public VariableReference(String name){
+
+    public VariableReference(String name) {
         this.name = name;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return name;
     }
 }

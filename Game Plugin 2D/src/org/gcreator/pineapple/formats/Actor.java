@@ -69,7 +69,7 @@ public class Actor extends ClassResource {
     /**
      * The actor version.
      */
-    public static final double VERSION = 1.100D;
+    public static final double VERSION = 1.20D;
 
     /**
      * Where the actor's properties are stored.
@@ -255,6 +255,7 @@ public class Actor extends ClassResource {
         Element fields = doc.createElement("fields");
         for (Field f : this.fields) {
             Element field = doc.createElement("field");
+            field.setAttribute("access", f.access.name());
             field.setAttribute("name", f.name);
             field.setAttribute("type", f.type);
             field.setAttribute("default-value", f.defaultValue);
@@ -369,7 +370,8 @@ public class Actor extends ClassResource {
                 }
                 
             } else if (parsingFields && localName.equalsIgnoreCase("field")) {
-                String name, type, defaultValue, isStatic, isFinal;
+                String name, type, defaultValue, isStatic, isFinal, access;
+                access = atts.getValue("access");
                 name = atts.getValue("name");
                 type = atts.getValue("type");
                 defaultValue = atts.getValue("default-value");
@@ -377,6 +379,11 @@ public class Actor extends ClassResource {
                 isFinal = atts.getValue("final");
 
                 Field f = new Field();
+                if (access != null) {
+                    f.access = Field.Access.valueOf(access);
+                } else {
+                    f.access = Field.Access.PUBLIC;
+                }
                 f.name = name;
                 f.type = type;
                 f.defaultValue = defaultValue;
