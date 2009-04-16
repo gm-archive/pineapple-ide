@@ -152,12 +152,12 @@ public class CppGenerator {
             if (v.isStatic) {
                 continue;
             }
-            Expression e = v.defaultValue;
+            /*Expression e = v.defaultValue;
             if (e != null) {
                 writeLine( v.name + " = " + e.toString() + ";");
-            } else {
+            } else {*/
                 writeLine("/* Note: no default value for field " + v.name + "*/");
-            }
+            //}
         }
     }
 

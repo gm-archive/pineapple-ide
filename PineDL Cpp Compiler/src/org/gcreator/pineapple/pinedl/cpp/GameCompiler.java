@@ -871,7 +871,8 @@ public class GameCompiler {
     private void printFields(Vector<Field> fields, PrintWriter w) {
         for (Field v : fields) {
             w.print("\t");
-            w.print(v.getAccess().toString().toLowerCase() + " ");
+            w.print("public ");
+            //w.print(v.getAccess().toString().toLowerCase() + " ");
             if (v.isStatic()) {
                 w.print("static ");
             }

@@ -349,11 +349,15 @@ sum_op returns [Expression e = null]
 	(PLUS q=mult_op {e=new SumOperation(e, q);}
 	|MINUS q=mult_op {e=new SubtractionOperation(e, q);})
 	)*;
+	
+unary_minus_op returns [Expression e = null]
+	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);})?
+	a=sum_op {if(e==null){e=a;}else{((SubtractionOperation)e).right = a;}};
 
 bitw_shift_op returns [Expression e = null]
-	: t=sum_op {e=t;} (
-	(SHIFT_R q=sum_op {e=new RShiftOperation(e, q);}
-	|SHIFT_L q=sum_op {e=new LShiftOperation(e, q);})
+	: t=unary_minus_op {e=t;} (
+	(SHIFT_R q=unary_minus_op {e=new RShiftOperation(e, q);}
+	|SHIFT_L q=unary_minus_op {e=new LShiftOperation(e, q);})
 	)*;
 	
 compop returns [Expression e = null]
@@ -395,25 +399,25 @@ logicalor returns [Expression e = null]
 	(LOG_OR q=logicaland {e=new LogicalOrOperation(e, q);})
 	)*;
 	
-ternary returns [Expression e = null]
+ternary_conditional returns [Expression e = null]
 	: t=logicalor {e=t;} (
 	('?' p=logicalor ':' q=logicalor {e=new TernaryConditional(e, p, q);})
 	)*;
 	
 expression returns [Expression e = null]
-	: (MINUS|PLUS)? (r=ternary {e=r;} (
-	(EQUAL q=ternary {e=new EqualOperation(e, q);})
-	|('+=' q=ternary {e=new EqualOperation(e, new SumOperation(e,q));})
-	|('-=' q=ternary {e=new EqualOperation(e, new SubtractionOperation(e,q));})
-	|('*=' q=ternary {e=new EqualOperation(e, new MultiplyOperation(e,q));})
-	|('/=' q=ternary {e=new EqualOperation(e, new DivisionOperation(e,q));})
-	|('%=' q=ternary {e=new EqualOperation(e, new ModOperation(e,q));})
-	|('&=' q=ternary {e=new EqualOperation(e, new BitwiseAndOperation(e,q));})
-	|('|=' q=ternary {e=new EqualOperation(e, new BitwiseOrOperation(e,q));})
-	|('^=' q=ternary {e=new EqualOperation(e, new BitwiseXorOperation(e,q));})
-	|('<<=' q=ternary {e=new EqualOperation(e, new LShiftOperation(e,q));})
-	|('>>=' q=ternary {e=new EqualOperation(e, new RShiftOperation(e,q));})
-	)*) | (MINUS|PLUS)? (t=ternary {e=t;});
+	: (MINUS|PLUS)? (r=ternary_conditional {e=r;} (
+	(EQUAL q=ternary_conditional {e=new EqualOperation(e, q);})
+	|('+=' q=ternary_conditional {e=new EqualOperation(e, new SumOperation(e,q));})
+	|('-=' q=ternary_conditional {e=new EqualOperation(e, new SubtractionOperation(e,q));})
+	|('*=' q=ternary_conditional {e=new EqualOperation(e, new MultiplyOperation(e,q));})
+	|('/=' q=ternary_conditional {e=new EqualOperation(e, new DivisionOperation(e,q));})
+	|('%=' q=ternary_conditional {e=new EqualOperation(e, new ModOperation(e,q));})
+	|('&=' q=ternary_conditional {e=new EqualOperation(e, new BitwiseAndOperation(e,q));})
+	|('|=' q=ternary_conditional {e=new EqualOperation(e, new BitwiseOrOperation(e,q));})
+	|('^=' q=ternary_conditional {e=new EqualOperation(e, new BitwiseXorOperation(e,q));})
+	|('<<=' q=ternary_conditional {e=new EqualOperation(e, new LShiftOperation(e,q));})
+	|('>>=' q=ternary_conditional {e=new EqualOperation(e, new RShiftOperation(e,q));})
+	)*) | (MINUS|PLUS)? (t=ternary_conditional {e=t;});
 
 //End of operations
 
@@ -503,7 +507,3 @@ WHITESPACE : (
       { newLine(); }
     )
  { $channel = HIDDEN; };
-
-
-
-

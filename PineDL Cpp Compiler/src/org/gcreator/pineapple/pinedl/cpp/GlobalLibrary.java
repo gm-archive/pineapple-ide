@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
+/*
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.util.Vector;
@@ -30,14 +30,17 @@ import org.gcreator.pineapple.pinedl.Function;
 import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.Variable;
-
+*/
 /**
+ * 
+ * FUTURE CLASS: Not yet needed
+ * 
  * Defines all the classes defined in the Pineapple core library
  * and scripts.
  * Good for context.
  * @author Luís Reis
  */
-public class GlobalLibrary {
+/*public class GlobalLibrary {
     public Vector<PineClass> userDefinedClasses = new Vector<PineClass>();
     public Vector<PineClass> coreClasses = new Vector<PineClass>();
     
@@ -82,3 +85,5 @@ public class GlobalLibrary {
         }};
     }
 }
+*/
+    
