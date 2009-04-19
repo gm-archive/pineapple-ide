@@ -408,23 +408,23 @@ public class CppGenerator {
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
-            return leafToString(s.left, vars) + " + " + leafToString(s.right, vars);
+            return "("+leafToString(s.left, vars) + ") + (" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
-            return leafToString(s.left, vars) + " - " + leafToString(s.right, vars);
+            return "("+leafToString(s.left, vars) + ") - (" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof MultiplyOperation) {
             MultiplyOperation s = (MultiplyOperation) l;
-            return leafToString(s.left, vars) + " * " + leafToString(s.right, vars);
+            return "("+leafToString(s.left, vars) + ") * (" + leafToString(s.right, vars) + ")";
         }
         if (l instanceof DivisionOperation) {
             DivisionOperation s = (DivisionOperation) l;
-            return leafToString(s.left, vars) + " / " + leafToString(s.right, vars);
+            return "("+leafToString(s.left, vars) + ") / (" + leafToString(s.right, vars)+")";
         }
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
-            return leafToString(s.left, vars) + " < " + leafToString(s.right, vars);
+            return "("+leafToString(s.left, vars) + ") < (" + leafToString(s.right, vars)+")";
         }
         if (l instanceof IntConstant) {
             return l.toString();
