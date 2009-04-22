@@ -4,7 +4,6 @@
 #include "texture.h"
 #include "exceptions.h"
 
-
 using namespace Pineapple;
 
 SDL_Surface* load_image( std::string filename );
@@ -40,21 +39,22 @@ void Texture::init(SDL_Surface* surface) {
     // Set the texture's stretching properties
     GLenum texture_format;
 
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-       GLint nOfColors = surface->format->BytesPerPixel;
-        if (nOfColors == 4)     // contains an alpha channel
-        {
-                if (surface->format->Rmask == 0x000000ff)
-                        texture_format = GL_RGBA;
-                else
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    GLint nOfColors = surface->format->BytesPerPixel;
+    if (nOfColors == 4)     // contains an alpha channel
+    {
+        if (surface->format->Rmask == 0x000000ff)
+            texture_format = GL_RGBA;
+        else
                         texture_format = GL_BGRA;
-        } else if (nOfColors == 3)     // no alpha channel
-        {
-                if (surface->format->Rmask == 0x000000ff)
-                        texture_format = GL_RGB;
-                else
-                        texture_format = GL_BGR;
+    }
+    else if (nOfColors == 3)     // no alpha channel
+    {
+        if (surface->format->Rmask == 0x000000ff)
+            texture_format = GL_RGB;
+        else
+            texture_format = GL_BGR;
         } else {
                 // warning: the image is not truecolor..  this will probably break
                 // this error should not go unhandled
@@ -66,12 +66,13 @@ void Texture::init(SDL_Surface* surface) {
         glTexImage2D( GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
                       texture_format, GL_UNSIGNED_BYTE, surface->pixels );
 
-    //setup the sprite class' stuff
+    //setup the sprite class stuff
     this->textureid = texture;
     this->width = surface->w;
     this->height = surface->h;
-    this->originx = originx;
-    this->originy = originy;
+    //TODO: origins
+    this->originx = originx = 0;
+    this->originy = originy = 0;
 
     //free the image
     SDL_FreeSurface(surface);
