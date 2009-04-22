@@ -600,6 +600,7 @@ public class PineappleGUI implements EventHandler {
             }
         };
         fileSave.setMnemonic('S');
+        fileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         fileSave.setVisible(true);
         fileSave.setEnabled(false);
         fileSave.addActionListener(new ActionListener() {

@@ -23,8 +23,6 @@
 package org.gcreator.pineapple.syntax;
 
 import java.awt.BorderLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -58,15 +56,6 @@ public class PineDLPane extends DocumentPane {
         this.setLayout(new BorderLayout());
         this.editor = new PineDLEditor(file);
 
-        editor.editor.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
-                    save();
-                }
-            }
-        });
         String x;
         int i = file.getName().lastIndexOf('.');
         if (i < 0 || i >= file.getName().length()) {

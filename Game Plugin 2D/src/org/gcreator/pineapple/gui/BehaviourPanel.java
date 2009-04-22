@@ -23,8 +23,6 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import java.awt.Component;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -510,15 +508,6 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
             public void changedUpdate(DocumentEvent e) {
                 change(e);
-            }
-        });
-        p.editor.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
-                    pane.save();
-                }
             }
         });
         int i = tabPane.getComponentCount() - 2;
