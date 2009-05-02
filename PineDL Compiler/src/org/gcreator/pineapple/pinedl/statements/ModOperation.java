@@ -27,10 +27,10 @@ import org.gcreator.pineapple.pinedl.Leaf;
 
 
 /**
- * Represents a % operation
+ * Represents a modulus operation
  * @author Luís Reis
  */
-public class ModOperation extends Operation{
+public class ModOperation extends Operation {
     public Expression left = null;
     public Expression right = null;
     

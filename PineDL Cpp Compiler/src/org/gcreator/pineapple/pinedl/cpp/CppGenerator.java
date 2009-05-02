@@ -48,11 +48,13 @@ import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
 import org.gcreator.pineapple.pinedl.statements.EqualOperation;
+import org.gcreator.pineapple.pinedl.statements.EqualsOperation;
 import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.FunctionReference;
 import org.gcreator.pineapple.pinedl.statements.IfStatement;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
+import org.gcreator.pineapple.pinedl.statements.ModOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
 import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
@@ -191,7 +193,7 @@ public class CppGenerator {
             } else if (t.type[0].equals("Math")) {
                 return "Pineapple::Math" + (reference ? "*" : "");
             } else if (t.type[0].equals("Key")) {
-                return "Pineapple::Key" + (reference ? "*" : "");
+                return "Pineapple::Key";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Keyboard")) {
                 return "Pineapple::Keyboard" + (reference ? "*" : "");
             }
@@ -538,6 +540,14 @@ public class CppGenerator {
             PrePostFixOperator p = (PrePostFixOperator) l;
             //NOTE: should work, as long as all is working well
             return p.content.toString();
+        }
+        if (l instanceof ModOperation) {
+            ModOperation m = (ModOperation)l;
+            return leafToString(m.left, false, vars) + " % " + leafToString(m.right, false, vars);
+        }
+        if (l instanceof EqualsOperation) {
+            EqualsOperation e = (EqualsOperation) l;
+            return leafToString(e.left, false, vars) + " == " + leafToString(e.right, false, vars);
         }
 
         System.out.println("Oh NOES! No stuffles for " + l + " of class " + l.getClass().getName());

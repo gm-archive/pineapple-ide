@@ -342,6 +342,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "application.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "background.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "drawing.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "exceptions.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "io.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "keyboard.h", replace);
@@ -784,6 +785,7 @@ public class GameCompiler {
         headerH.println("#include \"application.h\"");
         headerH.println("#include \"background.h\"");
         headerH.println("#include \"color.h\"");
+        headerH.println("#include \"drawing.h\"");
         headerH.println("#include \"exceptions.h\"");
         headerH.println("#include \"io.h\"");
         headerH.println("#include \"keyboard.h\"");

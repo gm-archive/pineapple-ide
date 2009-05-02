@@ -39,7 +39,6 @@ import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
 import org.gcreator.pineapple.pinedl.Variable;
-import org.gcreator.pineapple.pinedl.statements.IntConstant;
 
 /**
  * Creates a H file from a PineDL context
@@ -183,7 +182,7 @@ public class HGenerator {
             } else if (t.type[0].equals("Math")) {
                 return "Pineapple::Math" + (reference ? "*" : "");
             } else if (t.type[0].equals("Key")) {
-                return "Pineapple::Key" + (reference ? "*" : "");
+                return "Pineapple::Key";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Keyboard")) {
                 return "Pineapple::Keyboard" + (reference ? "*" : "");
             }
