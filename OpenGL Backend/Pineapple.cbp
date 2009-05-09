@@ -43,6 +43,9 @@
 		<Unit filename="background.cpp" />
 		<Unit filename="background.h" />
 		<Unit filename="color.cpp" />
+		<Unit filename="drawing.cpp">
+			<Option virtualFolder="APIs/Drawing API/" />
+		</Unit>
 		<Unit filename="drawing.h">
 			<Option virtualFolder="APIs/Drawing API/" />
 		</Unit>
