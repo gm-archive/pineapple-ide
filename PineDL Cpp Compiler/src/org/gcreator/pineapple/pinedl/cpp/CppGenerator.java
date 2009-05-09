@@ -163,7 +163,7 @@ public class CppGenerator {
         }
     }
 
-    private String retrieveType(Type t, boolean reference) {
+    public String retrieveType(Type t, boolean reference) {
         if (t.typeCategory == TypeCategory.NATIVE) {
             return typeToString(t, reference);
         }

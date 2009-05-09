@@ -90,7 +90,9 @@ void Scene::drawActors()
     list<Actor*>::iterator i = actors.begin();
     while (i != actors.end())
     {
+        glPushMatrix();
         (*i)->draw();
+        glPopMatrix();
         i++;
     }
 }
