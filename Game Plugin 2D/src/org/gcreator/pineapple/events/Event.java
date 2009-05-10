@@ -63,6 +63,12 @@ public class Event {
     public static final String TYPE_KEYRELEASE = "Key Release Event";
 
     /**
+     * The KeyPressed event.
+     * Called when a key is down.
+     */
+    public static final String TYPE_KEYPRESSED = "Key Pressed Event";
+
+    /**
      * Creates a new {@link Event}.
      * 
      * @param type The type of the event.

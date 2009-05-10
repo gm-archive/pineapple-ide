@@ -106,6 +106,7 @@ public class AboutDialog extends JDialog {
                 "<li>" + "TGMG" + "</li>" +
                 "<li>" + "Sleija" + "</li>" +
                 "<li>" + "IsmAvatar" + "</li>" +
+                "<li>" + "Josh @ Dreamland" + "</li>" +
                 "</ul>"+
                 "<br/>"+
                 "We would also like to thank the " +

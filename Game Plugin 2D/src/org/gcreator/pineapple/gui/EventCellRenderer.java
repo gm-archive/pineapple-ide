@@ -58,7 +58,9 @@ public class EventCellRenderer extends DefaultListCellRenderer {
             this.setIcon(KEY_IMAGE);
         } else if (value.toString().equals("Key Release Event")) {
             this.setIcon(KEY_IMAGE);
-        } else {
+        } else if (value.toString().equals("Key Pressed Event")) {
+            this.setIcon(KEY_IMAGE);
+        }  else {
             this.setIcon(null);
         }
 

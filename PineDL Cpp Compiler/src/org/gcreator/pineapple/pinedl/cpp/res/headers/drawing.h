@@ -28,9 +28,9 @@ void drawTranslate(GLdouble x, GLdouble y, GLdouble z);
 
 /* Color stuffles */
 
-Pineapple::Color drawColor();
-void drawColor(Pineapple::Color c);
-void drawColor(Pineapple::Color c, GLfloat a);
+Pineapple::Color* drawColor();
+void drawColor(Pineapple::Color* c);
+void drawColor(Pineapple::Color* c, GLfloat a);
 void drawColor(GLfloat r, GLfloat g, GLfloat b);
 void drawColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 

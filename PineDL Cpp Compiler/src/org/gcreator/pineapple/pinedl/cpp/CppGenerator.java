@@ -29,17 +29,13 @@ import java.util.Vector;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.gcreator.pineapple.formats.ClassResource;
-import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
 import org.gcreator.pineapple.pinedl.Function;
 import org.gcreator.pineapple.pinedl.Leaf;
-import org.gcreator.pineapple.pinedl.NativeType;
-import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.PineDLLexer;
 import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
-import org.gcreator.pineapple.pinedl.TypeCategory;
 import org.gcreator.pineapple.pinedl.Variable;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.Block;
@@ -70,15 +66,8 @@ import org.gcreator.pineapple.pinedl.statements.VariableReference;
  * 
  * @author Luís Reis
  */
-public class CppGenerator {
+public class CppGenerator extends BaseGenerator {
 
-    OutputStream out = null;
-    InputStream in = null;
-    GameCompiler cmp = null;
-    PineClass cls = null;
-    String fname = "";
-    boolean successful = true;
-    Vector<String> context = null;
 
     public CppGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
             Vector<String> context) {
@@ -163,45 +152,6 @@ public class CppGenerator {
         }
     }
 
-    public String retrieveType(Type t, boolean reference) {
-        if (t.typeCategory == TypeCategory.NATIVE) {
-            return typeToString(t, reference);
-        }
-        if (t.typeCategory == TypeCategory.ARRAY) {
-            return retrieveType(t.arrayType, reference) + "*";
-        }
-        if (t.type.length != 1) {
-            return typeToString(t, reference);
-        }
-        for (String s : context) {
-            if (s.equals(t.type[t.type.length - 1])) {
-                return s + (reference ? "*" : "");
-            }
-        }
-        for (Type type : cls.importStmt) {
-            if (type.type[type.type.length - 1].equals(t.type[0])) {
-                return typeToString(type, reference);
-            }
-        }
-        if (t.type.length == 1) {
-            if (t.type[0].equals("Texture")) {
-                return "Pineapple::Texture" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Actor")) {
-                return "Pineapple::Actor" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Scene")) {
-                return "Pineapple::Scene" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Math")) {
-                return "Pineapple::Math" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Key")) {
-                return "Pineapple::Key";// + (reference ? "*" : "");
-            } else if (t.type[0].equals("Keyboard")) {
-                return "Pineapple::Keyboard" + (reference ? "*" : "");
-            }
-        }
-        throwError("In file " + fname + ": Unknown type " + t.toString());
-        return "---";
-    }
-
     private String merge(String[] x, char c) {
         String res = x[0];
         for (int i = 1; i < x.length; i++) {
@@ -241,6 +191,9 @@ public class CppGenerator {
             return true;
         }
         if (t.equals("Keyboard") || t.equals("Pineapple.Keyboard")) {
+            return true;
+        }
+        if (t.equals("Color") || t.equals("Pineapple.Color")) {
             return true;
         }
         return false;
@@ -368,8 +321,16 @@ public class CppGenerator {
     private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception {
         return leafToString(l, statement, vars, true);
     }
-
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
+        String s = _leafToString(l, statement, vars, isLeft);
+        System.out.print("\t{ ");
+        System.out.println("In: " + l + " (" + l.getClass().getName() + ")");
+        System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
+        System.out.println("Out: " + s);
+        System.out.println("}");
+        return s;
+     }
+    private String _leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         if (l instanceof BooleanConstant) {
             return String.valueOf(((BooleanConstant) l).value);
         }
@@ -555,165 +516,4 @@ public class CppGenerator {
         return l.toString();
     }
 
-    private String accessToString(AccessControlKeyword k) {
-        if (k == AccessControlKeyword.PRIVATE) {
-            return "private";
-        }
-        if (k == AccessControlKeyword.PROTECTED) {
-            return "protected";
-        }
-        return "public";
-    }
-
-    private String typeToString(Type t, boolean reference) {
-        if (t.typeCategory == TypeCategory.ARRAY) {
-            return typeToString(t.arrayType, true) + "*";
-        }
-        if (t.typeCategory == TypeCategory.NATIVE) {
-            if (t.nativeType == NativeType.BOOL) {
-                return "bool";
-            }
-            if (t.nativeType == NativeType.CHAR) {
-                return "signed char";
-            }
-            if (t.nativeType == NativeType.DOUBLE) {
-                return "double";
-            }
-            if (t.nativeType == NativeType.FLOAT) {
-                return "float";
-            }
-            if (t.nativeType == NativeType.INT) {
-                return "int";
-            }
-            if (t.nativeType == NativeType.VOID) {
-                return "void";
-            }
-            if (t.nativeType == NativeType.STRING) {
-                return "std::string";
-            }
-            if (t.nativeType == NativeType.UCHAR) {
-                return "unsigned char";
-            }
-            if (t.nativeType == NativeType.UDOUBLE) {
-                return "unsigned double";
-            }
-            if (t.nativeType == NativeType.UFLOAT) {
-                return "unsigned float";
-            }
-            if (t.nativeType == NativeType.UINT) {
-                return "unsigned int";
-            }
-        }
-        String x = t.type[0];
-        for (int i = 1; i < t.type.length; i++) {
-            x += "::";
-            x += t.type[i];
-        }
-        if (reference) {
-            x += '*';
-        }
-        return x;
-    }
-
-    private String detokenize(String id) {
-        if (id.startsWith("_")) {
-            return "_P_" + id;
-        }
-        /*
-         * The following aren't PineDL keywords, so the user
-         * has the right to use them
-         */
-        if (id.equals("do")) {
-            throwWarning("'do' is not a PineDL keyword, but may become in the future. Don't use it");
-            return "_K_do";
-        }
-        if (id.equals("unsigned")) {
-            return "_K_unsigned";
-        }
-        if (id.equals("signed")) {
-            return "_K_signed";
-        }
-        if (id.equals("switch")) {
-            throwWarning("'switch' is not a PineDL keyword, but may become in the future. Don't use it");
-            return "_K_switch";
-        }
-        if (id.equals("case")) {
-            throwWarning("'case' is not a PineDL keyword, but may become in the future. Don't use it");
-            return "_K_case";
-        }
-        if (id.equals("default")) {
-            throwWarning("'default' is not a PineDL keyword, but may become in the future. Don't use it");
-            return "_K_default";
-        }
-        if (id.equals("NULL")) {
-            return "_K_NULL";
-        }
-        if (id.equals("FILE")) {
-            return "_K_FILE";
-        }
-        if (id.startsWith("SDL")) {
-            return "_K_" + id;
-        }
-        if (id.equals("default")) {
-            return "_K_default";
-        }
-        if (id.startsWith("GL") || id.startsWith("gl")) {
-            return "_K_" + id;
-        }
-        if (id.equals("lambda")) {
-            throwWarning("'lambda' is not a PineDL keyword, but may become in the future. Don't use it");
-            return id;
-        }
-        if (id.equals("repeat")) {
-            throwWarning("'repeat' is not a PineDL keyword, but may become in the future. Don't use it");
-            return id;
-        }
-        if (id.equals("std")) {
-            return "_K_" + id;
-        }
-        if (id.equals("virtual")) {
-            return "_K_" + id;
-        }
-        if (id.equals("using")) {
-            return "_K_" + id;
-        }
-        if (id.equals("namespace")) {
-            return "_K_" + id;
-        }
-
-        return id;
-    }
-
-    private String getHeaderTitle(String name) {
-        String s = "__";
-
-        s += name.toUpperCase();
-
-        s += "_H__";
-        return s;
-    }
-
-    private void writeLine() throws IOException {
-        out.write('\n');
-    }
-
-    private void writeLine(String line) throws IOException {
-        out.write(line.getBytes());
-        out.write('\n');
-    }
-
-    private void throwWarning(String warning) {
-        String message = "[WARNING] ";
-        message += warning;
-
-        cmp.compFrame.writeLine(message);
-    }
-
-    private void throwError(String error) {
-        String message = "[ERROR] ";
-        message += error;
-        successful = false;
-
-        cmp.compFrame.writeLine(message);
-    }
 }

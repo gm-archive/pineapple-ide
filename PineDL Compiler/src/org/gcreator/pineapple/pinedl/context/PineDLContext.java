@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008-2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008-2009 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.context;
 
 import java.util.Hashtable;
@@ -31,50 +30,61 @@ import org.gcreator.pineapple.pinedl.Type;
  * @author Luís Reis
  */
 public class PineDLContext {
+
     public PineDLContext root = null;
     private String functionName = null;
     private Hashtable<String, Type> vars = new Hashtable<String, Type>();
-    
-    public PineDLContext(String function){
+
+    public PineDLContext(String function) {
         this.root = null;
         functionName = function;
     }
-    
-    public PineDLContext(PineDLContext root){
+
+    public PineDLContext(PineDLContext root) {
         this.root = root;
-        if(root!=null){
+        if (root != null) {
             functionName = root.functionName;
         }
     }
-    
+
     /**
      * Finds out whether a variable is declared in the function or constructor.
      * Does not take class fields into account.
      * @param var The variable name
      * @return Whether the variable is declared
      */
-    public boolean isVariableDeclared(String var){
-        if(vars.containsKey(var)){
+    public boolean isVariableDeclared(String var) {
+        if (vars.containsKey(var)) {
             return true;
         }
-        return root!=null && root.isVariableDeclared(var);
+        return root != null && root.isVariableDeclared(var);
     }
-    
-    public Type getVariableType(String var){
-        if(vars.containsKey(var)){
+
+    public Type getVariableType(String var) {
+        if (vars.containsKey(var)) {
             return vars.get(var);
         }
-        if(root==null){
+        if (root == null) {
             return null;
         }
         return root.getVariableType(var);
     }
-    
-    public void declareVariable(String var, Type type){
+
+    public void declareVariable(String var, Type type) {
         vars.put(var, type);
     }
-    
-    public String getFunctionName(){
+
+    public String getFunctionName() {
         return functionName;
+    }
+
+    @Override
+    public String toString() {
+        String s = "[ root="+root+", function_name="+functionName+", vars={";
+        for (String k : vars.keySet()) {
+            s += k+"="+vars.get(k)+",";
+        }
+        s += "} ]";
+        return s;
     }
 }

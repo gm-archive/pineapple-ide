@@ -172,7 +172,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         eventsTab.setLayout(new java.awt.BorderLayout());
 
         eventList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event", "Key Press Event", "Key Release Event" };
+            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event", "Key Press Event", "Key Release Event", "Key Pressed Event" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });

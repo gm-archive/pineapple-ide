@@ -5,7 +5,6 @@
 #include "application.h"
 #include "actor.h"
 #include "scene.h"
-#include "scene.h"
 #include "window.h"
 
 using namespace Pineapple;
@@ -143,6 +142,16 @@ void Scene::onKeyUp(Key key)
     while (i != actors.end())
     {
         (*i)->onKeyUp(key);
+        i++;
+    }
+}
+
+void Scene::onKeyPressed(Key key)
+{
+    list<Actor*>::iterator i = actors.begin();
+    while (i != actors.end())
+    {
+        (*i)->onKeyPressed(key);
         i++;
     }
 }

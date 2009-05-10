@@ -39,6 +39,7 @@ public:
 
     virtual void onKeyDown(Key key);
     virtual void onKeyUp(Key key);
+    virtual void onKeyPressed(Key key);
 
     int getWidth() { return width; }
     int getHeight() { return height; }
