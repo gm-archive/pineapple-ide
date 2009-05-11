@@ -55,9 +55,7 @@ public class GameSettingsDialog extends javax.swing.JDialog {
         this.p = p;
         Hashtable<String, String> settings = p.getSettings();
         String st = settings.get("game-fullscreen");
-        System.out.println("st=" + st);
         if (st != null && st.equals("true")) {
-            System.out.println("enabling");
             runInFS.setSelected(true);
         }
         st = settings.get("game-resizable");

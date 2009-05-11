@@ -82,7 +82,7 @@ public class GameCompiler {
     File compConf;
     File imageArchive;
     Scene mainScene;
-    CompilerFrame compFrame;
+    static CompilerFrame compFrame;
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
     Vector<File> compFiles = new Vector<File>();
@@ -115,6 +115,9 @@ public class GameCompiler {
     public GameCompiler(final Project p, final CompilationProfile profile) {
         this.p = p;
         this.profile = profile;
+        if (compFrame != null) {
+            compFrame.dispose();
+        }
         compFrame = new CompilerFrame(this);
         compFrame.setSize(330, 460);
         compFrame.setVisible(true);
@@ -317,6 +320,7 @@ public class GameCompiler {
         w.println("\tSDL_GL_SwapBuffers();");
         w.println("\tSDL_Delay(100);");
         w.println("\tGame::TextureList::init();");
+        w.println("\tWindow::setFullscreen("+ p.getSettings().get("game-fullscreen") +");");
         w.println("\tPineapple::Window::run();");
         w.println("\t/* No code is executed beyod this point until after " +
                 "the game window has been closed. */");
