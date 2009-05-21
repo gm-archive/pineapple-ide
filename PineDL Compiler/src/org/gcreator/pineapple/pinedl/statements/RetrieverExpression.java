@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
@@ -29,24 +28,25 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represent an "x.y" expression
  * @author luis
  */
-public class RetrieverExpression extends Reference{
+public class RetrieverExpression extends Reference {
+
     public Reference left = null;
     public Reference right = null;
-    
-    public RetrieverExpression(Reference left, Reference right){
+
+    public RetrieverExpression(Reference left, Reference right) {
         this.left = left;
         this.right = right;
     }
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         left = (Reference) left.optimize();
         right = (Reference) right.optimize();
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        return left.toString() + "." + right.toString();
+    public String toString() {
+        return left + "." + right;
     }
 }

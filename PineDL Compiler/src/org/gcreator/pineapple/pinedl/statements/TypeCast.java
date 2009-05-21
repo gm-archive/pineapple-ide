@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
@@ -32,26 +31,27 @@ import org.gcreator.pineapple.pinedl.TypeCategory;
  * Represents a type change statement
  * @author Luís Reis
  */
-public class TypeCast extends Operation{
+public class TypeCast extends Operation {
+
     public Type type = null;
     public Expression exp = null;
-    
-    public TypeCast(){}
-    public TypeCast(Type type, Expression exp){
+
+    public TypeCast() {
+    }
+
+    public TypeCast(Type type, Expression exp) {
         this.type = type;
         this.exp = exp;
     }
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         exp = (Expression) exp.optimize();
-        if(type.typeCategory==TypeCategory.NATIVE
-                &&exp instanceof Constant){
-            if(type.nativeType==NativeType.STRING){
-                if(exp instanceof StringConstant){
+        if (type.typeCategory == TypeCategory.NATIVE && exp instanceof Constant) {
+            if (type.nativeType == NativeType.STRING) {
+                if (exp instanceof StringConstant) {
                     return exp;
-                }
-                else{
+                } else {
                     return new StringConstant(exp.toString());
                 }
             }

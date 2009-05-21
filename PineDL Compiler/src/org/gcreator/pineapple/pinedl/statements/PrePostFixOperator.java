@@ -47,8 +47,8 @@ public class PrePostFixOperator extends Operation {
     @Override
     public String toString() {
         if (pre) {
-            return (sum ? "++" : "--") + content.toString();
+            return (sum ? "++" : "--") + content;
         }
-        return content.toString() + (sum ? "++" : "--");
+        return content + (sum ? "++" : "--");
     }
 }

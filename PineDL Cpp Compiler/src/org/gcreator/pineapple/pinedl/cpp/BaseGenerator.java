@@ -1,0 +1,259 @@
+/*
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2009 Serge Humphrey<bob@bobtheblueberry.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+ */
+package org.gcreator.pineapple.pinedl.cpp;
+
+import java.io.IOException;
+import org.gcreator.pineapple.pinedl.NativeType;
+import org.gcreator.pineapple.pinedl.PineClass;
+import org.gcreator.pineapple.pinedl.Type;
+import org.gcreator.pineapple.pinedl.TypeCategory;
+import java.util.Vector;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.gcreator.pineapple.pinedl.AccessControlKeyword;
+
+/**
+ * This base class provides methods for generating C++ code
+ * from PineDL tokens from the parser and was created
+ * to avoid having duplicate code in the {@link HGenerator}
+ * and the {@link CppGenerator}.
+ * 
+ * @author Serge Humphrey
+ */
+public abstract class BaseGenerator {
+
+    protected GameCompiler cmp = null;
+    protected PineClass cls = null;
+    protected String fname = "";
+    protected Vector<String> context = null;
+    protected boolean successful = true;
+    protected OutputStream out = null;
+    protected InputStream in = null;
+
+    /**
+     * Creates a new {@link BaseGenerator}.
+     */
+    public BaseGenerator() {
+    }
+
+    protected String retrieveType(Type t, boolean reference) {
+        if (t.typeCategory == TypeCategory.NATIVE) {
+            return typeToString(t, reference);
+        }
+        if (t.typeCategory == TypeCategory.ARRAY) {
+            return retrieveType(t.arrayType, reference) + "*";
+        }
+        if (t.type.length != 1) {
+            return typeToString(t, reference);
+        }
+        for (String s : context) {
+            if (s.equals(t.type[t.type.length - 1])) {
+                return s;
+            }
+        }
+        for (Type type : cls.importStmt) {
+            if (type.type[type.type.length - 1].equals(t.type[0])) {
+                return typeToString(type, reference);
+            }
+        }
+        if (t.type.length == 1) {
+            if (t.type[0].equals("Texture")) {
+                return "Pineapple::Texture" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Actor")) {
+                return "Pineapple::Actor" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Scene")) {
+                return "Pineapple::Scene" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Math")) {
+                return "Pineapple::Math" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Key")) {
+                return "Pineapple::Key";// + (reference ? "*" : "");
+            } else if (t.type[0].equals("Keyboard")) {
+                return "Pineapple::Keyboard" + (reference ? "*" : "");
+            }
+        }
+        throwError("In file " + fname + ": Unknown type " + t.toString());
+        return "---";
+    }
+
+    protected String typeToString(Type t, boolean reference) {
+        if (t.typeCategory == TypeCategory.ARRAY) {
+            return typeToString(t.arrayType, true) + "*";
+        }
+        if (t.typeCategory == TypeCategory.NATIVE) {
+            if (t.nativeType == NativeType.BOOL) {
+                return "bool";
+            }
+            if (t.nativeType == NativeType.CHAR) {
+                return "signed char";
+            }
+            if (t.nativeType == NativeType.DOUBLE) {
+                return "double";
+            }
+            if (t.nativeType == NativeType.FLOAT) {
+                return "float";
+            }
+            if (t.nativeType == NativeType.INT) {
+                return "int";
+            }
+            if (t.nativeType == NativeType.VOID) {
+                return "void";
+            }
+            if (t.nativeType == NativeType.STRING) {
+                return "std::string";
+            }
+            if (t.nativeType == NativeType.UCHAR) {
+                return "unsigned char";
+            }
+            if (t.nativeType == NativeType.UDOUBLE) {
+                return "unsigned double";
+            }
+            if (t.nativeType == NativeType.UFLOAT) {
+                return "unsigned float";
+            }
+            if (t.nativeType == NativeType.UINT) {
+                return "unsigned int";
+            }
+        }
+        String x = t.type[0];
+        for (int i = 1; i < t.type.length; i++) {
+            x += "::";
+            x += t.type[i];
+        }
+        if (reference) {
+            x += '*';
+        }
+        return x;
+    }
+
+    protected void throwError(String error) {
+        String message = "[ERROR] ";
+        message += error;
+        successful = false;
+
+        cmp.compFrame.writeLine(message);
+    }
+
+    protected String detokenize(String id) {
+        if (id.startsWith("_")) {
+            return "_P_" + id;
+        }
+        /*
+         * The following aren't PineDL keywords, so the user
+         * has the right to use them
+         */
+        if (id.equals("do")) {
+            throwWarning("'do' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return "_K_do";
+        }
+        if (id.equals("unsigned")) {
+            return "_K_unsigned";
+        }
+        if (id.equals("signed")) {
+            return "_K_signed";
+        }
+        if (id.equals("switch")) {
+            throwWarning("'switch' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return "_K_switch";
+        }
+        if (id.equals("case")) {
+            throwWarning("'case' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return "_K_case";
+        }
+        if (id.equals("default")) {
+            throwWarning("'default' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return "_K_default";
+        }
+        if (id.equals("NULL")) {
+            return "_K_NULL";
+        }
+        if (id.equals("FILE")) {
+            return "_K_FILE";
+        }
+        if (id.startsWith("SDL")) {
+            return "_K_" + id;
+        }
+        if (id.equals("default")) {
+            return "_K_default";
+        }
+        if (id.startsWith("GL") || id.startsWith("gl")) {
+            return "_K_" + id;
+        }
+        if (id.equals("lambda")) {
+            throwWarning("'lambda' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return id;
+        }
+        if (id.equals("repeat")) {
+            throwWarning("'repeat' is not a PineDL keyword, but may become in the future. Avoid using it");
+            return id;
+        }
+        if (id.equals("std")) {
+            return "_K_" + id;
+        }
+        if (id.equals("virtual")) {
+            return "_K_" + id;
+        }
+        if (id.equals("using")) {
+            return "_K_" + id;
+        }
+        if (id.equals("namespace")) {
+            return "_K_" + id;
+        }
+
+        return id;
+    }
+
+    protected String getHeaderTitle(String name) {
+        String s = "__";
+
+        s += name.toUpperCase();
+
+        s += "_H__";
+        return s;
+    }
+
+    protected void writeLine() throws IOException {
+        out.write('\n');
+    }
+
+    protected void writeLine(String line) throws IOException {
+        out.write(line.getBytes());
+        out.write('\n');
+    }
+
+    protected void throwWarning(String warning) {
+        String message = "[WARNING] ";
+        message += warning;
+
+        cmp.compFrame.writeLine(message);
+    }
+    
+    protected String accessToString(AccessControlKeyword k) {
+        if (k == AccessControlKeyword.PRIVATE) {
+            return "private";
+        }
+        if (k == AccessControlKeyword.PROTECTED) {
+            return "protected";
+        }
+        return "public";
+    }
+}

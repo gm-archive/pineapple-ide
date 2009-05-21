@@ -20,38 +20,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Leaf;
 
 /**
  * Represents an if statement
  * @author Luís Reis
  */
-public class IfStatement extends Leaf{
+public class IfStatement extends Leaf {
+
     public Expression condition = null;
     public Leaf then = null;
     public Leaf elseCase = null;
-    
+
     @Override
-    public Leaf optimize(){
-        if(then!=null){
+    public Leaf optimize() {
+        if (then != null) {
             then.optimize();
         }
-        if(elseCase!=null){
+        if (elseCase != null) {
             elseCase.optimize();
         }
-        if(then==null&&elseCase==null){ return condition; }
+        if (then == null && elseCase == null) {
+            return condition;
+        }
         condition = (Expression) condition.optimize();
-        if(condition instanceof BooleanConstant){
-            if(((BooleanConstant) condition).value){
+        if (condition instanceof BooleanConstant) {
+            if (((BooleanConstant) condition).value) {
                 Block b = new Block();
                 b.content.add(then);
                 return b;
-            }
-            else{
+            } else {
                 Block b = new Block();
                 b.content.add(elseCase);
                 return b;
@@ -59,17 +59,17 @@ public class IfStatement extends Leaf{
         }
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        String s = "if[" + condition.toString() + ", ";
-        
+    public String toString() {
+        String s = "if[" + condition + ", ";
+
         s += then;
-        
+
         s += ", ";
-        
+
         s += elseCase;
-        
+
         return s + "]";
     }
 }

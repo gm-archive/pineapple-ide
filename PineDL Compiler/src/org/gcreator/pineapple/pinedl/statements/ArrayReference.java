@@ -20,26 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 /**
  * Represents the reference to an array element
  * @author Luís Reis
  */
-public class ArrayReference extends Reference{
+public class ArrayReference extends Reference {
+
     public Reference base = null;
     public Expression exp = null;
-    
-    public ArrayReference(){}
-    
-    public ArrayReference(Reference base, Expression exp){
+
+    public ArrayReference() {
+    }
+
+    public ArrayReference(Reference base, Expression exp) {
         this.base = base;
         this.exp = exp;
     }
-    
+
     @Override
-    public String toString(){
-        return base.toString() + "[" + exp.toString() + "]";
+    public String toString() {
+        return base + "[" + exp + "]";
     }
 }

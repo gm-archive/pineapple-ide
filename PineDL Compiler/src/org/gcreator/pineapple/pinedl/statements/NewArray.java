@@ -20,10 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.Type;
 
@@ -31,25 +29,31 @@ import org.gcreator.pineapple.pinedl.Type;
  * Represents a function call
  * @author Luís Reis
  */
-public class NewArray extends Expression{
+public class NewArray extends Expression {
+
     public Type type = null;
     public Expression size = null;
-    
-    public NewArray(){}
-    public NewArray(Type type, Expression size){this.type = type; this.size = size;}
-    
+
+    public NewArray() {
+    }
+
+    public NewArray(Type type, Expression size) {
+        this.type = type;
+        this.size = size;
+    }
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         size.optimize();
         return this;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         String s = "new " + type + "[";
-        
-        s += size.toString();
-        
+
+        s += size;
+
         s += "]";
         return s;
     }

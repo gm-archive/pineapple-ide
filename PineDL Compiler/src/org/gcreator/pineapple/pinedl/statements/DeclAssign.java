@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
@@ -30,22 +29,22 @@ import org.gcreator.pineapple.pinedl.Type;
  * Represent a simple "type name;" statement
  * @author Luís Reis
  */
-public class DeclAssign extends Leaf{
+public class DeclAssign extends Leaf {
+
     public Type type = null;
     public String name = "";
     public Expression value = null;
-    
+
     @Override
-    public Leaf optimize(){
-        if(value!=null){
+    public Leaf optimize() {
+        if (value != null) {
             value = (Expression) value.optimize();
         }
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        return value==null?
-            (name+":"+type.toString()):("=["+name+":"+type.toString()+", "+value.toString()+"]");
+    public String toString() {
+        return value == null ? (name + ":" + type) : ("=[" + name + ":" + type + ", " + value + "]");
     }
 }

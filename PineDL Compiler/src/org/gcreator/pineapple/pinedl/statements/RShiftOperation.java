@@ -20,39 +20,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
-
 
 /**
  * Represents a right shift operation
  * @author Luís Reis
  */
-public class RShiftOperation extends Operation{
+public class RShiftOperation extends Operation {
+
     public Expression left = null;
     public Expression right = null;
-    
-    public RShiftOperation(){}
-    public RShiftOperation(Expression left, Expression right){
+
+    public RShiftOperation() {
+    }
+
+    public RShiftOperation(Expression left, Expression right) {
         this.left = left;
         this.right = right;
     }
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         left = (Expression) left.optimize();
         right = (Expression) right.optimize();
-        if((left instanceof IntConstant) && (right instanceof IntConstant)){
+        if ((left instanceof IntConstant) && (right instanceof IntConstant)) {
             return new IntConstant(
                     ((IntConstant) left).value >> ((IntConstant) right).value);
         }
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        return ">>[" + left.toString() + ", " + right.toString() + "]";
+    public String toString() {
+        return ">>[" + left + ", " + right + "]";
     }
 }

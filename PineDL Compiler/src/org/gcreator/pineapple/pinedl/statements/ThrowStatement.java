@@ -20,27 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Leaf;
 
 /**
  * Represents a throw statement
  * @author Luís Reis
  */
-public class ThrowStatement extends Leaf{
+public class ThrowStatement extends Leaf {
+
     public Expression value = null;
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
         value = (Expression) value.optimize();
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        return "throw[" + value.toString() + "]";
+    public String toString() {
+        return "throw[" + value + "]";
     }
 }

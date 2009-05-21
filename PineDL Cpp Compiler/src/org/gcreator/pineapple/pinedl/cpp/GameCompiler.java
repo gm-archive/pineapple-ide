@@ -180,6 +180,7 @@ public class GameCompiler {
                                 if (!worked) {
                                     return;
                                 }
+                                compFrame.writeLine("<em>"+script.getName()+"...</em>");
                                 generateHeader(script);
                                 generateCppFile(script);
                             }

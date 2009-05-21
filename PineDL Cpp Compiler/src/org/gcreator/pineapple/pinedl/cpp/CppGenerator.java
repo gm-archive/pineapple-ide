@@ -324,13 +324,18 @@ public class CppGenerator extends BaseGenerator {
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         String s = _leafToString(l, statement, vars, isLeft);
         System.out.print("\t{ ");
-        System.out.println("In: " + l + " (" + l.getClass().getName() + ")");
+        System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
         System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
         System.out.println("Out: " + s);
         System.out.println("}");
         return s;
      }
     private String _leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
+        if (l == null) {
+            System.out.println("null leaf :<\tDebug: vars="+vars+"; statement="+statement+"; isLeft="+isLeft);
+            //throw new NullPointerException("AHHHH! Null leaf!");
+            return "???NULL???";
+        }
         if (l instanceof BooleanConstant) {
             return String.valueOf(((BooleanConstant) l).value);
         }
@@ -371,23 +376,23 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof SumOperation) {
             SumOperation s = (SumOperation) l;
-            return "("+leafToString(s.left, vars) + ") + (" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " + " + leafToString(s.right, vars);
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
-            return "("+leafToString(s.left, vars) + ") - (" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " - " + leafToString(s.right, vars);
         }
         if (l instanceof MultiplyOperation) {
             MultiplyOperation s = (MultiplyOperation) l;
-            return "("+leafToString(s.left, vars) + ") * (" + leafToString(s.right, vars) + ")";
+            return leafToString(s.left, vars) + " * " + leafToString(s.right, vars);
         }
         if (l instanceof DivisionOperation) {
             DivisionOperation s = (DivisionOperation) l;
-            return "("+leafToString(s.left, vars) + ") / (" + leafToString(s.right, vars)+")";
+            return leafToString(s.left, vars) + " / " + leafToString(s.right, vars);
         }
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
-            return "("+leafToString(s.left, vars) + ") < (" + leafToString(s.right, vars)+")";
+            return leafToString(s.left, vars) + " < " + leafToString(s.right, vars);
         }
         if (l instanceof IntConstant) {
             return l.toString();

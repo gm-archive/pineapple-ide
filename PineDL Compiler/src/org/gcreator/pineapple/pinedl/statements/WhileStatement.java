@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import java.util.Vector;
@@ -30,30 +29,31 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents an while statement
  * @author Luís Reis
  */
-public class WhileStatement extends Leaf{
+public class WhileStatement extends Leaf {
+
     public Expression condition = null;
     public Leaf then = null;
-    
+
     @Override
-    public Leaf optimize(){
-        if(then!=null){
+    public Leaf optimize() {
+        if (then != null) {
             then.optimize();
         }
         condition = (Expression) condition.optimize();
-        if(condition instanceof BooleanConstant){
-            if(!((BooleanConstant) condition).value){
+        if (condition instanceof BooleanConstant) {
+            if (!((BooleanConstant) condition).value) {
                 return null;
             }
         }
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        String s = "while[" + condition.toString() + ", ";
-        
+    public String toString() {
+        String s = "while[" + condition + ", ";
+
         s += then;
-        
+
         return s + "]";
     }
 }

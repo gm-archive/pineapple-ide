@@ -20,10 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.Type;
 
@@ -31,29 +29,30 @@ import org.gcreator.pineapple.pinedl.Type;
  * Represents an if statement
  * @author Luís Reis
  */
-public class Catch extends Leaf{
+public class Catch extends Leaf {
+
     public Type t = null;
     public String name = "e";
     public Leaf then = null;
-    
+
     @Override
-    public Leaf optimize(){
-        if(then!=null){
+    public Leaf optimize() {
+        if (then != null) {
             then.optimize();
         }
         return this;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         String s = "catch[";
-        
-        s += name + ":" + t.toString();
-        
+
+        s += name + ":" + t;
+
         s += ",";
-        
+
         s += then;
-        
+
         return s + "]";
     }
 }
