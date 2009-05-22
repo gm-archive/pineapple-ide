@@ -323,11 +323,10 @@ pre_post_op returns [Expression e = null]
 	(
 	  '++' {e=new PrePostFixOperator(false, true, e);}
 	 |'--' {e=new PrePostFixOperator(false, false, e);}
-	))
+	)?)
 	/* ++x --x */
 	|('++' q=primitive {e=new PrePostFixOperator(true, true, q);})
-	|('--' q=primitive {e=new PrePostFixOperator(true, false, q);}
-  );
+	|('--' q=primitive {e=new PrePostFixOperator(true, false, q);});
 	
 notcastexpr returns [Expression e = null]
 @init{
@@ -405,7 +404,7 @@ ternary_conditional returns [Expression e = null]
 	)*;
 	
 expression returns [Expression e = null]
-	: (MINUS|PLUS)? (r=ternary_conditional {e=r;} (
+	: r=ternary_conditional {e=r;} (
 	(EQUAL q=ternary_conditional {e=new EqualOperation(e, q);})
 	|('+=' q=ternary_conditional {e=new EqualOperation(e, new SumOperation(e,q));})
 	|('-=' q=ternary_conditional {e=new EqualOperation(e, new SubtractionOperation(e,q));})
@@ -417,7 +416,7 @@ expression returns [Expression e = null]
 	|('^=' q=ternary_conditional {e=new EqualOperation(e, new BitwiseXorOperation(e,q));})
 	|('<<=' q=ternary_conditional {e=new EqualOperation(e, new LShiftOperation(e,q));})
 	|('>>=' q=ternary_conditional {e=new EqualOperation(e, new RShiftOperation(e,q));})
-	)*) | (MINUS|PLUS)? (t=ternary_conditional {e=t;});
+	)*;
 
 //End of operations
 
@@ -443,7 +442,7 @@ intconst returns [IntConstant i = null]
 
 INTCONST_PRIVATE
 	:	(
-			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '1'..'7'*))
+			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
@@ -504,7 +503,6 @@ WHITESPACE : (
       | '\n'    // Unix
     )
       // increment the line count in the scanner; useful for syntax errors
-      { newLine(); }
+      /*{ newLine(); }*/
     )
  { $channel = HIDDEN; };
-
