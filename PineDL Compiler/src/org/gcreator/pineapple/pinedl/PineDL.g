@@ -350,7 +350,7 @@ sum_op returns [Expression e = null]
 	)*;
 	
 unary_minus_op returns [Expression e = null]
-	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);})?
+	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);} | PLUS)?
 	a=sum_op {if(e==null){e=a;}else{((SubtractionOperation)e).right = a;}};
 
 bitw_shift_op returns [Expression e = null]
@@ -504,5 +504,6 @@ WHITESPACE : (
     )
       // increment the line count in the scanner; useful for syntax errors
       /*{ newLine(); }*/
+      //Removed this line due to error
     )
  { $channel = HIDDEN; };
