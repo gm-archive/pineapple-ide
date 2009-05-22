@@ -378,6 +378,13 @@ public class CppGenerator extends BaseGenerator {
             SumOperation s = (SumOperation) l;
             return leafToString(s.left, vars) + " + " + leafToString(s.right, vars);
         }
+        if (l instanceof PrePostFixOperator) {
+            PrePostFixOperator s = (PrePostFixOperator) l;
+            if(s.pre){
+                return (s.sum?"++":"--")+leafToString(s.content, vars) + (statement?";":"");
+            }
+            return leafToString(s.content, vars) + (s.sum?"++":"--") + (statement?";":"");
+        }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
             return leafToString(s.left, vars) + " - " + leafToString(s.right, vars);
