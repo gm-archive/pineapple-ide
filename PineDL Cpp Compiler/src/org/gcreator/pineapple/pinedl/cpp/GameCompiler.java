@@ -321,9 +321,12 @@ public class GameCompiler {
         w.println("\tSDL_GL_SwapBuffers();");
         w.println("\tSDL_Delay(100);");
         w.println("\tGame::TextureList::init();");
-        w.println("\tWindow::setFullscreen("+ p.getSettings().get("game-fullscreen") +");");
+        String fullscreen = p.getSettings().get("game-fullscreen");
+        if(fullscreen!=null){
+            w.println("\tWindow::setFullscreen("+ fullscreen +");");
+        }
         w.println("\tPineapple::Window::run();");
-        w.println("\t/* No code is executed beyod this point until after " +
+        w.println("\t/* No code is executed beyond this point until after " +
                 "the game window has been closed. */");
         w.println("}");
         w.close();
@@ -671,7 +674,7 @@ public class GameCompiler {
                 w.println("\t}");
             }
 
-            if (evt.getType().equals(Event.TYPE_KEYPRESSED)) {
+            if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
                 w.println("\tpublic void onKeyPressed(Key key) {");
 
                 w.print(outputEvent(a, evt));
