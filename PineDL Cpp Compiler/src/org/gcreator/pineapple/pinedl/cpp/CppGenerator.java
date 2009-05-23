@@ -286,6 +286,7 @@ public class CppGenerator extends BaseGenerator {
 
             writeLine(s);
 
+            System.out.println(method.content.toString());
 
             writeLine(leafToString(method.content, vars));
 
@@ -323,11 +324,11 @@ public class CppGenerator extends BaseGenerator {
     }
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         String s = _leafToString(l, statement, vars, isLeft);
-        System.out.print("\t{ ");
-        System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
-        System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
-        System.out.println("Out: " + s);
-        System.out.println("}");
+        //System.out.print("\t{ ");
+        //System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
+        //System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
+        //System.out.println("Out: " + s);
+        //System.out.println("}");
         return s;
      }
     private String _leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
@@ -387,7 +388,7 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
-            return leafToString(s.left, vars) + " - " + leafToString(s.right, vars);
+            return "(" + leafToString(s.left, vars) + " - " + leafToString(s.right, vars) + ")";
         }
         if (l instanceof MultiplyOperation) {
             MultiplyOperation s = (MultiplyOperation) l;

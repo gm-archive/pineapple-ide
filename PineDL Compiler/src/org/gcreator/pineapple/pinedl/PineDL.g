@@ -282,6 +282,7 @@ pkgname returns [String s = null]
 
 reference returns [Reference r = null]
 	:	ref=(WORD|'this'|'super') {r = new VariableReference(ref.getText());}
+	
 	(PAREN_L {r = new FunctionReference(ref.getText());}
 		(e=expression {((FunctionReference) r).arguments.add(e);}
 			(',' e=expression {((FunctionReference) r).arguments.add(e);})*
@@ -299,7 +300,7 @@ primitive returns [Expression e = null]
 	   /* 55 */
 	    c=constant {e=c;}
 	   /* 55.23 */
-	    |  (r=reference {e=r;} ('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*)
+	    |  (r=reference {e=r;} (('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*))
 	   /* (6 + 22) */
 		| (PAREN_L x=expression {e=x;} PAREN_R)
 	   /* new Class(1 , 2 , 3 , 4 , 5); */	
@@ -343,20 +344,21 @@ mult_op returns [Expression e = null]
 	|MOD q=notcastexpr {e=new ModOperation(e, q);})
 	)*;
 
+//Enabling this will cause a terrible bug
+//unary_minus_op returns [Expression e = null]
+//	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);} | PLUS)?
+//	a=mult_op {if(e==null){e=a;}else{((SubtractionOperation)e).right = a;}};
+
 sum_op returns [Expression e = null]
 	: t=mult_op {e=t;} (
 	(PLUS q=mult_op {e=new SumOperation(e, q);}
 	|MINUS q=mult_op {e=new SubtractionOperation(e, q);})
 	)*;
-	
-unary_minus_op returns [Expression e = null]
-	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);} | PLUS)?
-	a=sum_op {if(e==null){e=a;}else{((SubtractionOperation)e).right = a;}};
 
 bitw_shift_op returns [Expression e = null]
-	: t=unary_minus_op {e=t;} (
-	(SHIFT_R q=unary_minus_op {e=new RShiftOperation(e, q);}
-	|SHIFT_L q=unary_minus_op {e=new LShiftOperation(e, q);})
+	: t=sum_op {e=t;} (
+	(SHIFT_R q=sum_op {e=new RShiftOperation(e, q);}
+	|SHIFT_L q=sum_op {e=new LShiftOperation(e, q);})
 	)*;
 	
 compop returns [Expression e = null]
@@ -433,7 +435,7 @@ doubleconst returns [DoubleConstant d = null]
 	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
 
 DOUBLECONST_PRIVATE
-	:(MINUS|PLUS)?(DIGIT* '.' DIGIT+);
+	:/*(MINUS|PLUS)?*/(DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
 	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
@@ -442,7 +444,7 @@ intconst returns [IntConstant i = null]
 
 INTCONST_PRIVATE
 	:	(
-			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
+			/*(MINUS|PLUS)?*/(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
