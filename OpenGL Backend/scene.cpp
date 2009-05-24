@@ -68,10 +68,11 @@ void Scene::draw()
     }
     for (unsigned int i = 0; i < views.size(); i++)
     {
+        Drawing d = Drawing();
         View* v = views[i];
         v->set(bgColor);
         drawBackgrounds();
-        drawActors();
+        drawActors(d);
     }
 }
 
@@ -82,7 +83,7 @@ bool compareActors(Actor*& a, Actor*& b)
 //
 //Draw this scene's actors
 //
-void Scene::drawActors()
+void Scene::drawActors(Drawing& d)
 {
     actors.sort(compareActors);
 
@@ -90,7 +91,7 @@ void Scene::drawActors()
     while (i != actors.end())
     {
         glPushMatrix();
-        (*i)->draw();
+        (*i)->draw(d);
         glPopMatrix();
         i++;
     }

@@ -91,6 +91,8 @@ public abstract class BaseGenerator {
                 return "Pineapple::Keyboard" + (reference ? "*" : "");
             } else if (t.type[0].equals("Color")) {
                 return "Pineapple::Color";// + (reference ? "*" : "");
+            } else if (t.type[0].equals("Drawing")) {
+                return "Pineapple::Drawing" + (reference ? "&" : "") ;
             }
         }
         throwError("In file " + fname + ": Unknown type " + t.toString());
@@ -157,7 +159,7 @@ public abstract class BaseGenerator {
 
     protected String detokenize(String id) {
         if (id.startsWith("_")) {
-            return "_P_" + id;
+            return id;
         }
         /*
          * The following aren't PineDL keywords, so the user

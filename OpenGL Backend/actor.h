@@ -4,6 +4,7 @@
 #include "vector.h"
 #include "texture.h"
 #include "keyboard.h"
+#include "drawing.h"
 #include <iostream>
 
 namespace Pineapple {
@@ -60,7 +61,7 @@ public:
 
     virtual void update() {}
     void move();
-    virtual void draw();
+    virtual void draw(Pineapple::Drawing& d);
 
     virtual void onKeyDown(Key key) {}
     virtual void onKeyUp(Key key) {}

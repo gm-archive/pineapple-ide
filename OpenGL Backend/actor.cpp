@@ -81,7 +81,7 @@ void Actor::move()
 //
 //Draws the actor
 //
-void Actor::draw()
+void Actor::draw(Drawing& d)
 {
     if (texture < 0)
         return;

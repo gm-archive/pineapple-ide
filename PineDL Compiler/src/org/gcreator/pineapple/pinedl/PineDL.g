@@ -153,18 +153,6 @@ package org.gcreator.pineapple.pinedl;
 
 }
 
-@lexer::members{
-	private int line = 0;
-	
-	protected void newLine() {
-	    line++;
-	}
-	
-	public int getLine() {
-	    return line;
-	}
-}
-
 @members{
 	private PineClass target = null;
 }
@@ -344,11 +332,6 @@ mult_op returns [Expression e = null]
 	|MOD q=notcastexpr {e=new ModOperation(e, q);})
 	)*;
 
-//Enabling this will cause a terrible bug
-//unary_minus_op returns [Expression e = null]
-//	: (MINUS {e=new SubtractionOperation(new IntConstant(0), null);} | PLUS)?
-//	a=mult_op {if(e==null){e=a;}else{((SubtractionOperation)e).right = a;}};
-
 sum_op returns [Expression e = null]
 	: t=mult_op {e=t;} (
 	(PLUS q=mult_op {e=new SumOperation(e, q);}
@@ -435,7 +418,7 @@ doubleconst returns [DoubleConstant d = null]
 	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
 
 DOUBLECONST_PRIVATE
-	:/*(MINUS|PLUS)?*/(DIGIT* '.' DIGIT+);
+	:(MINUS|PLUS)?(DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
 	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
@@ -444,7 +427,7 @@ intconst returns [IntConstant i = null]
 
 INTCONST_PRIVATE
 	:	(
-			/*(MINUS|PLUS)?*/(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
+			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
@@ -504,8 +487,7 @@ WHITESPACE : (
       | '\r'    // Macintosh
       | '\n'    // Unix
     )
-      // increment the line count in the scanner; useful for syntax errors
-      /*{ newLine(); }*/
-      //Removed this line due to error
     )
  { $channel = HIDDEN; };
+
+
