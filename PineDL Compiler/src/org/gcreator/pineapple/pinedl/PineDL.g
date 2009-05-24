@@ -287,6 +287,9 @@ primitive returns [Expression e = null]
 	:	
 	   /* 55 */
 	    c=constant {e=c;}
+	    |
+	   /* -x */
+        s=(MINUS|PLUS) p=primitive{e = (s.getText().equals("-")) ? new NegationOperation(p) : p;}// Ignore +x
 	   /* 55.23 */
 	    |  (r=reference {e=r;} (('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*))
 	   /* (6 + 22) */
@@ -489,7 +492,6 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
-
 
 
 
