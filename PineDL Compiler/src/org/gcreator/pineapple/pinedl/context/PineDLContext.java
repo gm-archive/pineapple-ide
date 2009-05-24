@@ -23,6 +23,8 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.context;
 
 import java.util.Hashtable;
+import org.gcreator.pineapple.pinedl.Leaf;
+import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 
 /**
@@ -31,7 +33,14 @@ import org.gcreator.pineapple.pinedl.Type;
  */
 public class PineDLContext {
 
+    public enum Flag{
+        StaticData,
+        ContentData
+    }
+    
     public PineDLContext root = null;
+    public Flag flag = null;
+    public PineClass sisterClass = null;
     private String functionName = null;
     private Hashtable<String, Type> vars = new Hashtable<String, Type>();
 
