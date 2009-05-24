@@ -33,6 +33,7 @@ import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
 import org.gcreator.pineapple.pinedl.Function;
 import org.gcreator.pineapple.pinedl.Leaf;
+import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.PineDLLexer;
 import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
@@ -68,22 +69,21 @@ import org.gcreator.pineapple.pinedl.statements.VariableReference;
  */
 public class CppGenerator extends BaseGenerator {
 
-
     public CppGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
-            Vector<String> context) {
+            Vector<String> context, PineClass cls) {
         try {
             this.in = in;
             this.out = out;
             this.cmp = cmp;
+            this.cls = cls;
             this.context = context;
-            parse();
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
                 throw new Exception("Invalid class name!");
             }
             write();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throwError("Parsing exception: " + e.getMessage());
         }
     }
@@ -145,10 +145,10 @@ public class CppGenerator extends BaseGenerator {
             }
             /*Expression e = v.defaultValue;
             if (e != null) {
-                writeLine( v.name + " = " + e.toString() + ";");
+            writeLine( v.name + " = " + e.toString() + ";");
             } else {*/
-                writeLine("/* Note: no default value for field " + v.name + "*/");
-            //}
+            writeLine("/* Note: no default value for field " + v.name + "*/");
+        //}
         }
     }
 
@@ -203,6 +203,7 @@ public class CppGenerator extends BaseGenerator {
     }
 
     public boolean isType(Reference e) {
+        System.out.println("isType applied to " + e.getClass().getName());
         if (e instanceof VariableReference) {
             if (isType(((VariableReference) e).name)) {
                 return true;
@@ -255,9 +256,9 @@ public class CppGenerator extends BaseGenerator {
             writeLine(s);
             String content = leafToString(c.content, vars);
             int index = content.indexOf('{');
-            writeLine(content.substring(0, index+1));
+            writeLine(content.substring(0, index + 1));
             writeInitFields();
-            writeLine(content.substring(index+1));
+            writeLine(content.substring(index + 1));
 
             writeLine();
         }
@@ -307,7 +308,7 @@ public class CppGenerator extends BaseGenerator {
             if (r != null) {
                 for (ClassResource.Field f : r.fields) {
                     if (f.getName().equals(v.name)) {
-                        if (f.getDefaultValue() != null && f.getDefaultValue() != "") {
+                        if (f.getDefaultValue() != null && !f.getDefaultValue().isEmpty()) {
                             s += " = " + f.getDefaultValue();
                         }
                         break;
@@ -325,6 +326,7 @@ public class CppGenerator extends BaseGenerator {
     private String leafToString(Leaf l, boolean statement, PineDLContext vars) throws Exception {
         return leafToString(l, statement, vars, true);
     }
+
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         String s = _leafToString(l, statement, vars, isLeft);
         System.out.print("\t{ ");
@@ -333,13 +335,15 @@ public class CppGenerator extends BaseGenerator {
         System.out.println("Out: " + s);
         System.out.println("}");
         return s;
-     }
+    }
+
     private String _leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         if (l == null) {
-            System.out.println("null leaf :<\tDebug: vars="+vars+"; statement="+statement+"; isLeft="+isLeft);
+            System.out.println("null leaf :<\tDebug: vars=" + vars + "; statement=" + statement + "; isLeft=" + isLeft);
             //throw new NullPointerException("AHHHH! Null leaf!");
             return "???NULL???";
         }
+        System.out.println("Left type" + l.getClass().getName());
         if (l instanceof BooleanConstant) {
             return String.valueOf(((BooleanConstant) l).value);
         }
@@ -384,10 +388,10 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof PrePostFixOperator) {
             PrePostFixOperator s = (PrePostFixOperator) l;
-            if(s.pre){
-                return (s.sum?"++":"--")+leafToString(s.content, vars) + (statement?";":"");
+            if (s.pre) {
+                return (s.sum ? "++" : "--") + leafToString(s.content, vars) + (statement ? ";" : "");
             }
-            return leafToString(s.content, vars) + (s.sum?"++":"--") + (statement?";":"");
+            return leafToString(s.content, vars) + (s.sum ? "++" : "--") + (statement ? ";" : "");
         }
         if (l instanceof SubtractionOperation) {
             SubtractionOperation s = (SubtractionOperation) l;
@@ -486,40 +490,69 @@ public class CppGenerator extends BaseGenerator {
             }
             x += ')';
             if (statement) {
+                System.out.println("Statement");
                 x += ';';
+            }
+            else{
+                System.out.println("Not statement");
             }
             return x;
         }
         if (l instanceof VariableReference) {
             if (isType((VariableReference) l) && isLeft) {
-                return ((VariableReference) l).name.replaceAll("\\.", "::");
+                String name = ((VariableReference) l).name;
+                for(String s : cmp.classContext.keySet()){
+                    System.out.println("key " + s);
+                }
+                return name.replaceAll("\\.", "::");
             }
             return ((VariableReference) l).name;
         }
         if (l instanceof RetrieverExpression) {
             RetrieverExpression e = (RetrieverExpression) l;
             if (isType(e) && isLeft) {
+                System.out.println("Type is " + e);
                 return e.toString().replaceAll("\\.", "::");
             } else if (e.left instanceof RetrieverExpression) {
                 boolean istype = isType(e.left) && isLeft;
-                return leafToString(e.left, false, vars) + (istype ? "::" : "->") +
-                        leafToString(e.right, false, vars, false);
+                String s = leafToString(e.left, false, vars);
+                String t = leafToString(e.right, false, vars, false);
+                if (istype) {
+                    System.out.println("In type " + s + ", retrieve " + t);
+                }
+                return s + (istype ? "::" : "->") + t;
             } else if (e.left instanceof VariableReference) {
+                System.out.println("isType(e.left); where e.left= " + e.left);
                 boolean istype = isType(e.left) && isLeft;
                 boolean declared = vars.isVariableDeclared(e.left.toString());
+                System.out.println("declared: " + declared + ", istype: " + istype);
+                if (!declared && isLeft) {
+                    if (istype) {
+                        String tname = e.left.toString();
+                        System.out.println("Type: " + tname);
+                        for(String s : cmp.classContext.keySet()){
+                            System.out.println("key " + s);
+                        }
+                    } else {
+                        String tname = e.left.toString();
+                        System.out.println("Variable: " + tname);
+                        if(!vars.isVariableDeclared(tname)
+                                && !cls.variables.contains(tname)){
+                            throwError("In class " + cls.clsName + ", "
+                                    + "function " + vars.getFunctionName()
+                                    + ":\n'" + tname + "' does not name a"
+                                    + " type nor a variable.");
+                        }
+                    }
+                }
+                PineDLContext newContext = new PineDLContext(vars);
                 return (declared ? "" : "::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
-                        leafToString(e.right, false, vars, false);
+                        leafToString(e.right, false, newContext, false) + (statement?";":"");
             }
             return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
         }
-
-        if (l instanceof PrePostFixOperator) {
-            PrePostFixOperator p = (PrePostFixOperator) l;
-            //NOTE: should work, as long as all is working well
-            return p.content.toString();
-        }
         if (l instanceof ModOperation) {
-            ModOperation m = (ModOperation)l;
+            ModOperation m = (ModOperation) l;
             return leafToString(m.left, false, vars) + " % " + leafToString(m.right, false, vars);
         }
         if (l instanceof EqualsOperation) {
@@ -531,5 +564,4 @@ public class CppGenerator extends BaseGenerator {
         System.out.println("\t oh well just returning " + l.toString());
         return l.toString();
     }
-
 }

@@ -60,6 +60,7 @@ import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.formats.ClassResource;
 import org.gcreator.pineapple.formats.ClassResource.Field;
 import org.gcreator.pineapple.game2d.GamePlugin;
+import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -96,6 +97,7 @@ public class GameCompiler {
     HashMap<File, String> imageNames = new HashMap<File, String>();
     HashMap<String, String> config = new HashMap<String, String>();
     HashMap<String, ClassResource> clsres = new HashMap<String, ClassResource>();
+    HashMap<String, PineClass> classContext = new HashMap<String, PineClass>();
     static boolean copiedLib = false;
 
     public GameCompiler(final Project p) {
@@ -176,13 +178,20 @@ public class GameCompiler {
                             buildContext();
                             compFrame.writeLine("Generating C++ and header files");
                             context.add("TextureList");
+                            HashMap<File, PineClass> tmp = new HashMap<File, PineClass>();
                             for (File script : pineScripts) {
                                 if (!worked) {
                                     return;
                                 }
                                 compFrame.writeLine("<em>"+script.getName()+"...</em>");
-                                generateHeader(script);
-                                generateCppFile(script);
+                                PineClass cls = generateHeader(script);
+                                String name = script.getName();
+                                name = name.substring(0, name.indexOf('.'));
+                                classContext.put(name, cls);
+                                tmp.put(script, cls);
+                            }
+                            for(File script : tmp.keySet()){
+                                generateCppFile(script, tmp.get(script));
                             }
                             /* Only copy lib once every time
                             Pineapple is run. */
@@ -451,7 +460,7 @@ public class GameCompiler {
         }
     }
 
-    private void generateHeader(File script) throws IOException {
+    private PineClass generateHeader(File script) throws IOException {
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
@@ -465,9 +474,10 @@ public class GameCompiler {
             worked = false;
         }
         fos.close();
+        return gen.cls;
     }
 
-    private void generateCppFile(File script) throws IOException {
+    private void generateCppFile(File script, PineClass cls) throws IOException {
         InputStream is = new FileInputStream(script);
         String fname = script.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
@@ -477,7 +487,7 @@ public class GameCompiler {
             System.out.println("Blank file: " + fname + "; skipping");
             return;
         }
-        CppGenerator gen = new CppGenerator(is, fos, this, fname, context);
+        CppGenerator gen = new CppGenerator(is, fos, this, fname, context, cls);
         if (!gen.wasSuccessful()) {
             worked = false;
         }

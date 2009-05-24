@@ -43,7 +43,7 @@ import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 public abstract class BaseGenerator {
 
     protected GameCompiler cmp = null;
-    protected PineClass cls = null;
+    public PineClass cls = null;
     protected String fname = "";
     protected Vector<String> context = null;
     protected boolean successful = true;
@@ -150,8 +150,9 @@ public abstract class BaseGenerator {
     }
 
     protected void throwError(String error) {
-        String message = "[ERROR] ";
+        String message = "<font color='red'>";
         message += error;
+        message += "</font>";
         successful = false;
 
         cmp.compFrame.writeLine(message);
