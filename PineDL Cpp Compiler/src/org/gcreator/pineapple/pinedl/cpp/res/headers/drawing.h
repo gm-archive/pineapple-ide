@@ -39,12 +39,12 @@ void drawColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 /* Simple Shapes */
 
 void drawCircle(GLint x,GLint y, GLint r, bool filled = true);
-void drawLine(GLint x,GLint y, GLint x2, GLint y2, GLint width = 1);
+void drawLine(GLint x1,GLint y1, GLint x2, GLint y2, GLint width = 1);
 void drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
 void drawRoundRect(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
 void drawEllipse(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
 void drawTriangle(GLint x1, GLint y1, GLint x2, GLint y2, GLint x3, GLint y3, bool filled = true);
 void drawPoint(GLint x, GLint y);
-void drawArrow(GLint x1, GLint y1, GLint x2, GLint y2, GLint size);
+void drawArc(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
 
 #endif // DRAWING_H_INCLUDED

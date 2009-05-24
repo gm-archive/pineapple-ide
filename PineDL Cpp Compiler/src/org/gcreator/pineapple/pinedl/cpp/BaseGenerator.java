@@ -89,6 +89,8 @@ public abstract class BaseGenerator {
                 return "Pineapple::Key";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Keyboard")) {
                 return "Pineapple::Keyboard" + (reference ? "*" : "");
+            } else if (t.type[0].equals("Color")) {
+                return "Pineapple::Color";// + (reference ? "*" : "");
             }
         }
         throwError("In file " + fname + ": Unknown type " + t.toString());

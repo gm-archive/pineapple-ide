@@ -407,6 +407,7 @@ public class GameCompiler {
         }
 
 
+        command.add("-ggdb");
         String[] args = command.toArray(new String[command.size()]);
         compFrame.writeLine("Calling GCC C++ for executable generation");
         StringBuffer cmd = new StringBuffer("<font color='green'><em>");
@@ -674,7 +675,7 @@ public class GameCompiler {
                 w.println("\t}");
             }
 
-            if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
+            if (evt.getType().equals(Event.TYPE_KEYPRESSED)) {
                 w.println("\tpublic void onKeyPressed(Key key) {");
 
                 w.print(outputEvent(a, evt));
