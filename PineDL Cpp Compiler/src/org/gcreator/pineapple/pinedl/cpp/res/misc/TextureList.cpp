@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <zlib.h>
+#include <ctime>
 
 using namespace Game;
 using namespace std;
@@ -11,6 +12,7 @@ struct ImageData
    long long size;
    long long decompressed_size;
    Texture* tex;
+   time_t last_used;
 };
 
 vector<ImageData*> images;
@@ -79,6 +81,7 @@ Texture* TextureList::Get_Texture(int id)
 	{
 		Load_Textures(&id, 1);
 	}
+    images[id]->tex = time(NULL);
 	return images[id]->tex;
 }
 
