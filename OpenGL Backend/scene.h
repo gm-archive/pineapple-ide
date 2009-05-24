@@ -21,7 +21,7 @@ protected:
     int width;
     int height;
 
-    virtual void drawActors(Drawing& d);
+    virtual void drawActors(Drawing* d);
     virtual void drawBackgrounds();
 public:
     Scene(int width, int height);

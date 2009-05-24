@@ -61,7 +61,7 @@ public:
 
     virtual void update() {}
     void move();
-    virtual void draw(Pineapple::Drawing& d);
+    virtual void draw(Pineapple::Drawing* d);
 
     virtual void onKeyDown(Key key) {}
     virtual void onKeyUp(Key key) {}

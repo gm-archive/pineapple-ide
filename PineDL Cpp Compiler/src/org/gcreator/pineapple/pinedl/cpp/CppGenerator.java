@@ -196,6 +196,9 @@ public class CppGenerator extends BaseGenerator {
         if (t.equals("Color") || t.equals("Pineapple.Color")) {
             return true;
         }
+        if (t.equals("Drawing") || t.equals("Pineapple.Drawing")) {
+            return true;
+        }
         return false;
     }
 
@@ -324,11 +327,11 @@ public class CppGenerator extends BaseGenerator {
     }
     private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         String s = _leafToString(l, statement, vars, isLeft);
-        //System.out.print("\t{ ");
-        //System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
-        //System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
-        //System.out.println("Out: " + s);
-        //System.out.println("}");
+        System.out.print("\t{ ");
+        System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
+        System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
+        System.out.println("Out: " + s);
+        System.out.println("}");
         return s;
      }
     private String _leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {

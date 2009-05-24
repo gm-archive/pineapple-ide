@@ -92,7 +92,7 @@ public abstract class BaseGenerator {
             } else if (t.type[0].equals("Color")) {
                 return "Pineapple::Color";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Drawing")) {
-                return "Pineapple::Drawing" + (reference ? "&" : "") ;
+                return "Pineapple::Drawing" + (reference ? "*" : "") ;
             }
         }
         throwError("In file " + fname + ": Unknown type " + t.toString());

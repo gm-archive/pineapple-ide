@@ -68,7 +68,7 @@ void Scene::draw()
     }
     for (unsigned int i = 0; i < views.size(); i++)
     {
-        Drawing d = Drawing();
+        Drawing* d = new Drawing();
         View* v = views[i];
         v->set(bgColor);
         drawBackgrounds();
@@ -83,7 +83,7 @@ bool compareActors(Actor*& a, Actor*& b)
 //
 //Draw this scene's actors
 //
-void Scene::drawActors(Drawing& d)
+void Scene::drawActors(Drawing* d)
 {
     actors.sort(compareActors);
 

@@ -22,6 +22,12 @@
             <fileset dir="PineDL Compiler" includes="xbuild.xml"/>
         </subant>
     </target>
+
+    <target name="debug-single">
+        <subant target="debug-single">
+            <fileset dir="PineDL Compiler" includes="xbuild.xml"/>
+        </subant>
+    </target>
     
     <target name="jar">
         <subant target="jar">

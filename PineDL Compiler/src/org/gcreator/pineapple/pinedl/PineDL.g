@@ -309,7 +309,7 @@ pre_post_op returns [Expression e = null]
 	:
 	/* x++ x-- */
   (p=primitive {e=p;}
-	(
+  (
 	  '++' {e=new PrePostFixOperator(false, true, e);}
 	 |'--' {e=new PrePostFixOperator(false, false, e);}
 	)?)
@@ -415,19 +415,19 @@ STRINGCONST_PRIVATE
 	'"');
 
 doubleconst returns [DoubleConstant d = null]
-	: v=DOUBLECONST_PRIVATE {d=new DoubleConstant(v.getText());};
+	: s=(PLUS|MINUS)? v=DOUBLECONST_PRIVATE {d=new DoubleConstant(((s != null) ? s.getText() : "")+v.getText());};
 
 DOUBLECONST_PRIVATE
-	:(MINUS|PLUS)?(DIGIT* '.' DIGIT+);
+	: (DIGIT* '.' DIGIT+);
 
 intconst returns [IntConstant i = null]
-	: v=INTCONST_PRIVATE {i = new IntConstant(v.getText());};
+	: s=(PLUS|MINUS)? v=INTCONST_PRIVATE {i = new IntConstant(((s != null) ? s.getText() : "")+v.getText());};
 
 
 
 INTCONST_PRIVATE
 	:	(
-			(MINUS|PLUS)?(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
+			(('1'..'9' DIGIT*)|('0x' ('0'..'9'|'a'..'f'|'A'..'F')+)|('0' '0'..'7'*))
 		);
 
 nullconst returns [NullConstant n = new NullConstant()]
@@ -489,5 +489,7 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
+
+
 
 
