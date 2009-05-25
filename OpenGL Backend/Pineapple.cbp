@@ -40,6 +40,10 @@
 		<Unit filename="actor.h" />
 		<Unit filename="application.cpp" />
 		<Unit filename="application.h" />
+		<Unit filename="array.cpp" />
+		<Unit filename="array.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="background.cpp" />
 		<Unit filename="background.h" />
 		<Unit filename="color.cpp" />
