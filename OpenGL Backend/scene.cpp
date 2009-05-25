@@ -59,7 +59,11 @@ void Scene::update()
 //
 void Scene::draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    if(bgColor!=NULL)
+    {
+        glClearColor(bgColor->getRed(), bgColor->getGreen(), bgColor->getBlue(), bgColor->getAlpha());
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
 
     if (views.size() == 0)
     {
