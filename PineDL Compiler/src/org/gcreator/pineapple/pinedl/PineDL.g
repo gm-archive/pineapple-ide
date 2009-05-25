@@ -306,7 +306,7 @@ primitive returns [Expression e = null]
 		PAREN_R
 	)
 		/* new int[] { 1 , 2 , 3 , 4 , 5} */
-		| ('new' t=clstype '[' x=expression ']' {e=new NewArray(t, x);});
+		| ('new' (t=clstype '[' x=expression ']' {e=new NewArray(t, x);})|(t=nativetype '[' x=expression ']' {e=new NewArray(t, x);}));
 		
 pre_post_op returns [Expression e = null]
 	:
@@ -441,7 +441,7 @@ boolconst returns [BooleanConstant b = new BooleanConstant(false)]
 
 type returns [Type type = new Type()]
 	: (i=nativetype {type=i;})|(t=clstype {type=t;})
-	('[' ']' {Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;})*;
+	(ARRAY_L ARRAY_R {Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;})*;
 
 clstype returns [Type type = new Type()]
 @init{
@@ -492,4 +492,3 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
-

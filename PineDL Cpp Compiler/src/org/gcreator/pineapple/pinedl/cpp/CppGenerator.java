@@ -39,6 +39,7 @@ import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.Variable;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
+import org.gcreator.pineapple.pinedl.statements.ArrayReference;
 import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
 import org.gcreator.pineapple.pinedl.statements.DeclAssign;
@@ -54,6 +55,7 @@ import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.ModOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NegationOperation;
+import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
 import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
 import org.gcreator.pineapple.pinedl.statements.Reference;
@@ -349,6 +351,7 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof DeclAssign) {
             DeclAssign da = (DeclAssign) l;
+            System.out.println("Reached DeclAssign with" + typeToString(da.type, false));
             if (vars.isVariableDeclared(da.name)) {
                 throw new Exception("In function " + vars.getFunctionName() + ": " + "Redeclaring variable '" + da.name + "'");
             }
@@ -525,6 +528,17 @@ public class CppGenerator extends BaseGenerator {
         if (l instanceof EqualsOperation) {
             EqualsOperation e = (EqualsOperation) l;
             return leafToString(e.left, false, vars) + " == " + leafToString(e.right, false, vars);
+        }
+        if (l instanceof NewArray) {
+            NewArray e = (NewArray) l;
+            return "new Array<" + typeToString(e.type, true) + ">(" +
+                    leafToString(e.size, false, vars) + ")" +
+                    (statement ? ";" : "");
+        }
+        if (l instanceof ArrayReference) {
+            ArrayReference ar = (ArrayReference) l;
+            return leafToString(ar.base, false, vars) + "[" + leafToString(ar.exp, false, vars)
+                    + "]";
         }
 
         System.out.println("Oh NOES! No stuffles for " + l + " of class " + l.getClass().getName());

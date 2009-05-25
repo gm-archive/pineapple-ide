@@ -18,6 +18,18 @@ class IOException : public Exception{
         IOException(const std::string message) : Exception(message){}
 };
 
+class IndexOutOfBoundsException : public Exception{
+    public:
+        IndexOutOfBoundsException() : Exception(){}
+        IndexOutOfBoundsException(const std::string message) : Exception(message){}
+};
+
+class InvalidArgumentException : public Exception{
+    public:
+        InvalidArgumentException() : Exception(){}
+        InvalidArgumentException(const std::string message) : Exception(message){}
+};
+
 }
 
 #endif

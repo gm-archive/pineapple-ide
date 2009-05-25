@@ -356,6 +356,7 @@ public class GameCompiler {
         }
         compFrame.writeLine("Copying header files");
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "actor.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "array.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "application.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "background.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h", replace);
@@ -809,6 +810,7 @@ public class GameCompiler {
         headerH.println("#ifndef _PINEAPPLE_HEADER_H_");
         headerH.println("#define _PINEAPPLE_HEADER_H_");
         headerH.println("#include \"actor.h\"");
+        headerH.println("#include \"array.h\"");
         headerH.println("#include \"application.h\"");
         headerH.println("#include \"background.h\"");
         headerH.println("#include \"color.h\"");

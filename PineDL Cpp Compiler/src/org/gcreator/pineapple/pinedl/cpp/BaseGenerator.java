@@ -61,7 +61,7 @@ public abstract class BaseGenerator {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return retrieveType(t.arrayType, reference) + "*";
+            return "new ::Pineapple::Array<"+retrieveType(t.arrayType, reference) + ">*";
         }
         if (t.type.length != 1) {
             return typeToString(t, reference);
@@ -78,21 +78,21 @@ public abstract class BaseGenerator {
         }
         if (t.type.length == 1) {
             if (t.type[0].equals("Texture")) {
-                return "Pineapple::Texture" + (reference ? "*" : "");
+                return "::Pineapple::Texture" + (reference ? "*" : "");
             } else if (t.type[0].equals("Actor")) {
-                return "Pineapple::Actor" + (reference ? "*" : "");
+                return "::Pineapple::Actor" + (reference ? "*" : "");
             } else if (t.type[0].equals("Scene")) {
-                return "Pineapple::Scene" + (reference ? "*" : "");
+                return "::Pineapple::Scene" + (reference ? "*" : "");
             } else if (t.type[0].equals("Math")) {
-                return "Pineapple::Math" + (reference ? "*" : "");
+                return "::Pineapple::Math" + (reference ? "*" : "");
             } else if (t.type[0].equals("Key")) {
-                return "Pineapple::Key";// + (reference ? "*" : "");
+                return "::Pineapple::Key";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Keyboard")) {
-                return "Pineapple::Keyboard" + (reference ? "*" : "");
+                return "::Pineapple::Keyboard" + (reference ? "*" : "");
             } else if (t.type[0].equals("Color")) {
-                return "Pineapple::Color";// + (reference ? "*" : "");
+                return "::Pineapple::Color";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Drawing")) {
-                return "Pineapple::Drawing" + (reference ? "*" : "") ;
+                return "::Pineapple::Drawing" + (reference ? "*" : "") ;
             }
         }
         throwError("In file " + fname + ": Unknown type " + t.toString());
@@ -101,7 +101,7 @@ public abstract class BaseGenerator {
 
     protected String typeToString(Type t, boolean reference) {
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return typeToString(t.arrayType, true) + "*";
+            return "new ::Pineapple::Array<"+typeToString(t.arrayType, true) + ">*";
         }
         if (t.typeCategory == TypeCategory.NATIVE) {
             if (t.nativeType == NativeType.BOOL) {
