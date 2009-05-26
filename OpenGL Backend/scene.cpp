@@ -97,6 +97,7 @@ void Scene::drawActors(Drawing* d)
         glPushMatrix();
         (*i)->draw(d);
         glPopMatrix();
+	d->drawColor(Color::WHITE);
         i++;
     }
 }
