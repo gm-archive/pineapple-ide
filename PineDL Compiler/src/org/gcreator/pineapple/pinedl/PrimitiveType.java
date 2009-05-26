@@ -28,7 +28,7 @@ package org.gcreator.pineapple.pinedl;
  * 
  * @author Luís Reis
  */
-public enum NativeType {
+public enum PrimitiveType {
     INT,
     UINT,
     FLOAT,

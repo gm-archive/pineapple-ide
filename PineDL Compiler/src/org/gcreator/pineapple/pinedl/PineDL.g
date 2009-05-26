@@ -306,7 +306,7 @@ primitive returns [Expression e = null]
 		PAREN_R
 	)
 		/* new int[] { 1 , 2 , 3 , 4 , 5} */
-		| ('new' (t=clstype '[' x=expression ']' {e=new NewArray(t, x);})|(t=nativetype '[' x=expression ']' {e=new NewArray(t, x);}));
+		| ('new' (t=clstype '[' x=expression ']' {e=new NewArray(t, x);})|(t=primitivetype '[' x=expression ']' {e=new NewArray(t, x);}));
 		
 pre_post_op returns [Expression e = null]
 	:
@@ -440,7 +440,7 @@ boolconst returns [BooleanConstant b = new BooleanConstant(false)]
 	:	('true' {b.value = true;})|'false';
 
 type returns [Type type = new Type()]
-	: (i=nativetype {type=i;})|(t=clstype {type=t;})
+	: (i=primitivetype {type=i;})|(t=clstype {type=t;})
 	(ARRAY_L ARRAY_R {Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;})*;
 
 clstype returns [Type type = new Type()]
@@ -450,20 +450,20 @@ clstype returns [Type type = new Type()]
 }
 	:	(c=WORD {s += c.getText();} ('.' t=WORD {s += "." + t.getText();})*) {type.type = s.split("\\.");};
 
-nativetype returns [Type type = new Type()]
+primitivetype returns [Type type = new Type()]
 @init{
-	type.typeCategory = TypeCategory.NATIVE;
-} :	('int' {type.nativeType = NativeType.INT;})|
-	('uint' {type.nativeType = NativeType.UINT;})|
-	('float' {type.nativeType = NativeType.FLOAT;})|
-	('ufloat' {type.nativeType = NativeType.UFLOAT;})|
-	('double' {type.nativeType = NativeType.DOUBLE;})|
-	('udouble' {type.nativeType = NativeType.UDOUBLE;})|
-	('char' {type.nativeType = NativeType.CHAR;})|
-	('uchar' {type.nativeType = NativeType.UCHAR;})|
-	('bool' {type.nativeType = NativeType.BOOL;})|
-	('string' {type.nativeType = NativeType.STRING;})|
-	('void' {type.nativeType = NativeType.VOID;});
+	type.typeCategory = TypeCategory.PRIMITIVE;
+} :	('int' {type.primitiveType = PrimitiveType.INT;})|
+	('uint' {type.primitiveType = PrimitiveType.UINT;})|
+	('float' {type.primitiveType = PrimitiveType.FLOAT;})|
+	('ufloat' {type.primitiveType = PrimitiveType.UFLOAT;})|
+	('double' {type.primitiveType = PrimitiveType.DOUBLE;})|
+	('udouble' {type.primitiveType = PrimitiveType.UDOUBLE;})|
+	('char' {type.primitiveType = PrimitiveType.CHAR;})|
+	('uchar' {type.primitiveType = PrimitiveType.UCHAR;})|
+	('bool' {type.primitiveType = PrimitiveType.BOOL;})|
+	('string' {type.primitiveType = PrimitiveType.STRING;})|
+	('void' {type.primitiveType = PrimitiveType.VOID;});
 	
 accesscontrolkeyword returns [AccessControlKeyword a = AccessControlKeyword.PUBLIC]
 	:	'public' | ('private' {a = AccessControlKeyword.PRIVATE;}) | ('protected' {a = AccessControlKeyword.PROTECTED;});
@@ -492,3 +492,4 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
+

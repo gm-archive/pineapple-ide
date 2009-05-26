@@ -1,6 +1,5 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
+Copyright (C) 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +19,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
 
 /**
+ * Represents a negation operation, such as -x.
  *
- * @author Luís Reis
+ * @author Serge Humphrey
  */
-public class NegationOperation extends Expression{
-    public Leaf exp = null;
-    
-    public NegationOperation(){
-        
+public class NegationOperation extends Operation {
+
+    public Expression exp = null;
+
+    public NegationOperation() {
     }
-    
-    public NegationOperation(Leaf content){
-        exp = content;
+
+    public NegationOperation(Expression e) {
+        this.exp = e;
     }
-    
+
     @Override
-    public Leaf optimize(){
+    public Leaf optimize() {
+        exp = (Expression) exp.optimize();
         return this;
     }
-    
+
     @Override
-    public String toString(){
-        return "-"+exp.toString();
+    public String toString() {
+        return "-" + exp;
     }
 }

@@ -23,7 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.io.IOException;
-import org.gcreator.pineapple.pinedl.NativeType;
+import org.gcreator.pineapple.pinedl.PrimitiveType;
 import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
@@ -57,7 +57,7 @@ public abstract class BaseGenerator {
     }
 
     protected String retrieveType(Type t, boolean reference) {
-        if (t.typeCategory == TypeCategory.NATIVE) {
+        if (t.typeCategory == TypeCategory.PRIMITIVE) {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
@@ -103,38 +103,38 @@ public abstract class BaseGenerator {
         if (t.typeCategory == TypeCategory.ARRAY) {
             return "new ::Pineapple::Array<"+typeToString(t.arrayType, true) + ">*";
         }
-        if (t.typeCategory == TypeCategory.NATIVE) {
-            if (t.nativeType == NativeType.BOOL) {
+        if (t.typeCategory == TypeCategory.PRIMITIVE) {
+            if (t.primitiveType == PrimitiveType.BOOL) {
                 return "bool";
             }
-            if (t.nativeType == NativeType.CHAR) {
+            if (t.primitiveType == PrimitiveType.CHAR) {
                 return "signed char";
             }
-            if (t.nativeType == NativeType.DOUBLE) {
+            if (t.primitiveType == PrimitiveType.DOUBLE) {
                 return "double";
             }
-            if (t.nativeType == NativeType.FLOAT) {
+            if (t.primitiveType == PrimitiveType.FLOAT) {
                 return "float";
             }
-            if (t.nativeType == NativeType.INT) {
+            if (t.primitiveType == PrimitiveType.INT) {
                 return "int";
             }
-            if (t.nativeType == NativeType.VOID) {
+            if (t.primitiveType == PrimitiveType.VOID) {
                 return "void";
             }
-            if (t.nativeType == NativeType.STRING) {
+            if (t.primitiveType == PrimitiveType.STRING) {
                 return "std::string";
             }
-            if (t.nativeType == NativeType.UCHAR) {
+            if (t.primitiveType == PrimitiveType.UCHAR) {
                 return "unsigned char";
             }
-            if (t.nativeType == NativeType.UDOUBLE) {
+            if (t.primitiveType == PrimitiveType.UDOUBLE) {
                 return "unsigned double";
             }
-            if (t.nativeType == NativeType.UFLOAT) {
+            if (t.primitiveType == PrimitiveType.UFLOAT) {
                 return "unsigned float";
             }
-            if (t.nativeType == NativeType.UINT) {
+            if (t.primitiveType == PrimitiveType.UINT) {
                 return "unsigned int";
             }
         }

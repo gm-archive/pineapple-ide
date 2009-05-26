@@ -23,7 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.statements;
 
 import org.gcreator.pineapple.pinedl.Leaf;
-import org.gcreator.pineapple.pinedl.NativeType;
+import org.gcreator.pineapple.pinedl.PrimitiveType;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
 
@@ -47,8 +47,8 @@ public class TypeCast extends Operation {
     @Override
     public Leaf optimize() {
         exp = (Expression) exp.optimize();
-        if (type.typeCategory == TypeCategory.NATIVE && exp instanceof Constant) {
-            if (type.nativeType == NativeType.STRING) {
+        if (type.typeCategory == TypeCategory.PRIMITIVE && exp instanceof Constant) {
+            if (type.primitiveType == PrimitiveType.STRING) {
                 if (exp instanceof StringConstant) {
                     return exp;
                 } else {

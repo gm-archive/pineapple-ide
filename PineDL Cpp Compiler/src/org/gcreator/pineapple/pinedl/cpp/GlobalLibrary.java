@@ -20,70 +20,92 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-/*
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.util.Vector;
-import org.gcreator.pineapple.pinedl.AccessControlKeyword;
-import org.gcreator.pineapple.pinedl.Argument;
-import org.gcreator.pineapple.pinedl.Function;
-import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
-import org.gcreator.pineapple.pinedl.Variable;
-*/
+
 /**
- * 
- * FUTURE CLASS: Not yet needed
  * 
  * Defines all the classes defined in the Pineapple core library
  * and scripts.
- * Good for context.
+ *
  * @author Luís Reis
+ * @author Serge Humphrey
  */
-/*public class GlobalLibrary {
-    public Vector<PineClass> userDefinedClasses = new Vector<PineClass>();
-    public Vector<PineClass> coreClasses = new Vector<PineClass>();
-    
-    public static final Type SCENE = new Type("Pineapple.Scene");
-    
-    public GlobalLibrary(){
-        PineClass Application = new PineClass(){{
-            packageName = new String[]{"Pineapple"};
-            clsName = "Application";
-            variables.add(new Variable(
-                    AccessControlKeyword.PRIVATE, true, Type.INT, "speed"));
-            variables.add(new Variable(
-                    AccessControlKeyword.PRIVATE, true, Type.BOOL, "running"));
-            variables.add(new Variable(
-                    AccessControlKeyword.PRIVATE, true, SCENE, "currentScene"));
-            
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.VOID, "init"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.VOID, "exit"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.BOOL, "isRunning"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.INT, "getSpeed"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.STRING, "getCurrentDirectory"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.STRING, "getExecutablePath"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.STRING, "getExecutableDirectory"));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, Type.VOID, "setScene", new Argument(SCENE, "scene")));
-            functions.add(new Function(
-                    AccessControlKeyword.PUBLIC, true, SCENE, "getScene"));
-            
-        }};
-        coreClasses.add(Application);
-        
-        PineClass Texture = new PineClass(){{
-            packageName = new String[]{"Pineapple"};
-            clsName = "Texture";
-        }};
+public class GlobalLibrary {
+
+    public static Vector<ClassDefinition> coreClasses = new Vector<ClassDefinition>();
+    public static Vector<ClassDefinition> userDefinedClasses = new Vector<ClassDefinition>();
+
+    static {
+        /* Add the functions provided by libPineapple.a, the OpenGL Backend */
+    }
+
+    private GlobalLibrary() {
+    }
+
+    public static class ClassDefinition {
+
+        public String name;
+        public Vector<ClassDefinition> classes;
+        public Vector<MethodDefinition> methods;
+        public Vector<FieldDefinition> fields;
+
+        public ClassDefinition(String name) {
+            this.name = name;
+            this.classes = new Vector<ClassDefinition>();
+            this.methods = new Vector<MethodDefinition>();
+            this.fields = new Vector<FieldDefinition>();
+        }
+    }
+
+    public static class FieldDefinition {
+        public String name;
+        public boolean isStatic;
+        public boolean isFinal;
+        public Type type;
+
+        public FieldDefinition(String name, Type type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        public FieldDefinition(String name, Type type, boolean isStatic, boolean isFinal) {
+            this(name, type);
+            this.isStatic = isStatic;
+            this.isFinal = isFinal;
+        }
+    }
+
+    public static class MethodDefinition {
+        public String name;
+        public Vector<Variable> arguments;
+        public boolean isFinal;
+        public boolean isStatic;
+        public Type returnType;
+
+        public MethodDefinition(String name, Type returnType) {
+            this.name = name;
+            this.returnType = returnType;
+            this.arguments = new Vector<Variable>();
+        }
+
+        public MethodDefinition(String name, Type returnType, boolean isStatic, boolean isFinal) {
+            this(name, returnType);
+            this.isStatic = isStatic;
+            this.isFinal = isFinal;
+        }
+    }
+
+    public static class Variable {
+        String name;
+        Type type;
+        public Variable(String name, Type type) {
+            this.name = name;
+            this.type = type;
+        }
     }
 }
-*/
+
     
