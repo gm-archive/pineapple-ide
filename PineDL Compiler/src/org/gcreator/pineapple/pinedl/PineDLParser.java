@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g 2009-05-25 23:52:50
+// $ANTLR 3.1.2 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g 2009-05-26 00:14:02
 
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
@@ -4468,7 +4468,7 @@ public class PineDLParser extends Parser {
 
 
     // $ANTLR start "type"
-    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:442:1: type returns [Type type = new Type()] : ( (i= primitivetype ) | (t= clstype ) ( ARRAY_L ARRAY_R )* );
+    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:442:1: type returns [Type type = new Type()] : (i= primitivetype | t= clstype ) ( ARRAY_L ARRAY_R )* ;
     public final Type type() throws RecognitionException {
         Type type =  new Type();
 
@@ -4478,28 +4478,28 @@ public class PineDLParser extends Parser {
 
 
         try {
-            // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:2: ( (i= primitivetype ) | (t= clstype ) ( ARRAY_L ARRAY_R )* )
-            int alt59=2;
-            int LA59_0 = input.LA(1);
+            // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:2: ( (i= primitivetype | t= clstype ) ( ARRAY_L ARRAY_R )* )
+            // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:4: (i= primitivetype | t= clstype ) ( ARRAY_L ARRAY_R )*
+            {
+            // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:4: (i= primitivetype | t= clstype )
+            int alt58=2;
+            int LA58_0 = input.LA(1);
 
-            if ( ((LA59_0>=78 && LA59_0<=88)) ) {
-                alt59=1;
+            if ( ((LA58_0>=78 && LA58_0<=88)) ) {
+                alt58=1;
             }
-            else if ( (LA59_0==WORD) ) {
-                alt59=2;
+            else if ( (LA58_0==WORD) ) {
+                alt58=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return type;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 59, 0, input);
+                    new NoViableAltException("", 58, 0, input);
 
                 throw nvae;
             }
-            switch (alt59) {
+            switch (alt58) {
                 case 1 :
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:4: (i= primitivetype )
-                    {
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:4: (i= primitivetype )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:5: i= primitivetype
                     {
                     pushFollow(FOLLOW_primitivetype_in_type2522);
@@ -4512,17 +4512,11 @@ public class PineDLParser extends Parser {
                     }
 
                     }
-
-
-                    }
                     break;
                 case 2 :
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:32: (t= clstype ) ( ARRAY_L ARRAY_R )*
+                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:31: t= clstype
                     {
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:32: (t= clstype )
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:443:33: t= clstype
-                    {
-                    pushFollow(FOLLOW_clstype_in_type2530);
+                    pushFollow(FOLLOW_clstype_in_type2528);
                     t=clstype();
 
                     state._fsp--;
@@ -4532,41 +4526,42 @@ public class PineDLParser extends Parser {
                     }
 
                     }
-
-                    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:444:2: ( ARRAY_L ARRAY_R )*
-                    loop58:
-                    do {
-                        int alt58=2;
-                        int LA58_0 = input.LA(1);
-
-                        if ( (LA58_0==ARRAY_L) ) {
-                            alt58=1;
-                        }
-
-
-                        switch (alt58) {
-                    	case 1 :
-                    	    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:444:3: ARRAY_L ARRAY_R
-                    	    {
-                    	    match(input,ARRAY_L,FOLLOW_ARRAY_L_in_type2537); if (state.failed) return type;
-                    	    match(input,ARRAY_R,FOLLOW_ARRAY_R_in_type2539); if (state.failed) return type;
-                    	    if ( state.backtracking==0 ) {
-                    	      Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;
-                    	    }
-
-                    	    }
-                    	    break;
-
-                    	default :
-                    	    break loop58;
-                        }
-                    } while (true);
-
-
-                    }
                     break;
 
             }
+
+            // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:444:2: ( ARRAY_L ARRAY_R )*
+            loop59:
+            do {
+                int alt59=2;
+                int LA59_0 = input.LA(1);
+
+                if ( (LA59_0==ARRAY_L) ) {
+                    alt59=1;
+                }
+
+
+                switch (alt59) {
+            	case 1 :
+            	    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:444:3: ARRAY_L ARRAY_R
+            	    {
+            	    match(input,ARRAY_L,FOLLOW_ARRAY_L_in_type2535); if (state.failed) return type;
+            	    match(input,ARRAY_R,FOLLOW_ARRAY_R_in_type2537); if (state.failed) return type;
+            	    if ( state.backtracking==0 ) {
+            	      Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop59;
+                }
+            } while (true);
+
+
+            }
+
         }
         catch (RecognitionException re) {
             reportError(re);
@@ -4598,7 +4593,7 @@ public class PineDLParser extends Parser {
             // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:451:4: (c= WORD ( '.' t= WORD )* )
             // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:451:5: c= WORD ( '.' t= WORD )*
             {
-            c=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2563); if (state.failed) return type;
+            c=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2561); if (state.failed) return type;
             if ( state.backtracking==0 ) {
               s += c.getText();
             }
@@ -4617,8 +4612,8 @@ public class PineDLParser extends Parser {
             	case 1 :
             	    // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:451:33: '.' t= WORD
             	    {
-            	    match(input,DOT,FOLLOW_DOT_in_clstype2568); if (state.failed) return type;
-            	    t=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2572); if (state.failed) return type;
+            	    match(input,DOT,FOLLOW_DOT_in_clstype2566); if (state.failed) return type;
+            	    t=(Token)match(input,WORD,FOLLOW_WORD_in_clstype2570); if (state.failed) return type;
             	    if ( state.backtracking==0 ) {
             	      s += "." + t.getText();
             	    }
@@ -4734,7 +4729,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:456:5: ( 'int' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:456:6: 'int'
                     {
-                    match(input,78,FOLLOW_78_in_primitivetype2596); if (state.failed) return type;
+                    match(input,78,FOLLOW_78_in_primitivetype2594); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.INT;
                     }
@@ -4750,7 +4745,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:457:2: ( 'uint' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:457:3: 'uint'
                     {
-                    match(input,79,FOLLOW_79_in_primitivetype2604); if (state.failed) return type;
+                    match(input,79,FOLLOW_79_in_primitivetype2602); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.UINT;
                     }
@@ -4766,7 +4761,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:458:2: ( 'float' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:458:3: 'float'
                     {
-                    match(input,80,FOLLOW_80_in_primitivetype2612); if (state.failed) return type;
+                    match(input,80,FOLLOW_80_in_primitivetype2610); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.FLOAT;
                     }
@@ -4782,7 +4777,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:459:2: ( 'ufloat' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:459:3: 'ufloat'
                     {
-                    match(input,81,FOLLOW_81_in_primitivetype2620); if (state.failed) return type;
+                    match(input,81,FOLLOW_81_in_primitivetype2618); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.UFLOAT;
                     }
@@ -4798,7 +4793,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:460:2: ( 'double' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:460:3: 'double'
                     {
-                    match(input,82,FOLLOW_82_in_primitivetype2628); if (state.failed) return type;
+                    match(input,82,FOLLOW_82_in_primitivetype2626); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.DOUBLE;
                     }
@@ -4814,7 +4809,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:461:2: ( 'udouble' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:461:3: 'udouble'
                     {
-                    match(input,83,FOLLOW_83_in_primitivetype2636); if (state.failed) return type;
+                    match(input,83,FOLLOW_83_in_primitivetype2634); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.UDOUBLE;
                     }
@@ -4830,7 +4825,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:462:2: ( 'char' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:462:3: 'char'
                     {
-                    match(input,84,FOLLOW_84_in_primitivetype2644); if (state.failed) return type;
+                    match(input,84,FOLLOW_84_in_primitivetype2642); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.CHAR;
                     }
@@ -4846,7 +4841,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:463:2: ( 'uchar' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:463:3: 'uchar'
                     {
-                    match(input,85,FOLLOW_85_in_primitivetype2652); if (state.failed) return type;
+                    match(input,85,FOLLOW_85_in_primitivetype2650); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.UCHAR;
                     }
@@ -4862,7 +4857,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:464:2: ( 'bool' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:464:3: 'bool'
                     {
-                    match(input,86,FOLLOW_86_in_primitivetype2660); if (state.failed) return type;
+                    match(input,86,FOLLOW_86_in_primitivetype2658); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.BOOL;
                     }
@@ -4878,7 +4873,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:465:2: ( 'string' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:465:3: 'string'
                     {
-                    match(input,87,FOLLOW_87_in_primitivetype2668); if (state.failed) return type;
+                    match(input,87,FOLLOW_87_in_primitivetype2666); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.STRING;
                     }
@@ -4894,7 +4889,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:466:2: ( 'void' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:466:3: 'void'
                     {
-                    match(input,88,FOLLOW_88_in_primitivetype2676); if (state.failed) return type;
+                    match(input,88,FOLLOW_88_in_primitivetype2674); if (state.failed) return type;
                     if ( state.backtracking==0 ) {
                       type.primitiveType = PrimitiveType.VOID;
                     }
@@ -4954,7 +4949,7 @@ public class PineDLParser extends Parser {
                 case 1 :
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:469:4: 'public'
                     {
-                    match(input,89,FOLLOW_89_in_accesscontrolkeyword2693); if (state.failed) return a;
+                    match(input,89,FOLLOW_89_in_accesscontrolkeyword2691); if (state.failed) return a;
 
                     }
                     break;
@@ -4964,7 +4959,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:469:15: ( 'private' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:469:16: 'private'
                     {
-                    match(input,90,FOLLOW_90_in_accesscontrolkeyword2698); if (state.failed) return a;
+                    match(input,90,FOLLOW_90_in_accesscontrolkeyword2696); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PRIVATE;
                     }
@@ -4980,7 +4975,7 @@ public class PineDLParser extends Parser {
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:469:65: ( 'protected' )
                     // /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/PineDL Compiler/src/org/gcreator/pineapple/pinedl/PineDL.g:469:66: 'protected'
                     {
-                    match(input,91,FOLLOW_91_in_accesscontrolkeyword2706); if (state.failed) return a;
+                    match(input,91,FOLLOW_91_in_accesscontrolkeyword2704); if (state.failed) return a;
                     if ( state.backtracking==0 ) {
                       a = AccessControlKeyword.PROTECTED;
                     }
@@ -5208,11 +5203,12 @@ public class PineDLParser extends Parser {
     static final String DFA4_eofS =
         "\33\uffff";
     static final String DFA4_minS =
-        "\1\33\1\uffff\20\40\1\11\1\uffff\1\15\1\40\1\37\2\uffff\1\11\1\36";
+        "\1\33\1\uffff\5\40\13\36\1\11\1\uffff\1\37\1\15\1\40\1\36\2\uffff"+
+        "\1\11";
     static final String DFA4_maxS =
-        "\1\133\1\uffff\5\130\14\40\1\uffff\1\34\1\40\1\37\2\uffff\2\40";
+        "\1\133\1\uffff\5\130\14\40\1\uffff\1\37\1\34\2\40\2\uffff\1\40";
     static final String DFA4_acceptS =
-        "\1\uffff\1\4\21\uffff\1\3\3\uffff\1\1\1\2\2\uffff";
+        "\1\uffff\1\4\21\uffff\1\3\4\uffff\1\1\1\2\1\uffff";
     static final String DFA4_specialS =
         "\33\uffff}>";
     static final String[] DFA4_transitionS = {
@@ -5228,26 +5224,26 @@ public class PineDLParser extends Parser {
             "\15\1\16\1\17\1\20\1\21",
             "\1\22\55\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17"+
             "\1\20\1\21",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\24",
-            "\1\25\24\uffff\1\26\1\uffff\1\24",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\24\1\uffff\1\25",
+            "\1\26\24\uffff\1\24\1\uffff\1\25",
             "",
-            "\1\27\6\uffff\1\27\7\uffff\1\30",
-            "\1\31",
+            "\1\27",
+            "\1\30\6\uffff\1\30\7\uffff\1\31",
             "\1\32",
+            "\1\24\1\uffff\1\25",
             "",
             "",
-            "\1\25\24\uffff\1\26\1\uffff\1\24",
-            "\1\26\1\uffff\1\24"
+            "\1\26\24\uffff\1\24\1\uffff\1\25"
     };
 
     static final short[] DFA4_eot = DFA.unpackEncodedString(DFA4_eotS);
@@ -5284,37 +5280,37 @@ public class PineDLParser extends Parser {
         }
     }
     static final String DFA17_eotS =
-        "\35\uffff";
+        "\36\uffff";
     static final String DFA17_eofS =
-        "\35\uffff";
+        "\36\uffff";
     static final String DFA17_minS =
-        "\1\4\13\36\1\4\14\uffff\1\4\1\40\2\4";
+        "\1\4\13\36\1\4\13\uffff\1\4\1\uffff\1\40\3\4";
     static final String DFA17_maxS =
-        "\1\130\13\40\1\112\14\uffff\1\130\1\61\1\112\1\130";
+        "\1\130\13\40\1\112\13\uffff\1\130\1\uffff\1\61\1\130\1\112\1\130";
     static final String DFA17_acceptS =
-        "\15\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\1\4"+
-        "\uffff";
+        "\15\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\uffff"+
+        "\1\1\4\uffff";
     static final String DFA17_specialS =
-        "\35\uffff}>";
+        "\36\uffff}>";
     static final String[] DFA17_transitionS = {
             "\2\15\6\uffff\1\15\7\uffff\1\27\5\uffff\1\23\1\uffff\1\15\3"+
             "\uffff\1\14\2\15\1\uffff\1\15\12\uffff\1\15\1\uffff\1\15\1\uffff"+
             "\1\25\1\26\1\20\1\uffff\1\21\1\22\1\24\1\uffff\1\16\1\17\3\15"+
             "\13\uffff\3\15\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1"+
             "\13",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\1\15\1\uffff\1\30",
-            "\5\15\1\32\2\15\1\uffff\15\15\2\uffff\1\15\1\uffff\1\31\1\uffff"+
-            "\1\30\35\uffff\15\15",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\1\30\1\uffff\1\31",
+            "\5\15\1\32\2\15\1\uffff\15\15\2\uffff\1\15\1\uffff\1\33\1\uffff"+
+            "\1\31\35\uffff\15\15",
             "",
             "",
             "",
@@ -5326,13 +5322,15 @@ public class PineDLParser extends Parser {
             "",
             "",
             "",
-            "",
-            "\2\15\6\uffff\1\15\17\uffff\1\15\2\uffff\1\30\3\15\1\uffff"+
+            "\2\15\6\uffff\1\15\17\uffff\1\15\2\uffff\1\31\3\15\1\uffff"+
             "\1\15\12\uffff\1\15\1\uffff\1\15\13\uffff\3\15\13\uffff\16\15",
-            "\1\33\16\uffff\1\15\1\uffff\1\15",
-            "\5\15\1\32\2\15\1\uffff\15\15\2\uffff\1\15\1\uffff\1\34\1\uffff"+
-            "\1\30\35\uffff\15\15",
-            "\2\15\6\uffff\1\15\17\uffff\1\15\2\uffff\1\30\3\15\1\uffff"+
+            "",
+            "\1\34\16\uffff\1\15\1\uffff\1\15",
+            "\2\15\6\uffff\1\15\17\uffff\1\15\2\uffff\1\31\3\15\1\uffff"+
+            "\1\15\12\uffff\1\15\1\uffff\1\15\13\uffff\3\15\13\uffff\16\15",
+            "\5\15\1\32\2\15\1\uffff\15\15\2\uffff\1\15\1\uffff\1\35\1\uffff"+
+            "\1\31\35\uffff\15\15",
+            "\2\15\6\uffff\1\15\17\uffff\1\15\2\uffff\1\31\3\15\1\uffff"+
             "\1\15\12\uffff\1\15\1\uffff\1\15\13\uffff\3\15\13\uffff\16\15"
     };
 
@@ -5370,41 +5368,44 @@ public class PineDLParser extends Parser {
         }
     }
     static final String DFA19_eotS =
-        "\24\uffff";
+        "\25\uffff";
     static final String DFA19_eofS =
-        "\24\uffff";
+        "\25\uffff";
     static final String DFA19_minS =
-        "\1\4\1\uffff\1\4\13\36\1\uffff\1\40\1\4\1\uffff\2\4";
+        "\1\4\1\uffff\1\4\13\36\1\uffff\1\4\1\40\1\uffff\3\4";
     static final String DFA19_maxS =
-        "\1\130\1\uffff\1\112\13\40\1\uffff\1\61\1\130\1\uffff\1\112\1\130";
+        "\1\130\1\uffff\1\112\13\40\1\uffff\1\130\1\61\1\uffff\1\130\1\112"+
+        "\1\130";
     static final String DFA19_acceptS =
-        "\1\uffff\1\1\14\uffff\1\3\2\uffff\1\2\2\uffff";
+        "\1\uffff\1\1\14\uffff\1\3\2\uffff\1\2\3\uffff";
     static final String DFA19_specialS =
-        "\24\uffff}>";
+        "\25\uffff}>";
     static final String[] DFA19_transitionS = {
             "\2\1\6\uffff\1\1\7\uffff\1\16\7\uffff\1\1\3\uffff\1\2\2\1\1"+
             "\uffff\1\1\12\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\3"+
             "\1\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15",
             "",
-            "\5\1\1\17\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\20\1\uffff"+
+            "\5\1\1\20\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\17\1\uffff"+
             "\1\21\35\uffff\15\1",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
-            "\1\1\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
+            "\1\22\1\uffff\1\21",
             "",
-            "\1\22\16\uffff\1\1\1\uffff\1\1",
             "\2\1\6\uffff\1\1\17\uffff\1\1\2\uffff\1\21\3\1\1\uffff\1\1"+
             "\12\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\16\1",
+            "\1\23\16\uffff\1\1\1\uffff\1\1",
             "",
-            "\5\1\1\17\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\23\1\uffff"+
+            "\2\1\6\uffff\1\1\17\uffff\1\1\2\uffff\1\21\3\1\1\uffff\1\1"+
+            "\12\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\16\1",
+            "\5\1\1\20\2\1\1\uffff\15\1\2\uffff\1\1\1\uffff\1\24\1\uffff"+
             "\1\21\35\uffff\15\1",
             "\2\1\6\uffff\1\1\17\uffff\1\1\2\uffff\1\21\3\1\1\uffff\1\1"+
             "\12\uffff\1\1\1\uffff\1\1\13\uffff\3\1\13\uffff\16\1"
@@ -5885,27 +5886,27 @@ public class PineDLParser extends Parser {
     public static final BitSet FOLLOW_75_in_nullconst2487 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_76_in_boolconst2501 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_77_in_boolconst2506 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_primitivetype_in_type2522 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_clstype_in_type2530 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_ARRAY_L_in_type2537 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_ARRAY_R_in_type2539 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_WORD_in_clstype2563 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_DOT_in_clstype2568 = new BitSet(new long[]{0x0000000100000000L});
-    public static final BitSet FOLLOW_WORD_in_clstype2572 = new BitSet(new long[]{0x0000000000000202L});
-    public static final BitSet FOLLOW_78_in_primitivetype2596 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_79_in_primitivetype2604 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_80_in_primitivetype2612 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_81_in_primitivetype2620 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_82_in_primitivetype2628 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_83_in_primitivetype2636 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_84_in_primitivetype2644 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_85_in_primitivetype2652 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_86_in_primitivetype2660 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_87_in_primitivetype2668 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_88_in_primitivetype2676 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_89_in_accesscontrolkeyword2693 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_90_in_accesscontrolkeyword2698 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_91_in_accesscontrolkeyword2706 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_primitivetype_in_type2522 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_clstype_in_type2528 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_ARRAY_L_in_type2535 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_ARRAY_R_in_type2537 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_WORD_in_clstype2561 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_DOT_in_clstype2566 = new BitSet(new long[]{0x0000000100000000L});
+    public static final BitSet FOLLOW_WORD_in_clstype2570 = new BitSet(new long[]{0x0000000000000202L});
+    public static final BitSet FOLLOW_78_in_primitivetype2594 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_79_in_primitivetype2602 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_80_in_primitivetype2610 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_81_in_primitivetype2618 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_82_in_primitivetype2626 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_83_in_primitivetype2634 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_84_in_primitivetype2642 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_85_in_primitivetype2650 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_86_in_primitivetype2658 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_87_in_primitivetype2666 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_88_in_primitivetype2674 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_89_in_accesscontrolkeyword2691 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_90_in_accesscontrolkeyword2696 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_91_in_accesscontrolkeyword2704 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_54_in_synpred30_PineDL903 = new BitSet(new long[]{0xFBBAE01714101030L,0x0000000001FFF800L});
     public static final BitSet FOLLOW_stmt_in_synpred30_PineDL907 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_58_in_synpred33_PineDL1036 = new BitSet(new long[]{0x0000000010000000L});

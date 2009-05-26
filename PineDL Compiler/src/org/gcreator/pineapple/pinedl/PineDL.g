@@ -440,7 +440,7 @@ boolconst returns [BooleanConstant b = new BooleanConstant(false)]
 	:	('true' {b.value = true;})|'false';
 
 type returns [Type type = new Type()]
-	: (i=primitivetype {type=i;})|(t=clstype {type=t;})
+	: (i=primitivetype {type=i;}|t=clstype {type=t;})
 	(ARRAY_L ARRAY_R {Type ar = new Type(); ar.typeCategory = TypeCategory.ARRAY; ar.arrayType = type; type = ar;})*;
 
 clstype returns [Type type = new Type()]
