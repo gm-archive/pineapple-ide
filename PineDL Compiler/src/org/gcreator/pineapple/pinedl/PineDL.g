@@ -290,11 +290,14 @@ primitive returns [Expression e = null]
 	    |
 	   /* -x */
         s=(MINUS|PLUS) p=primitive{e = (s.getText().equals("-")) ? new NegationOperation(p) : p;}// Ignore +x
-	   /* 55.23 */
+	   
+	   		
+		/* 55.23 */
 	    |  (r=reference {e=r;} (('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*))
 	   /* (6 + 22) */
 		| (PAREN_L x=expression {e=x;} PAREN_R)
-	   /* new Class(1 , 2 , 3 , 4 , 5); */	
+		  
+		/* new Class(1 , 2 , 3 , 4 , 5); */	
 		|
 	(
 		'new' t=clstype {e=new NewCall(t);}
@@ -305,8 +308,8 @@ primitive returns [Expression e = null]
 		(',' ex=expression {((NewCall) e).arguments.add(ex);})*)?
 		PAREN_R
 	)
-		/* new int[] { 1 , 2 , 3 , 4 , 5} */
-		| ('new' (t=clstype '[' x=expression ']' {e=new NewArray(t, x);})|(t=primitivetype '[' x=expression ']' {e=new NewArray(t, x);}));
+			/* new int[100] */
+		| ('new' t=type '[' x=expression ']' {e=new NewArray(t, x);});
 		
 pre_post_op returns [Expression e = null]
 	:
@@ -492,4 +495,6 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
+
+
 

@@ -61,7 +61,7 @@ public abstract class BaseGenerator {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return "new ::Pineapple::Array<"+retrieveType(t.arrayType, reference) + ">*";
+            return "::Pineapple::Array<"+retrieveType(t.arrayType, reference) + ">*";
         }
         if (t.type.length != 1) {
             return typeToString(t, reference);
