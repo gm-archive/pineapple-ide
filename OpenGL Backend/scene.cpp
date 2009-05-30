@@ -6,7 +6,6 @@
 #include "actor.h"
 #include "scene.h"
 #include "window.h"
-
 using namespace Pineapple;
 using namespace std;
 

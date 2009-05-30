@@ -29,6 +29,8 @@ package org.gcreator.pineapple.pinedl;
 public class Type {
 
     public static final Type INT = new Type(PrimitiveType.INT);
+    public static final Type DOUBLE = new Type(PrimitiveType.DOUBLE);
+    public static final Type FLOAT = new Type(PrimitiveType.FLOAT);
     public static final Type BOOL = new Type(PrimitiveType.BOOL);
     public static final Type VOID = new Type(PrimitiveType.VOID);
     public static final Type STRING = new Type(PrimitiveType.STRING);

@@ -40,6 +40,20 @@ public class GlobalLibrary {
 
     static {
         /* Add the functions provided by libPineapple.a, the OpenGL Backend */
+        ClassDefinition c = new ClassDefinition("Drawing");
+        MethodDefinition m;
+        m = new MethodDefinition("drawBegin", Type.VOID);
+        m.arguments.add(new Variable("mode", Type.INT));
+        c.methods.add(m);
+
+        m = new MethodDefinition("drawEnd", Type.VOID);
+        c.methods.add(m);
+
+        m = new MethodDefinition("drawVertex", Type.VOID);
+        m.arguments.add(new Variable("x", Type.DOUBLE));
+        c.methods.add(m);
+
+        coreClasses.add(c);
     }
 
     private GlobalLibrary() {
@@ -98,12 +112,18 @@ public class GlobalLibrary {
         }
     }
 
-    public static class Variable {
-        String name;
-        Type type;
+    public static class Variable  {
+        public String name;
+        public Type type;
+        public String defaultValue;
+        
         public Variable(String name, Type type) {
             this.name = name;
             this.type = type;
+        }
+        public Variable(String name, Type type, String defaultValue) {
+            this(name, type);
+            this.defaultValue = defaultValue;
         }
     }
 }
