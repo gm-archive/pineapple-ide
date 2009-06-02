@@ -54,7 +54,7 @@ public final class StaticContext {
         s += "/Pineapple/";
         appDataFolder = new File(s);
         if (!appDataFolder.exists()) {
-            appDataFolder.mkdir();
+            appDataFolder.mkdirs();
         }
         URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
         try {
