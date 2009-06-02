@@ -385,7 +385,9 @@ public class Scene extends ClassResource {
             this.scene = s;
             XMLReader r = XMLReaderFactory.createXMLReader();
             r.setContentHandler(this);
-            r.parse(new InputSource(in));
+            if (in.available() != 0) {
+                r.parse(new InputSource(in));
+            }
             in.close();
         }
         
