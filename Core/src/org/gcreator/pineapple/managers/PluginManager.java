@@ -81,7 +81,12 @@ public final class PluginManager {
         }
         for (File file : modules) {
             String key = "plugins.enabled." + file.getPath();
-            boolean enabled = !(SettingsManager.exists(key) && SettingsManager.get(key).equals(Boolean.FALSE.toString()));
+            boolean enabled;
+            if (!SettingsManager.exists(key)) {
+                enabled = true;
+            } else {
+                enabled = !SettingsManager.get(key).equals(Boolean.FALSE.toString());
+            }
             importPlugin(file, clsloader, enabled);
         }
         EventManager.fireEvent(null, DefaultEventTypes.PLUGINS_LOADED);
