@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1243189455 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/actor.cpp
+1243944827 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/actor.cpp
 	"application.h"
 	"vector.h"
 	"actor.h"
@@ -17,12 +17,11 @@
 	<vector>
 	<list>
 
-1243189451 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/actor.h
+1243953926 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/actor.h
 	"vector.h"
 	"texture.h"
 	"keyboard.h"
 	"drawing.h"
-	<iostream>
 
 1235840191 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/vector.h
 	"pamath.h"
@@ -72,7 +71,7 @@
 1235840191 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/keyboard.cpp
 	"keyboard.h"
 
-1243694046 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/scene.cpp
+1243694372 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/scene.cpp
 	"SDL/SDL.h"
 	"SDL/SDL_opengl.h"
 	<vector>
@@ -138,12 +137,12 @@
 	"scene.h"
 	"window.h"
 
-1243306629 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/drawing.h
+1243696503 /home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/drawing.h
 	<math.h>
 	<SDL/SDL_opengl.h>
 	"color.h"
 
-1243306625 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/drawing.cpp
+1243696497 source:/home/bob/NetBeansProjects/Pineapple/Sabre/Trunk/OpenGL Backend/drawing.cpp
 	"drawing.h"
 	<cstdlib>
 	<iostream>

@@ -67,35 +67,11 @@ void Drawing::drawCircle(GLint x,GLint y, GLint r, bool filled) {
     drawEnd();
 }
 
-void Drawing::drawLine(GLint x1,GLint y1, GLint x2, GLint y2, GLint width) {
-    if (width == 0) {
-        return;
-    }
-    if (width == 1) {
-        drawBegin(DRAW_LINES);
-        drawVertex(x1, y1);
-        drawVertex(x2, y2);
-        drawEnd();
-    } else {
-        // Figure out the angle between point 1 and point 2.
-        int a = atan(y2-y1/x2-x1);
-        //calculate 4 points for an angled rectangle
-        int px1, px2, px3, px4, py1, py2, py3, py4;
-        px1 = x1+sin(a)*width/2;
-        py1 = y1+cos(a)*width/2;
-        px2 = x1-sin(a)*width/2;
-        py2 = y1-cos(a)*width/2;
-        px3 = x2-sin(a)*width/2;
-        py3 = y2-cos(a)*width/2;
-        px4 = x2+sin(a)*width/2;
-        py4 = y2+cos(a)*width/2;
-        drawBegin(DRAW_QUADS);
-        drawVertex(px1, py1);
-        drawVertex(px2, py2);
-        drawVertex(px3, py3);
-        drawVertex(px4, py4);
-        drawEnd();
-    }
+void Drawing::drawLine(GLint x1,GLint y1, GLint x2, GLint y2) {
+    drawBegin(DRAW_LINES);
+    drawVertex(x1, y1);
+    drawVertex(x2, y2);
+    drawEnd();
 }
 
 void Drawing::drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)

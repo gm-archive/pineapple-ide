@@ -8,7 +8,7 @@ using namespace Pineapple;
 //
 //Set actor defaults
 //
-Actor::Actor(float x, float y, float depth)
+Actor::Actor(double x, double y, double depth)
 {
     this->x = x;
     this->y = y;
@@ -21,6 +21,7 @@ Actor::Actor(float x, float y, float depth)
     motion = new VectorXY(0, 0);
     gravity = new VectorRV(270, 0);
     friction = 0;
+    autoDraw = true;
 }
 
 //
@@ -83,8 +84,15 @@ void Actor::move()
 //
 void Actor::draw(Drawing* d)
 {
-    if (texture < 0)
+    if (texture < 0 || !autoDraw)
         return;
     Texture* tex = Game::TextureList::Get_Texture(texture);
     tex->draw(x, y, width, height, angle);
+}
+
+Texture* Actor::getTexture()
+{
+    if (texture < 0)
+        return NULL;
+    return Game::TextureList::Get_Texture(texture);
 }

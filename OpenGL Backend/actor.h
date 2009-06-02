@@ -5,54 +5,55 @@
 #include "texture.h"
 #include "keyboard.h"
 #include "drawing.h"
-#include <iostream>
 
 namespace Pineapple {
 
 class Actor
 {
+private:
     Vector* motion;
     Vector* gravity;
-    float friction;
+    double friction;
 protected:
     int texture;
-    float angle;
-    float width, height;
-    float x, y;
-    float depth;
+    double angle;
+    double width, height;
+    double x, y;
+    double depth;
+    bool autoDraw;
 
 public:
-    Actor(float x = 0, float y = 0, float depth = 0);
+    Actor(double x = 0, double y = 0, double depth = 0);
     virtual ~Actor();
 
-    float getX() { return x; }
-    float getY() { return y; }
+    double getX() { return x; }
+    double getY() { return y; }
 
-    void setX(float x) { this->x = x; }
-    void setY(float y) { this->y = y; }
+    void setX(double x) { this->x = x; }
+    void setY(double y) { this->y = y; }
 
-    float getHSpeed() { return motion->getX(); }
-    float getVSpeed() { return motion->getY(); }
+    double getHSpeed() { return motion->getX(); }
+    double getVSpeed() { return motion->getY(); }
 
-    void setHSpeed(float x) { motion->setX(x); }
-    void setVSpeed(float y) { motion->setY(y); }
+    void setHSpeed(double x) { motion->setX(x); }
+    void setVSpeed(double y) { motion->setY(y); }
 
-    float getSpeed() { return motion->getSpeed(); }
-    float getDirection() { return motion->getDirection(); }
-    void setSpeed(float s) { motion->setSpeed(s); }
-    void setDirection(float d) { motion->setDirection(d); }
+    double getSpeed() { return motion->getSpeed(); }
+    double getDirection() { return motion->getDirection(); }
+    void setSpeed(double s) { motion->setSpeed(s); }
+    void setDirection(double d) { motion->setDirection(d); }
 
-    void setFriction(float f) { friction = f; }
-    float getFriction() { return friction; }
+    void setFriction(double f) { friction = f; }
+    double getFriction() { return friction; }
 
-    float getGravity() { return gravity->getSpeed(); }
-    float getGravityDirection() { return gravity->getDirection(); }
-    void setGravity(float g) { gravity->setSpeed(g); }
-    void setGravity(float g, float d) { gravity->setSpeed(g); gravity->setDirection(d); }
-    void setGravityDirection(float d) { gravity->setDirection(d); }
+    double getGravity() { return gravity->getSpeed(); }
+    double getGravityDirection() { return gravity->getDirection(); }
+    void setGravity(double g) { gravity->setSpeed(g); }
+    void setGravity(double g, double d) { gravity->setSpeed(g); gravity->setDirection(d); }
+    void setGravityDirection(double d) { gravity->setDirection(d); }
 
-    float getDepth() { return depth; }
-    void setDepth(float depth) { this->depth = depth; }
+    double getDepth() { return depth; }
+    void setDepth(double depth) { this->depth = depth; }
 
     void loop();
 
@@ -66,6 +67,11 @@ public:
     virtual void onKeyDown(Key key) {}
     virtual void onKeyUp(Key key) {}
     virtual void onKeyPressed(Key key) {}
+
+    bool isAutoDrawn() { return autoDraw; }
+    void setAutoDrawn(bool autoDraw) { this->autoDraw = autoDraw; }
+
+    Texture* getTexture();
 };
 
 }

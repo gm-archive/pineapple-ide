@@ -29,7 +29,7 @@ namespace Pineapple
         void drawBegin(GLenum mode);
         void drawEnd(void);
         void drawVertex(GLdouble x, GLdouble y, GLdouble z = 0, GLdouble w = 1);
-        void drawTranslate(GLdouble x, GLdouble y, GLdouble z);
+        void drawTranslate(GLdouble x, GLdouble y, GLdouble z = 0);
         void drawPush();
         void drawPop();
 
@@ -44,7 +44,7 @@ namespace Pineapple
         /* Simple Shapes */
 
         void drawCircle(GLint x,GLint y, GLint r, bool filled = true);
-        void drawLine(GLint x1,GLint y1, GLint x2, GLint y2, GLint width = 1);
+        void drawLine(GLint x1,GLint y1, GLint x2, GLint y2);
         void drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
         void drawRoundRect(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
         void drawEllipse(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
