@@ -22,7 +22,8 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui;
 
-import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import org.gcreator.pineapple.validators.ResourceValidator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,8 +58,7 @@ public class ResourceChooser extends JPanel {
     private ResourceValidator validator = new UniversalValidator();
 
     public ResourceChooser() {
-        super(new FlowLayout(FlowLayout.LEFT));
-
+        super(new GridBagLayout());
         label = new JLabel();
         label.setText("<none>");
         label.setVisible(true);
@@ -84,7 +84,16 @@ public class ResourceChooser extends JPanel {
             }
         });
 
-        add(label);
+        GridBagConstraints c = new  GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.WEST;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 5;
+        c.weightx = 100.0;
+        c.weighty = 100.0;
+        add(label, c);
     }
 
     public void setResourceValidator(ResourceValidator validator) {

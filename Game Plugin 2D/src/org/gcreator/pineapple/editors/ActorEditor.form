@@ -98,12 +98,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="polymorhpismPanel" alignment="0" max="32767" attributes="3"/>
-                          <Component id="inGameRenderingPanel" alignment="0" max="32767" attributes="3"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="polymorhpismPanel" alignment="0" max="32767" attributes="2"/>
+                          <Component id="inGameRenderingPanel" alignment="1" max="32767" attributes="2"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -113,7 +113,7 @@
                       <Component id="inGameRenderingPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="polymorhpismPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="44" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -131,33 +131,33 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="spriteLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="spriteChooser" min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Component id="spriteChooser" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="depthLabel" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="depthSpinner" min="-2" pref="63" max="-2" attributes="1"/>
                               </Group>
-                              <Component id="renderSpriteCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="drawSpriteCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" attributes="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <EmptySpace min="2" pref="2" max="2" attributes="0"/>
-                                  <Component id="spriteLabel" max="32767" attributes="0"/>
+                                  <Component id="spriteLabel" pref="21" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="spriteChooser" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="spriteChooser" pref="23" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -165,8 +165,8 @@
                               <Component id="depthSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="renderSpriteCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="drawSpriteCheckBox" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -184,15 +184,15 @@
                     <Property name="text" type="java.lang.String" value="Depth (z):"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="renderSpriteCheckBox">
+                <Component class="javax.swing.JCheckBox" name="drawSpriteCheckBox">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Render sprite automatically"/>
+                    <Property name="text" type="java.lang.String" value="Draw sprite automatically"/>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="opaque" type="boolean" value="true"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="renderSpriteCheckBoxActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawSpriteCheckBoxActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="org.gcreator.pineapple.gui.ResourceChooser" name="spriteChooser">
@@ -217,15 +217,10 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="parentLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="parentChooser" min="-2" pref="75" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="barrenCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="78" max="32767" attributes="0"/>
+                          <Component id="parentLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="parentChooser" pref="133" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -233,11 +228,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="parentLabel" alignment="0" max="32767" attributes="1"/>
-                              <Component id="parentChooser" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="parentChooser" alignment="1" max="32767" attributes="1"/>
+                              <Component id="parentLabel" alignment="1" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="barrenCheckBox" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -249,16 +243,6 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Parent:"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="barrenCheckBox">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Barren"/>
-                    <Property name="horizontalAlignment" type="int" value="2"/>
-                    <Property name="horizontalTextPosition" type="int" value="4"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barrenCheckBoxActionPerformed"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>

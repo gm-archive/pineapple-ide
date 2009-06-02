@@ -22,6 +22,10 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.pinedl;
 
+
+import java.util.Arrays;
+
+
 /**
  * Represents a PineDL type, such as "int" or "className"
  * @author Luís Reis
@@ -43,7 +47,16 @@ public class Type {
     }
 
     public Type(String type) {
-        this.type = type.split("\\.");
+        String[] t = type.split("\\.");
+        if (t.length == 0) {
+            throw new IllegalArgumentException("Invalid Type");
+        }
+        // Must begin with ``Pineapple.''
+        if (!t[0].equals("Pineapple")) {
+            t = Arrays.copyOf(t, t.length+1);
+            t[0] = "Pineapple";
+        }
+        this.type = t;
     }
     public TypeCategory typeCategory = TypeCategory.PRIMITIVE;
     /**
@@ -112,5 +125,29 @@ public class Type {
             return s;
         }
         return "~INVALID~";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Type)) {
+            return false;
+        }
+        Type t = (Type)o;
+        if (this.typeCategory != t.typeCategory) {
+            return false;
+        }
+        if (typeCategory == TypeCategory.PRIMITIVE) {
+            return t.primitiveType == this.primitiveType;
+        } else if (typeCategory == TypeCategory.ARRAY) {
+            return this.arrayType.equals(t.arrayType);
+        } else if  (typeCategory == TypeCategory.CLASS) {
+            for (int i = 0; i < type.length; i++) {
+                if (!this.type[i].equals(t.type[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

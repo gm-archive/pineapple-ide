@@ -81,7 +81,6 @@ public class Actor extends ClassResource {
      */
     public Actor() {
         properties = new Hashtable<String, Object>();
-        properties.put("barren", false);
         properties.put("render-automatically", true);
         properties.put("z", 0.0F);
     }
@@ -120,26 +119,6 @@ public class Actor extends ClassResource {
     public void setName(String name) {
         properties.put("name", name);
     }
-
-    /**
-     * Gets whether this actor is barren (can have children) or not.
-     *
-     * @return Whether this actor is barren or not.
-     * @see #setBarren(barren)
-     */
-    public boolean isBarren() {
-        return (Boolean)properties.get("barren");
-    }
-
-    /**
-     * Sets whether this actor is barren.
-     *
-     * @param barren Whether or not this actor can have children.
-     */
-    public void setBarren(boolean barren) {
-        properties.put("barren", barren);
-    }
-
     /**
      * Gets the parent of this actor, <tt>null</tt> if it has
      * not been set.
@@ -194,7 +173,7 @@ public class Actor extends ClassResource {
      * @return Wheter or not this actor's image should be
      * drawn automatically during the game.
      */
-    public boolean isRenderedAutomatically() {
+    public boolean isAutoDrawn() {
         return (Boolean)properties.get("render-automatically");
     }
 
@@ -203,7 +182,7 @@ public class Actor extends ClassResource {
      *
      * @param auto Whether or not to render this actor's image.
      */
-    public void setRenderedAutomatically(boolean auto) {
+    public void setAutoDraw(boolean auto) {
         properties.put("render-automatically", auto);
     }
 
@@ -482,7 +461,7 @@ public class Actor extends ClassResource {
             }
         } else if (name.equals("z")) {
             return Float.valueOf(value);
-        } else if (name.equals("render-automatically") || name.equals("barren")) {
+        } else if (name.equals("render-automatically")) {
             return Boolean.valueOf(value);
         }
         return value;

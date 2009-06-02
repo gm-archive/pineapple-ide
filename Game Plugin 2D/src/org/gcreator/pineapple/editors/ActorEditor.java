@@ -107,8 +107,7 @@ public final class ActorEditor extends DocumentPane {
                 setModified(true);
             }
         });
-        renderSpriteCheckBox.setSelected(actor.isRenderedAutomatically());
-        barrenCheckBox.setSelected(actor.isBarren());
+        drawSpriteCheckBox.setSelected(actor.isAutoDrawn());
     }
     
     /**
@@ -151,13 +150,12 @@ public final class ActorEditor extends DocumentPane {
         inGameRenderingPanel = new javax.swing.JPanel();
         depthSpinner = new javax.swing.JSpinner();
         depthLabel = new javax.swing.JLabel();
-        renderSpriteCheckBox = new javax.swing.JCheckBox();
+        drawSpriteCheckBox = new javax.swing.JCheckBox();
         spriteChooser = new org.gcreator.pineapple.gui.ResourceChooser();
         spriteLabel = new javax.swing.JLabel();
         polymorhpismPanel = new javax.swing.JPanel();
         parentChooser = new org.gcreator.pineapple.gui.ResourceChooser();
         parentLabel = new javax.swing.JLabel();
-        barrenCheckBox = new javax.swing.JCheckBox();
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -196,13 +194,13 @@ public final class ActorEditor extends DocumentPane {
 
         depthLabel.setText("Depth (z):");
 
-        renderSpriteCheckBox.setSelected(true);
-        renderSpriteCheckBox.setText("Render sprite automatically");
-        renderSpriteCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        renderSpriteCheckBox.setOpaque(true);
-        renderSpriteCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        drawSpriteCheckBox.setSelected(true);
+        drawSpriteCheckBox.setText("Draw sprite automatically");
+        drawSpriteCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        drawSpriteCheckBox.setOpaque(true);
+        drawSpriteCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                renderSpriteCheckBoxActionPerformed(evt);
+                drawSpriteCheckBoxActionPerformed(evt);
             }
         });
 
@@ -213,80 +211,67 @@ public final class ActorEditor extends DocumentPane {
         inGameRenderingPanelLayout.setHorizontalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(spriteLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(depthLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(renderSpriteCheckBox)))
+                    .addComponent(drawSpriteCheckBox))
+                .addGap(18, 18, 18))
         );
         inGameRenderingPanelLayout.setVerticalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE))
+                    .addComponent(spriteChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(depthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(renderSpriteCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(drawSpriteCheckBox)
+                .addContainerGap())
         );
 
         polymorhpismPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Polymorphism"));
 
         parentLabel.setText("Parent:");
 
-        barrenCheckBox.setText("Barren");
-        barrenCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        barrenCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        barrenCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                barrenCheckBoxActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout polymorhpismPanelLayout = new javax.swing.GroupLayout(polymorhpismPanel);
         polymorhpismPanel.setLayout(polymorhpismPanelLayout);
         polymorhpismPanelLayout.setHorizontalGroup(
             polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(polymorhpismPanelLayout.createSequentialGroup()
-                .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(polymorhpismPanelLayout.createSequentialGroup()
-                        .addComponent(parentLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(parentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(barrenCheckBox))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addComponent(parentLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(parentChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addContainerGap())
         );
         polymorhpismPanelLayout.setVerticalGroup(
             polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(polymorhpismPanelLayout.createSequentialGroup()
                 .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(parentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(parentChooser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(barrenCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(parentChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(parentLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
         propertiesPanel.setLayout(propertiesPanelLayout);
         propertiesPanelLayout.setHorizontalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(propertiesPanelLayout.createSequentialGroup()
-                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, propertiesPanelLayout.createSequentialGroup()
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(polymorhpismPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         propertiesPanelLayout.setVerticalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,7 +279,7 @@ public final class ActorEditor extends DocumentPane {
                 .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(polymorhpismPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         view.add(propertiesPanel, "card2");
@@ -323,20 +308,15 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     clayout.last(view);
 }//GEN-LAST:event_membersToggleActionPerformed
 
-private void renderSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renderSpriteCheckBoxActionPerformed
-    actor.setRenderedAutomatically(renderSpriteCheckBox.isSelected());
+private void drawSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawSpriteCheckBoxActionPerformed
+    actor.setAutoDraw(drawSpriteCheckBox.isSelected());
     setModified(true);
-}//GEN-LAST:event_renderSpriteCheckBoxActionPerformed
-
-private void barrenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barrenCheckBoxActionPerformed
-    actor.setBarren(barrenCheckBox.isSelected());
-    setModified(true);
-}//GEN-LAST:event_barrenCheckBoxActionPerformed
+}//GEN-LAST:event_drawSpriteCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox barrenCheckBox;
     private javax.swing.JLabel depthLabel;
     private javax.swing.JSpinner depthSpinner;
+    private javax.swing.JCheckBox drawSpriteCheckBox;
     private javax.swing.JPanel inGameRenderingPanel;
     private javax.swing.JToggleButton membersToggle;
     private org.gcreator.pineapple.gui.ResourceChooser parentChooser;
@@ -344,7 +324,6 @@ private void barrenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JPanel polymorhpismPanel;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JToggleButton propertiesToggle;
-    private javax.swing.JCheckBox renderSpriteCheckBox;
     private org.gcreator.pineapple.gui.ResourceChooser spriteChooser;
     private javax.swing.JLabel spriteLabel;
     private javax.swing.ButtonGroup toggles;

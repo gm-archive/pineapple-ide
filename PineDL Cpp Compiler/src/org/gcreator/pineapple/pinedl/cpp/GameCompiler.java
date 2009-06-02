@@ -663,7 +663,7 @@ public class GameCompiler {
             }
 
             if (evt.getType().equals(Event.TYPE_DRAW)) {
-                w.println("\tpublic void draw(Drawing d) {");
+                w.println("\tpublic void draw(Drawing d) : Actor.draw(d) {");
 
                 w.print(outputEvent(a, evt));
 
@@ -707,6 +707,7 @@ public class GameCompiler {
     private void printCreateEvent(PrintWriter w, Actor a, Event evt) throws IOException {
         w.println("\tpublic this(float __x, float __y, float depth) : super(__x, __y, depth) {");
         w.println("\t\tsetDepth(depth);");
+        w.println("\t\tautoDraw = "+a.isAutoDrawn()+";");
         if (a.getImage() != null) {
             w.print(("\t\ttexture = "));
             String iname = a.getImage().getName();
