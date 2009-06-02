@@ -3,19 +3,17 @@
     
     <description>Copies the module to the proper location</description>
     
-    <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
-    
     <target name="copy" depends="checkcopy" if="papple.exists">
-        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/dist/Pineapple.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-api-1.5.0.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-plaf-1.5.0.jar" destdir="Core/dist/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="Pineapple/lib/mydoggy-res-1.5.0.jar" destdir="Core/dist/Plugins"/>
+        <copy file="Pineapple/dist/Pineapple.jar" todir="Core/build/Plugins"/>
+        <copy file="Pineapple/dist/Pineapple.jar" todir="Core/dist/Plugins"/>
+        <copy file="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" todir="Core/build/Plugins"/>
+        <copy file="Pineapple/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" todir="Core/dist/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-api-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-api-1.5.0.jar" todir="Core/dist/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-plaf-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-plaf-1.5.0.jar" todir="Core/dist/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-res-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Pineapple/lib/mydoggy-res-1.5.0.jar" todir="Core/dist/Plugins"/>
     </target>
 
     <target name="checkcopy">

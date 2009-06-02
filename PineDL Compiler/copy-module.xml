@@ -7,8 +7,8 @@
     
     
     <target name="copy" depends="checkcopy" if="pdlc.exists">
-        <v-copy src="PineDL Compiler/dist/PineDL_Compiler.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="PineDL Compiler/dist/PineDL_Compiler.jar" destdir="Core/dist/Plugins"/>
+        <v-copy file="PineDL Compiler/dist/PineDL_Compiler.jar" todir="Core/build/Plugins"/>
+        <v-copy file="PineDL Compiler/dist/PineDL_Compiler.jar" todir="Core/dist/Plugins"/>
     </target>
     
     <target name="checkcopy">

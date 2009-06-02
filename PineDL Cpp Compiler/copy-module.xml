@@ -6,8 +6,8 @@
     <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
     
     <target name="copy" depends="checkcopy" if="pdlcppc.exists">
-        <v-copy src="PineDL Cpp Compiler/dist/PineDL_Cpp_Compiler.jar" destdir="Core/build/Plugins"/>
-        <v-copy src="PineDL Cpp Compiler/dist/PineDL_Cpp_Compiler.jar" destdir="Core/dist/Plugins"/>
+        <v-copy file="PineDL Cpp Compiler/dist/PineDL_Cpp_Compiler.jar" todir="Core/build/Plugins"/>
+        <v-copy file="PineDL Cpp Compiler/dist/PineDL_Cpp_Compiler.jar" todir="Core/dist/Plugins"/>
     </target>
 
     <target name="checkcopy">
