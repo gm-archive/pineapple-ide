@@ -232,9 +232,45 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("autoDraw", Type.BOOL));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("getTexture", new Type("Texture")));
-
-
+        
         coreClasses.add(c);
+
+        c = new ClassDefinition("Scene");
+        c.fields.add(new FieldDefinition("bgColor", new Type("Color"), Access.PROTECTED));
+        c.fields.add(new FieldDefinition("width", Type.INT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("height", Type.INT, Access.PROTECTED));
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("width", Type.INT),
+                new VariableDefinition("height", Type.INT)));
+        c.methods.add(new MethodDefinition("getBackground", new Type("Color")));
+        m = new MethodDefinition("setBackground", Type.VOID);
+        m.arguments.add(new VariableDefinition("bgColor", new Type("Color")));
+        c.methods.add(m);
+        c.methods.add(new MethodDefinition("update", Type.VOID));
+        c.methods.add(new MethodDefinition("draw", Type.VOID));
+        m = new MethodDefinition("addActor", Type.VOID);
+        m.arguments.add(new VariableDefinition("actor", new Type("Actor")));
+        c.methods.add(m);
+        m = new MethodDefinition("addView", Type.VOID);
+        m.arguments.add(new VariableDefinition("view", new Type("View")));
+        c.methods.add(m);
+        m = new MethodDefinition("addBackground", Type.VOID);
+        m.arguments.add(new VariableDefinition("bg", new Type("Background")));
+        c.methods.add(m);
+        m = new MethodDefinition("onKeyUp", Type.VOID);
+        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        c.methods.add(m);
+        m = new MethodDefinition("onKeyDown", Type.VOID);
+        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        c.methods.add(m);
+        m = new MethodDefinition("onKeyPressed", Type.VOID);
+        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        c.methods.add(m);
+        c.methods.add(new MethodDefinition("getWidth", Type.INT));
+        c.methods.add(new MethodDefinition("getHeight", Type.INT));
+        
+        coreClasses.add(c);
+
     }
 
     private GlobalLibrary() {
@@ -244,6 +280,7 @@ public class GlobalLibrary {
 
         public String name;
         public Access access;
+        public ClassDefinition parent;
         public Vector<ClassDefinition> classes;
         public Vector<MethodDefinition> methods;
         public Vector<FieldDefinition> fields;
