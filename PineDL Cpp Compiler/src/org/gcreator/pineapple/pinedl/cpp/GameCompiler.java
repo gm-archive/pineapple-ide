@@ -183,14 +183,14 @@ public class GameCompiler {
                                 if (!worked) {
                                     return;
                                 }
-                                compFrame.writeLine("<em>"+script.getName()+"...</em>");
+                                compFrame.writeLine("<em>" + script.getName() + "...</em>");
                                 PineClass cls = generateHeader(script);
                                 String name = script.getName();
                                 name = name.substring(0, name.indexOf('.'));
                                 classContext.put(name, cls);
                                 tmp.put(script, cls);
                             }
-                            for(File script : tmp.keySet()){
+                            for (File script : tmp.keySet()) {
                                 generateCppFile(script, tmp.get(script));
                             }
                             /* Only copy lib once every time
@@ -219,12 +219,10 @@ public class GameCompiler {
     }
 
     public void generateTextureList() throws IOException {
-        File header = new File(outputFolder, "TextureList.h");
-        PrintWriter w = new PrintWriter(header);
-        w.println("#ifndef __PINEDL_TEXTURELIST_H__");
-        w.println("#define __PINEDL_TEXTURELIST_H__");
-        w.println();
-        w.println();
+        File h = new File(outputFolder, "TextureList.h");
+        File cpp = new File(outputFolder, "TextureList.cpp");
+        PrintWriter w = new PrintWriter(h);
+        w.println("#ifndef _PINEAPPLE_TextureList_H_\n#define _PINEAPPLE_TextureList_H_");
         int imgn = 0;
         for (File image : imageFiles) {
             String fname = imageNames.get(image);
@@ -232,31 +230,15 @@ public class GameCompiler {
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
             w.println(("#define " + fname + "\t\t\t" + imgn++));
         }
+        w.println("#endif");
         w.println();
-        w.println("#include \"header.h\"");
-        w.println();
-        w.println("using namespace Pineapple;");
-        w.println();
-        w.println("namespace " + gamePackage + "{");
-        w.println("\tclass TextureList {");
-
-        w.println("\t    public:");
-        w.println("\t\tstatic void init();");
-        w.println("\t\tstatic Texture* Get_Texture(int);");
-
-        w.println("\t};\n}");
-
-        w.println("\n#endif");
         w.close();
-
-
-
-        File cpp = new File(outputFolder, "TextureList.cpp");
         w = new PrintWriter(cpp);
-
+        w.println("#include \"texturelist.h\"");
         w.println("#include \"TextureList.h\"");
         w.println();
-        w.println("long archive_size = " + imageArchive.length() + ";");
+        w.println("void TextureList::init()\n{");
+        w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
         Vector<BasicFile> simgs = new Vector<BasicFile>();
         for (Scene.ActorInScene s : mainScene.actors) {
@@ -269,20 +251,14 @@ public class GameCompiler {
                 simgs.add(b.image);
             }
         }
-        w.println("const int START_IMAGES[" + simgs.size() + "] = {");
+        w.println("\tTextureList::START_IMAGES = new unsigned int[" + simgs.size() + "];");
+        int i = 0;
         for (BasicFile f : simgs) {
-            w.println("\t" + f.getName().replaceAll("\\.", "_") + ",");
+            w.println("\tTextureList::START_IMAGES[" + i++ + "] = " + f.getName().replaceAll("\\.", "_") + ";");
         }
-        w.println("};");
-        w.println();
-        w.println();
-        LineNumberReader r = new LineNumberReader(new InputStreamReader(GameCompiler.class.getResourceAsStream("/org/gcreator/pineapple/pinedl/cpp/res/misc/TextureList.cpp")));
-        String l;
-        while ((l = r.readLine()) != null) {
-            w.println(l);
-        }
-        r.close();
-        w.println();
+        w.println("\tTextureList::N_START_IMAGES = " + simgs.size() + ";");
+        w.println("\tTextureList::load();");
+        w.println("}\n");
         w.close();
     }
 
@@ -329,10 +305,10 @@ public class GameCompiler {
         w.println("\t/* No idea why, but we got to call these here before we load textures. */");
         w.println("\tSDL_GL_SwapBuffers();");
         w.println("\tSDL_Delay(100);");
-        w.println("\tGame::TextureList::init();");
+        w.println("\tPineapple::TextureList::init();");
         String fullscreen = p.getSettings().get("game-fullscreen");
-        if(fullscreen!=null){
-            w.println("\tWindow::setFullscreen("+ fullscreen +");");
+        if (fullscreen != null) {
+            w.println("\tPineapple::Window::setFullscreen(" + fullscreen + ");");
         }
         w.println("\tPineapple::Window::run();");
         w.println("\t/* No code is executed beyond this point until after " +
@@ -368,6 +344,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "pamath.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "scene.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "texture.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "texturelist.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "timer.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "vector.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "view.h", replace);
@@ -645,7 +622,7 @@ public class GameCompiler {
         w.println();
         printFields(a.fields, w);
         w.println();
-        
+
         boolean hasCreate = false;
 
         for (Event evt : a.events) {
@@ -663,8 +640,8 @@ public class GameCompiler {
             }
 
             if (evt.getType().equals(Event.TYPE_DRAW)) {
-                w.println("\tpublic void draw(Drawing d) : Actor.draw(d) {");
-
+                w.println("\tpublic void draw(Drawing d) {");
+                w.println("\tActor.draw(d);");
                 w.print(outputEvent(a, evt));
 
                 w.println("\t}");
@@ -707,7 +684,7 @@ public class GameCompiler {
     private void printCreateEvent(PrintWriter w, Actor a, Event evt) throws IOException {
         w.println("\tpublic this(float __x, float __y, float depth) : super(__x, __y, depth) {");
         w.println("\t\tsetDepth(depth);");
-        w.println("\t\tautoDraw = "+a.isAutoDrawn()+";");
+        w.println("\t\tautoDraw = " + a.isAutoDrawn() + ";");
         if (a.getImage() != null) {
             w.print(("\t\ttexture = "));
             String iname = a.getImage().getName();
@@ -769,13 +746,13 @@ public class GameCompiler {
             String iname = b.image.getName().replaceAll("\\.", "_");
             w.println("\t\taddBackground(new Background(" + iname + ", " +
                     b.x + ", " + b.y + ", " + b.drawImage + ", " +
-                    b.hrepeat + ", " + b.vrepeat  + "));");
+                    b.hrepeat + ", " + b.vrepeat + "));");
         }
 
         w.println("\t}");
         w.println("}");
         w.close();
-        
+
         pineScripts.add(f);
     }
 
@@ -824,10 +801,11 @@ public class GameCompiler {
         headerH.println("#include \"scene.h\"");
         headerH.println("#include \"texture.h\"");
         headerH.println("#include \"timer.h\"");
+        headerH.println("#include \"texturelist.h\"");
+        headerH.println("#include \"TextureList.h\"");
         headerH.println("#include \"vector.h\"");
         headerH.println("#include \"view.h\"");
         headerH.println("#include \"window.h\"");
-        headerH.println("#include \"TextureList.h\"");
     }
 
     private void loadConfig() {

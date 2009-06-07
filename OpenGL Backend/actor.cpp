@@ -40,7 +40,7 @@ void Actor::loop()
 {
     if (texture < 0)
         return;
-    Texture* tex = ::Game::TextureList::Get_Texture(texture);
+    Texture* tex = TextureList::Get_Texture(texture);
     if (x > Application::getScene()->getWidth() + tex->getOriginX())
         x = -tex->getOriginX();
     if (x < -tex->getOriginX())
@@ -86,7 +86,7 @@ void Actor::draw(Drawing* d)
 {
     if (texture < 0 || !autoDraw)
         return;
-    Texture* tex = Game::TextureList::Get_Texture(texture);
+    Texture* tex = TextureList::Get_Texture(texture);
     tex->draw(x, y, width, height, angle);
 }
 
@@ -94,5 +94,5 @@ Texture* Actor::getTexture()
 {
     if (texture < 0)
         return NULL;
-    return Game::TextureList::Get_Texture(texture);
+    return TextureList::Get_Texture(texture);
 }
