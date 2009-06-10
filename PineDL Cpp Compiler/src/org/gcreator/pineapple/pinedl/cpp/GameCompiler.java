@@ -219,8 +219,8 @@ public class GameCompiler {
     }
 
     public void generateTextureList() throws IOException {
-        File h = new File(outputFolder, "TextureList.h");
-        File cpp = new File(outputFolder, "TextureList.cpp");
+        File h = new File(outputFolder, "GameDefines.h");
+        File cpp = new File(outputFolder, "TextureListDefined.cpp");
         PrintWriter w = new PrintWriter(h);
         w.println("#ifndef _PINEAPPLE_TextureList_H_\n#define _PINEAPPLE_TextureList_H_");
         int imgn = 0;
@@ -235,7 +235,7 @@ public class GameCompiler {
         w.close();
         w = new PrintWriter(cpp);
         w.println("#include \"texturelist.h\"");
-        w.println("#include \"TextureList.h\"");
+        w.println("#include \"GameDefines.h\"");
         w.println();
         w.println("void TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
@@ -362,7 +362,7 @@ public class GameCompiler {
             String path = script.getAbsolutePath();
             command.add(path.substring(0, path.lastIndexOf('.')) + ".cpp");
         }
-        command.add((new File(outputFolder, "TextureList.cpp")).getAbsolutePath());
+        command.add((new File(outputFolder, "TextureListDefined.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "main.cpp")).getAbsolutePath());
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
 
@@ -802,7 +802,7 @@ public class GameCompiler {
         headerH.println("#include \"texture.h\"");
         headerH.println("#include \"timer.h\"");
         headerH.println("#include \"texturelist.h\"");
-        headerH.println("#include \"TextureList.h\"");
+        headerH.println("#include \"GameDefines.h\"");
         headerH.println("#include \"vector.h\"");
         headerH.println("#include \"view.h\"");
         headerH.println("#include \"window.h\"");
