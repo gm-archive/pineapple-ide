@@ -68,6 +68,7 @@ public final class PineapplePlugin extends Plugin {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getAuthor() {
         return "Serge Humphrey, Luís Reis";
     }

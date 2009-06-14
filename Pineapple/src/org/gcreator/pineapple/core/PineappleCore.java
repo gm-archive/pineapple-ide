@@ -110,6 +110,11 @@ public final class PineappleCore {
      */
     public static final String PROJECT_RENAMED = "project-renamed";
     
+    /**
+     * Initializes Pineapple's core:
+     * - Registers event handlers
+     * - Constructs PineappleGUI
+     */
     public static void intialize() {
         CoreEventHandler c = new CoreEventHandler();
         EventManager.addEventHandler(c, REGISTER_FORMATS, EventPriority.MEDIUM);

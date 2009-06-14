@@ -51,6 +51,10 @@ public class TextEditor extends DocumentPane {
     private static final long serialVersionUID = 1L;
     private JScrollPane scroll;
     private JTextPane editor;
+    
+    /**
+     * Deals with undo and redo operations
+     */
     public IntegratedUndoManager undo = new IntegratedUndoManager();
 
     /**

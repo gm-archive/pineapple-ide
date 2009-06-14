@@ -60,6 +60,9 @@ public class ListeningVector<E> extends Vector<E> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean add(E e) {
         boolean b = super.add(e);
@@ -67,6 +70,9 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean remove(Object o) {
         boolean b = super.remove(o);
@@ -74,6 +80,9 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean b = super.addAll(c);
@@ -81,6 +90,9 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
         boolean b = super.addAll(index, c);
@@ -88,6 +100,9 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean b = super.removeAll(c);
@@ -95,6 +110,9 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean b = super.removeAll(c);
@@ -102,12 +120,18 @@ public class ListeningVector<E> extends Vector<E> {
         return b;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
         super.clear();
         fireUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E set(int index, E element) {
         E x = super.set(index, element);
@@ -115,12 +139,18 @@ public class ListeningVector<E> extends Vector<E> {
         return x;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void add(int index, E element) {
         super.add(index, element);
         fireUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E remove(int index) {
         E x = super.remove(index);

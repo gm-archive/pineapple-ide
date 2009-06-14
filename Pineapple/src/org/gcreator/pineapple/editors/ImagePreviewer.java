@@ -83,15 +83,25 @@ public final class ImagePreviewer extends DocumentPane {
         return false;
     }
 
+    /**
+     * A Swing component used to display the image
+     */
     private class ImageComponent extends JComponent {
 
         private static final long serialVersionUID = 244363643;
 
+        /**
+         * Constructs the image component
+         */
         public ImageComponent() {
             Dimension d = new Dimension(image.getWidth(), image.getHeight());
             setPreferredSize(d);
         }
 
+        /**
+         * Paints the image in the component
+         * @param g The graphical context
+         */
         @Override
         public void paint(Graphics g) {
             g.drawImage(image, 0, 0, null);

@@ -50,6 +50,10 @@ public class AboutDialog extends JDialog {
 
     private static final long serialVersionUID = -3046667469132936123L;
 
+    /**
+     * Creates the about dialog
+     * @param parent The dialog's parent
+     */
     public AboutDialog(JFrame parent) {
         super(parent);
 
@@ -89,6 +93,10 @@ public class AboutDialog extends JDialog {
         this.add(tabs, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the tab for credits
+     * @return The credits tab
+     */
     public JScrollPane createCreditsTab() {
         JEditorPane editor = new JEditorPane();
         editor.setVisible(true);
@@ -117,6 +125,10 @@ public class AboutDialog extends JDialog {
         return scroll;
     }
 
+    /**
+     * Creates the tab for licenses
+     * @return The license tab
+     */
     public JScrollPane createLicenseTab() {
         JEditorPane editor = new JEditorPane("text/html",
                 "Most of the source code is licensed as MIT, " +
@@ -164,6 +176,10 @@ public class AboutDialog extends JDialog {
         return scroll;
     }
 
+    /**
+     * Creates a tab displaying the MIT license
+     * @return The MIT license tab
+     */
     public JScrollPane createMITTab() {
         JTextArea p = new JTextArea(
                 "Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>\n" +
@@ -190,6 +206,10 @@ public class AboutDialog extends JDialog {
         return new JScrollPane(p);
     }
 
+    /**
+     * Creates a tab displaying the LGPL license
+     * @return The LGPL license tab
+     */
     public JScrollPane createLGPLTab() {
         JTextArea p = new JTextArea(
                 "                    GNU LESSER GENERAL PUBLIC LICENSE\n" +
