@@ -52,7 +52,9 @@ public class Event {
 
     /**
      * Intercepts an event.
-     * WARNING: This method's effect is IRREVERSIBLE.
+     * However, this method should be used with caution and moderation.
+     * In first place, this method's effect is IRREVERSIBLE.
+     * In second place, the consequences this method brings may not be easy to predict.
      * 
      * @see #isHandled()
      */
@@ -90,6 +92,7 @@ public class Event {
     
     /**
      * Gets the event arguments.
+     * @return The arguments of the event
      */
     public Object[] getArguments(){
         return arguments;

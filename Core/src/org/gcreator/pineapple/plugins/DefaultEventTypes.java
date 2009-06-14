@@ -36,12 +36,36 @@ public final class DefaultEventTypes {
      */
     private DefaultEventTypes() {}
     
+    /**
+     * Used when the event type is not specified
+     */
     public static final String UNDEFINED = "undefined";
-    public static final String APPLICATION_INITIALIZED = "application-initilized";
+    
+    /**
+     * Called when the application(not the main window) is initialized
+     */
+    public static final String APPLICATION_INITIALIZED = "application-initialized";
+    
+    /**
+     * Called when the main application window is created
+     */
     public static final String WINDOW_CREATED = "window-created";
+    
+    /**
+     * Called when the main application window is closed, asking for disposal
+     */
     public static final String WINDOW_DISPOSED = "window-disposed";
+    
+    /**
+     * Used to detect every single event
+     */
     public static final String ALL = "all";
+    
+    /**
+     * Called when the application plugins are loaded
+     */
     public static final String PLUGINS_LOADED = "plugins-loaded";
+    
     /**
      * Called when Pineapple is about to terminate.
      */

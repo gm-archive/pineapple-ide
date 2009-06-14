@@ -23,12 +23,21 @@ THE SOFTWARE.
 package org.gcreator.pineapple.plugins;
 
 /**
- * Specifies a priority for events.
- * EventHandlers are handled in high, medium, low order
+ * Specifies a priority for event handlers.
+ * EventHandlers are handled in high, medium, low order.
  * @author Luís Reis
  */
 public enum EventPriority {
+    /**
+     * Represents high-priority event handlers, which are informed before the remaining
+     */
     HIGH,
+    /**
+     * The default event handler priority.
+     */
     MEDIUM,
+    /**
+     * Low priority event handlers are informed of events only after other event handlers
+     */
     LOW
 }

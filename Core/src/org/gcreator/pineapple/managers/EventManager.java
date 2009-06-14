@@ -136,6 +136,9 @@ public final class EventManager {
         }
     }
     
+    /**
+     * Used to hold event handlers associated with specific types.
+     */
     private static class EventObject {
 
         EventHandler handler;
