@@ -23,14 +23,15 @@ namespace Pineapple
         {
             return length;
         }
-        T getElementAt(int pos)
+        T& getElementAt(int pos)
         {
             if (pos>=length)
             {
                 throw new IndexOutOfBoundsException();
             }
+            return arrayContent[length];
         }
-        T operator[](int pos)
+        T& operator[](int pos)
         {
             return getElementAt(pos);
         }

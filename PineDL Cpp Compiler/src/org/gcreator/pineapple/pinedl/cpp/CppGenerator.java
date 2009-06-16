@@ -547,7 +547,7 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof ArrayReference) {
             ArrayReference ar = (ArrayReference) l;
-            return leafToString(ar.base, false, vars) + "[" + leafToString(ar.exp, false, vars)
+            return "(*" +leafToString(ar.base, false, vars) + ")[" + leafToString(ar.exp, false, vars)
                     + "]";
         }
 
