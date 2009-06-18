@@ -51,8 +51,11 @@ import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.FunctionReference;
 import org.gcreator.pineapple.pinedl.statements.IfStatement;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
+import org.gcreator.pineapple.pinedl.statements.LessEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.ModOperation;
+import org.gcreator.pineapple.pinedl.statements.MoreEqualOperation;
+import org.gcreator.pineapple.pinedl.statements.MoreOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NegationOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
@@ -411,6 +414,18 @@ public class CppGenerator extends BaseGenerator {
             LessOperation s = (LessOperation) l;
             return leafToString(s.left, vars) + " < " + leafToString(s.right, vars);
         }
+        if (l instanceof MoreOperation) {
+            MoreOperation s = (MoreOperation) l;
+            return leafToString(s.left, vars) + " > " + leafToString(s.right, vars);
+        }
+        if (l instanceof LessEqualOperation) {
+            LessEqualOperation s = (LessEqualOperation) l;
+            return leafToString(s.left, vars) + " <= " + leafToString(s.right, vars);
+        }
+        if (l instanceof MoreEqualOperation) {
+            MoreEqualOperation s = (MoreEqualOperation) l;
+            return leafToString(s.left, vars) + " >= " + leafToString(s.right, vars);
+        }
         if (l instanceof IntConstant) {
             return l.toString();
         }
@@ -421,22 +436,24 @@ public class CppGenerator extends BaseGenerator {
             return l.toString();
         }
         if (l instanceof FunctionReference) {
-            FunctionReference f = (FunctionReference) l;
-            String s = f.name;
-            s += '(';
-            boolean first = true;
-            for (Expression e : f.arguments) {
-                if (!first) {
-                    s += ", ";
+            FunctionReference e = (FunctionReference) l;
+            String x = e.name;
+            x += '(';
+            boolean isFirst = true;
+            for (Expression exp : e.arguments) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    x += ", ";
                 }
-                s += leafToString(e, vars);
-                first = false;
+
+                x += leafToString(exp, false, vars);
             }
-            s += ')';
+            x += ')';
             if (statement) {
-                s += ';';
+                x += ';';
             }
-            return s;
+            return x;
         }
         if (l instanceof NewCall) {
             NewCall n = (NewCall) l;
@@ -475,26 +492,6 @@ public class CppGenerator extends BaseGenerator {
                 s += "}";
             }
             return s;
-        }
-        if (l instanceof FunctionReference) {
-            FunctionReference e = (FunctionReference) l;
-            String x = e.name;
-            x += '(';
-            boolean isFirst = true;
-            for (Expression exp : e.arguments) {
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    x += ", ";
-                }
-
-                x += leafToString(exp, false, vars);
-            }
-            x += ')';
-            if (statement) {
-                x += ';';
-            }
-            return x;
         }
         if (l instanceof VariableReference) {
             if (isType((VariableReference) l) && isLeft) {
