@@ -306,8 +306,15 @@ public class CppGenerator extends BaseGenerator {
             if (!v.isStatic) {
                 continue;
             }
-            String s = v.type + " " + detokenize(cls.clsName) + "::" + detokenize(v.name);
-            ClassResource r = cmp.clsres.get(cls.clsName);
+            
+            String s = retrieveType(v.type, true) + " "
+                    + detokenize(cls.clsName) + "::" + detokenize(v.name);
+            if(v.defaultValue!=null){
+                PineDLContext context2 = new PineDLContext("<none>");
+                s += " = ";
+                s += leafToString(v.defaultValue, context2);
+            }
+            /*ClassResource r = cmp.clsres.get(cls.clsName);
             if (r != null) {
                 for (ClassResource.Field f : r.fields) {
                     if (f.getName().equals(v.name)) {
@@ -317,7 +324,7 @@ public class CppGenerator extends BaseGenerator {
                         break;
                     }
                 }
-            }
+            }*/
             writeLine(s + ";");
         }
     }

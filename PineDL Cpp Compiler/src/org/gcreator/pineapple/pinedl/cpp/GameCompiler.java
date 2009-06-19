@@ -881,7 +881,15 @@ public class GameCompiler {
     private void printFields(Vector<Field> fields, PrintWriter w) {
         for (Field v : fields) {
             w.print("\t");
-            w.print("public ");
+            if(v.getAccess()==ClassResource.Field.Access.PRIVATE){
+                w.print("private ");
+            }
+            else if(v.getAccess()==ClassResource.Field.Access.PROTECTED){
+                w.print("protected ");
+            }
+            else{
+                w.print("public ");
+            }
             //w.print(v.getAccess().toString().toLowerCase() + " ");
             if (v.isStatic()) {
                 w.print("static ");
@@ -890,12 +898,8 @@ public class GameCompiler {
                 w.print("final ");
             }
             w.print(v.getType() + " " + v.getName());
-            if (v.getDefaultValue() != null && v.getDefaultValue() != "") {
-                if (v.getType().equals("string")) {
-                    w.print(" = \"" + v.getDefaultValue().replaceAll("\\\"", "\"") + "\"");
-                } else {
-                    w.print(" = " + v.getDefaultValue());
-                }
+            if (v.getDefaultValue() != null && !v.getDefaultValue().equals("")) {
+                w.print(" = " + v.getDefaultValue());
             }
             w.println(";");
         }
