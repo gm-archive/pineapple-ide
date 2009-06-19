@@ -94,13 +94,11 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
         JComboBox typeBox = new JComboBox();
         String[] types = new String[] {
-            "int",
-            "string",
-            "double",
+            "bool",
+            "char",
             "float",
-            "long",
-            "byte",
-            "short",
+            "int",
+            "string"
         };
         for (String s : types) {
             typeBox.addItem(s);
@@ -109,6 +107,9 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
             String name = f.getName().substring(0, f.getName().lastIndexOf('.'));
             typeBox.addItem(name);
         }
+        typeBox.setEditable(true); //Allow other types, such as int[]
+        
+        
         t = new TableColumn(i++, 14, null, new DefaultCellEditor(typeBox));
         t.setHeaderValue("Type");
         fieldsTable.addColumn(t);
@@ -510,7 +511,7 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
                 change(e);
             }
         });
-        int i = tabPane.getComponentCount() - 2;
+        int i = tabPane.getTabCount() - 2;
         tabPane.insertTab(e.getType(), null, p, e.getType(), i);
         tabPane.setTabComponentAt(i, new EventTabRenderer(tabPane));
     }
