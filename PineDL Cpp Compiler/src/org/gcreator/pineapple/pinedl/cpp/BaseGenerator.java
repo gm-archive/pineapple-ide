@@ -31,6 +31,22 @@ import java.util.Vector;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
+import org.gcreator.pineapple.pinedl.Leaf;
+import org.gcreator.pineapple.pinedl.context.PineDLContext;
+import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
+import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
+import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
+import org.gcreator.pineapple.pinedl.statements.IntConstant;
+import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
+import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
+import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
+import org.gcreator.pineapple.pinedl.statements.NewArray;
+import org.gcreator.pineapple.pinedl.statements.NotOperation;
+import org.gcreator.pineapple.pinedl.statements.NullConstant;
+import org.gcreator.pineapple.pinedl.statements.StringConstant;
+import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
+import org.gcreator.pineapple.pinedl.statements.SumOperation;
+import org.gcreator.pineapple.pinedl.statements.TypeCast;
 
 /**
  * This base class provides methods for generating C++ code
@@ -61,7 +77,7 @@ public abstract class BaseGenerator {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return "::Pineapple::Array<"+retrieveType(t.arrayType, reference) + ">*";
+            return "::Pineapple::Array<" + retrieveType(t.arrayType, reference) + ">*";
         }
         if (t.type.length != 1) {
             return typeToString(t, reference);
@@ -92,7 +108,7 @@ public abstract class BaseGenerator {
             } else if (t.type[0].equals("Color")) {
                 return "::Pineapple::Color";// + (reference ? "*" : "");
             } else if (t.type[0].equals("Drawing")) {
-                return "::Pineapple::Drawing" + (reference ? "*" : "") ;
+                return "::Pineapple::Drawing" + (reference ? "*" : "");
             }
         }
         throwError("In file " + fname + ": Unknown type " + t.toString());
@@ -101,7 +117,7 @@ public abstract class BaseGenerator {
 
     protected String typeToString(Type t, boolean reference) {
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return "new ::Pineapple::Array<"+typeToString(t.arrayType, true) + ">*";
+            return "new ::Pineapple::Array<" + typeToString(t.arrayType, true) + ">*";
         }
         if (t.typeCategory == TypeCategory.PRIMITIVE) {
             if (t.primitiveType == PrimitiveType.BOOL) {
@@ -236,6 +252,157 @@ public abstract class BaseGenerator {
         return s;
     }
 
+    public Type inspectLeafType(Leaf leaf, PineDLContext context) throws Exception {
+        if (leaf instanceof StringConstant) {
+            return Type.STRING;
+        }
+        if (leaf instanceof IntConstant) {
+            return Type.INT;
+        }
+        if (leaf instanceof DoubleConstant) {
+            return Type.FLOAT;
+        }
+        if (leaf instanceof BooleanConstant) {
+            return Type.BOOL;
+        }
+        if (leaf instanceof NullConstant) {
+            return null;
+        }
+        if (leaf instanceof NewArray) {
+            Type t = new Type();
+            t.typeCategory = TypeCategory.ARRAY;
+            t.arrayType = ((NewArray) leaf).type;
+            return t;
+        }
+        if (leaf instanceof SumOperation) {
+            SumOperation sum = (SumOperation) leaf;
+            Type leftType = inspectLeafType(sum.left, context);
+            Type rightType = inspectLeafType(sum.right, context);
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE) {
+                throw new Exception("Invalid type");
+            }
+            if (rightType.typeCategory != TypeCategory.PRIMITIVE) {
+                throw new Exception("Invalid type"); //If, in the future, a toString()
+            //function gets defined, then this may become possible
+            }
+            if (leftType.primitiveType == PrimitiveType.STRING) {
+                return leftType;
+            }
+            //Right-sided strings are only acceptable
+            //If left side is a string as well.
+            if (rightType.primitiveType == PrimitiveType.STRING) {
+                throw new Exception("Invalid type");
+            }
+            if (leftType.primitiveType == PrimitiveType.BOOL) {
+                throw new Exception("Invalid type");
+            }
+            //Bool on the right is only acceptable
+            //If left side is a string
+            if (rightType.primitiveType == PrimitiveType.BOOL) {
+                throw new Exception("Invalid type");
+            }
+            if (leftType.primitiveType == PrimitiveType.FLOAT || rightType.primitiveType == PrimitiveType.FLOAT) {
+                return Type.FLOAT;
+            }
+            if (leftType.primitiveType == PrimitiveType.INT ||
+                    rightType.primitiveType == PrimitiveType.INT) {
+                return Type.INT;
+            }
+            /////CHAR SUPPORT!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            return null; //The only thing left, I suppose
+        }
+        if (leaf instanceof SubtractionOperation) {
+            SubtractionOperation op = (SubtractionOperation) leaf;
+            Type leftType = inspectLeafType(op.left, context);
+            Type rightType = inspectLeafType(op.right, context);
+            return multLikeOperationHandler(leftType, rightType);
+        }
+        if (leaf instanceof MultiplyOperation) {
+            MultiplyOperation op = (MultiplyOperation) leaf;
+            Type leftType = inspectLeafType(op.left, context);
+            Type rightType = inspectLeafType(op.right, context);
+            return multLikeOperationHandler(leftType, rightType);
+        }
+        if (leaf instanceof DivisionOperation) {
+            DivisionOperation op = (DivisionOperation) leaf;
+            Type leftType = inspectLeafType(op.left, context);
+            Type rightType = inspectLeafType(op.right, context);
+            return multLikeOperationHandler(leftType, rightType);
+        }
+        if(leaf instanceof TypeCast){
+            return ((TypeCast) leaf).type;
+        }
+        if(leaf instanceof LogicalAndOperation){
+            LogicalAndOperation op = (LogicalAndOperation) leaf;
+            Leaf left = op.left;
+            Leaf right = op.right;
+            return logicOperationHandler(
+                    inspectLeafType(left, context),
+                    inspectLeafType(right, context));
+        }
+        if(leaf instanceof LogicalOrOperation){
+            LogicalOrOperation op = (LogicalOrOperation) leaf;
+            Leaf left = op.left;
+            Leaf right = op.right;
+            return logicOperationHandler(
+                    inspectLeafType(left, context),
+                    inspectLeafType(right, context));
+        }
+        if(leaf instanceof NotOperation){
+            NotOperation op = (NotOperation) leaf;
+            Type type = inspectLeafType(op.exp, context);
+            if(type.typeCategory!=TypeCategory.PRIMITIVE){
+                throw new Exception("Invalid type");
+            }
+            if(type.primitiveType!=PrimitiveType.BOOL){
+                throw new Exception("Invalid type");
+            }
+            return Type.BOOL;
+        }
+        throw new Exception("Unrecognized type");
+    }
+    
+    private Type logicOperationHandler(Type left, Type right) throws Exception{
+        if(left.typeCategory!=TypeCategory.PRIMITIVE){
+            throw new Exception("Invalid type");
+        }
+        if(right.typeCategory!=TypeCategory.PRIMITIVE){
+            throw new Exception("Invalid type");
+        }
+        if(left.primitiveType!=PrimitiveType.BOOL){
+            throw new Exception("Invalid type");
+        }
+        if(right.primitiveType!=PrimitiveType.BOOL){
+            throw new Exception("Invalid type");
+        }
+        return Type.BOOL;
+    }
+    
+    private Type multLikeOperationHandler(Type left, Type right) throws Exception {
+        if(left.typeCategory!=TypeCategory.PRIMITIVE){
+            throw new Exception("Invalid type");
+        }
+        if(right.typeCategory!=TypeCategory.PRIMITIVE){
+            throw new Exception("Invalid type");
+        }
+        PrimitiveType leftType = left.primitiveType;
+        PrimitiveType rightType = right.primitiveType;
+        if(leftType==PrimitiveType.STRING||rightType==PrimitiveType.STRING){
+            throw new Exception("Invalid type");
+        }
+        if(leftType==PrimitiveType.BOOL||rightType==PrimitiveType.BOOL){
+            throw new Exception("Invalid type");
+        }
+        if(leftType==PrimitiveType.FLOAT||rightType==PrimitiveType.FLOAT){
+            return Type.FLOAT;
+        }
+        if(leftType==PrimitiveType.INT||rightType==PrimitiveType.INT){
+            return Type.INT;
+        }
+        //DEAL WITH CHAR SOME TIME!!!
+        return null;
+    }
+
     protected void writeLine() throws IOException {
         out.write('\n');
     }
@@ -251,7 +418,7 @@ public abstract class BaseGenerator {
 
         cmp.compFrame.writeLine(message);
     }
-    
+
     protected String accessToString(AccessControlKeyword k) {
         if (k == AccessControlKeyword.PRIVATE) {
             return "private";
