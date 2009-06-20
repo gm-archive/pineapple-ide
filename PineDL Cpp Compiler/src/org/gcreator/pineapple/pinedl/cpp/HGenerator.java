@@ -42,8 +42,7 @@ import org.gcreator.pineapple.pinedl.Variable;
  */
 public class HGenerator extends BaseGenerator {
 
-    public HGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
-            Vector<String> context) {
+    public HGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname) {
         try {
             if (in.available() == 0) {
                 System.out.println("Empty file! skipping");
@@ -52,7 +51,6 @@ public class HGenerator extends BaseGenerator {
             this.in = in;
             this.out = out;
             this.cmp = cmp;
-            this.context = context;
             parse();
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
@@ -105,20 +103,23 @@ public class HGenerator extends BaseGenerator {
                 throwError("Found two import statements referencing same class name.");
                 return;
             }
-            if (context.contains(t.type[t.type.length - 1])) {
-                throwWarning("Found import statement reference class name of same package");
-                return;
-            }
+            //if (context.contains(t.type[t.type.length - 1])) {
+            //    throwWarning("Found import statement reference class name of same package");
+            //    return;
+            //}
             s.add(t.type[t.type.length - 1]);
             writeLine("#include \"" + t.type[t.type.length - 1] + '"');
         }
     }
 
+    GlobalLibrary.ClassDefinition superDefinition;
+    
     private void writeClass() throws Exception {
         String s = "class ";
         s += detokenize(cls.clsName);
         if (cls.superClass != null) {
             s += " : public " + retrieveType(cls.superClass, false);
+            superDefinition = classFromName(cls.superClass.type);
         }
         s += "{";
         writeLine(s);

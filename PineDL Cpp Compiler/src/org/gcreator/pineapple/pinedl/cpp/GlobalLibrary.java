@@ -24,8 +24,15 @@ package org.gcreator.pineapple.pinedl.cpp;
 
 import java.util.Arrays;
 import java.util.Vector;
-import org.gcreator.pineapple.formats.ClassResource.Field.Access;
+import org.gcreator.pineapple.pinedl.AccessControlKeyword;
+import org.gcreator.pineapple.pinedl.Argument;
+import org.gcreator.pineapple.pinedl.Function;
+import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
+import org.gcreator.pineapple.pinedl.Variable;
+import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
+import org.gcreator.pineapple.pinedl.statements.Constant;
+import org.gcreator.pineapple.pinedl.statements.IntConstant;
 
 /**
  * 
@@ -60,6 +67,33 @@ public class GlobalLibrary {
         return null;
     }
     
+    public static ClassDefinition getClassFromName(String name, String[] packageName){
+        ClassDefinition definition = getUserDefinedClassFromName(name, packageName);
+        if(definition!=null){
+            return definition;
+        }
+        if(packageName.length==1&&packageName[0].equals("Pineapple")){
+            return getCoreClassFromName(name);
+        }
+        return null;
+    }
+    
+    public static void addUserClass(PineClass userClass){
+        ClassDefinition clsDefinition = new ClassDefinition(userClass.clsName,
+                userClass.packageName);
+        for(Variable v : userClass.variables){
+            clsDefinition.fields.add(
+                    new FieldDefinition(v.name, v.type, v.isStatic, v.isFinal, v.access));
+        }
+        for(Function f : userClass.functions){
+            MethodDefinition m = new MethodDefinition(f.name, f.returnType, f.isStatic, f.isFinal);
+            m.access = f.access;
+            for(Argument arg : f.arguments){
+                VariableDefinition v = new VariableDefinition(arg.name, arg.type, arg.defaultValue);
+            }
+        }
+    }
+    
     static {
         /* Functions provided by libPineapple.a, the OpenGL Backend */
 
@@ -76,14 +110,14 @@ public class GlobalLibrary {
         m = new MethodDefinition("drawVertex", Type.VOID);
         m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         m.arguments.add(new VariableDefinition("y", Type.FLOAT));
-        m.arguments.add(new VariableDefinition("z", Type.FLOAT, "0"));
-        m.arguments.add(new VariableDefinition("w", Type.FLOAT, "1"));
+        m.arguments.add(new VariableDefinition("z", Type.FLOAT, new IntConstant(0)));
+        m.arguments.add(new VariableDefinition("w", Type.FLOAT, new IntConstant(1)));
         c.methods.add(m);
 
         m = new MethodDefinition("drawTranslate", Type.VOID);
         m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         m.arguments.add(new VariableDefinition("y", Type.FLOAT));
-        m.arguments.add(new VariableDefinition("z", Type.FLOAT, "0"));
+        m.arguments.add(new VariableDefinition("z", Type.FLOAT, new IntConstant(0)));
         c.methods.add(m);
 
         m = new MethodDefinition("drawPop", Type.VOID);
@@ -122,7 +156,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
         m.arguments.add(new VariableDefinition("y2", Type.INT));
-        m.arguments.add(new VariableDefinition("filled", Type.BOOL, "true"));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawLine", Type.VOID);
@@ -137,7 +171,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
         m.arguments.add(new VariableDefinition("y2", Type.INT));
-        m.arguments.add(new VariableDefinition("filled", Type.BOOL, "true"));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawRoundRect", Type.VOID);
@@ -145,7 +179,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
         m.arguments.add(new VariableDefinition("y2", Type.INT));
-        m.arguments.add(new VariableDefinition("filled", Type.BOOL, "true"));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawEllipse", Type.VOID);
@@ -153,7 +187,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
         m.arguments.add(new VariableDefinition("y2", Type.INT));
-        m.arguments.add(new VariableDefinition("filled", Type.BOOL, "true"));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawTriangle", Type.VOID);
@@ -163,7 +197,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y2", Type.INT));
         m.arguments.add(new VariableDefinition("x3", Type.INT));
         m.arguments.add(new VariableDefinition("y3", Type.INT));
-        m.arguments.add(new VariableDefinition("filled", Type.BOOL, "true"));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawPoint", Type.VOID);
@@ -175,20 +209,20 @@ public class GlobalLibrary {
 
         c = new ClassDefinition("Actor");
         c.constructors.add(new ConstructorDefinition(
-                new VariableDefinition("x", Type.FLOAT, "0"),
-                new VariableDefinition("y", Type.FLOAT, "0"),
-                new VariableDefinition("depth", Type.FLOAT, "0")));
-        c.fields.add(new FieldDefinition("motion", new Type("Vector"), Access.PRIVATE));
-        c.fields.add(new FieldDefinition("gravity", new Type("Vector"), Access.PRIVATE));
-        c.fields.add(new FieldDefinition("friction", Type.FLOAT, Access.PRIVATE));
-        c.fields.add(new FieldDefinition("texture", Type.INT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("angle", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("width", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("height", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("x", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("y", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("depth", Type.FLOAT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("autoDraw", Type.BOOL, Access.PROTECTED));
+                new VariableDefinition("x", Type.FLOAT, new IntConstant(0)),
+                new VariableDefinition("y", Type.FLOAT, new IntConstant(0)),
+                new VariableDefinition("depth", Type.FLOAT, new IntConstant(0))));
+        c.fields.add(new FieldDefinition("motion", new Type("Vector"), AccessControlKeyword.PRIVATE));
+        c.fields.add(new FieldDefinition("gravity", new Type("Vector"), AccessControlKeyword.PRIVATE));
+        c.fields.add(new FieldDefinition("friction", Type.FLOAT, AccessControlKeyword.PRIVATE));
+        c.fields.add(new FieldDefinition("texture", Type.INT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("angle", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("width", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("height", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("x", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("y", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("depth", Type.FLOAT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("autoDraw", Type.BOOL, AccessControlKeyword.PROTECTED));
         c.methods.add(new MethodDefinition("getX", Type.FLOAT));
         c.methods.add(new MethodDefinition("getY", Type.FLOAT));
         c.methods.add(new MethodDefinition("getHSpeed", Type.FLOAT));
@@ -257,9 +291,9 @@ public class GlobalLibrary {
         coreClasses.add(c);
 
         c = new ClassDefinition("Scene");
-        c.fields.add(new FieldDefinition("bgColor", new Type("Color"), Access.PROTECTED));
-        c.fields.add(new FieldDefinition("width", Type.INT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("height", Type.INT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("bgColor", new Type("Color"), AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("width", Type.INT, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("height", Type.INT, AccessControlKeyword.PROTECTED));
         c.constructors.add(new ConstructorDefinition(
                 new VariableDefinition("width", Type.INT),
                 new VariableDefinition("height", Type.INT)));
@@ -301,7 +335,7 @@ public class GlobalLibrary {
 
         public String name;
         public String[] packageName;
-        public Access access;
+        public AccessControlKeyword access;
         public ClassDefinition parent = null;
         public Vector<ClassDefinition> classes;
         public Vector<MethodDefinition> methods;
@@ -311,7 +345,7 @@ public class GlobalLibrary {
 
         protected ClassDefinition(String name) {
             this.name = name;
-            this.access = Access.PUBLIC;
+            this.access = AccessControlKeyword.PUBLIC;
             this.classes = new Vector<ClassDefinition>();
             this.methods = new Vector<MethodDefinition>();
             this.fields = new Vector<FieldDefinition>();
@@ -348,18 +382,18 @@ public class GlobalLibrary {
 
     public static class FieldDefinition {
         public String name;
-        public Access access;
+        public AccessControlKeyword access;
         public boolean isStatic;
         public boolean isFinal;
         public Type type;
 
         public FieldDefinition(String name, Type type) {
-            this.access = Access.PUBLIC;
+            this.access = AccessControlKeyword.PUBLIC;
             this.name = name;
             this.type = type;
         }
 
-        public FieldDefinition(String name, Type type, Access access) {
+        public FieldDefinition(String name, Type type, AccessControlKeyword access) {
             this(name, type);
             this.access = access;
         }
@@ -370,7 +404,7 @@ public class GlobalLibrary {
             this.isFinal = isFinal;
         }
 
-        public FieldDefinition(String name, Type type, boolean isStatic, boolean isFinal, Access access) {
+        public FieldDefinition(String name, Type type, boolean isStatic, boolean isFinal, AccessControlKeyword access) {
             this(name, type);
             this.isStatic = isStatic;
             this.isFinal = isFinal;
@@ -380,7 +414,7 @@ public class GlobalLibrary {
 
     public static class MethodDefinition {
         public String name;
-        public Access access;
+        public AccessControlKeyword access;
         public Vector<VariableDefinition> arguments;
         public boolean isFinal;
         public boolean isStatic;
@@ -388,7 +422,7 @@ public class GlobalLibrary {
 
         public MethodDefinition(String name, Type returnType) {
             this.name = name;
-            this.access = Access.PUBLIC;
+            this.access = AccessControlKeyword.PUBLIC;
             this.returnType = returnType;
             this.arguments = new Vector<VariableDefinition>();
         }
@@ -403,26 +437,26 @@ public class GlobalLibrary {
     public static class VariableDefinition  {
         public String name;
         public Type type;
-        public Access access;
-        public String defaultValue = null;
+        public AccessControlKeyword access;
+        public Constant defaultValue = null;
         
         public VariableDefinition(String name, Type type) {
             this.name = name;
             this.type = type;
-            this.access = Access.PUBLIC;
+            this.access = AccessControlKeyword.PUBLIC;
         }
-        public VariableDefinition(String name, Type type, String defaultValue) {
+        public VariableDefinition(String name, Type type, Constant defaultValue) {
             this(name, type);
             this.defaultValue = defaultValue;
         }
     }
 
     public static class ConstructorDefinition {
-        public Access access;
+        public AccessControlKeyword access;
         public Vector<VariableDefinition> arguments;
 
         public ConstructorDefinition(VariableDefinition... args) {
-            this.access = Access.PUBLIC;
+            this.access = AccessControlKeyword.PUBLIC;
             this.arguments = new Vector<VariableDefinition>();
             this.arguments.copyInto(args);
         }
@@ -430,7 +464,7 @@ public class GlobalLibrary {
 
     public static class EnumDefinition {
         String name;
-        public Access access;
+        public AccessControlKeyword access;
         public Vector<String> values;
 
         public EnumDefinition(String name, String... values) {
@@ -439,7 +473,7 @@ public class GlobalLibrary {
             this.values.copyInto(values);
         }
 
-        public EnumDefinition(String name, Access access, String... values) {
+        public EnumDefinition(String name, AccessControlKeyword access, String... values) {
             this(name, values);
             this.access = access;
         }

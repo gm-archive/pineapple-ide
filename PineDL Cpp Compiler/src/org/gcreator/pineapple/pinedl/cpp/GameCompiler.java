@@ -87,7 +87,7 @@ public class GameCompiler {
     Vector<File> pineScripts = new Vector<File>();
     Vector<File> imageFiles = new Vector<File>();
     Vector<File> compFiles = new Vector<File>();
-    Vector<String> context = new Vector<String>();
+    private Vector<String> context = new Vector<String>();
     String gamePackage = "Game";
     boolean worked = true;
     PrintWriter headerH = null;
@@ -97,7 +97,7 @@ public class GameCompiler {
     HashMap<File, String> imageNames = new HashMap<File, String>();
     HashMap<String, String> config = new HashMap<String, String>();
     HashMap<String, ClassResource> clsres = new HashMap<String, ClassResource>();
-    HashMap<String, PineClass> classContext = new HashMap<String, PineClass>();
+    //HashMap<String, PineClass> classContext = new HashMap<String, PineClass>();
     static boolean copiedLib = false;
 
     public GameCompiler(final Project p) {
@@ -120,6 +120,7 @@ public class GameCompiler {
         if (compFrame != null) {
             compFrame.dispose();
         }
+        GlobalLibrary.userDefinedClasses.clear();
         compFrame = new CompilerFrame(this);
         compFrame.setSize(330, 460);
         compFrame.setVisible(true);
@@ -185,9 +186,10 @@ public class GameCompiler {
                                 }
                                 compFrame.writeLine("<em>" + script.getName() + "...</em>");
                                 PineClass cls = generateHeader(script);
+                                GlobalLibrary.addUserClass(cls);
                                 String name = script.getName();
                                 name = name.substring(0, name.indexOf('.'));
-                                classContext.put(name, cls);
+                                //classContext.put(name, cls);
                                 tmp.put(script, cls);
                             }
                             for (File script : tmp.keySet()) {
@@ -447,7 +449,7 @@ public class GameCompiler {
         headerH.print(fname);
         headerH.println(".h\"");
         FileOutputStream fos = new FileOutputStream(output);
-        HGenerator gen = new HGenerator(is, fos, this, fname, context);
+        HGenerator gen = new HGenerator(is, fos, this, fname);
         if (!gen.wasSuccessful()) {
             worked = false;
         }
@@ -465,7 +467,7 @@ public class GameCompiler {
             System.out.println("Blank file: " + fname + "; skipping");
             return;
         }
-        CppGenerator gen = new CppGenerator(is, fos, this, fname, context, cls);
+        CppGenerator gen = new CppGenerator(is, fos, this, fname, cls);
         if (!gen.wasSuccessful()) {
             worked = false;
         }

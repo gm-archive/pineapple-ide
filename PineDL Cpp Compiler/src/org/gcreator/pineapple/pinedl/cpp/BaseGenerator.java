@@ -61,7 +61,7 @@ public abstract class BaseGenerator {
     protected GameCompiler cmp = null;
     public PineClass cls = null;
     protected String fname = "";
-    protected Vector<String> context = null;
+    //protected Vector<String> context = null;
     protected boolean successful = true;
     protected OutputStream out = null;
     protected InputStream in = null;
@@ -82,16 +82,7 @@ public abstract class BaseGenerator {
         if (t.type.length != 1) {
             return typeToString(t, reference);
         }
-        for (String s : context) {
-            if (s.equals(t.type[t.type.length - 1])) {
-                return s;
-            }
-        }
-        for (Type type : cls.importStmt) {
-            if (type.type[type.type.length - 1].equals(t.type[0])) {
-                return typeToString(type, reference);
-            }
-        }
+        
         if (t.type.length == 1) {
             if (t.type[0].equals("Texture")) {
                 return "::Pineapple::Texture" + (reference ? "*" : "");
@@ -111,6 +102,25 @@ public abstract class BaseGenerator {
                 return "::Pineapple::Drawing" + (reference ? "*" : "");
             }
         }
+        
+        GlobalLibrary.ClassDefinition definition = classFromName(t.type);
+        if(definition!=null){
+            String[] fullName = new String[definition.packageName.length+1];
+            for(int i = 0; i < definition.packageName.length; i++){
+                fullName[i] = definition.packageName[i];
+            }
+            fullName[fullName.length-1] = definition.name;
+            Type type = new Type();
+            type.typeCategory = TypeCategory.CLASS;
+            type.type = fullName;
+            return typeToString(type, reference);
+        }
+        /*for (String s : context) {
+            if (s.equals(t.type[t.type.length - 1])) {
+                return s;
+            }
+        }*/
+        
         throwError("In file " + fname + ": Unknown type " + t.toString());
         return "---";
     }
@@ -391,29 +401,18 @@ public abstract class BaseGenerator {
                 }
             }
             //Try Pineapple classes:
-            def = GlobalLibrary.getCoreClassFromName(clsName[1]);
-            if(def!=null){
-                return def;
-            }
-        }
-        else if(clsName.length==2){
-            if(clsName[0].equals("Pineapple")){
-                GlobalLibrary.ClassDefinition def = GlobalLibrary.getCoreClassFromName(clsName[1]);
+            if(clsName.length==2&&clsName[0].equals("Pineapple")){
+                def = GlobalLibrary.getCoreClassFromName(clsName[1]);
                 if(def!=null){
                     return def;
                 }
             }
         }
-        
-        //Note that at this point the length STILL can be 2!
-        //And the namespace can be Pineapple. It just can't be an
-        //imported statement nor a standard API class
-        //And it can't be a no-namespace class
         String[] pkg = new String[clsName.length-1];
         for(int i = 0; i < pkg.length; i++){
             pkg[i] = clsName[i];
         }
-        return GlobalLibrary.getUserDefinedClassFromName(clsName[clsName.length-1], pkg);
+        return GlobalLibrary.getClassFromName(clsName[clsName.length-1], pkg);
         
     }
     

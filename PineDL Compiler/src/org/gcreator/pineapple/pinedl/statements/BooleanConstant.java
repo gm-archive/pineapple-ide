@@ -29,6 +29,9 @@ package org.gcreator.pineapple.pinedl.statements;
  */
 public class BooleanConstant extends Constant {
 
+    public static BooleanConstant TRUE = new BooleanConstant(true);
+    public static BooleanConstant FALSE = new BooleanConstant(false);
+    
     public boolean value = false;
 
     public BooleanConstant(boolean value) {

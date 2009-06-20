@@ -75,13 +75,12 @@ import org.gcreator.pineapple.pinedl.statements.VariableReference;
 public class CppGenerator extends BaseGenerator {
 
     public CppGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
-            Vector<String> context, PineClass cls) {
+            PineClass cls) {
         try {
             this.in = in;
             this.out = out;
             this.cmp = cmp;
             this.cls = cls;
-            this.context = context;
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
                 throw new Exception("Invalid class name!");
@@ -125,10 +124,10 @@ public class CppGenerator extends BaseGenerator {
                 throwError("Found two import statements referencing same class name.");
                 return;
             }
-            if (context.contains(t.type[t.type.length - 1])) {
-                throwWarning("Found import statement reference class name of same package");
-                return;
-            }
+            //if (context.contains(t.type[t.type.length - 1])) {
+            //    throwWarning("Found import statement reference class name of same package");
+            //    return;
+            //}
             s.add(t.type[t.type.length - 1]);
             writeLine("using " + typeToString(t, false) + ';');
         }
@@ -167,44 +166,7 @@ public class CppGenerator extends BaseGenerator {
     }
 
     public boolean isType(String t) {
-        for (Type type : cls.importStmt) {
-            if (merge(type.type, '.').equals(t)) {
-                return true;
-            }
-            if (type.type[type.type.length - 1].equals(t)) {
-                return true;
-            }
-        }
-        for (String s : context) {
-            if (t.equals(s) || t.equals("Game." + s)) {
-                return true;
-            }
-        }
-        if (t.equals("Texture") || t.equals("Pineapple.Texture")) {
-            return true;
-        }
-        if (t.equals("Actor") || t.equals("Pineapple.Actor")) {
-            return true;
-        }
-        if (t.equals("Scene") || t.equals("Pineapple.Scene")) {
-            return true;
-        }
-        if (t.equals("Math") || t.equals("Pineapple.Math")) {
-            return true;
-        }
-        if (t.equals("Key") || t.equals("Pineapple.Key")) {
-            return true;
-        }
-        if (t.equals("Keyboard") || t.equals("Pineapple.Keyboard")) {
-            return true;
-        }
-        if (t.equals("Color") || t.equals("Pineapple.Color")) {
-            return true;
-        }
-        if (t.equals("Drawing") || t.equals("Pineapple.Drawing")) {
-            return true;
-        }
-        return false;
+        return classFromName(new String[]{t})!=null;
     }
 
     public boolean isType(Reference e) {
