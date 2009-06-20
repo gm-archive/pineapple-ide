@@ -30,14 +30,9 @@ package org.gcreator.pineapple.pinedl;
  */
 public enum PrimitiveType {
     INT,
-    UINT,
     FLOAT,
-    UFLOAT,
-    DOUBLE,
-    UDOUBLE,
     BOOL,
     CHAR,
-    UCHAR,
     STRING,
     VOID
 }

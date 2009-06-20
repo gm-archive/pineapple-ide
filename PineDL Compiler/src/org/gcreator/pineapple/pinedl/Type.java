@@ -33,11 +33,11 @@ import java.util.Arrays;
 public class Type {
 
     public static final Type INT = new Type(PrimitiveType.INT);
-    public static final Type DOUBLE = new Type(PrimitiveType.DOUBLE);
     public static final Type FLOAT = new Type(PrimitiveType.FLOAT);
     public static final Type BOOL = new Type(PrimitiveType.BOOL);
     public static final Type VOID = new Type(PrimitiveType.VOID);
     public static final Type STRING = new Type(PrimitiveType.STRING);
+    public static final Type CHAR = new Type(PrimitiveType.CHAR);
 
     public Type() {
     }
@@ -82,26 +82,11 @@ public class Type {
             if (primitiveType == PrimitiveType.INT) {
                 return "int";
             }
-            if (primitiveType == PrimitiveType.UINT) {
-                return "uint";
-            }
             if (primitiveType == PrimitiveType.FLOAT) {
                 return "float";
             }
-            if (primitiveType == PrimitiveType.UFLOAT) {
-                return "ufloat";
-            }
-            if (primitiveType == PrimitiveType.DOUBLE) {
-                return "double";
-            }
-            if (primitiveType == PrimitiveType.UDOUBLE) {
-                return "udouble";
-            }
             if (primitiveType == PrimitiveType.CHAR) {
                 return "char";
-            }
-            if (primitiveType == PrimitiveType.UCHAR) {
-                return "uchar";
             }
             if (primitiveType == PrimitiveType.BOOL) {
                 return "bool";

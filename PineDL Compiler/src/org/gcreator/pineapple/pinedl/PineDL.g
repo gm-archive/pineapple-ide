@@ -457,13 +457,8 @@ primitivetype returns [Type type = new Type()]
 @init{
 	type.typeCategory = TypeCategory.PRIMITIVE;
 } :	('int' {type.primitiveType = PrimitiveType.INT;})|
-	('uint' {type.primitiveType = PrimitiveType.UINT;})|
 	('float' {type.primitiveType = PrimitiveType.FLOAT;})|
-	('ufloat' {type.primitiveType = PrimitiveType.UFLOAT;})|
-	('double' {type.primitiveType = PrimitiveType.DOUBLE;})|
-	('udouble' {type.primitiveType = PrimitiveType.UDOUBLE;})|
 	('char' {type.primitiveType = PrimitiveType.CHAR;})|
-	('uchar' {type.primitiveType = PrimitiveType.UCHAR;})|
 	('bool' {type.primitiveType = PrimitiveType.BOOL;})|
 	('string' {type.primitiveType = PrimitiveType.STRING;})|
 	('void' {type.primitiveType = PrimitiveType.VOID;});
@@ -495,6 +490,4 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
- 
- 
- 
+
