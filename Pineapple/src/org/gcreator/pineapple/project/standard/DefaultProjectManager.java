@@ -410,9 +410,10 @@ public class DefaultProjectManager implements ProjectManager {
                     newFile.createNewFile();
                 }
                 out = new BufferedOutputStream(new FileOutputStream(newFile));
-                int r;
-                while ((r = in.read()) != -1) {
-                    out.write(r);
+                int read;
+                byte[] buffer = new byte[8192];
+                while ((read = in.read()) != -1) {
+                    out.write(buffer, 0, read);
                 }
                 updateTreeUI();
             } catch (IOException ex) {
