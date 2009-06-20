@@ -124,13 +124,10 @@ public abstract class BaseGenerator {
                 return "bool";
             }
             if (t.primitiveType == PrimitiveType.CHAR) {
-                return "signed char";
-            }
-            if (t.primitiveType == PrimitiveType.DOUBLE) {
-                return "double";
+                return "char";
             }
             if (t.primitiveType == PrimitiveType.FLOAT) {
-                return "float";
+                return "double"; //This is intended (PineDL float = C double)
             }
             if (t.primitiveType == PrimitiveType.INT) {
                 return "int";
@@ -140,18 +137,6 @@ public abstract class BaseGenerator {
             }
             if (t.primitiveType == PrimitiveType.STRING) {
                 return "std::string";
-            }
-            if (t.primitiveType == PrimitiveType.UCHAR) {
-                return "unsigned char";
-            }
-            if (t.primitiveType == PrimitiveType.UDOUBLE) {
-                return "unsigned double";
-            }
-            if (t.primitiveType == PrimitiveType.UFLOAT) {
-                return "unsigned float";
-            }
-            if (t.primitiveType == PrimitiveType.UINT) {
-                return "unsigned int";
             }
         }
         String x = t.type[0];

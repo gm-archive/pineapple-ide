@@ -62,16 +62,16 @@ public class GlobalLibrary {
         c.methods.add(m);
 
         m = new MethodDefinition("drawVertex", Type.VOID);
-        m.arguments.add(new VariableDefinition("x", Type.DOUBLE));
-        m.arguments.add(new VariableDefinition("y", Type.DOUBLE));
-        m.arguments.add(new VariableDefinition("z", Type.DOUBLE, "0"));
-        m.arguments.add(new VariableDefinition("w", Type.DOUBLE, "1"));
+        m.arguments.add(new VariableDefinition("x", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("z", Type.FLOAT, "0"));
+        m.arguments.add(new VariableDefinition("w", Type.FLOAT, "1"));
         c.methods.add(m);
 
         m = new MethodDefinition("drawTranslate", Type.VOID);
-        m.arguments.add(new VariableDefinition("x", Type.DOUBLE));
-        m.arguments.add(new VariableDefinition("y", Type.DOUBLE));
-        m.arguments.add(new VariableDefinition("z", Type.DOUBLE, "0"));
+        m.arguments.add(new VariableDefinition("x", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("z", Type.FLOAT, "0"));
         c.methods.add(m);
 
         m = new MethodDefinition("drawPop", Type.VOID);
@@ -163,60 +163,60 @@ public class GlobalLibrary {
 
         c = new ClassDefinition("Actor");
         c.constructors.add(new ConstructorDefinition(
-                new VariableDefinition("x", Type.DOUBLE, "0"),
-                new VariableDefinition("y", Type.DOUBLE, "0"),
-                new VariableDefinition("depth", Type.DOUBLE, "0")));
+                new VariableDefinition("x", Type.FLOAT, "0"),
+                new VariableDefinition("y", Type.FLOAT, "0"),
+                new VariableDefinition("depth", Type.FLOAT, "0")));
         c.fields.add(new FieldDefinition("motion", new Type("Vector"), Access.PRIVATE));
         c.fields.add(new FieldDefinition("gravity", new Type("Vector"), Access.PRIVATE));
-        c.fields.add(new FieldDefinition("friction", Type.DOUBLE, Access.PRIVATE));
+        c.fields.add(new FieldDefinition("friction", Type.FLOAT, Access.PRIVATE));
         c.fields.add(new FieldDefinition("texture", Type.INT, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("angle", Type.DOUBLE, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("width", Type.DOUBLE, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("height", Type.DOUBLE, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("x", Type.DOUBLE, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("y", Type.DOUBLE, Access.PROTECTED));
-        c.fields.add(new FieldDefinition("depth", Type.DOUBLE, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("angle", Type.FLOAT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("width", Type.FLOAT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("height", Type.FLOAT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("x", Type.FLOAT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("y", Type.FLOAT, Access.PROTECTED));
+        c.fields.add(new FieldDefinition("depth", Type.FLOAT, Access.PROTECTED));
         c.fields.add(new FieldDefinition("autoDraw", Type.BOOL, Access.PROTECTED));
-        c.methods.add(new MethodDefinition("getX", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getY", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getHSpeed", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getVSpeed", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getSpeed", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getDirection", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getFriction", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getGravity", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getGravityDirection", Type.DOUBLE));
-        c.methods.add(new MethodDefinition("getDepth", Type.DOUBLE));
+        c.methods.add(new MethodDefinition("getX", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getY", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getHSpeed", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getVSpeed", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getSpeed", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getDirection", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getFriction", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getGravity", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getGravityDirection", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getDepth", Type.FLOAT));
         m = new MethodDefinition("setX", Type.VOID);
-        m.arguments.add(new VariableDefinition("x", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setY", Type.VOID);
-        m.arguments.add(new VariableDefinition("y", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setHSpeed", Type.VOID);
-        m.arguments.add(new VariableDefinition("x", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setVSpeed", Type.VOID);
-        m.arguments.add(new VariableDefinition("y", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setSpeed", Type.VOID);
-        m.arguments.add(new VariableDefinition("s", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("s", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setDirection", Type.VOID);
-        m.arguments.add(new VariableDefinition("d", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("d", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setGravity", Type.VOID);
-        m.arguments.add(new VariableDefinition("g", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("g", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setGravity", Type.VOID);
-        m.arguments.add(new VariableDefinition("g", Type.DOUBLE));
-        m.arguments.add(new VariableDefinition("d", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("g", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("d", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setGravityDirection", Type.VOID);
-        m.arguments.add(new VariableDefinition("d", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("d", Type.FLOAT));
         c.methods.add(m);
         m = new MethodDefinition("setDepth", Type.VOID);
-        m.arguments.add(new VariableDefinition("depth", Type.DOUBLE));
+        m.arguments.add(new VariableDefinition("depth", Type.FLOAT));
         c.methods.add(m);
         c.enums.add(new EnumDefinition("Motion", "MotionXY", "MotionRV"));
         m = new MethodDefinition("setMotionMode", Type.VOID);
