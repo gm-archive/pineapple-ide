@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.util.Vector;
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.gcreator.pineapple.formats.ClassResource;
 import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
 import org.gcreator.pineapple.pinedl.Function;

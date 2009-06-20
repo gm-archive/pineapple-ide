@@ -293,8 +293,7 @@ public abstract class BaseGenerator {
                     rightType.primitiveType == PrimitiveType.INT) {
                 return Type.INT;
             }
-            /////CHAR SUPPORT!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            return null; //The only thing left, I suppose
+            return Type.CHAR;
         }
         if (leaf instanceof SubtractionOperation) {
             SubtractionOperation op = (SubtractionOperation) leaf;
@@ -373,7 +372,49 @@ public abstract class BaseGenerator {
     }
 
     public GlobalLibrary.ClassDefinition classFromName(String[] clsName){
-        return null;
+        if(clsName.length==1){
+            
+            //Try same package(including the class itself)
+            GlobalLibrary.ClassDefinition def =
+                    GlobalLibrary.getUserDefinedClassFromName(clsName[0], cls.packageName);
+            
+            //Try import statements:
+            importLoop:
+            for(Type t : cls.importStmt){
+                if(!t.type[t.type.length-1].equals(clsName[0])){
+                    //Matched!
+                    String[] pkg = new String[t.type.length-1];
+                    for(int i = 0; i < pkg.length; i++){
+                        pkg[i] = t.type[i];
+                    }
+                    return GlobalLibrary.getUserDefinedClassFromName(clsName[0], pkg);
+                }
+            }
+            //Try Pineapple classes:
+            def = GlobalLibrary.getCoreClassFromName(clsName[1]);
+            if(def!=null){
+                return def;
+            }
+        }
+        else if(clsName.length==2){
+            if(clsName[0].equals("Pineapple")){
+                GlobalLibrary.ClassDefinition def = GlobalLibrary.getCoreClassFromName(clsName[1]);
+                if(def!=null){
+                    return def;
+                }
+            }
+        }
+        
+        //Note that at this point the length STILL can be 2!
+        //And the namespace can be Pineapple. It just can't be an
+        //imported statement nor a standard API class
+        //And it can't be a no-namespace class
+        String[] pkg = new String[clsName.length-1];
+        for(int i = 0; i < pkg.length; i++){
+            pkg[i] = clsName[i];
+        }
+        return GlobalLibrary.getUserDefinedClassFromName(clsName[clsName.length-1], pkg);
+        
     }
     
     private Type ClassTypeFunction
@@ -465,8 +506,7 @@ public abstract class BaseGenerator {
         if (leftType == PrimitiveType.INT || rightType == PrimitiveType.INT) {
             return Type.INT;
         }
-        //DEAL WITH CHAR SOME TIME!!!
-        return null;
+        return Type.CHAR;
     }
 
     protected void writeLine() throws IOException {

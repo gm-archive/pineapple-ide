@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.pinedl.cpp;
 
+import java.util.Arrays;
 import java.util.Vector;
 import org.gcreator.pineapple.formats.ClassResource.Field.Access;
 import org.gcreator.pineapple.pinedl.Type;
@@ -44,6 +45,17 @@ public class GlobalLibrary {
             if(coreClass.name.equals(name)){
                 return coreClass;
             }
+        }
+        return null;
+    }
+    
+    public static ClassDefinition getUserDefinedClassFromName(String name, String[] packageName){
+        for(ClassDefinition definition : userDefinedClasses){
+            if(!definition.name.equals(name)){
+                continue;
+            }
+            Arrays.equals(definition.packageName, packageName);
+            return definition;
         }
         return null;
     }
@@ -288,6 +300,7 @@ public class GlobalLibrary {
     public static class ClassDefinition {
 
         public String name;
+        public String[] packageName;
         public Access access;
         public ClassDefinition parent = null;
         public Vector<ClassDefinition> classes;
@@ -296,7 +309,7 @@ public class GlobalLibrary {
         public Vector<ConstructorDefinition> constructors;
         public Vector<EnumDefinition> enums;
 
-        public ClassDefinition(String name) {
+        protected ClassDefinition(String name) {
             this.name = name;
             this.access = Access.PUBLIC;
             this.classes = new Vector<ClassDefinition>();
@@ -304,6 +317,12 @@ public class GlobalLibrary {
             this.fields = new Vector<FieldDefinition>();
             this.constructors = new Vector<ConstructorDefinition>();
             this.enums = new Vector<EnumDefinition>();
+            this.packageName = new String[]{"Pineapple"};
+        }
+        
+        public ClassDefinition(String name, String[] packageName){
+            this(name);
+            this.packageName = packageName;
         }
         
         public Vector<MethodDefinition> getMethods(String fname){
