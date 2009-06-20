@@ -329,10 +329,10 @@ public abstract class BaseGenerator {
             Type rightType = inspectLeafType(op.right, context);
             return multLikeOperationHandler(leftType, rightType);
         }
-        if(leaf instanceof TypeCast){
+        if (leaf instanceof TypeCast) {
             return ((TypeCast) leaf).type;
         }
-        if(leaf instanceof LogicalAndOperation){
+        if (leaf instanceof LogicalAndOperation) {
             LogicalAndOperation op = (LogicalAndOperation) leaf;
             Leaf left = op.left;
             Leaf right = op.right;
@@ -340,7 +340,7 @@ public abstract class BaseGenerator {
                     inspectLeafType(left, context),
                     inspectLeafType(right, context));
         }
-        if(leaf instanceof LogicalOrOperation){
+        if (leaf instanceof LogicalOrOperation) {
             LogicalOrOperation op = (LogicalOrOperation) leaf;
             Leaf left = op.left;
             Leaf right = op.right;
@@ -348,55 +348,136 @@ public abstract class BaseGenerator {
                     inspectLeafType(left, context),
                     inspectLeafType(right, context));
         }
-        if(leaf instanceof NotOperation){
+        if (leaf instanceof NotOperation) {
             NotOperation op = (NotOperation) leaf;
             Type type = inspectLeafType(op.exp, context);
-            if(type.typeCategory!=TypeCategory.PRIMITIVE){
+            if (type.typeCategory != TypeCategory.PRIMITIVE) {
                 throw new Exception("Invalid type");
             }
-            if(type.primitiveType!=PrimitiveType.BOOL){
+            if (type.primitiveType != PrimitiveType.BOOL) {
                 throw new Exception("Invalid type");
             }
             return Type.BOOL;
         }
         throw new Exception("Unrecognized type");
     }
+
+    public Type TypeFunction(Type type, String fname, Type... arguments)
+            throws Exception {
+        if (type.typeCategory == TypeCategory.PRIMITIVE) {
+            if (type.primitiveType == PrimitiveType.STRING && fname.equals("getLength")) {
+                return Type.INT; //getLength() returns int
+            }
+            throw new Exception("No such function");
+        }
+        if (type.typeCategory == TypeCategory.ARRAY) {
+            if (fname.equals("getLength")) {
+                return Type.INT;
+            }
+            throw new Exception("No such function");
+        }
+        String[] clsName = type.type;
+        
+        GlobalLibrary.ClassDefinition definition = classFromName(clsName);
+        
+        if(definition==null){
+            throw new Exception("Invalid class");
+        }
+        
+        return ClassTypeFunction(definition, fname, arguments);
+    }
+
+    public GlobalLibrary.ClassDefinition classFromName(String[] clsName){
+        return null;
+    }
     
-    private Type logicOperationHandler(Type left, Type right) throws Exception{
-        if(left.typeCategory!=TypeCategory.PRIMITIVE){
+    private Type ClassTypeFunction
+            (GlobalLibrary.ClassDefinition definition, String fname, Type... arguments)
+            throws Exception {
+
+        Vector<GlobalLibrary.MethodDefinition> methods = definition.getMethods(fname);
+        
+        if(methods.size()==0){
+            throw new Exception("Function not found");
+        }
+        
+        methodLoop:
+        for(GlobalLibrary.MethodDefinition method : methods){
+            int index = 0;
+            for(GlobalLibrary.VariableDefinition arg : method.arguments){
+                if(index>=arguments.length){
+                    if(arg.defaultValue==null){
+                        return method.returnType;
+                    }
+                    continue methodLoop;
+                }
+                Type argType = arg.type;
+                if(!typeMatches(argType, arg.type)){
+                    continue methodLoop;
+                }
+            }
+        }
+
+        throw new Exception("Invalid arguments");
+    }
+    
+    //Note that if t2 extends t1, then true
+    public boolean typeMatches(Type t1, Type t2)
+    throws Exception{
+        if(t1.typeCategory!=t2.typeCategory){
+            return false;
+        }
+        if(t1.typeCategory==TypeCategory.PRIMITIVE){
+            return t1.primitiveType==t2.primitiveType;
+        }
+        if(t1.typeCategory==TypeCategory.ARRAY){
+            return typeMatches(t1.arrayType, t2.arrayType);
+        }
+        String[] type1 = t1.type;
+        String[] type2 = t2.type;
+        GlobalLibrary.ClassDefinition cls1 = classFromName(type1);
+        GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
+        if(cls1==null||cls2==null){
+            throw new Exception("Unrecognized class");
+        }
+        return cls2.inheritsFrom(cls1);
+    }
+
+    private Type logicOperationHandler(Type left, Type right) throws Exception {
+        if (left.typeCategory != TypeCategory.PRIMITIVE) {
             throw new Exception("Invalid type");
         }
-        if(right.typeCategory!=TypeCategory.PRIMITIVE){
+        if (right.typeCategory != TypeCategory.PRIMITIVE) {
             throw new Exception("Invalid type");
         }
-        if(left.primitiveType!=PrimitiveType.BOOL){
+        if (left.primitiveType != PrimitiveType.BOOL) {
             throw new Exception("Invalid type");
         }
-        if(right.primitiveType!=PrimitiveType.BOOL){
+        if (right.primitiveType != PrimitiveType.BOOL) {
             throw new Exception("Invalid type");
         }
         return Type.BOOL;
     }
-    
+
     private Type multLikeOperationHandler(Type left, Type right) throws Exception {
-        if(left.typeCategory!=TypeCategory.PRIMITIVE){
+        if (left.typeCategory != TypeCategory.PRIMITIVE) {
             throw new Exception("Invalid type");
         }
-        if(right.typeCategory!=TypeCategory.PRIMITIVE){
+        if (right.typeCategory != TypeCategory.PRIMITIVE) {
             throw new Exception("Invalid type");
         }
         PrimitiveType leftType = left.primitiveType;
         PrimitiveType rightType = right.primitiveType;
-        if(leftType==PrimitiveType.STRING||rightType==PrimitiveType.STRING){
+        if (leftType == PrimitiveType.STRING || rightType == PrimitiveType.STRING) {
             throw new Exception("Invalid type");
         }
-        if(leftType==PrimitiveType.BOOL||rightType==PrimitiveType.BOOL){
+        if (leftType == PrimitiveType.BOOL || rightType == PrimitiveType.BOOL) {
             throw new Exception("Invalid type");
         }
-        if(leftType==PrimitiveType.FLOAT||rightType==PrimitiveType.FLOAT){
+        if (leftType == PrimitiveType.FLOAT || rightType == PrimitiveType.FLOAT) {
             return Type.FLOAT;
         }
-        if(leftType==PrimitiveType.INT||rightType==PrimitiveType.INT){
+        if (leftType == PrimitiveType.INT || rightType == PrimitiveType.INT) {
             return Type.INT;
         }
         //DEAL WITH CHAR SOME TIME!!!

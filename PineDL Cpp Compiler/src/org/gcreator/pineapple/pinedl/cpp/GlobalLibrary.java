@@ -39,6 +39,15 @@ public class GlobalLibrary {
     public static Vector<ClassDefinition> coreClasses = new Vector<ClassDefinition>();
     public static Vector<ClassDefinition> userDefinedClasses = new Vector<ClassDefinition>();
 
+    public static ClassDefinition getCoreClassFromName(String name){
+        for(ClassDefinition coreClass : coreClasses){
+            if(coreClass.name.equals(name)){
+                return coreClass;
+            }
+        }
+        return null;
+    }
+    
     static {
         /* Functions provided by libPineapple.a, the OpenGL Backend */
 
@@ -280,7 +289,7 @@ public class GlobalLibrary {
 
         public String name;
         public Access access;
-        public ClassDefinition parent;
+        public ClassDefinition parent = null;
         public Vector<ClassDefinition> classes;
         public Vector<MethodDefinition> methods;
         public Vector<FieldDefinition> fields;
@@ -295,6 +304,26 @@ public class GlobalLibrary {
             this.fields = new Vector<FieldDefinition>();
             this.constructors = new Vector<ConstructorDefinition>();
             this.enums = new Vector<EnumDefinition>();
+        }
+        
+        public Vector<MethodDefinition> getMethods(String fname){
+            Vector<MethodDefinition> md = new Vector<MethodDefinition>();
+            for(MethodDefinition method : methods){
+                if(method.name.equals(fname)){
+                    md.add(method);
+                }
+            }
+            if(parent!=null){
+                md.addAll(parent.getMethods(fname));
+            }
+            return md;
+        }
+        
+        public boolean inheritsFrom(ClassDefinition possibleParent){
+            if(parent==possibleParent){
+                return true;
+            }
+            return parent!=null&&parent.inheritsFrom(possibleParent);
         }
     }
 
@@ -356,7 +385,7 @@ public class GlobalLibrary {
         public String name;
         public Type type;
         public Access access;
-        public String defaultValue;
+        public String defaultValue = null;
         
         public VariableDefinition(String name, Type type) {
             this.name = name;
