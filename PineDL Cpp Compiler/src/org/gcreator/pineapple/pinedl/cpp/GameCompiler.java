@@ -281,9 +281,10 @@ public class GameCompiler {
         if (is == null) {
             throw new IOException("Resource " + resFolder + fname + " does not exist!");
         }
-        int c;
-        while ((c = is.read()) != -1) {
-            fos.write(c);
+        int read;
+        byte[] buffer = new byte[8192];
+        while ((read = is.read(buffer)) != -1) {
+            fos.write(buffer, 0, read);
         }
         fos.close();
         is.close();
