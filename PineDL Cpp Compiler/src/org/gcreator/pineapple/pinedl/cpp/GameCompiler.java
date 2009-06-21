@@ -39,11 +39,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -180,19 +179,33 @@ public class GameCompiler {
                             compFrame.writeLine("Generating C++ and header files");
                             context.add("TextureList");
                             HashMap<File, PineClass> tmp = new HashMap<File, PineClass>();
+                            Vector<GlobalLibrary.ClassDefinition> clsDef =
+                                    new Vector<GlobalLibrary.ClassDefinition>();
+                            Vector<InitialParser> parsers = new Vector<InitialParser>();
                             for (File script : pineScripts) {
                                 if (!worked) {
                                     return;
                                 }
                                 compFrame.writeLine("<em>" + script.getName() + "...</em>");
-                                PineClass cls = generateHeader(script);
-                                GlobalLibrary.addUserClass(cls);
+                                InputStream is = new FileInputStream(script);
+                                InitialParser parser = new InitialParser(is);
+                                clsDef.add(GlobalLibrary.addUserClass(parser.cls));
+                                parsers.add(parser);
                                 String name = script.getName();
                                 name = name.substring(0, name.indexOf('.'));
                                 //classContext.put(name, cls);
-                                tmp.put(script, cls);
+                                tmp.put(script, parser.cls);
+                            }
+                            generateTextureList();
+                            for(int i = 0; i < parsers.size(); i++){
+                                InitialParser parser = parsers.get(i);
+                                GlobalLibrary.ClassDefinition cDef = clsDef.get(i);
+                                System.out.println("Array="+Arrays.toString(parser.cls.superClass.type));
+                                cDef.parent = parser.classFromName(parser.cls.superClass.type);
+                                System.out.println("Parent=" + cDef.parent);
                             }
                             for (File script : tmp.keySet()) {
+                                generateHeader(script, tmp.get(script));
                                 generateCppFile(script, tmp.get(script));
                             }
                             /* Only copy lib once every time
@@ -200,7 +213,6 @@ public class GameCompiler {
                             copyLib(!copiedLib);
                             copiedLib = true;
                             compFrame.writeLine("Compiling C++ code");
-                            generateTextureList();
                             generateMain();
                             compile();
                         } catch (Exception ex) {
@@ -441,8 +453,7 @@ public class GameCompiler {
         }
     }
 
-    private PineClass generateHeader(File script) throws IOException {
-        InputStream is = new FileInputStream(script);
+    private PineClass generateHeader(File script, PineClass cls) throws IOException {
         String fname = script.getName();
         fname = fname.substring(0, fname.lastIndexOf('.'));
         File output = new File(outputFolder, fname + ".h");
@@ -450,7 +461,7 @@ public class GameCompiler {
         headerH.print(fname);
         headerH.println(".h\"");
         FileOutputStream fos = new FileOutputStream(output);
-        HGenerator gen = new HGenerator(is, fos, this, fname);
+        HGenerator gen = new HGenerator(fos, this, fname, cls);
         if (!gen.wasSuccessful()) {
             worked = false;
         }
@@ -468,7 +479,7 @@ public class GameCompiler {
             System.out.println("Blank file: " + fname + "; skipping");
             return;
         }
-        CppGenerator gen = new CppGenerator(is, fos, this, fname, cls);
+        CppGenerator gen = new CppGenerator(fos, this, fname, cls);
         if (!gen.wasSuccessful()) {
             worked = false;
         }

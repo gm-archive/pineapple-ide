@@ -61,8 +61,9 @@ public class GlobalLibrary {
             if(!definition.name.equals(name)){
                 continue;
             }
-            Arrays.equals(definition.packageName, packageName);
-            return definition;
+            if(Arrays.equals(definition.packageName, packageName)){
+                return definition;
+            }
         }
         return null;
     }
@@ -78,7 +79,7 @@ public class GlobalLibrary {
         return null;
     }
     
-    public static void addUserClass(PineClass userClass){
+    public static ClassDefinition addUserClass(PineClass userClass){
         ClassDefinition clsDefinition = new ClassDefinition(userClass.clsName,
                 userClass.packageName);
         for(Variable v : userClass.variables){
@@ -92,6 +93,8 @@ public class GlobalLibrary {
                 VariableDefinition v = new VariableDefinition(arg.name, arg.type, arg.defaultValue);
             }
         }
+        userDefinedClasses.add(clsDefinition);
+        return clsDefinition;
     }
     
     static {
@@ -325,7 +328,6 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getHeight", Type.INT));
         
         coreClasses.add(c);
-
     }
 
     private GlobalLibrary() {
@@ -370,6 +372,38 @@ public class GlobalLibrary {
                 md.addAll(parent.getMethods(fname));
             }
             return md;
+        }
+        
+        public FieldDefinition getField(String fname){
+            System.out.println("Looking for field " + fname + " in class " + name);
+            for(FieldDefinition field : fields){
+                if(field.name.equals(fname)){
+                    System.out.println("FOUND!");
+                    return field;
+                }
+            }
+            if(parent!=null){
+                System.out.println("Seeking in base class");
+                return parent.getInheritedField(fname);
+            }
+            System.out.println("No base class");
+            return null;
+        }
+        
+        public FieldDefinition getInheritedField(String fname){
+            System.out.println("Looking for field " + fname + " in class " + name);
+            for(FieldDefinition field : fields){
+                if(field.name.equals(fname)&&field.access!=AccessControlKeyword.PRIVATE){
+                    System.out.println("FOUND");
+                    return field;
+                }
+            }
+            if(parent!=null){
+                System.out.println("Seeking in base class");
+                return parent.getInheritedField(fname);
+            }
+            System.out.println("No base class");
+            return null;
         }
         
         public boolean inheritsFrom(ClassDefinition possibleParent){

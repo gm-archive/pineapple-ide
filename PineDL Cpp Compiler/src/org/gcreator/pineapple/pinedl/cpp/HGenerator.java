@@ -22,16 +22,12 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.pinedl.cpp;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
-import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
 import org.gcreator.pineapple.pinedl.Function;
-import org.gcreator.pineapple.pinedl.PineDLLexer;
-import org.gcreator.pineapple.pinedl.PineDLParser;
+import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.Variable;
 
@@ -41,17 +37,13 @@ import org.gcreator.pineapple.pinedl.Variable;
  * @author Luís Reis
  */
 public class HGenerator extends BaseGenerator {
-
-    public HGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname) {
+    
+    public HGenerator(OutputStream out, GameCompiler cmp, String fname,
+            PineClass cls) {
         try {
-            if (in.available() == 0) {
-                System.out.println("Empty file! skipping");
-                return;
-            }
-            this.in = in;
             this.out = out;
             this.cmp = cmp;
-            parse();
+            this.cls = cls;
             this.fname = cls.clsName;
             if (!this.fname.equals(fname)) {
                 throw new Exception("Invalid class name: " + fname + "  (should be '" + this.fname + "')");
@@ -65,13 +57,6 @@ public class HGenerator extends BaseGenerator {
 
     public boolean wasSuccessful() {
         return successful;
-    }
-
-    private void parse() throws Exception {
-        PineDLLexer lexer = new PineDLLexer(new ANTLRInputStream(in));
-        CommonTokenStream ts = new CommonTokenStream(lexer);
-        PineDLParser parser = new PineDLParser(ts);
-        cls = parser.doc();
     }
 
     private void write() throws Exception {

@@ -30,12 +30,14 @@ import org.gcreator.pineapple.pinedl.TypeCategory;
 import java.util.Vector;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
+import org.gcreator.pineapple.pinedl.statements.EqualOperation;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
@@ -47,6 +49,7 @@ import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
 import org.gcreator.pineapple.pinedl.statements.SumOperation;
 import org.gcreator.pineapple.pinedl.statements.TypeCast;
+import org.gcreator.pineapple.pinedl.statements.VariableReference;
 
 /**
  * This base class provides methods for generating C++ code
@@ -64,7 +67,6 @@ public abstract class BaseGenerator {
     //protected Vector<String> context = null;
     protected boolean successful = true;
     protected OutputStream out = null;
-    protected InputStream in = null;
 
     /**
      * Creates a new {@link BaseGenerator}.
@@ -82,7 +84,7 @@ public abstract class BaseGenerator {
         if (t.type.length != 1) {
             return typeToString(t, reference);
         }
-        
+
         if (t.type.length == 1) {
             if (t.type[0].equals("Texture")) {
                 return "::Pineapple::Texture" + (reference ? "*" : "");
@@ -102,25 +104,25 @@ public abstract class BaseGenerator {
                 return "::Pineapple::Drawing" + (reference ? "*" : "");
             }
         }
-        
+
         GlobalLibrary.ClassDefinition definition = classFromName(t.type);
-        if(definition!=null){
-            String[] fullName = new String[definition.packageName.length+1];
-            for(int i = 0; i < definition.packageName.length; i++){
+        if (definition != null) {
+            String[] fullName = new String[definition.packageName.length + 1];
+            for (int i = 0; i < definition.packageName.length; i++) {
                 fullName[i] = definition.packageName[i];
             }
-            fullName[fullName.length-1] = definition.name;
+            fullName[fullName.length - 1] = definition.name;
             Type type = new Type();
             type.typeCategory = TypeCategory.CLASS;
             type.type = fullName;
             return typeToString(type, reference);
         }
         /*for (String s : context) {
-            if (s.equals(t.type[t.type.length - 1])) {
-                return s;
-            }
+        if (s.equals(t.type[t.type.length - 1])) {
+        return s;
+        }
         }*/
-        
+
         throwError("In file " + fname + ": Unknown type " + t.toString());
         return "---";
     }
@@ -353,7 +355,40 @@ public abstract class BaseGenerator {
             }
             return Type.BOOL;
         }
-        throw new Exception("Unrecognized type");
+        if (leaf instanceof VariableReference) {
+            VariableReference v = (VariableReference) leaf;
+            return getTypeOfVariable(v, context);
+        }
+        if (leaf instanceof EqualOperation){
+            EqualOperation op = (EqualOperation) leaf;
+            System.out.println("Left:" + op.left);
+            System.out.println("Right:" + op.right);
+            Type t1 = inspectLeafType(op.left, context);
+            Type t2 = inspectLeafType(op.right, context);
+            if(!typeMatches(t2, t1)){
+                throw new Exception("Invalid type");
+            }
+            return t2;
+        }
+        throw new Exception("Unrecognized type for leaf " + leaf.toString());
+    }
+
+    public Type getTypeOfVariable(VariableReference var, PineDLContext context)
+            throws Exception {
+        if (context.isVariableDeclared(var.name)) {
+            return context.getVariableType(var.name);
+        }
+
+        GlobalLibrary.ClassDefinition definition = getCurrentClass();
+
+        System.out.println("Seeking field " + var.name);
+        GlobalLibrary.FieldDefinition field = definition.getField(var.name);
+        return field == null ? null : field.type;
+    }
+
+    public GlobalLibrary.ClassDefinition getCurrentClass() {
+        System.out.println("Looking for class " + cls.toString() + ", with " + "name " + cls.clsName + " and package " + Arrays.toString(cls.packageName));
+        return GlobalLibrary.getUserDefinedClassFromName(cls.clsName, cls.packageName);
     }
 
     public Type TypeFunction(Type type, String fname, Type... arguments)
@@ -371,73 +406,81 @@ public abstract class BaseGenerator {
             throw new Exception("No such function");
         }
         String[] clsName = type.type;
-        
+
         GlobalLibrary.ClassDefinition definition = classFromName(clsName);
-        
-        if(definition==null){
+
+        if (definition == null) {
             throw new Exception("Invalid class");
         }
-        
+
         return ClassTypeFunction(definition, fname, arguments);
     }
 
-    public GlobalLibrary.ClassDefinition classFromName(String[] clsName){
-        if(clsName.length==1){
-            
+    public GlobalLibrary.ClassDefinition classFromName(String[] clsName) {
+        if (clsName.length == 1) {
+
             //Try same package(including the class itself)
             GlobalLibrary.ClassDefinition def =
                     GlobalLibrary.getUserDefinedClassFromName(clsName[0], cls.packageName);
-            
+            if (def != null) {
+                return def;
+            }
+
             //Try import statements:
             importLoop:
-            for(Type t : cls.importStmt){
-                if(!t.type[t.type.length-1].equals(clsName[0])){
+            for (Type t : cls.importStmt) {
+                if (!t.type[t.type.length - 1].equals(clsName[0])) {
                     //Matched!
-                    String[] pkg = new String[t.type.length-1];
-                    for(int i = 0; i < pkg.length; i++){
+                    String[] pkg = new String[t.type.length - 1];
+                    for (int i = 0; i < pkg.length; i++) {
                         pkg[i] = t.type[i];
                     }
                     return GlobalLibrary.getUserDefinedClassFromName(clsName[0], pkg);
                 }
             }
-            //Try Pineapple classes:
-            if(clsName.length==2&&clsName[0].equals("Pineapple")){
-                def = GlobalLibrary.getCoreClassFromName(clsName[1]);
-                if(def!=null){
-                    return def;
-                }
+            
+            def = GlobalLibrary.getCoreClassFromName(clsName[0]);
+            if(def!=null){
+                return def;
             }
         }
-        String[] pkg = new String[clsName.length-1];
-        for(int i = 0; i < pkg.length; i++){
+        GlobalLibrary.ClassDefinition def;
+        //Try Pineapple classes:
+        if (clsName.length == 2 && clsName[0].equals("Pineapple")) {
+            def = GlobalLibrary.getCoreClassFromName(clsName[1]);
+            if (def != null) {
+                return def;
+            }
+        }
+        String[] pkg = new String[clsName.length - 1];
+        for (int i = 0; i < pkg.length; i++) {
             pkg[i] = clsName[i];
         }
-        return GlobalLibrary.getClassFromName(clsName[clsName.length-1], pkg);
-        
+        return GlobalLibrary.getClassFromName(clsName[clsName.length - 1], pkg);
+
     }
-    
-    private Type ClassTypeFunction
-            (GlobalLibrary.ClassDefinition definition, String fname, Type... arguments)
+
+    private Type ClassTypeFunction(GlobalLibrary.ClassDefinition definition, String fname, Type... arguments)
             throws Exception {
 
         Vector<GlobalLibrary.MethodDefinition> methods = definition.getMethods(fname);
-        
-        if(methods.size()==0){
+
+        if (methods.size() == 0) {
             throw new Exception("Function not found");
         }
-        
+
         methodLoop:
-        for(GlobalLibrary.MethodDefinition method : methods){
+        for (GlobalLibrary.MethodDefinition method : methods) {
             int index = 0;
-            for(GlobalLibrary.VariableDefinition arg : method.arguments){
-                if(index>=arguments.length){
-                    if(arg.defaultValue==null){
+            for (GlobalLibrary.VariableDefinition arg : method.arguments) {
+                if (index >= arguments.length) {
+                    if (arg.defaultValue == null) {
                         return method.returnType;
                     }
                     continue methodLoop;
                 }
                 Type argType = arg.type;
-                if(!typeMatches(argType, arg.type)){
+                if (!typeMatches(argType, arg.type)) {
                     continue methodLoop;
                 }
             }
@@ -445,24 +488,23 @@ public abstract class BaseGenerator {
 
         throw new Exception("Invalid arguments");
     }
-    
     //Note that if t2 extends t1, then true
     public boolean typeMatches(Type t1, Type t2)
-    throws Exception{
-        if(t1.typeCategory!=t2.typeCategory){
+            throws Exception {
+        if (t1.typeCategory != t2.typeCategory) {
             return false;
         }
-        if(t1.typeCategory==TypeCategory.PRIMITIVE){
-            return t1.primitiveType==t2.primitiveType;
+        if (t1.typeCategory == TypeCategory.PRIMITIVE) {
+            return t1.primitiveType == t2.primitiveType;
         }
-        if(t1.typeCategory==TypeCategory.ARRAY){
+        if (t1.typeCategory == TypeCategory.ARRAY) {
             return typeMatches(t1.arrayType, t2.arrayType);
         }
         String[] type1 = t1.type;
         String[] type2 = t2.type;
         GlobalLibrary.ClassDefinition cls1 = classFromName(type1);
         GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
-        if(cls1==null||cls2==null){
+        if (cls1 == null || cls2 == null) {
             throw new Exception("Unrecognized class");
         }
         return cls2.inheritsFrom(cls1);

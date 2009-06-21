@@ -23,18 +23,13 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.cpp;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Vector;
-import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.gcreator.pineapple.pinedl.Argument;
 import org.gcreator.pineapple.pinedl.Constructor;
 import org.gcreator.pineapple.pinedl.Function;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.PineClass;
-import org.gcreator.pineapple.pinedl.PineDLLexer;
-import org.gcreator.pineapple.pinedl.PineDLParser;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.Variable;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
@@ -74,10 +69,9 @@ import org.gcreator.pineapple.pinedl.statements.VariableReference;
  */
 public class CppGenerator extends BaseGenerator {
 
-    public CppGenerator(InputStream in, OutputStream out, GameCompiler cmp, String fname,
+    public CppGenerator(OutputStream out, GameCompiler cmp, String fname,
             PineClass cls) {
         try {
-            this.in = in;
             this.out = out;
             this.cmp = cmp;
             this.cls = cls;
@@ -87,20 +81,13 @@ public class CppGenerator extends BaseGenerator {
             }
             write();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             throwError("Parsing exception: " + e.getMessage());
         }
     }
 
     public boolean wasSuccessful() {
         return successful;
-    }
-
-    private void parse() throws Exception {
-        PineDLLexer lexer = new PineDLLexer(new ANTLRInputStream(in));
-        CommonTokenStream ts = new CommonTokenStream(lexer);
-        PineDLParser parser = new PineDLParser(ts);
-        cls = parser.doc();
     }
 
     private void write() throws Exception {
@@ -300,11 +287,11 @@ public class CppGenerator extends BaseGenerator {
 
    private String leafToString(Leaf l, boolean statement, PineDLContext vars, boolean isLeft) throws Exception {
         String s = _leafToString(l, statement, vars, isLeft);
-        System.out.print("\t{ ");
-        System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
-        System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
-        System.out.println("Out: " + s);
-        System.out.println("}");
+        //System.out.print("\t{ ");
+        //System.out.println("In: " + l + ((l != null) ? " (" + l.getClass().getName() + ")" : ""));
+        //System.out.println("\tstatement: "+ statement +", vars: " + vars + ", left: " + isLeft+((l instanceof Reference) ? ", is type: "+isType((Reference)l) : ""));
+        //System.out.println("Out: " + s);
+        //System.out.println("}");
         return s;
     }
 
@@ -336,10 +323,18 @@ public class CppGenerator extends BaseGenerator {
             if (vars.isVariableDeclared(da.name)) {
                 throw new Exception("In function " + vars.getFunctionName() + ": " + "Redeclaring variable '" + da.name + "'");
             }
-            vars.declareVariable(da.name, da.type);
-            String s = retrieveType(da.type, true);
+            Type t1 = da.type;
+            
+            vars.declareVariable(da.name, t1);
+            String s = retrieveType(t1, true);
             s += " " + detokenize(da.name);
             if (da.value != null) {
+                Type t2 = inspectLeafType(da.value, vars);
+                if(!typeMatches(da.type, inspectLeafType(da.value, vars))){
+                    throw new Exception("In function "+ vars.getFunctionName() + ": "
+                            + "Attempting to assign type " + t2 +
+                            " to variable of type " + t1);
+                }
                 s += " = " + leafToString(da.value, vars);
             }
             if (statement) {
@@ -349,6 +344,17 @@ public class CppGenerator extends BaseGenerator {
         }
         if (l instanceof EqualOperation) {
             EqualOperation e = (EqualOperation) l;
+            Type t1 = inspectLeafType(e.left, vars);
+            System.out.println("Left is " + e.left);
+            System.out.println("Right is " + e.right);
+            Type t2 = inspectLeafType(e.right, vars);
+            System.out.println("t1="+t1);
+            System.out.println("t2="+t2);
+            if(!typeMatches(t1, t2)){
+                throw new Exception("In function "+ vars.getFunctionName() + ": "
+                            + "Attempting to assign type " + t2 +
+                            " to variable or field of type " + t1);
+            }
             String s = leafToString(e.left, vars) + " = " + leafToString(e.right, vars);
             if (statement) {
                 s += ';';
