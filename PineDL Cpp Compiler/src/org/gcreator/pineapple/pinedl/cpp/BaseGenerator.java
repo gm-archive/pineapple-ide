@@ -45,6 +45,7 @@ import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NotOperation;
 import org.gcreator.pineapple.pinedl.statements.NullConstant;
+import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
 import org.gcreator.pineapple.pinedl.statements.SumOperation;
@@ -370,9 +371,14 @@ public abstract class BaseGenerator {
             }
             return t2;
         }
-        throw new Exception("Unrecognized type for leaf " + leaf.toString());
+        if(leaf instanceof RetrieverExpression){
+            RetrieverExpression retrieve = (RetrieverExpression) leaf;
+            //TODO!!!
+        }
+        throw new Exception("Unrecognized type for leaf " + leaf.toString()
+                + " of class " + leaf.getClass().getName());
     }
-
+    
     public Type getTypeOfVariable(VariableReference var, PineDLContext context)
             throws Exception {
         if (context.isVariableDeclared(var.name)) {

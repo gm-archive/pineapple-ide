@@ -59,7 +59,9 @@ import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.formats.ClassResource;
 import org.gcreator.pineapple.formats.ClassResource.Field;
 import org.gcreator.pineapple.game2d.GamePlugin;
+import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.PineClass;
+import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -233,28 +235,41 @@ public class GameCompiler {
     }
 
     public void generateTextureList() throws IOException {
-        File h = new File(outputFolder, "GameDefines.h");
+        File h = new File(outputFolder, "texturelistdefined.h");
         File cpp = new File(outputFolder, "TextureListDefined.cpp");
         PrintWriter w = new PrintWriter(h);
-        w.println("#ifndef _PINEAPPLE_TextureList_H_\n#define _PINEAPPLE_TextureList_H_");
-        int imgn = 0;
+        w.println("#ifndef __PINEDL_TEXTURELISTDEFINED_H__");
+        w.println("#define __PINEDL_TEXTURELISTDEFINED_H__");
+        w.println();
+        
         for (File image : imageFiles) {
             String fname = imageNames.get(image);
             int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            w.println(("#define " + fname + "\t\t\t" + imgn++));
+            w.println(("static int " + fname));
         }
+        w.println();
         w.println("#endif");
         w.println();
         w.close();
         w = new PrintWriter(cpp);
         w.println("#include \"texturelist.h\"");
-        w.println("#include \"GameDefines.h\"");
         w.println();
+        int imgn = 0;
+        Vector<BasicFile> simgs = new Vector<BasicFile>();
+        GlobalLibrary.ClassDefinition textureList =
+                new GlobalLibrary.ClassDefinition("TextureList");
+        for (BasicFile f : simgs) {
+            String name = f.getName().replaceAll("\\.", "_");
+            int value = imgn++;
+            textureList.fields.add(
+                    new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
+            w.println("\t::Pineapple::TextureList::" + name
+                    + " = " + value + ";");
+        }
         w.println("void TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
-        Vector<BasicFile> simgs = new Vector<BasicFile>();
         for (Scene.ActorInScene s : mainScene.actors) {
             if (!simgs.contains(s.actor.getImage())) {
                 simgs.add(s.actor.getImage());
@@ -700,7 +715,7 @@ public class GameCompiler {
         w.println("\t\tsetDepth(depth);");
         w.println("\t\tautoDraw = " + a.isAutoDrawn() + ";");
         if (a.getImage() != null) {
-            w.print(("\t\ttexture = "));
+            w.print(("\t\ttexture = TextureList."));
             String iname = a.getImage().getName();
             int index = iname.indexOf('.');
             iname = iname.substring(0, index) + "_" + iname.substring(index + 1);

@@ -4,9 +4,6 @@
 #include "texture.h"
 #include <vector>
 
-using namespace Pineapple;
-using namespace std;
-
 namespace Pineapple
 {
     class TextureList
@@ -22,7 +19,7 @@ namespace Pineapple
             unsigned long long decompressed_size;
             Texture* tex;
         };
-        static vector<ImageData*> images;
+        static std::vector<ImageData*> images;
         static long archive_size;
         static long archive_data_start;
         static unsigned int* START_IMAGES;
@@ -30,6 +27,7 @@ namespace Pineapple
     public:
         static void init();
         static Texture* Get_Texture(unsigned int);
+        #include "texturelistdefined.h"
     };
 }
 
