@@ -241,12 +241,12 @@ public class GameCompiler {
         w.println("#ifndef __PINEDL_TEXTURELISTDEFINED_H__");
         w.println("#define __PINEDL_TEXTURELISTDEFINED_H__");
         w.println();
-        
+        int imgn = 0;
         for (File image : imageFiles) {
             String fname = imageNames.get(image);
             int index = fname.lastIndexOf('.');
             fname = fname.substring(0, index) + "_" + fname.substring(index + 1);
-            w.println(("static int " + fname));
+            w.println(("static const int " + fname + " = " + imgn++ + ";"));
         }
         w.println();
         w.println("#endif");
@@ -255,19 +255,18 @@ public class GameCompiler {
         w = new PrintWriter(cpp);
         w.println("#include \"texturelist.h\"");
         w.println();
-        int imgn = 0;
+        
         Vector<BasicFile> simgs = new Vector<BasicFile>();
         GlobalLibrary.ClassDefinition textureList =
                 new GlobalLibrary.ClassDefinition("TextureList");
         for (BasicFile f : simgs) {
-            String name = f.getName().replaceAll("\\.", "_");
-            int value = imgn++;
-            textureList.fields.add(
+            if(f!=null){
+                String name = f.getName().replaceAll("\\.", "_");
+                textureList.fields.add(
                     new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
-            w.println("\t::Pineapple::TextureList::" + name
-                    + " = " + value + ";");
+            }
         }
-        w.println("void TextureList::init()\n{");
+        w.println("void Pineapple::TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
         for (Scene.ActorInScene s : mainScene.actors) {
@@ -283,7 +282,9 @@ public class GameCompiler {
         w.println("\tTextureList::START_IMAGES = new unsigned int[" + simgs.size() + "];");
         int i = 0;
         for (BasicFile f : simgs) {
-            w.println("\tTextureList::START_IMAGES[" + i++ + "] = " + f.getName().replaceAll("\\.", "_") + ";");
+            if(f!=null){
+                w.println("\tTextureList::START_IMAGES[" + i++ + "] = " + f.getName().replaceAll("\\.", "_") + ";");
+            }
         }
         w.println("\tTextureList::N_START_IMAGES = " + simgs.size() + ";");
         w.println("\tTextureList::load();");
@@ -831,7 +832,6 @@ public class GameCompiler {
         headerH.println("#include \"texture.h\"");
         headerH.println("#include \"timer.h\"");
         headerH.println("#include \"texturelist.h\"");
-        headerH.println("#include \"GameDefines.h\"");
         headerH.println("#include \"vector.h\"");
         headerH.println("#include \"view.h\"");
         headerH.println("#include \"window.h\"");

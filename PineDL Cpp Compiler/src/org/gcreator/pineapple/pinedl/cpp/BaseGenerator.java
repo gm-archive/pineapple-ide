@@ -28,9 +28,9 @@ import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 import org.gcreator.pineapple.pinedl.TypeCategory;
 import java.util.Vector;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
@@ -38,6 +38,7 @@ import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
 import org.gcreator.pineapple.pinedl.statements.EqualOperation;
+import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
@@ -45,6 +46,7 @@ import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NotOperation;
 import org.gcreator.pineapple.pinedl.statements.NullConstant;
+import org.gcreator.pineapple.pinedl.statements.Reference;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
@@ -373,9 +375,9 @@ public abstract class BaseGenerator {
         }
         if(leaf instanceof RetrieverExpression){
             RetrieverExpression retrieve = (RetrieverExpression) leaf;
-            //TODO!!!
         }
-        throw new Exception("Unrecognized type for leaf " + leaf.toString()
+        throw new Exception("In function " + cls.clsName + "." + context.getFunctionName()
+                + ": Unrecognized type for leaf " + leaf.toString()
                 + " of class " + leaf.getClass().getName());
     }
     
