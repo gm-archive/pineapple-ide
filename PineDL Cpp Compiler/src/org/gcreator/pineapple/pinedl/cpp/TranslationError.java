@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-package org.gcreator.pineapple.pinedl.statements;
+
+package org.gcreator.pineapple.pinedl.cpp;
 
 import org.gcreator.pineapple.pinedl.Leaf;
+import org.gcreator.pineapple.pinedl.context.PineDLContext;
 
 /**
- * Represents a && operation
+ * Indicates an error while parsing something;
  * @author Luís Reis
  */
-public class LogicalOrOperation extends LogicalBinaryOperation {
-
-    public LogicalOrOperation() {
+public class TranslationError {
+    public boolean isFatal;
+    public Leaf leaf;
+    public PineDLContext context;
+    
+    /**
+     * Should be ONLY the method, not the "in function NAME: etc."
+     */
+    public String errorMessage;
+    
+    public TranslationError(boolean isFatal, Leaf leaf, PineDLContext context,
+            String errorMessage){
+        this.isFatal = isFatal;
+        this.leaf = leaf;
+        this.context = context;
+        this.errorMessage = errorMessage;
     }
-
-    public LogicalOrOperation(Expression left, Expression right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    @Override
-    public Leaf optimize() {
-        left = (Expression) left.optimize();
-        right = (Expression) right.optimize();
-        if ((left instanceof BooleanConstant) && (right instanceof BooleanConstant)) {
-            return new BooleanConstant(
-                    ((BooleanConstant) left).value && ((BooleanConstant) right).value);
-        }
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "&&[" + left + ", " + right + "]";
+    
+    public String generateFullErrorMessage(){
+        return "In " + context.contentClass.clsName + "." + context.getFunctionName()
+                + ": " + errorMessage;
     }
 }

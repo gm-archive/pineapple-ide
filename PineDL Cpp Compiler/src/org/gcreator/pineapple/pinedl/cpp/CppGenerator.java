@@ -175,6 +175,7 @@ public class CppGenerator extends BaseGenerator {
 
             boolean isFirst = true;
             PineDLContext vars = new PineDLContext("<constructor>");
+            vars.contentClass = cls;
             for (Argument a : c.arguments) {
                 if (!isFirst) {
                     s += ", ";
@@ -225,6 +226,7 @@ public class CppGenerator extends BaseGenerator {
 
             boolean isFirst = true;
             PineDLContext vars = new PineDLContext(method.name);
+            vars.contentClass = cls;
             for (Argument a : method.arguments) {
                 if (!isFirst) {
                     s += ", ";
@@ -384,6 +386,7 @@ public class CppGenerator extends BaseGenerator {
             DivisionOperation s = (DivisionOperation) l;
             return leafToString(s.left, vars) + " / " + leafToString(s.right, vars);
         }
+        //!
         if (l instanceof LessOperation) {
             LessOperation s = (LessOperation) l;
             return leafToString(s.left, vars) + " < " + leafToString(s.right, vars);

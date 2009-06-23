@@ -28,7 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a && operation
  * @author Luís Reis
  */
-public class LogicalAndOperation extends BinaryOperation {
+public class LogicalAndOperation extends LogicalBinaryOperation {
 
     public LogicalAndOperation() {
     }

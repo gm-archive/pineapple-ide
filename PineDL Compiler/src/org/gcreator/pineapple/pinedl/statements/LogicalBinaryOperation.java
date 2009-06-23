@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+
 package org.gcreator.pineapple.pinedl.statements;
 
-import org.gcreator.pineapple.pinedl.Leaf;
-
 /**
- * Represents a && operation
+ * This class is never directly used, but it is extended by several others
  * @author Luís Reis
  */
-public class LogicalOrOperation extends LogicalBinaryOperation {
+public class LogicalBinaryOperation extends BinaryOperation{
 
-    public LogicalOrOperation() {
-    }
-
-    public LogicalOrOperation(Expression left, Expression right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    @Override
-    public Leaf optimize() {
-        left = (Expression) left.optimize();
-        right = (Expression) right.optimize();
-        if ((left instanceof BooleanConstant) && (right instanceof BooleanConstant)) {
-            return new BooleanConstant(
-                    ((BooleanConstant) left).value && ((BooleanConstant) right).value);
-        }
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "&&[" + left + ", " + right + "]";
-    }
 }

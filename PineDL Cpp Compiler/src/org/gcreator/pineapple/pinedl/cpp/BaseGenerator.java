@@ -30,23 +30,29 @@ import org.gcreator.pineapple.pinedl.TypeCategory;
 import java.util.Vector;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
+import org.gcreator.pineapple.pinedl.statements.BinaryOperation;
+import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
+import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
 import org.gcreator.pineapple.pinedl.statements.EqualOperation;
-import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
+import org.gcreator.pineapple.pinedl.statements.LessEqualOperation;
+import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
+import org.gcreator.pineapple.pinedl.statements.MoreEqualOperation;
+import org.gcreator.pineapple.pinedl.statements.MoreOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
+import org.gcreator.pineapple.pinedl.statements.NegationOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NotOperation;
 import org.gcreator.pineapple.pinedl.statements.NullConstant;
-import org.gcreator.pineapple.pinedl.statements.Reference;
+import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
@@ -219,10 +225,6 @@ public abstract class BaseGenerator {
         if (id.startsWith("GL") || id.startsWith("gl")) {
             return "_K_" + id;
         }
-        if (id.equals("lambda")) {
-            throwWarning("'lambda' is not a PineDL keyword, but may become in the future. Avoid using it");
-            return id;
-        }
         if (id.equals("repeat")) {
             throwWarning("'repeat' is not a PineDL keyword, but may become in the future. Avoid using it");
             return id;
@@ -250,6 +252,314 @@ public abstract class BaseGenerator {
 
         s += "_H__";
         return s;
+    }
+
+    public TranslatedLeaf translateLeaf(Leaf leaf, PineDLContext context, boolean isStatement) {
+        TranslatedLeaf translation = new TranslatedLeaf();
+        translation.equivalentLeaf = leaf;
+        if (leaf == null) {
+            translation.errors.add(
+                    new TranslationError(true, leaf, context, "Found null leaf\n" +
+                    "Please report this error to the development team."));
+            return translation;
+        }
+        if (leaf instanceof NegationOperation) {
+            NegationOperation op = (NegationOperation) leaf;
+            TranslatedLeaf child = translateLeaf(op.exp, context, false);
+            translation.errors.addAll(child.errors);
+            Type childType = child.inspectedType;
+            if (childType.typeCategory == TypeCategory.CLASS) {
+                translation.errors.add(
+                        new TranslationError(true, leaf, context,
+                        "Attempting to find additive inverse of class."));
+            } //we split class from arrays for more relevant error messages.
+            else if (childType.typeCategory == TypeCategory.ARRAY) {
+                translation.errors.add(
+                        new TranslationError(true, leaf, context,
+                        "Attempting to find additive inverse of array."));
+            } else {
+                if (childType.primitiveType == PrimitiveType.STRING) {
+                    translation.errors.add(
+                            new TranslationError(true, leaf, context,
+                            "Attempting to find additive inverse of string."));
+                } else if (childType.primitiveType == PrimitiveType.BOOL) {
+                    translation.errors.add(
+                            new TranslationError(true, leaf, context,
+                            "Attempting to find additive inverse of boolean."));
+                } else if (childType.primitiveType == PrimitiveType.CHAR) {
+                    translation.errors.add(
+                            new TranslationError(true, leaf, context,
+                            "Attempting to find additive inverse of boolean."));
+                } else {
+                    translation.inspectedType = childType;
+                }
+            }
+
+            translation.stringEquivalent = "-" + child.stringEquivalent;
+        } else if (leaf instanceof BooleanConstant) {
+            translation.inspectedType = Type.BOOL;
+            translation.stringEquivalent = String.valueOf(((BooleanConstant) leaf).value);
+        } else if (leaf instanceof IntConstant) {
+            translation.inspectedType = Type.INT;
+            translation.stringEquivalent = String.valueOf(((IntConstant) leaf).value);
+        } else if (leaf instanceof DoubleConstant) {
+            translation.inspectedType = Type.FLOAT;
+            translation.stringEquivalent = String.valueOf(((DoubleConstant) leaf).value);
+        } else if (leaf instanceof StringConstant) {
+            translation.inspectedType = Type.STRING;
+            translation.stringEquivalent = leaf.toString();
+        } else if (leaf instanceof Block) {
+            Block block = (Block) leaf;
+            PineDLContext newContext = new PineDLContext(context);
+            newContext.declareVariable("this", new Type(fname));
+            translation.stringEquivalent = "{\n";
+
+            for (Leaf childLeaf : block.content) {
+                TranslatedLeaf child = translateLeaf(childLeaf, newContext, true);
+                translation.errors.addAll(child.errors);
+                translation.stringEquivalent += child.stringEquivalent;
+            }
+
+            translation.inspectedType = null; //Not an expression
+            translation.stringEquivalent += "}";
+        } else if (leaf instanceof DeclAssign) {
+            DeclAssign declaration = (DeclAssign) leaf;
+            if (context.isVariableDeclared(declaration.name)) {
+                translation.errors.add(new TranslationError(
+                        true, leaf, context, "Redeclaring variable " + declaration.name));
+            }
+            Type type = declaration.type;
+            //Although there is a type involved, the statement itself is not an expression
+            translation.inspectedType = null;
+            translation.stringEquivalent = retrieveType(type, true);
+            translation.stringEquivalent += " " + detokenize(declaration.name);
+            if (declaration.value != null) {
+                TranslatedLeaf value = translateLeaf(
+                        declaration.value, context, false);
+                Type valueType = value.inspectedType;
+
+                try {
+                    if (!typeMatches(type, valueType)) {
+                        //Maybe later we'll want to add some more
+                        //checks for primitive types
+                        translation.errors.add(new TranslationError(true,
+                                declaration,
+                                context,
+                                "Implicitly converting " + valueType + " to " + type));
+                    }
+                } catch (ClassNotFoundException e) {
+                    translation.errors.add(new TranslationError(true,
+                            declaration,
+                            context,
+                            "Class not found exception"));
+                }
+                translation.stringEquivalent += " = " + value.stringEquivalent;
+            }
+        } else if (leaf instanceof EqualOperation) {
+            EqualOperation operation = (EqualOperation) leaf;
+            TranslatedLeaf left = translateLeaf(operation.left, context, false);
+            TranslatedLeaf right = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(left.errors);
+            translation.errors.addAll(right.errors);
+            Type leftType = left.inspectedType;
+            Type rightType = right.inspectedType;
+            try {
+                if (!typeMatches(leftType, rightType)) {
+                    translation.errors.add(new TranslationError(true,
+                            operation,
+                            context,
+                            "Implicitly converting " + rightType + " to " + leftType));
+                }
+            } catch (ClassNotFoundException e) {
+                translation.errors.add(new TranslationError(true,
+                        operation,
+                        context,
+                        "Class not found exception"));
+            }
+            translation.inspectedType = rightType;
+            translation.stringEquivalent = left.stringEquivalent + " = " + right.stringEquivalent;
+        } else if (leaf instanceof SumOperation) {
+            SumOperation operation = (SumOperation) leaf;
+            TranslatedLeaf leftLeaf = translateLeaf(operation.left, context, false);
+            TranslatedLeaf rightLeaf = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(leftLeaf.errors);
+            translation.errors.addAll(rightLeaf.errors);
+            Type leftType = leftLeaf.inspectedType;
+            Type rightType = rightLeaf.inspectedType;
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE) {
+                translation.errors.add(new TranslationError(true,
+                        operation,
+                        context,
+                        "Attempting to use type " + leftType + " in a sum"));
+            }
+            if (rightType.typeCategory != TypeCategory.PRIMITIVE) {
+                translation.errors.add(new TranslationError(true,
+                        operation,
+                        context,
+                        "Attempting to use type " + rightType + " in a sum"));
+            //If, in the future, a toString()
+            //function gets defined, then this may become possible
+            }
+            if (leftType.primitiveType == PrimitiveType.STRING) {
+                translation.inspectedType = Type.STRING;
+            } //Right-sided strings are only acceptable
+            //If left side is a string as well.
+            else {
+                if (rightType.primitiveType == PrimitiveType.STRING) {
+                    translation.errors.add(new TranslationError(true,
+                            operation,
+                            context,
+                            "Attempting to use non-string + string"));
+                }
+                if (leftType.primitiveType == PrimitiveType.BOOL) {
+                    translation.errors.add(new TranslationError(true,
+                            operation,
+                            context,
+                            "Attempting to use a boolean on the left side of a sum"));
+                }
+                //Bool on the right is only acceptable
+                //If left side is a string
+                if (rightType.primitiveType == PrimitiveType.BOOL) {
+                    translation.errors.add(new TranslationError(true,
+                            operation,
+                            context,
+                            "Booleans can only be on the right side of a sum if the left side is a string."));
+                }
+                if (leftType.primitiveType == PrimitiveType.FLOAT || rightType.primitiveType == PrimitiveType.FLOAT) {
+                    translation.inspectedType = Type.FLOAT;
+                }
+                if (leftType.primitiveType == PrimitiveType.INT ||
+                        rightType.primitiveType == PrimitiveType.INT) {
+                    translation.inspectedType = Type.INT;
+                }
+                translation.inspectedType = Type.CHAR;
+            }
+            translation.stringEquivalent = "(" + leftLeaf.stringEquivalent + ") + (" + rightLeaf.stringEquivalent + ')';
+        } else if (leaf instanceof PrePostFixOperator) {
+            PrePostFixOperator operator = (PrePostFixOperator) leaf;
+            TranslatedLeaf content = translateLeaf(
+                    operator.content, context, false);
+            Type contentType = content.inspectedType;
+            translation.errors.addAll(content.errors);
+            if (contentType.typeCategory != TypeCategory.PRIMITIVE) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Using ++ or -- operator on non-primitive type."));
+            } else if (contentType.primitiveType != PrimitiveType.INT) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Using ++ or -- operator on non-integer type."));
+            }
+            translation.inspectedType = Type.INT;
+            translation.stringEquivalent = "(";
+            if (operator.pre) {
+                translation.stringEquivalent = (operator.sum ? "++" : "--");
+            }
+
+            translation.stringEquivalent += content.stringEquivalent;
+
+            if (!operator.pre) {
+                translation.stringEquivalent += (operator.sum ? "++)" : "--)");
+            } else {
+                translation.stringEquivalent += ')';
+            }
+
+        } else if (leaf instanceof SubtractionOperation || leaf instanceof MultiplyOperation || leaf instanceof DivisionOperation) {
+            BinaryOperation operation = (BinaryOperation) leaf;
+            TranslatedLeaf leftLeaf = translateLeaf(operation.left, context, false);
+            TranslatedLeaf rightLeaf = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(leftLeaf.errors);
+            translation.errors.addAll(rightLeaf.errors);
+            Type leftType = leftLeaf.inspectedType;
+            Type rightType = rightLeaf.inspectedType;
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE || rightType.typeCategory != TypeCategory.PRIMITIVE) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Only primitive types can be used in -, * and / operations"));
+            }
+            PrimitiveType leftPrimitive = leftType.primitiveType;
+            PrimitiveType rightPrimitive = rightType.primitiveType;
+            if (leftPrimitive == PrimitiveType.STRING || rightPrimitive == PrimitiveType.STRING) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Using string on -, * or / operation"));
+            }
+            if (leftPrimitive == PrimitiveType.BOOL || rightPrimitive == PrimitiveType.BOOL) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Using boolean on -, * or / operation"));
+            }
+            translation.inspectedType = Type.FLOAT;
+            if (leftPrimitive != PrimitiveType.FLOAT && rightPrimitive != PrimitiveType.FLOAT) {
+                translation.inspectedType = leftPrimitive == PrimitiveType.INT ||//
+                        rightPrimitive == PrimitiveType.INT ? Type.INT : Type.CHAR;
+            }
+            translation.stringEquivalent = "(" + leftLeaf.stringEquivalent;
+            translation.stringEquivalent += ") ";
+            if (leaf instanceof SubtractionOperation) {
+                translation.stringEquivalent += '-';
+            } else if (leaf instanceof MultiplyOperation) {
+                translation.stringEquivalent += '*';
+            } else if (leaf instanceof DivisionOperation) {
+                translation.stringEquivalent += '/';
+            }
+            translation.stringEquivalent += " (" + rightLeaf.stringEquivalent;
+            translation.stringEquivalent += ')';            //some comments are just there
+        //to make sure NetBeans'
+        //"Format" feature does not
+        //suppress the line breaks
+        } else if (leaf instanceof LessOperation || leaf instanceof MoreOperation || //
+                leaf instanceof LessEqualOperation || leaf instanceof MoreEqualOperation) {
+            BinaryOperation operation = (BinaryOperation) leaf;
+            TranslatedLeaf leftLeaf = translateLeaf(operation.left, context, false);
+            TranslatedLeaf rightLeaf = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(leftLeaf.errors);
+            translation.errors.addAll(rightLeaf.errors);
+            Type leftType = leftLeaf.inspectedType;
+            Type rightType = rightLeaf.inspectedType;
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE || rightType.typeCategory != TypeCategory.PRIMITIVE) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Only primitive types can be used in comparison operations"));
+            } else {
+                PrimitiveType leftPrimitive = leftType.primitiveType;
+                PrimitiveType rightPrimitive = rightType.primitiveType;
+                //Turns out strings can have <, >, <= and >= operators :)
+                if (leftPrimitive == PrimitiveType.BOOL || rightPrimitive == PrimitiveType.BOOL) {
+                    translation.errors.add(new TranslationError(true,
+                            leaf,
+                            context,
+                            "Attempting to use >, <, >= or <= operator on boolean"));
+                }
+            }
+            translation.stringEquivalent = "(" + leftLeaf.stringEquivalent;
+            translation.stringEquivalent += ")";
+            if(leaf instanceof LessOperation){
+                translation.stringEquivalent += "<";
+            } else if(leaf instanceof MoreOperation){
+                translation.stringEquivalent += ">";
+            } else if(leaf instanceof LessEqualOperation){
+                translation.stringEquivalent += "<=";
+            } else if(leaf instanceof MoreEqualOperation){
+                translation.stringEquivalent += ">=";
+            }
+            translation.stringEquivalent += "(";
+            translation.stringEquivalent += rightLeaf.stringEquivalent;
+            translation.stringEquivalent += ")";
+            translation.inspectedType = Type.BOOL;
+        }
+        //TODO: FunctionReference, NewCall, IfStatement, VariableReference, RetrieverExpression,
+        //ModOperation, EqualsOperation, NewArray, ArrayReference and lots of others
+        if (!(leaf instanceof Block) && isStatement) {
+            translation.stringEquivalent += ';';
+        }
+        return translation;
     }
 
     public Type inspectLeafType(Leaf leaf, PineDLContext context) throws Exception {
@@ -362,25 +672,24 @@ public abstract class BaseGenerator {
             VariableReference v = (VariableReference) leaf;
             return getTypeOfVariable(v, context);
         }
-        if (leaf instanceof EqualOperation){
+        if (leaf instanceof EqualOperation) {
             EqualOperation op = (EqualOperation) leaf;
             System.out.println("Left:" + op.left);
             System.out.println("Right:" + op.right);
             Type t1 = inspectLeafType(op.left, context);
             Type t2 = inspectLeafType(op.right, context);
-            if(!typeMatches(t2, t1)){
+            if (!typeMatches(t2, t1)) {
                 throw new Exception("Invalid type");
             }
             return t2;
         }
-        if(leaf instanceof RetrieverExpression){
+        if (leaf instanceof RetrieverExpression) {
             RetrieverExpression retrieve = (RetrieverExpression) leaf;
         }
-        throw new Exception("In function " + cls.clsName + "." + context.getFunctionName()
-                + ": Unrecognized type for leaf " + leaf.toString()
-                + " of class " + leaf.getClass().getName());
+        throw new Exception("In function " + cls.clsName + "." + context.getFunctionName() +
+                ": Unrecognized type for leaf " + leaf.toString() + " of class " + leaf.getClass().getName());
     }
-    
+
     public Type getTypeOfVariable(VariableReference var, PineDLContext context)
             throws Exception {
         if (context.isVariableDeclared(var.name)) {
@@ -395,7 +704,8 @@ public abstract class BaseGenerator {
     }
 
     public GlobalLibrary.ClassDefinition getCurrentClass() {
-        System.out.println("Looking for class " + cls.toString() + ", with " + "name " + cls.clsName + " and package " + Arrays.toString(cls.packageName));
+        System.out.println("Looking for class " + cls.toString() + ", with " + "name " + cls.clsName +
+                " and package " + Arrays.toString(cls.packageName));
         return GlobalLibrary.getUserDefinedClassFromName(cls.clsName, cls.packageName);
     }
 
@@ -446,9 +756,9 @@ public abstract class BaseGenerator {
                     return GlobalLibrary.getUserDefinedClassFromName(clsName[0], pkg);
                 }
             }
-            
+
             def = GlobalLibrary.getCoreClassFromName(clsName[0]);
-            if(def!=null){
+            if (def != null) {
                 return def;
             }
         }
@@ -468,7 +778,8 @@ public abstract class BaseGenerator {
 
     }
 
-    private Type ClassTypeFunction(GlobalLibrary.ClassDefinition definition, String fname, Type... arguments)
+    private Type ClassTypeFunction(
+            GlobalLibrary.ClassDefinition definition, String fname, Type... arguments)
             throws Exception {
 
         Vector<GlobalLibrary.MethodDefinition> methods = definition.getMethods(fname);
@@ -498,7 +809,10 @@ public abstract class BaseGenerator {
     }
     //Note that if t2 extends t1, then true
     public boolean typeMatches(Type t1, Type t2)
-            throws Exception {
+            throws ClassNotFoundException {
+        if (t2 == null) {
+            return (t1.typeCategory != TypeCategory.PRIMITIVE) || t1.primitiveType == PrimitiveType.STRING;
+        }
         if (t1.typeCategory != t2.typeCategory) {
             return false;
         }
@@ -513,7 +827,7 @@ public abstract class BaseGenerator {
         GlobalLibrary.ClassDefinition cls1 = classFromName(type1);
         GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
         if (cls1 == null || cls2 == null) {
-            throw new Exception("Unrecognized class");
+            throw new ClassNotFoundException();
         }
         return cls2.inheritsFrom(cls1);
     }
