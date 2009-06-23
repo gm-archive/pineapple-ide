@@ -28,10 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a & operation
  * @author Luís Reis
  */
-public class BitwiseAndOperation extends Operation {
-
-    public Expression left = null;
-    public Expression right = null;
+public class BitwiseAndOperation extends BinaryOperation {
 
     public BitwiseAndOperation() {
     }

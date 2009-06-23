@@ -28,10 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a &lt;= operation
  * @author Luís Reis
  */
-public class LessEqualOperation extends Operation {
-
-    public Expression left = null;
-    public Expression right = null;
+public class LessEqualOperation extends BinaryOperation {
 
     public LessEqualOperation() {
     }

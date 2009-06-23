@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a ^ operation
  * @author Luís Reis
  */
-public class BitwiseXorOperation extends Operation {
-
-    public Expression left = null;
-    public Expression right = null;
+public class BitwiseXorOperation extends BinaryOperation {
 
     public BitwiseXorOperation() {
     }
