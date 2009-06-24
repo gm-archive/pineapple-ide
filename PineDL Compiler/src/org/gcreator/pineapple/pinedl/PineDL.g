@@ -275,8 +275,7 @@ reference returns [Reference r = null]
 		(e=expression {((FunctionReference) r).arguments.add(e);}
 			(',' e=expression {((FunctionReference) r).arguments.add(e);})*
 		)?
-	PAREN_R)?
-	(ARRAY_L e=expression {r = new ArrayReference(r, e);} ARRAY_R)*;
+	PAREN_R)?;
 
 constant returns [Constant c = null]
 	: (i=intconst {c=i;})|(d=doubleconst {c=d;})|(b=boolconst {c=b;})|(s=stringconst {c=s;})|(n=nullconst {c=n;});
@@ -291,13 +290,12 @@ primitive returns [Expression e = null]
 	   /* -x */
         s=(MINUS|PLUS) p=primitive{e = (s.getText().equals("-")) ? new NegationOperation(p) : p;}// Ignore +x
 	   
-	   		
-		/* 55.23 */
-	    |  (r=reference {e=r;} (('.' b=reference {e=new RetrieverExpression((Reference) e, b);})*))
+	   | (r = reference { e = r; })
+	    
 	   /* (6 + 22) */
 		| (PAREN_L x=expression {e=x;} PAREN_R)
 		  
-		/* new Class(1 , 2 , 3 , 4 , 5); */	
+		/* new Class(1 , 2 , 3 , 4 , 5); */ 	
 		|
 	(
 		'new' t=clstype {e=new NewCall(t);}
@@ -310,11 +308,20 @@ primitive returns [Expression e = null]
 	)
 			/* new int[100] */
 		| ('new' t=type '[' x=expression ']' {e=new NewArray(t, x);});
-		
+
+reference_checked returns [Expression e = null]
+:
+	t=primitive {e = t;}
+	
+	(('.') b=reference {e = new RetrieverExpression(e, b);})*
+	
+	(ARRAY_L i=expression {e = new ArrayReference(e, i); } ARRAY_R)*
+;
+
 pre_post_op returns [Expression e = null]
 	:
 	/* x++ x-- */
-  (p=primitive {e=p;}
+  (p=reference_checked {e=p;}
   (
 	  '++' {e=new PrePostFixOperator(false, true, e);}
 	 |'--' {e=new PrePostFixOperator(false, false, e);}
@@ -490,4 +497,3 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
-

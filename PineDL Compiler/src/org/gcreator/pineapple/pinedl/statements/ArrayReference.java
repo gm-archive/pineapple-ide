@@ -28,13 +28,13 @@ package org.gcreator.pineapple.pinedl.statements;
  */
 public class ArrayReference extends Reference {
 
-    public Reference base = null;
+    public Expression base = null;
     public Expression exp = null;
 
     public ArrayReference() {
     }
 
-    public ArrayReference(Reference base, Expression exp) {
+    public ArrayReference(Expression base, Expression exp) {
         this.base = base;
         this.exp = exp;
     }

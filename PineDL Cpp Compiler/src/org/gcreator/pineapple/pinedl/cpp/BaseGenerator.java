@@ -33,6 +33,7 @@ import java.util.Arrays;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
+import org.gcreator.pineapple.pinedl.statements.ArrayReference;
 import org.gcreator.pineapple.pinedl.statements.BinaryOperation;
 import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
@@ -368,12 +369,16 @@ public abstract class BaseGenerator {
             }
         } else if (leaf instanceof EqualOperation) {
             EqualOperation operation = (EqualOperation) leaf;
+            System.out.println("operation.left=" + operation.left.toString());
+            System.out.println("operation.right=" + operation.right.toString());
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);
             translation.errors.addAll(right.errors);
             Type leftType = left.inspectedType;
+            System.out.println("leftType=" + leftType);
             Type rightType = right.inspectedType;
+            System.out.println("rightType=" + rightType);
             try {
                 if (!typeMatches(leftType, rightType)) {
                     translation.errors.add(new TranslationError(true,
@@ -627,7 +632,8 @@ public abstract class BaseGenerator {
                         "Variable " + varRef.name + " not found."));
             }
             translation.inspectedType = t;
-            translation.stringEquivalent = detokenize(varRef.name);
+            String detokenizedName = detokenize(varRef.name);
+            translation.stringEquivalent = detokenize(detokenizedName);
         } else if (leaf instanceof FunctionReference) {
             //Should ONLY track the left side of a retriever sequence
             //So, in a().b().c().d(), although a(), b(), c() and d() are all instances
@@ -713,6 +719,7 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ')';
             translation.inspectedType = newCall.type;
         } else if (leaf instanceof RetrieverExpression) {
+            System.out.println("Reached RetrieverExpression");
             RetrieverExpression ret = (RetrieverExpression) leaf;
             TranslatedLeaf leftLeaf = translateLeaf(ret.left, //
                     context, false, true);
@@ -799,10 +806,12 @@ public abstract class BaseGenerator {
                     }
                 }
             } else {
+                System.out.println("Not a type");
+                System.out.println("Dealing with type " + leftLeaf.inspectedType);
                 //OK. It worked. Not a type. Let's proceed
                 Type leftType = leftLeaf.inspectedType;
                 translation.errors.addAll(leftLeaf.errors);
-                translation.stringEquivalent += leftLeaf.stringEquivalent;
+                translation.stringEquivalent = leftLeaf.stringEquivalent;
                 if (leftType.typeCategory == TypeCategory.PRIMITIVE) {
                     if (leftType.primitiveType == PrimitiveType.STRING) {
                         if (ret.right instanceof VariableReference) {
@@ -833,11 +842,35 @@ public abstract class BaseGenerator {
                                     "Could not find method " + funRef.name + " in array.\n" //
                                     + "Did you mean 'getLength()'?"));
                         }
+                    } else if (ret.right instanceof ArrayReference) {
+                        System.out.println("In ret.right instanceof ArrayReference");
+                        ArrayReference ar = (ArrayReference) ret.right;
+                        TranslatedLeaf base = translateLeaf(ar.base, context, false, false);
+                        TranslatedLeaf exp = translateLeaf(ar.exp, context, false, false);
+                        translation.errors.addAll(base.errors);
+                        translation.errors.addAll(exp.errors);
+                        translation.stringEquivalent = base.stringEquivalent;
+                        //Although getElementAt() is uglier than []
+                        //It actually saves us trouble
+                        //(as long as getElementAt() returns T& and not T)
+                        translation.stringEquivalent += "->getElementAt(" + exp.stringEquivalent + ")";
+                        if (base.inspectedType.typeCategory == TypeCategory.ARRAY) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Attempting to retrieve array element from non-array variable."));
+                        } else {
+                            translation.inspectedType = base.inspectedType.arrayType;
+                        }
+
+                        if (exp.inspectedType.typeCategory != TypeCategory.PRIMITIVE //
+                                || exp.inspectedType.primitiveType != PrimitiveType.INT) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Only integers can be used as array keys."));
+                        }
                     }
                     translation.stringEquivalent += "->getLength()";
                     translation.inspectedType = Type.INT;
-                } else {
-                    //TODO: For class
+                } else if (leftType.typeCategory == TypeCategory.CLASS) {
+                    System.out.println("Left is a class");
                     GlobalLibrary.ClassDefinition clsDef = classFromName(leftType.type);
                     if (ret.right instanceof VariableReference) {
                         VariableReference varRef = (VariableReference) ret.right;
@@ -845,6 +878,10 @@ public abstract class BaseGenerator {
                         if (field == null) {
                             translation.errors.add(new TranslationError(true, leaf, context, //
                                     "Could not find field " + varRef.name + " in " + leftType));
+                        }
+                        else{
+                            System.out.println("Assigning type to " + field.type);
+                            translation.inspectedType = field.type;
                         }
                         translation.stringEquivalent += "->" + varRef.name;
                     } else if (ret.right instanceof FunctionReference) {
@@ -891,8 +928,33 @@ public abstract class BaseGenerator {
                         }
                     }
                 }
-
             }
+        } else if (leaf instanceof ArrayReference) {
+            System.out.println("Reached ArrayReference");
+            ArrayReference ar = (ArrayReference) leaf;
+            System.out.println("ar.base="+ar.base.toString());
+            TranslatedLeaf base = translateLeaf(ar.base, context, false, false);
+            TranslatedLeaf exp = translateLeaf(ar.exp, context, false, false);
+            translation.errors.addAll(base.errors);
+            translation.errors.addAll(exp.errors);
+
+            translation.stringEquivalent = "(*" + base.stringEquivalent;
+            //getElementAt is uglier than 
+            translation.stringEquivalent += ")[" + exp.stringEquivalent + "]";
+            if (base.inspectedType.typeCategory != TypeCategory.ARRAY) {
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Attempting to retrieve array element from non-array variable."));
+            } else {
+                translation.inspectedType = base.inspectedType.arrayType;
+            }
+
+            if (exp.inspectedType.typeCategory != TypeCategory.PRIMITIVE //
+                    || exp.inspectedType.primitiveType != PrimitiveType.INT) {
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Only integers can be used as array keys."));
+            }
+
+
         }
         //TODO:
         //EqualsOperation, ArrayReference, logical operators and lots of others

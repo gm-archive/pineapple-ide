@@ -30,10 +30,10 @@ import org.gcreator.pineapple.pinedl.Leaf;
  */
 public class RetrieverExpression extends Reference {
 
-    public Reference left = null;
+    public Expression left = null;
     public Reference right = null;
 
-    public RetrieverExpression(Reference left, Reference right) {
+    public RetrieverExpression(Expression left, Reference right) {
         this.left = left;
         this.right = right;
     }
