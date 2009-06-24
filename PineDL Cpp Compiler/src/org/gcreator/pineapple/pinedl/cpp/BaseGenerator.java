@@ -438,12 +438,10 @@ public abstract class BaseGenerator {
                 }
                 if (leftType.primitiveType == PrimitiveType.FLOAT || rightType.primitiveType == PrimitiveType.FLOAT) {
                     translation.inspectedType = Type.FLOAT;
-                }
-                else if (leftType.primitiveType == PrimitiveType.INT ||
+                } else if (leftType.primitiveType == PrimitiveType.INT ||
                         rightType.primitiveType == PrimitiveType.INT) {
                     translation.inspectedType = Type.INT;
-                }
-                else{
+                } else {
                     translation.inspectedType = Type.CHAR;
                 }
             }
@@ -658,8 +656,8 @@ public abstract class BaseGenerator {
                         }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
-                        //We're not interested in this particular
-                        //type of exceptions
+                    //We're not interested in this particular
+                    //type of exceptions
                     }
                 }
                 matched = true;
@@ -752,8 +750,8 @@ public abstract class BaseGenerator {
                         translation.stringEquivalent += detokenize(funRef.name);
                         translation.stringEquivalent += '(';
                         boolean isFirst = true;
-                        for(Expression e : funRef.arguments){
-                            if(isFirst){
+                        for (Expression e : funRef.arguments) {
+                            if (isFirst) {
                                 translation.stringEquivalent += ", ";
                             }
                             TranslatedLeaf tLeaf = translateLeaf(e, context, false, false);
@@ -775,19 +773,19 @@ public abstract class BaseGenerator {
                                     //We're not interested in this particular
                                     //type of exceptions
                                 }
-                                if(!method.isStatic){
+                                if (!method.isStatic) {
                                     translation.errors.add(new TranslationError(true, leaf, context, //
-                                        "Attempting to use non-static method as static."));
+                                            "Attempting to use non-static method as static."));
                                 }
                             }
                             translation.inspectedType = method.returnType;
-                            
+
                         }
-                        
+
                         translation.stringEquivalent += ')';
-                        if(translation.inspectedType==null){
-                               translation.errors.add(new TranslationError(true, leaf, context, //
-                                        "Could not find method " + funRef.name));
+                        if (translation.inspectedType == null) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find method " + funRef.name));
                         }
                     }
                 } else {
@@ -805,45 +803,96 @@ public abstract class BaseGenerator {
                 Type leftType = leftLeaf.inspectedType;
                 translation.errors.addAll(leftLeaf.errors);
                 translation.stringEquivalent += leftLeaf.stringEquivalent;
-                if(leftType.typeCategory==TypeCategory.PRIMITIVE){
-                    if(leftType.primitiveType==PrimitiveType.STRING){
-                        if(ret.right instanceof VariableReference){
-                        translation.errors.add(new TranslationError(true, leaf, context, //
-                                "Attempting to retrieve field of string."));
-                        } else if(ret.right instanceof FunctionReference){
+                if (leftType.typeCategory == TypeCategory.PRIMITIVE) {
+                    if (leftType.primitiveType == PrimitiveType.STRING) {
+                        if (ret.right instanceof VariableReference) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Attempting to retrieve field of string."));
+                        } else if (ret.right instanceof FunctionReference) {
                             FunctionReference funRef = (FunctionReference) ret.right;
-                            if(!funRef.name.equals("getLength")){
+                            if (!funRef.name.equals("getLength")) {
                                 translation.errors.add(new TranslationError(true, leaf, context, //
-                                    "Could not find method " + funRef.name + " in string.\n" //
-                                    + "Did you mean 'getLength()'?"));
+                                        "Could not find method " + funRef.name + " in string.\n" //
+                                        + "Did you mean 'getLength()'?"));
                             }
                         }
-                    }
-                    else{
+                    } else {
                         translation.errors.add(new TranslationError(true, leaf, context, //
                                 "Attempting to retrieve field or method from non-string primitive type."));
                     }
                     translation.stringEquivalent += ".length()"; //getLength()
                     translation.inspectedType = Type.INT;       //is the only valid type
-                } else if(leftType.typeCategory==TypeCategory.ARRAY){
-                    if(ret.right instanceof VariableReference){
+                } else if (leftType.typeCategory == TypeCategory.ARRAY) {
+                    if (ret.right instanceof VariableReference) {
                         translation.errors.add(new TranslationError(true, leaf, context, //
                                 "Attempting to retrieve field of array."));
-                    } else if(ret.right instanceof FunctionReference){
+                    } else if (ret.right instanceof FunctionReference) {
                         FunctionReference funRef = (FunctionReference) ret.right;
-                        if(!funRef.name.equals("getLength")){
-                                translation.errors.add(new TranslationError(true, leaf, context, //
+                        if (!funRef.name.equals("getLength")) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
                                     "Could not find method " + funRef.name + " in array.\n" //
                                     + "Did you mean 'getLength()'?"));
                         }
                     }
                     translation.stringEquivalent += "->getLength()";
                     translation.inspectedType = Type.INT;
-                } else{
+                } else {
                     //TODO: For class
+                    GlobalLibrary.ClassDefinition clsDef = classFromName(leftType.type);
+                    if (ret.right instanceof VariableReference) {
+                        VariableReference varRef = (VariableReference) ret.right;
+                        GlobalLibrary.FieldDefinition field = clsDef.getField(varRef.name);
+                        if (field == null) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find field " + varRef.name + " in " + leftType));
+                        }
+                        translation.stringEquivalent += "->" + varRef.name;
+                    } else if (ret.right instanceof FunctionReference) {
+                        FunctionReference funRef = (FunctionReference) ret.right;
+                        Vector<GlobalLibrary.MethodDefinition> methods = clsDef.getMethods(funRef.name);
+                        Vector<TranslatedLeaf> argumentVector = new Vector<TranslatedLeaf>();
+                        translation.stringEquivalent += detokenize(funRef.name);
+                        translation.stringEquivalent += '(';
+                        boolean isFirst = true;
+                        for (Expression e : funRef.arguments) {
+                            if (isFirst) {
+                                translation.stringEquivalent += ", ";
+                            }
+                            TranslatedLeaf tLeaf = translateLeaf(e, context, false, false);
+                            translation.errors.addAll(tLeaf.errors);
+                            argumentVector.add(tLeaf);
+                            translation.stringEquivalent += tLeaf.stringEquivalent;
+                            isFirst = false;
+                        }
+                        functionLoop:
+                        for (GlobalLibrary.MethodDefinition method : methods) {
+                            for (int i = 0; i < method.arguments.size(); i++) {
+                                try {
+                                    Type type1 = method.arguments.get(i).type; //Intended
+                                    Type type2 = argumentVector.get(i).inspectedType; //Used
+                                    if (!typeMatches(type1, type2)) {
+                                        continue functionLoop;
+                                    }
+                                } catch (ClassNotFoundException e) {
+                                    //We're not interested in this particular
+                                    //type of exceptions
+                                }
+                                if (method.isStatic) {
+                                    translation.errors.add(new TranslationError(true, leaf, context, //
+                                            "Using static method as non-static"));
+                                }
+                            }
+                            translation.inspectedType = method.returnType;
+                        }
+                        translation.stringEquivalent += ')';
+                        if (translation.inspectedType == null) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find method " + funRef.name));
+                        }
+                    }
                 }
-            }
 
+            }
         }
         //TODO:
         //EqualsOperation, ArrayReference, logical operators and lots of others
@@ -933,7 +982,7 @@ public abstract class BaseGenerator {
 
         if (clsName.length == 2 && clsName[0].equals("Pineapple")) {
 
-            def = GlobalLibrary.getCoreClassFromName(clsName[  1]);
+            def = GlobalLibrary.getCoreClassFromName(clsName[1]);
             if (def != null) {
                 return def;
             }
@@ -998,55 +1047,13 @@ public abstract class BaseGenerator {
         if (cls1 == null || cls2 == null) {
             throw new ClassNotFoundException();
         }
-        if(Arrays.equals(cls1.packageName, cls2.packageName)){
-            if(cls1.name.equals(cls2.name)){
+        if (Arrays.equals(cls1.packageName, cls2.packageName)) {
+            if (cls1.name.equals(cls2.name)) {
                 return true;
             }
-            //If not, may happen and may not happen. We don't know yet.
+        //If not, may happen and may not happen. We don't know yet.
         }
         return cls2.inheritsFrom(cls1);
-    }
-
-    private Type logicOperationHandler(Type left, Type right) throws Exception {
-        if (left.typeCategory != TypeCategory.PRIMITIVE) {
-            throw new Exception("Invalid type");
-        }
-        if (right.typeCategory != TypeCategory.PRIMITIVE) {
-            throw new Exception("Invalid type");
-        }
-        if (left.primitiveType != PrimitiveType.BOOL) {
-            throw new Exception("Invalid type");
-        }
-        if (right.primitiveType != PrimitiveType.BOOL) {
-            throw new Exception("Invalid type");
-        }
-        return Type.BOOL;
-
-    }
-
-    private Type multLikeOperationHandler(Type left, Type right) throws Exception {
-        if (left.typeCategory != TypeCategory.PRIMITIVE) {
-            throw new Exception("Invalid type");
-        }
-        if (right.typeCategory != TypeCategory.PRIMITIVE) {
-            throw new Exception("Invalid type");
-        }
-        PrimitiveType leftType = left.primitiveType;
-        PrimitiveType rightType = right.primitiveType;
-        if (leftType == PrimitiveType.STRING || rightType == PrimitiveType.STRING) {
-
-            throw new Exception("Invalid type");
-        }
-        if (leftType == PrimitiveType.BOOL || rightType == PrimitiveType.BOOL) {
-            throw new Exception("Invalid type");
-        }
-        if (leftType == PrimitiveType.FLOAT || rightType == PrimitiveType.FLOAT) {
-            return Type.FLOAT;
-        }
-        if (leftType == PrimitiveType.INT || rightType == PrimitiveType.INT) {
-            return Type.INT;
-        }
-        return Type.CHAR;
     }
 
     protected void writeLine()
