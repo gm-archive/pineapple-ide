@@ -259,13 +259,14 @@ public class GameCompiler {
         Vector<BasicFile> simgs = new Vector<BasicFile>();
         GlobalLibrary.ClassDefinition textureList =
                 new GlobalLibrary.ClassDefinition("TextureList");
-        for (BasicFile f : simgs) {
-            if(f!=null){
-                String name = f.getName().replaceAll("\\.", "_");
-                textureList.fields.add(
-                    new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
-            }
+        for (File image : imageFiles) {
+            String name = image.getName().replaceAll("\\.", "_");
+            name = name.replaceAll("_zlib$", "");
+            System.out.println("Adding field " + name + " to TextureList.");
+            textureList.fields.add(
+                new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
         }
+        GlobalLibrary.coreClasses.add(textureList);
         w.println("void Pineapple::TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */

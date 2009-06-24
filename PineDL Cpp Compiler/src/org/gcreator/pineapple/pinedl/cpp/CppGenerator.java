@@ -127,10 +127,6 @@ public class CppGenerator extends BaseGenerator {
         return res;
     }
 
-    public boolean isType(String t) {
-        return classFromName(new String[]{t}) != null;
-    }
-
     public boolean isType(Reference e) {
         if (e instanceof VariableReference) {
             if (isType(((VariableReference) e).name)) {
@@ -149,7 +145,7 @@ public class CppGenerator extends BaseGenerator {
             String s = detokenize(cls.clsName) + "::" + detokenize(cls.clsName) + '(';
 
             boolean isFirst = true;
-            PineDLContext vars = new PineDLContext("<constructor>");
+            PineDLContext vars = new PineDLContext("&lt;constructor&gt;");
             vars.contentClass = cls;
             for (Argument a : c.arguments) {
                 if (!isFirst) {

@@ -47,6 +47,6 @@ public class RetrieverExpression extends Reference {
 
     @Override
     public String toString() {
-        return ".[ " + left + "," + right + "]";
+        return left + "." + right;
     }
 }

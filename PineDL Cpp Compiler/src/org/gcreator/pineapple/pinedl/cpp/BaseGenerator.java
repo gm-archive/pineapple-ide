@@ -113,7 +113,7 @@ public abstract class BaseGenerator {
             } else if (t.type[0].equals("Keyboard")) {
                 return "::Pineapple::Keyboard" + (reference ? "*" : "");
             } else if (t.type[0].equals("Color")) {
-                return "::Pineapple::Color";// + (reference ? "*" : "");
+                return "::Pineapple::Color" + (reference ? "*" : "");
             } else if (t.type[0].equals("Drawing")) {
                 return "::Pineapple::Drawing" + (reference ? "*" : "");
             }
@@ -187,7 +187,7 @@ public abstract class BaseGenerator {
 
     protected String detokenize(String id) {
         if (id.startsWith("_")) {
-            return id;
+            return "_U_" + id;
         }
         /*
          * The following aren't PineDL keywords, so the user
@@ -271,6 +271,7 @@ public abstract class BaseGenerator {
             translation.errors.add(
                     new TranslationError(true, leaf, context, "Found null leaf\n" +
                     "Please report this error to the development team."));
+            translation.stringEquivalent = "/* FAILURE */";
             return translation;
         }
         if (leaf instanceof NegationOperation) {
@@ -438,11 +439,13 @@ public abstract class BaseGenerator {
                 if (leftType.primitiveType == PrimitiveType.FLOAT || rightType.primitiveType == PrimitiveType.FLOAT) {
                     translation.inspectedType = Type.FLOAT;
                 }
-                if (leftType.primitiveType == PrimitiveType.INT ||
+                else if (leftType.primitiveType == PrimitiveType.INT ||
                         rightType.primitiveType == PrimitiveType.INT) {
                     translation.inspectedType = Type.INT;
                 }
-                translation.inspectedType = Type.CHAR;
+                else{
+                    translation.inspectedType = Type.CHAR;
+                }
             }
             translation.stringEquivalent = "(" + leftLeaf.stringEquivalent + ") + (" + rightLeaf.stringEquivalent + ')';
         } else if (leaf instanceof PrePostFixOperator) {
@@ -645,15 +648,16 @@ public abstract class BaseGenerator {
             boolean matched = false;
             functionLoop:
             for (GlobalLibrary.MethodDefinition method : getCurrentClass().getMethods(functionName)) {
-                for (int i = 0; i < method.arguments.size(); i++) {
-                    try{
+                int size = method.arguments.size();
+                for (int i = 0; i < size; i++) {
+                    try {
                         Type type1 = method.arguments.get(i).type; //Intended
                         Type type2 = argumentVector.get(i); //Used
                         if (!typeMatches(type1, type2)) {
                             continue functionLoop;
                         }
-                    }
-                    catch(ClassNotFoundException e){
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                         //We're not interested in this particular
                         //type of exceptions
                     }
@@ -661,13 +665,13 @@ public abstract class BaseGenerator {
                 matched = true;
                 translation.inspectedType = method.returnType;
             }
-            
-            if(!matched){
-                translation.errors.add(new TranslationError(true, leaf,context,
-                    "Could not find a method named " + functionName + 
-                    " with the intended arguments."));
+
+            if (!matched) {
+                translation.errors.add(new TranslationError(true, leaf, context,
+                        "Could not find a method named " + functionName +
+                        " with the intended arguments."));
             }
-            
+
             translation.stringEquivalent += ')';
         } else if (leaf instanceof NewArray) {
             NewArray newArray = (NewArray) leaf;
@@ -695,61 +699,154 @@ public abstract class BaseGenerator {
             translation.stringEquivalent = "new ";
             translation.stringEquivalent += typeToString(newCall.type, false);
             translation.stringEquivalent += '(';
-            
+
             boolean first = true;
-            for(Expression e : newCall.arguments){
-                if(!first){
+            for (Expression e : newCall.arguments) {
+                if (!first) {
                     translation.stringEquivalent += ", ";
                 }
                 TranslatedLeaf expression = translateLeaf(e, context, false);
                 translation.errors.addAll(expression.errors);
                 translation.stringEquivalent += expression.stringEquivalent;
-                
+
                 first = false;
             }
-            
+
             translation.stringEquivalent += ')';
-            System.out.println("new " + newCall.type);
             translation.inspectedType = newCall.type;
         } else if (leaf instanceof RetrieverExpression) {
-            System.out.println(leaf.toString());
-            //TODO!!!
-            /*
-             * Old CppGenerator implementation
-             * 
-    if (l instanceof RetrieverExpression) {
-        RetrieverExpression e = (RetrieverExpression) l;
-        if (isType(e) && isLeft) {
-            return e.toString().replaceAll("\\.", "::");
-        } else if (e.left instanceof RetrieverExpression) {
-            boolean istype = isType(e.left) && isLeft;
-            String s = leafToString(e.left, false, vars);
-            String t = leafToString(e.right, false, vars, false);
-            return s + (istype ? "::" : "->") + t;
-        } else if (e.left instanceof VariableReference) {
-            boolean istype = isType(e.left) && isLeft;
-            boolean declared = vars.isVariableDeclared(e.left.toString());
-            if (!declared && isLeft) {
-                if (istype) {
-                    String tname = e.left.toString();
+            RetrieverExpression ret = (RetrieverExpression) leaf;
+            TranslatedLeaf leftLeaf = translateLeaf(ret.left, //
+                    context, false, true);
+            if (leftLeaf == null) {
+                String retLeft = ret.left.toString();
+                //It is, perhaps, a type?
+                GlobalLibrary.ClassDefinition referencedType//
+                        = classFromName(retLeft.split("\\."));
+                if (referencedType != null) {
+                    //Only CLASS types have static fields and methods
+                    Leaf rightLeaf = ret.right;
+                    translation.stringEquivalent = referencedType.exportCppType();
+                    translation.stringEquivalent += "::";
+                    if (rightLeaf instanceof VariableReference) {
+                        VariableReference varRef = (VariableReference) rightLeaf;
+                        //Note that only CLASS types have fields
+                        GlobalLibrary.FieldDefinition field = //
+                                referencedType.getField(varRef.name);
+                        if (field == null) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find field " + varRef.name));
+                        } else {
+                            if (!field.isStatic) {
+                                translation.errors.add(new TranslationError(true, leaf, context, //
+                                        "Attempting to use non-static field as static."));
+                            }
+                            translation.inspectedType = field.type;
+                            translation.stringEquivalent += detokenize(varRef.name);
+                        }
+                    } else if (rightLeaf instanceof FunctionReference) {
+                        FunctionReference funRef = (FunctionReference) rightLeaf;
+                        Vector<GlobalLibrary.MethodDefinition> methods = //
+                                referencedType.getMethods(funRef.name);
+                        Vector<TranslatedLeaf> argumentVector = new Vector<TranslatedLeaf>();
+                        translation.stringEquivalent += detokenize(funRef.name);
+                        translation.stringEquivalent += '(';
+                        boolean isFirst = true;
+                        for(Expression e : funRef.arguments){
+                            if(isFirst){
+                                translation.stringEquivalent += ", ";
+                            }
+                            TranslatedLeaf tLeaf = translateLeaf(e, context, false, false);
+                            translation.errors.addAll(tLeaf.errors);
+                            argumentVector.add(tLeaf);
+                            translation.stringEquivalent += tLeaf.stringEquivalent;
+                            isFirst = false;
+                        }
+                        functionLoop:
+                        for (GlobalLibrary.MethodDefinition method : methods) {
+                            for (int i = 0; i < method.arguments.size(); i++) {
+                                try {
+                                    Type type1 = method.arguments.get(i).type; //Intended
+                                    Type type2 = argumentVector.get(i).inspectedType; //Used
+                                    if (!typeMatches(type1, type2)) {
+                                        continue functionLoop;
+                                    }
+                                } catch (ClassNotFoundException e) {
+                                    //We're not interested in this particular
+                                    //type of exceptions
+                                }
+                                if(!method.isStatic){
+                                    translation.errors.add(new TranslationError(true, leaf, context, //
+                                        "Attempting to use non-static method as static."));
+                                }
+                            }
+                            translation.inspectedType = method.returnType;
+                            
+                        }
+                        
+                        translation.stringEquivalent += ')';
+                        if(translation.inspectedType==null){
+                               translation.errors.add(new TranslationError(true, leaf, context, //
+                                        "Could not find method " + funRef.name));
+                        }
+                    }
                 } else {
-                    String tname = e.left.toString();
-                    if (!vars.isVariableDeclared(tname) && !cls.variables.contains(tname)) {
-                        throwError("In class " + cls.clsName + ", " + "function " + vars.getFunctionName() + ":\n'" + tname + "' does not name a" + " type or a variable.");
+                    if (inRetrieverExpression) {
+                        return null;
+                    } else {
+                        translation.inspectedType = null;
+                        translation.stringEquivalent = "/* FAILURE */";
+                        translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Expression \"" + retLeft + "\" does not name a variable, a function nor a type."));
                     }
                 }
+            } else {
+                //OK. It worked. Not a type. Let's proceed
+                Type leftType = leftLeaf.inspectedType;
+                translation.errors.addAll(leftLeaf.errors);
+                translation.stringEquivalent += leftLeaf.stringEquivalent;
+                if(leftType.typeCategory==TypeCategory.PRIMITIVE){
+                    if(leftType.primitiveType==PrimitiveType.STRING){
+                        if(ret.right instanceof VariableReference){
+                        translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Attempting to retrieve field of string."));
+                        } else if(ret.right instanceof FunctionReference){
+                            FunctionReference funRef = (FunctionReference) ret.right;
+                            if(!funRef.name.equals("getLength")){
+                                translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find method " + funRef.name + " in string.\n" //
+                                    + "Did you mean 'getLength()'?"));
+                            }
+                        }
+                    }
+                    else{
+                        translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Attempting to retrieve field or method from non-string primitive type."));
+                    }
+                    translation.stringEquivalent += ".length()"; //getLength()
+                    translation.inspectedType = Type.INT;       //is the only valid type
+                } else if(leftType.typeCategory==TypeCategory.ARRAY){
+                    if(ret.right instanceof VariableReference){
+                        translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Attempting to retrieve field of array."));
+                    } else if(ret.right instanceof FunctionReference){
+                        FunctionReference funRef = (FunctionReference) ret.right;
+                        if(!funRef.name.equals("getLength")){
+                                translation.errors.add(new TranslationError(true, leaf, context, //
+                                    "Could not find method " + funRef.name + " in array.\n" //
+                                    + "Did you mean 'getLength()'?"));
+                        }
+                    }
+                    translation.stringEquivalent += "->getLength()";
+                    translation.inspectedType = Type.INT;
+                } else{
+                    //TODO: For class
+                }
             }
-        PineDLContext newContext = new PineDLContext(vars);
-        return (declared ? "" : "::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
-            leafToString(e.right, false, newContext, false) + (statement ? ";" : "");
-        }
-        return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
-    }
-             */
+
         }
         //TODO:
         //EqualsOperation, ArrayReference, logical operators and lots of others
-
 
         if (!(leaf instanceof Block) && isStatement) {
             translation.stringEquivalent += ";\n";
@@ -764,14 +861,11 @@ public abstract class BaseGenerator {
 
         GlobalLibrary.ClassDefinition definition = getCurrentClass();
 
-        System.out.println("Seeking field " + var.name);
         GlobalLibrary.FieldDefinition field = definition.getField(var.name);
         return field == null ? null : field.type;
     }
 
     public GlobalLibrary.ClassDefinition getCurrentClass() {
-        System.out.println("Looking for class " + cls.toString() + ", with " + "name " + cls.clsName +
-                " and package " + Arrays.toString(cls.packageName));
         return GlobalLibrary.getUserDefinedClassFromName(cls.clsName, cls.packageName);
     }
 
@@ -795,6 +889,10 @@ public abstract class BaseGenerator {
             throw new Exception("Invalid class");
         }
         return ClassTypeFunction(definition, fname, arguments);
+    }
+
+    public boolean isType(String t) {
+        return classFromName(new String[]{t}) != null;
     }
 
     public GlobalLibrary.ClassDefinition classFromName(String[] clsName) {
@@ -899,6 +997,12 @@ public abstract class BaseGenerator {
         GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
         if (cls1 == null || cls2 == null) {
             throw new ClassNotFoundException();
+        }
+        if(Arrays.equals(cls1.packageName, cls2.packageName)){
+            if(cls1.name.equals(cls2.name)){
+                return true;
+            }
+            //If not, may happen and may not happen. We don't know yet.
         }
         return cls2.inheritsFrom(cls1);
     }

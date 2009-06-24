@@ -328,6 +328,22 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getHeight", Type.INT));
         
         coreClasses.add(c);
+        
+        c = new ClassDefinition("Color");
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("r", Type.FLOAT),
+                new VariableDefinition("g", Type.FLOAT),
+                new VariableDefinition("b", Type.FLOAT)));
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("r", Type.FLOAT),
+                new VariableDefinition("g", Type.FLOAT),
+                new VariableDefinition("b", Type.FLOAT),
+                new VariableDefinition("a", Type.FLOAT)));
+        c.methods.add(new MethodDefinition("getRed", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getGreen", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getBlue", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getAlpha", Type.FLOAT));
+        coreClasses.add(c);
     }
 
     private GlobalLibrary() {
@@ -411,6 +427,14 @@ public class GlobalLibrary {
                 return true;
             }
             return parent!=null&&parent.inheritsFrom(possibleParent);
+        }
+        
+        public String exportCppType(){
+            String result = "";
+            for(String s : packageName){
+                result += "::" + s;
+            }
+            return result + "::" + name;
         }
     }
 
