@@ -47,14 +47,10 @@ public class Type {
     }
 
     public Type(String type) {
+        typeCategory = TypeCategory.CLASS;
         String[] t = type.split("\\.");
         if (t.length == 0) {
             throw new IllegalArgumentException("Invalid Type");
-        }
-        // Must begin with ``Pineapple.''
-        if (!t[0].equals("Pineapple")) {
-            t = Arrays.copyOf(t, t.length+1);
-            t[0] = "Pineapple";
         }
         this.type = t;
     }

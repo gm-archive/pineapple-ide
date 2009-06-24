@@ -40,16 +40,21 @@ import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
 import org.gcreator.pineapple.pinedl.statements.EqualOperation;
+import org.gcreator.pineapple.pinedl.statements.Expression;
+import org.gcreator.pineapple.pinedl.statements.FunctionReference;
+import org.gcreator.pineapple.pinedl.statements.IfStatement;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LessEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
+import org.gcreator.pineapple.pinedl.statements.ModOperation;
 import org.gcreator.pineapple.pinedl.statements.MoreEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.MoreOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NegationOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
+import org.gcreator.pineapple.pinedl.statements.NewCall;
 import org.gcreator.pineapple.pinedl.statements.NotOperation;
 import org.gcreator.pineapple.pinedl.statements.NullConstant;
 import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
@@ -255,6 +260,11 @@ public abstract class BaseGenerator {
     }
 
     public TranslatedLeaf translateLeaf(Leaf leaf, PineDLContext context, boolean isStatement) {
+        return translateLeaf(leaf, context, isStatement, false);
+    }
+
+    public TranslatedLeaf translateLeaf(Leaf leaf, PineDLContext context, boolean isStatement,
+            boolean inRetrieverExpression) {
         TranslatedLeaf translation = new TranslatedLeaf();
         translation.equivalentLeaf = leaf;
         if (leaf == null) {
@@ -321,7 +331,7 @@ public abstract class BaseGenerator {
             }
 
             translation.inspectedType = null; //Not an expression
-            translation.stringEquivalent += "}";
+            translation.stringEquivalent += "}\n";
         } else if (leaf instanceof DeclAssign) {
             DeclAssign declaration = (DeclAssign) leaf;
             if (context.isVariableDeclared(declaration.name)) {
@@ -509,10 +519,32 @@ public abstract class BaseGenerator {
                 translation.stringEquivalent += '/';
             }
             translation.stringEquivalent += " (" + rightLeaf.stringEquivalent;
-            translation.stringEquivalent += ')';            //some comments are just there
+            translation.stringEquivalent += ')';
+        //some comments are just there
         //to make sure NetBeans'
         //"Format" feature does not
         //suppress the line breaks
+        } else if (leaf instanceof ModOperation) {
+            ModOperation mod = (ModOperation) leaf;
+            TranslatedLeaf left = translateLeaf(mod.left, context, false);
+            translation.errors.addAll(left.errors);
+            TranslatedLeaf right = translateLeaf(mod.right, context, false);
+            translation.errors.addAll(right.errors);
+            Type leftType = left.inspectedType;
+            Type rightType = right.inspectedType;
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE //
+                    || leftType.primitiveType != PrimitiveType.INT //
+                    || rightType.typeCategory != TypeCategory.PRIMITIVE //
+                    || rightType.primitiveType != PrimitiveType.INT) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Only integers can be used in % operations."));
+            }
+            translation.stringEquivalent = "(" + left.stringEquivalent;
+            translation.stringEquivalent += ")%(";
+            translation.stringEquivalent += right.stringEquivalent;
+            translation.stringEquivalent += ')';
         } else if (leaf instanceof LessOperation || leaf instanceof MoreOperation || //
                 leaf instanceof LessEqualOperation || leaf instanceof MoreEqualOperation) {
             BinaryOperation operation = (BinaryOperation) leaf;
@@ -540,158 +572,192 @@ public abstract class BaseGenerator {
             }
             translation.stringEquivalent = "(" + leftLeaf.stringEquivalent;
             translation.stringEquivalent += ")";
-            if(leaf instanceof LessOperation){
+            if (leaf instanceof LessOperation) {
                 translation.stringEquivalent += "<";
-            } else if(leaf instanceof MoreOperation){
+            } else if (leaf instanceof MoreOperation) {
                 translation.stringEquivalent += ">";
-            } else if(leaf instanceof LessEqualOperation){
+            } else if (leaf instanceof LessEqualOperation) {
                 translation.stringEquivalent += "<=";
-            } else if(leaf instanceof MoreEqualOperation){
+            } else if (leaf instanceof MoreEqualOperation) {
                 translation.stringEquivalent += ">=";
             }
             translation.stringEquivalent += "(";
             translation.stringEquivalent += rightLeaf.stringEquivalent;
             translation.stringEquivalent += ")";
             translation.inspectedType = Type.BOOL;
+        } else if (leaf instanceof IfStatement) {
+            IfStatement ifStatement = (IfStatement) leaf;
+            TranslatedLeaf condition = translateLeaf(ifStatement.condition, context, false);
+            translation.errors.addAll(condition.errors);
+            if (condition.inspectedType.typeCategory != TypeCategory.PRIMITIVE ||//
+                    condition.inspectedType.primitiveType != PrimitiveType.BOOL) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "If statement conditions MUST be booleans"));
+            }
+            translation.inspectedType = null;
+            translation.stringEquivalent = "if(";
+            translation.stringEquivalent += condition.stringEquivalent;
+            translation.stringEquivalent += ")\n";
+            TranslatedLeaf then = translateLeaf(ifStatement.then, context, true);
+            translation.errors.addAll(then.errors);
+            translation.stringEquivalent += then.stringEquivalent;
+            if (ifStatement.elseCase != null) {
+                translation.stringEquivalent += "else\n";
+                TranslatedLeaf elseCase = translateLeaf(ifStatement.elseCase, context, true);
+                translation.errors.addAll(elseCase.errors);
+                translation.stringEquivalent += elseCase.stringEquivalent;
+            }
+        } else if (leaf instanceof VariableReference) {
+            //Should ONLY track the left side of a retriever sequence
+            //So, in a.b.c.d, although a, b, c and d are all instances
+            //of VariableReference, only a is interpreted here.
+            //The others should be intercepted in RetrieverExpression parsing
+            VariableReference varRef = (VariableReference) leaf;
+            Type t = getTypeOfVariable(varRef, context);
+            if (t == null) {
+                if (inRetrieverExpression) {
+                    return null;
+                }
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "Variable " + varRef.name + " not found."));
+            }
+            translation.inspectedType = t;
+            translation.stringEquivalent = detokenize(varRef.name);
+        } else if (leaf instanceof FunctionReference) {
+            //Should ONLY track the left side of a retriever sequence
+            //So, in a().b().c().d(), although a(), b(), c() and d() are all instances
+            //of FunctionReference, only a() is interpreted here.
+            //The others should be intercepted in RetrieverExpression parsing
+            FunctionReference function = (FunctionReference) leaf;
+            String functionName = function.name;
+            translation.stringEquivalent = detokenize(functionName) + '(';
+            Vector<Type> argumentVector = new Vector<Type>();
+            for (Expression e : function.arguments) {
+                TranslatedLeaf parsedArgument = translateLeaf(e, context, false);
+                translation.errors.addAll(parsedArgument.errors);
+                translation.stringEquivalent += parsedArgument.stringEquivalent;
+                argumentVector.add(parsedArgument.inspectedType);
+            }
+            boolean matched = false;
+            functionLoop:
+            for (GlobalLibrary.MethodDefinition method : getCurrentClass().getMethods(functionName)) {
+                for (int i = 0; i < method.arguments.size(); i++) {
+                    try{
+                        Type type1 = method.arguments.get(i).type; //Intended
+                        Type type2 = argumentVector.get(i); //Used
+                        if (!typeMatches(type1, type2)) {
+                            continue functionLoop;
+                        }
+                    }
+                    catch(ClassNotFoundException e){
+                        //We're not interested in this particular
+                        //type of exceptions
+                    }
+                }
+                matched = true;
+                translation.inspectedType = method.returnType;
+            }
+            
+            if(!matched){
+                translation.errors.add(new TranslationError(true, leaf,context,
+                    "Could not find a method named " + functionName + 
+                    " with the intended arguments."));
+            }
+            
+            translation.stringEquivalent += ')';
+        } else if (leaf instanceof NewArray) {
+            NewArray newArray = (NewArray) leaf;
+            Type arrayType = newArray.type;
+            translation.inspectedType = new Type();
+            translation.inspectedType.typeCategory = TypeCategory.ARRAY;
+            translation.inspectedType.arrayType = arrayType;
+            translation.stringEquivalent = "new ::Pineapple::Array<";
+            translation.stringEquivalent += typeToString(arrayType, true);
+            translation.stringEquivalent += ">(";
+
+            TranslatedLeaf size = translateLeaf(newArray.size, context, false);
+            translation.errors.addAll(size.errors);
+            Type sizeType = size.inspectedType;
+            if (sizeType.typeCategory != TypeCategory.PRIMITIVE ||//
+                    sizeType.primitiveType != PrimitiveType.INT) {
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Creating new array with size of non-integer type."));
+            }
+            translation.stringEquivalent += size.stringEquivalent;
+
+            translation.stringEquivalent += ')';
+        } else if (leaf instanceof NewCall) {
+            NewCall newCall = (NewCall) leaf;
+            translation.stringEquivalent = "new ";
+            translation.stringEquivalent += typeToString(newCall.type, false);
+            translation.stringEquivalent += '(';
+            
+            boolean first = true;
+            for(Expression e : newCall.arguments){
+                if(!first){
+                    translation.stringEquivalent += ", ";
+                }
+                TranslatedLeaf expression = translateLeaf(e, context, false);
+                translation.errors.addAll(expression.errors);
+                translation.stringEquivalent += expression.stringEquivalent;
+                
+                first = false;
+            }
+            
+            translation.stringEquivalent += ')';
+            System.out.println("new " + newCall.type);
+            translation.inspectedType = newCall.type;
+        } else if (leaf instanceof RetrieverExpression) {
+            System.out.println(leaf.toString());
+            //TODO!!!
+            /*
+             * Old CppGenerator implementation
+             * 
+    if (l instanceof RetrieverExpression) {
+        RetrieverExpression e = (RetrieverExpression) l;
+        if (isType(e) && isLeft) {
+            return e.toString().replaceAll("\\.", "::");
+        } else if (e.left instanceof RetrieverExpression) {
+            boolean istype = isType(e.left) && isLeft;
+            String s = leafToString(e.left, false, vars);
+            String t = leafToString(e.right, false, vars, false);
+            return s + (istype ? "::" : "->") + t;
+        } else if (e.left instanceof VariableReference) {
+            boolean istype = isType(e.left) && isLeft;
+            boolean declared = vars.isVariableDeclared(e.left.toString());
+            if (!declared && isLeft) {
+                if (istype) {
+                    String tname = e.left.toString();
+                } else {
+                    String tname = e.left.toString();
+                    if (!vars.isVariableDeclared(tname) && !cls.variables.contains(tname)) {
+                        throwError("In class " + cls.clsName + ", " + "function " + vars.getFunctionName() + ":\n'" + tname + "' does not name a" + " type or a variable.");
+                    }
+                }
+            }
+        PineDLContext newContext = new PineDLContext(vars);
+        return (declared ? "" : "::") + leafToString(e.left, false, vars) + (istype ? "::" : "->") +
+            leafToString(e.right, false, newContext, false) + (statement ? ";" : "");
         }
-        //TODO: FunctionReference, NewCall, IfStatement, VariableReference, RetrieverExpression,
-        //ModOperation, EqualsOperation, NewArray, ArrayReference and lots of others
+        return leafToString(e.left, false, vars) + "->" + leafToString(e.right, false, vars, false);
+    }
+             */
+        }
+        //TODO:
+        //EqualsOperation, ArrayReference, logical operators and lots of others
+
+
         if (!(leaf instanceof Block) && isStatement) {
-            translation.stringEquivalent += ';';
+            translation.stringEquivalent += ";\n";
         }
         return translation;
     }
 
-    public Type inspectLeafType(Leaf leaf, PineDLContext context) throws Exception {
-        if (leaf instanceof StringConstant) {
-            return Type.STRING;
-        }
-        if (leaf instanceof IntConstant) {
-            return Type.INT;
-        }
-        if (leaf instanceof DoubleConstant) {
-            return Type.FLOAT;
-        }
-        if (leaf instanceof BooleanConstant) {
-            return Type.BOOL;
-        }
-        if (leaf instanceof NullConstant) {
-            return null;
-        }
-        if (leaf instanceof NewArray) {
-            Type t = new Type();
-            t.typeCategory = TypeCategory.ARRAY;
-            t.arrayType = ((NewArray) leaf).type;
-            return t;
-        }
-        if (leaf instanceof SumOperation) {
-            SumOperation sum = (SumOperation) leaf;
-            Type leftType = inspectLeafType(sum.left, context);
-            Type rightType = inspectLeafType(sum.right, context);
-            if (leftType.typeCategory != TypeCategory.PRIMITIVE) {
-                throw new Exception("Invalid type");
-            }
-            if (rightType.typeCategory != TypeCategory.PRIMITIVE) {
-                throw new Exception("Invalid type"); //If, in the future, a toString()
-            //function gets defined, then this may become possible
-            }
-            if (leftType.primitiveType == PrimitiveType.STRING) {
-                return leftType;
-            }
-            //Right-sided strings are only acceptable
-            //If left side is a string as well.
-            if (rightType.primitiveType == PrimitiveType.STRING) {
-                throw new Exception("Invalid type");
-            }
-            if (leftType.primitiveType == PrimitiveType.BOOL) {
-                throw new Exception("Invalid type");
-            }
-            //Bool on the right is only acceptable
-            //If left side is a string
-            if (rightType.primitiveType == PrimitiveType.BOOL) {
-                throw new Exception("Invalid type");
-            }
-            if (leftType.primitiveType == PrimitiveType.FLOAT || rightType.primitiveType == PrimitiveType.FLOAT) {
-                return Type.FLOAT;
-            }
-            if (leftType.primitiveType == PrimitiveType.INT ||
-                    rightType.primitiveType == PrimitiveType.INT) {
-                return Type.INT;
-            }
-            return Type.CHAR;
-        }
-        if (leaf instanceof SubtractionOperation) {
-            SubtractionOperation op = (SubtractionOperation) leaf;
-            Type leftType = inspectLeafType(op.left, context);
-            Type rightType = inspectLeafType(op.right, context);
-            return multLikeOperationHandler(leftType, rightType);
-        }
-        if (leaf instanceof MultiplyOperation) {
-            MultiplyOperation op = (MultiplyOperation) leaf;
-            Type leftType = inspectLeafType(op.left, context);
-            Type rightType = inspectLeafType(op.right, context);
-            return multLikeOperationHandler(leftType, rightType);
-        }
-        if (leaf instanceof DivisionOperation) {
-            DivisionOperation op = (DivisionOperation) leaf;
-            Type leftType = inspectLeafType(op.left, context);
-            Type rightType = inspectLeafType(op.right, context);
-            return multLikeOperationHandler(leftType, rightType);
-        }
-        if (leaf instanceof TypeCast) {
-            return ((TypeCast) leaf).type;
-        }
-        if (leaf instanceof LogicalAndOperation) {
-            LogicalAndOperation op = (LogicalAndOperation) leaf;
-            Leaf left = op.left;
-            Leaf right = op.right;
-            return logicOperationHandler(
-                    inspectLeafType(left, context),
-                    inspectLeafType(right, context));
-        }
-        if (leaf instanceof LogicalOrOperation) {
-            LogicalOrOperation op = (LogicalOrOperation) leaf;
-            Leaf left = op.left;
-            Leaf right = op.right;
-            return logicOperationHandler(
-                    inspectLeafType(left, context),
-                    inspectLeafType(right, context));
-        }
-        if (leaf instanceof NotOperation) {
-            NotOperation op = (NotOperation) leaf;
-            Type type = inspectLeafType(op.exp, context);
-            if (type.typeCategory != TypeCategory.PRIMITIVE) {
-                throw new Exception("Invalid type");
-            }
-            if (type.primitiveType != PrimitiveType.BOOL) {
-                throw new Exception("Invalid type");
-            }
-            return Type.BOOL;
-        }
-        if (leaf instanceof VariableReference) {
-            VariableReference v = (VariableReference) leaf;
-            return getTypeOfVariable(v, context);
-        }
-        if (leaf instanceof EqualOperation) {
-            EqualOperation op = (EqualOperation) leaf;
-            System.out.println("Left:" + op.left);
-            System.out.println("Right:" + op.right);
-            Type t1 = inspectLeafType(op.left, context);
-            Type t2 = inspectLeafType(op.right, context);
-            if (!typeMatches(t2, t1)) {
-                throw new Exception("Invalid type");
-            }
-            return t2;
-        }
-        if (leaf instanceof RetrieverExpression) {
-            RetrieverExpression retrieve = (RetrieverExpression) leaf;
-        }
-        throw new Exception("In function " + cls.clsName + "." + context.getFunctionName() +
-                ": Unrecognized type for leaf " + leaf.toString() + " of class " + leaf.getClass().getName());
-    }
-
-    public Type getTypeOfVariable(VariableReference var, PineDLContext context)
-            throws Exception {
+    public Type getTypeOfVariable(VariableReference var, PineDLContext context) {
         if (context.isVariableDeclared(var.name)) {
             return context.getVariableType(var.name);
         }
@@ -724,19 +790,15 @@ public abstract class BaseGenerator {
             throw new Exception("No such function");
         }
         String[] clsName = type.type;
-
         GlobalLibrary.ClassDefinition definition = classFromName(clsName);
-
         if (definition == null) {
             throw new Exception("Invalid class");
         }
-
         return ClassTypeFunction(definition, fname, arguments);
     }
 
     public GlobalLibrary.ClassDefinition classFromName(String[] clsName) {
         if (clsName.length == 1) {
-
             //Try same package(including the class itself)
             GlobalLibrary.ClassDefinition def =
                     GlobalLibrary.getUserDefinedClassFromName(clsName[0], cls.packageName);
@@ -750,9 +812,14 @@ public abstract class BaseGenerator {
                 if (!t.type[t.type.length - 1].equals(clsName[0])) {
                     //Matched!
                     String[] pkg = new String[t.type.length - 1];
+
+
+
                     for (int i = 0; i < pkg.length; i++) {
                         pkg[i] = t.type[i];
+
                     }
+
                     return GlobalLibrary.getUserDefinedClassFromName(clsName[0], pkg);
                 }
             }
@@ -764,8 +831,11 @@ public abstract class BaseGenerator {
         }
         GlobalLibrary.ClassDefinition def;
         //Try Pineapple classes:
+
+
         if (clsName.length == 2 && clsName[0].equals("Pineapple")) {
-            def = GlobalLibrary.getCoreClassFromName(clsName[1]);
+
+            def = GlobalLibrary.getCoreClassFromName(clsName[  1]);
             if (def != null) {
                 return def;
             }
@@ -790,6 +860,7 @@ public abstract class BaseGenerator {
 
         methodLoop:
         for (GlobalLibrary.MethodDefinition method : methods) {
+
             int index = 0;
             for (GlobalLibrary.VariableDefinition arg : method.arguments) {
                 if (index >= arguments.length) {
@@ -846,6 +917,7 @@ public abstract class BaseGenerator {
             throw new Exception("Invalid type");
         }
         return Type.BOOL;
+
     }
 
     private Type multLikeOperationHandler(Type left, Type right) throws Exception {
@@ -858,6 +930,7 @@ public abstract class BaseGenerator {
         PrimitiveType leftType = left.primitiveType;
         PrimitiveType rightType = right.primitiveType;
         if (leftType == PrimitiveType.STRING || rightType == PrimitiveType.STRING) {
+
             throw new Exception("Invalid type");
         }
         if (leftType == PrimitiveType.BOOL || rightType == PrimitiveType.BOOL) {
@@ -872,11 +945,13 @@ public abstract class BaseGenerator {
         return Type.CHAR;
     }
 
-    protected void writeLine() throws IOException {
+    protected void writeLine()
+            throws IOException {
         out.write('\n');
     }
 
-    protected void writeLine(String line) throws IOException {
+    protected void writeLine(String line)
+            throws IOException {
         out.write(line.getBytes());
         out.write('\n');
     }
@@ -889,6 +964,7 @@ public abstract class BaseGenerator {
     }
 
     protected String accessToString(AccessControlKeyword k) {
+
         if (k == AccessControlKeyword.PRIVATE) {
             return "private";
         }

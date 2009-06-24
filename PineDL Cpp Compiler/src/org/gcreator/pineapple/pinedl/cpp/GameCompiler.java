@@ -712,7 +712,7 @@ public class GameCompiler {
     }
 
     private void printCreateEvent(PrintWriter w, Actor a, Event evt) throws IOException {
-        w.println("\tpublic this(float __x, float __y, float depth) : super(__x, __y, depth) {");
+        w.println("\tpublic this(float x, float y, float depth) : super(x, y, depth) {");
         w.println("\t\tsetDepth(depth);");
         w.println("\t\tautoDraw = " + a.isAutoDrawn() + ";");
         if (a.getImage() != null) {
