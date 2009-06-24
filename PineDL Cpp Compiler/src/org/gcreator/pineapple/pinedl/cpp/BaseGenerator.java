@@ -30,6 +30,7 @@ import org.gcreator.pineapple.pinedl.TypeCategory;
 import java.util.Vector;
 import java.io.OutputStream;
 import java.util.Arrays;
+import javax.swing.SwingUtilities;
 import org.gcreator.pineapple.pinedl.AccessControlKeyword;
 import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
@@ -186,8 +187,14 @@ public abstract class BaseGenerator {
         message += error;
         message += "</font>";
         successful = false;
-
-        cmp.compFrame.writeLine(message);
+        final String msg = message;
+        System.out.println(msg);
+        
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                GameCompiler.compFrame.writeLine(msg);
+            }
+        });
     }
 
     protected String detokenize(String id) {
@@ -353,6 +360,7 @@ public abstract class BaseGenerator {
                 TranslatedLeaf value = translateLeaf(
                         declaration.value, context, false);
                 Type valueType = value.inspectedType;
+                translation.errors.addAll(value.errors);
 
                 try {
                     if (!typeMatches(type, valueType)) {
@@ -996,12 +1004,15 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
         } else if (leaf instanceof LogicalBinaryOperation){
+            System.out.println("Reaching LogicalBinaryOperation");
             LogicalBinaryOperation operation = (LogicalBinaryOperation) leaf;
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);
             translation.errors.addAll(right.errors);
+            System.out.println("left.inspectedType="+left.inspectedType);
             if(!left.inspectedType.equals(Type.BOOL)){
+                System.out.println("left is not BOOL");
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Attempting to use non-boolean on left side of logical operation"));
             }
@@ -1195,8 +1206,15 @@ public abstract class BaseGenerator {
     protected void throwWarning(String warning) {
         String message = "[WARNING] ";
         message += warning;
+        successful = false;
+        final String msg = message;
+        System.out.println(msg);
 
-        cmp.compFrame.writeLine(message);
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run(){
+                GameCompiler.compFrame.writeLine(msg);
+            }
+        });
     }
 
     protected String accessToString(AccessControlKeyword k) {
