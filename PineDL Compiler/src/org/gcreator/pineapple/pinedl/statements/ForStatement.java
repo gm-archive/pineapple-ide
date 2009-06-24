@@ -23,7 +23,6 @@ THE SOFTWARE.
 
 package org.gcreator.pineapple.pinedl.statements;
 
-import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Leaf;
 
 /**

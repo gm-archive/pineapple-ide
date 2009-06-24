@@ -41,6 +41,7 @@ import org.gcreator.pineapple.pinedl.statements.DeclAssign;
 import org.gcreator.pineapple.pinedl.statements.DivisionOperation;
 import org.gcreator.pineapple.pinedl.statements.DoubleConstant;
 import org.gcreator.pineapple.pinedl.statements.EqualOperation;
+import org.gcreator.pineapple.pinedl.statements.EqualsOperation;
 import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.FunctionReference;
 import org.gcreator.pineapple.pinedl.statements.IfStatement;
@@ -48,12 +49,14 @@ import org.gcreator.pineapple.pinedl.statements.IntConstant;
 import org.gcreator.pineapple.pinedl.statements.LessEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
+import org.gcreator.pineapple.pinedl.statements.LogicalBinaryOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalOrOperation;
 import org.gcreator.pineapple.pinedl.statements.ModOperation;
 import org.gcreator.pineapple.pinedl.statements.MoreEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.MoreOperation;
 import org.gcreator.pineapple.pinedl.statements.MultiplyOperation;
 import org.gcreator.pineapple.pinedl.statements.NegationOperation;
+import org.gcreator.pineapple.pinedl.statements.NequalOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
 import org.gcreator.pineapple.pinedl.statements.NotOperation;
@@ -65,6 +68,7 @@ import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
 import org.gcreator.pineapple.pinedl.statements.SumOperation;
 import org.gcreator.pineapple.pinedl.statements.TypeCast;
 import org.gcreator.pineapple.pinedl.statements.VariableReference;
+import org.gcreator.pineapple.pinedl.statements.WhileStatement;
 
 /**
  * This base class provides methods for generating C++ code
@@ -615,6 +619,24 @@ public abstract class BaseGenerator {
                 translation.errors.addAll(elseCase.errors);
                 translation.stringEquivalent += elseCase.stringEquivalent;
             }
+        } else if (leaf instanceof WhileStatement) {
+            WhileStatement statement = (WhileStatement) leaf;
+            TranslatedLeaf condition = translateLeaf(statement.condition, context, false);
+            translation.errors.addAll(condition.errors);
+            if (condition.inspectedType.typeCategory != TypeCategory.PRIMITIVE ||//
+                    condition.inspectedType.primitiveType != PrimitiveType.BOOL) {
+                translation.errors.add(new TranslationError(true,
+                        leaf,
+                        context,
+                        "If statement conditions MUST be booleans"));
+            }
+            translation.inspectedType = null;
+            translation.stringEquivalent = "if(";
+            translation.stringEquivalent += condition.stringEquivalent;
+            translation.stringEquivalent += ")\n";
+            TranslatedLeaf then = translateLeaf(statement.then, context, true);
+            translation.errors.addAll(then.errors);
+            translation.stringEquivalent += then.stringEquivalent;
         } else if (leaf instanceof VariableReference) {
             //Should ONLY track the left side of a retriever sequence
             //So, in a.b.c.d, although a, b, c and d are all instances
@@ -953,11 +975,52 @@ public abstract class BaseGenerator {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Only integers can be used as array keys."));
             }
-
-
+        } else if (leaf instanceof EqualsOperation){
+            EqualsOperation operation = (EqualsOperation) leaf;
+            TranslatedLeaf left = translateLeaf(operation.left, context, false);
+            TranslatedLeaf right = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(left.errors);
+            translation.errors.addAll(right.errors);
+            translation.stringEquivalent = "(" + left.stringEquivalent;
+            translation.stringEquivalent += ") == (" + right.stringEquivalent;
+            translation.stringEquivalent += ')';
+            translation.inspectedType = Type.BOOL;
+        } else if (leaf instanceof NequalOperation){
+            EqualsOperation operation = (EqualsOperation) leaf;
+            TranslatedLeaf left = translateLeaf(operation.left, context, false);
+            TranslatedLeaf right = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(left.errors);
+            translation.errors.addAll(right.errors);
+            translation.stringEquivalent = "(" + left.stringEquivalent;
+            translation.stringEquivalent += ") != (" + right.stringEquivalent;
+            translation.stringEquivalent += ')';
+            translation.inspectedType = Type.BOOL;
+        } else if (leaf instanceof LogicalBinaryOperation){
+            LogicalBinaryOperation operation = (LogicalBinaryOperation) leaf;
+            TranslatedLeaf left = translateLeaf(operation.left, context, false);
+            TranslatedLeaf right = translateLeaf(operation.right, context, false);
+            translation.errors.addAll(left.errors);
+            translation.errors.addAll(right.errors);
+            if(!left.inspectedType.equals(Type.BOOL)){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Attempting to use non-boolean on left side of logical operation"));
+            }
+            if(!right.inspectedType.equals(Type.BOOL)){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Attempting to use non-boolean on right side of logical operation"));
+            }
+            translation.stringEquivalent = "(" + left.stringEquivalent;
+            translation.stringEquivalent += ')';
+            if(leaf instanceof LogicalAndOperation){
+                translation.stringEquivalent += "&&";
+            } else if(leaf instanceof LogicalOrOperation){
+                translation.stringEquivalent += "||";
+            }
+            translation.stringEquivalent += "(" + right.stringEquivalent;
+            translation.stringEquivalent += ')';
+            translation.inspectedType = Type.BOOL;
         }
-        //TODO:
-        //EqualsOperation, ArrayReference, logical operators and lots of others
+        //TODO: &, |, ^, <<, >>, for, etc.
 
         if (!(leaf instanceof Block) && isStatement) {
             translation.stringEquivalent += ";\n";
