@@ -13,7 +13,7 @@ int Window::height;
 bool Window::fullscreen = false;
 bool Window::resizable = false;
 std::string Window::caption;
-std::vector<Key> Window::keys_pressed;
+std::vector<int> Window::keys_pressed;
 
 //
 //save window size and reset the window
@@ -97,16 +97,16 @@ void Window::run()
 
                 case SDL_KEYDOWN:
                     if (s != NULL)
-                        s->onKeyDown((Key)event.key.keysym.sym);
-                    keys_pressed.push_back((Key)event.key.keysym.sym);
+                        s->onKeyDown(event.key.keysym.sym);
+                    keys_pressed.push_back(event.key.keysym.sym);
                     break;
 
                 case SDL_KEYUP:
                     if (s != NULL)
-                        s->onKeyUp((Key)event.key.keysym.sym);
+                        s->onKeyUp(event.key.keysym.sym);
                     for (unsigned int i = 0; i < keys_pressed.size(); i++)
                     {
-                        if (keys_pressed[i] == (Key)event.key.keysym.sym) {
+                        if (keys_pressed[i] == event.key.keysym.sym) {
                             keys_pressed.erase(keys_pressed.begin()+i);
                             // Do not break loop; search for duplicate key entries.
                         }

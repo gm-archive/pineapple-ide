@@ -37,9 +37,9 @@ public:
     virtual void addView(View* view);
     virtual void addBackground(Background* bg);
 
-    virtual void onKeyDown(Key key);
-    virtual void onKeyUp(Key key);
-    virtual void onKeyPressed(Key key);
+    virtual void onKeyDown(int key);
+    virtual void onKeyUp(int key);
+    virtual void onKeyPressed(int key);
 
     int getWidth() { return width; }
     int getHeight() { return height; }

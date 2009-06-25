@@ -128,9 +128,9 @@ void Scene::addBackground(Background* bg)
     backgrounds.push_back(bg);
 }
 
-void Scene::onKeyDown(Key key)
+void Scene::onKeyDown(int key)
 {
-    if (key == KeyEscape)
+    if (key == Key::Escape)
         Application::exit();
 
     list<Actor*>::iterator i = actors.begin();
@@ -141,7 +141,7 @@ void Scene::onKeyDown(Key key)
     }
 }
 
-void Scene::onKeyUp(Key key)
+void Scene::onKeyUp(int key)
 {
     list<Actor*>::iterator i = actors.begin();
     while (i != actors.end())
@@ -151,7 +151,7 @@ void Scene::onKeyUp(Key key)
     }
 }
 
-void Scene::onKeyPressed(Key key)
+void Scene::onKeyPressed(int key)
 {
     list<Actor*>::iterator i = actors.begin();
     while (i != actors.end())
