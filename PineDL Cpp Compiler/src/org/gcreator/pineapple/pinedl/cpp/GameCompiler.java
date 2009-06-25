@@ -679,7 +679,7 @@ public class GameCompiler {
             }
 
             if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
-                w.print("\tpublic void onKeyDown(Key key) {");
+                w.print("\tpublic void onKeyDown(int key) {");
 
                 w.print(outputEvent(a, evt));
 
@@ -687,7 +687,7 @@ public class GameCompiler {
             }
 
             if (evt.getType().equals(Event.TYPE_KEYRELEASE)) {
-                w.println("\tpublic void onKeyUp(Key key) {");
+                w.println("\tpublic void onKeyUp(int key) {");
 
                 w.print(outputEvent(a, evt));
 
@@ -695,7 +695,7 @@ public class GameCompiler {
             }
 
             if (evt.getType().equals(Event.TYPE_KEYPRESSED)) {
-                w.println("\tpublic void onKeyPressed(Key key) {");
+                w.println("\tpublic void onKeyPressed(int key) {");
 
                 w.print(outputEvent(a, evt));
 

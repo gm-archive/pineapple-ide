@@ -10,6 +10,7 @@ namespace Pineapple {
 
 class Actor
 {
+private:
     Vector* motion;
     Vector* gravity;
     double friction;
@@ -63,9 +64,9 @@ public:
     void move();
     virtual void draw(Pineapple::Drawing* d);
 
-    virtual void onKeyDown(Key key) {}
-    virtual void onKeyUp(Key key) {}
-    virtual void onKeyPressed(Key key) {}
+    virtual void onKeyDown(int key) {}
+    virtual void onKeyUp(int key) {}
+    virtual void onKeyPressed(int key) {}
 
     bool isAutoDrawn() { return autoDraw; }
     void setAutoDrawn(bool autoDraw) { this->autoDraw = autoDraw; }

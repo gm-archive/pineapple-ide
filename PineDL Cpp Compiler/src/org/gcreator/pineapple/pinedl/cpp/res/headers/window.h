@@ -14,7 +14,7 @@ class Window
     static std::string caption;
     static bool fullscreen;
     static bool resizable;
-    static std::vector<Key> keys_pressed;
+    static std::vector<int> keys_pressed;
 
     static inline void update();
 public:

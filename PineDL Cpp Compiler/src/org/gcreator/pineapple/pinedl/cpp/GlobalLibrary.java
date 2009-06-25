@@ -277,13 +277,13 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("d", new Type("Pineapple.Drawing")));
         c.methods.add(m);
         m = new MethodDefinition("onKeyDown", Type.VOID);
-        m.arguments.add(new VariableDefinition("Key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
         m = new MethodDefinition("onKeyDown", Type.VOID);
-        m.arguments.add(new VariableDefinition("Key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
         m = new MethodDefinition("onKeyDown", Type.VOID);
-        m.arguments.add(new VariableDefinition("Key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("isAutoDrawn", Type.BOOL));
         m = new MethodDefinition("setAutoDrawn", Type.VOID);
@@ -316,13 +316,13 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("bg", new Type("Background")));
         c.methods.add(m);
         m = new MethodDefinition("onKeyUp", Type.VOID);
-        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("key", Type.INT));
         c.methods.add(m);
         m = new MethodDefinition("onKeyDown", Type.VOID);
-        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("key", Type.INT));
         c.methods.add(m);
         m = new MethodDefinition("onKeyPressed", Type.VOID);
-        m.arguments.add(new VariableDefinition("key", new Type("Key")));
+        m.arguments.add(new VariableDefinition("key", Type.INT));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("getWidth", Type.INT));
         c.methods.add(new MethodDefinition("getHeight", Type.INT));
@@ -343,6 +343,144 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getGreen", Type.FLOAT));
         c.methods.add(new MethodDefinition("getBlue", Type.FLOAT));
         c.methods.add(new MethodDefinition("getAlpha", Type.FLOAT));
+        coreClasses.add(c);
+        
+        c = new ClassDefinition("Key");
+        c.fields.add(new FieldDefinition("Unknown", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("First", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Backspace", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Tab", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Clear", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Return", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Pause", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Escape", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Space", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Exclaim", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("QuotedBL", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Hash", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Dollar", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Ampersand", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Quote", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LeftParen", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RightParen", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Asterisk", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Plus", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Comma", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Minus", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Period", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Slash", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number0", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number1", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number2", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number3", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number4", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number5", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number6", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number7", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number8", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Number9", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Colon", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Semicolon", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Less", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Equals", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Greater", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Question", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("At", Type.INT, true, true));
+        
+        c.fields.add(new FieldDefinition("LeftBracket", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Backslash", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RightBracket", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Caret", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Underscore", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Backquote", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("A", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("B", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("C", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("D", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("E", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("F", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("G", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("H", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("I", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("J", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("K", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("L", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("M", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("N", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("O", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("P", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Q", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("R", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("S", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("T", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("U", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("V", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("W", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("X", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Y", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Z", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Delete", Type.INT, true, true));
+        
+        for(int i = 0; i <= 95; i++){
+            c.fields.add(new FieldDefinition("World"+i, Type.INT, true, true));
+        }
+        
+        c.fields.add(new FieldDefinition("KP0", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP1", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP2", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP3", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP4", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP5", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP6", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP7", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP8", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KP9", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPPeriod", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPDivide", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPMultiply", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPMinus", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPPlus", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPEnter", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("KPEquals", Type.INT, true, true));
+        
+        c.fields.add(new FieldDefinition("Up", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Down", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Right", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Left", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Insert", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Home", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("End", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("PageUp", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("PageDown", Type.INT, true, true));
+        
+        for(int i = 1; i <= 15; i++){
+            c.fields.add(new FieldDefinition("F"+i, Type.INT, true, true));
+        }
+        
+        c.fields.add(new FieldDefinition("NumLock", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("CapsLock", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("ScrollLock", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RShift", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LShift", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RCtrl", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LCtrl", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RAlt", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LAlt", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RMeta", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LMeta", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("LSuper", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("RSuper", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Mode", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Compose", Type.INT, true, true));
+        
+        c.fields.add(new FieldDefinition("Help", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Print", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("SysReq", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Break", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Menu", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Power", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Euro", Type.INT, true, true));
+        c.fields.add(new FieldDefinition("Undo", Type.INT, true, true));
         coreClasses.add(c);
     }
 

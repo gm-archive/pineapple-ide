@@ -15,7 +15,7 @@ class Keyboard
     static Uint8* keys;
 public:
     static void update() { keys = SDL_GetKeyState(NULL); }
-    static bool isKeyDown(Key key) { return keys[key]; }
+    static bool isKeyDown(int key) { return keys[key]; }
 };
 
 }

@@ -1085,7 +1085,7 @@ public abstract class BaseGenerator {
                 translation.errors.addAll(value.errors);
                 if(type==null||type.equals(Type.VOID)){
                     translation.errors.add(new TranslationError(true, leaf, context, //
-                        "Void methods and constructors can only have void return statements."));
+                        "Void methodset and constructors can only have void return statements."));
                 }
                 else{
                     try{
