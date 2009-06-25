@@ -36,6 +36,9 @@ import org.gcreator.pineapple.pinedl.Leaf;
 import org.gcreator.pineapple.pinedl.context.PineDLContext;
 import org.gcreator.pineapple.pinedl.statements.ArrayReference;
 import org.gcreator.pineapple.pinedl.statements.BinaryOperation;
+import org.gcreator.pineapple.pinedl.statements.BitwiseAndOperation;
+import org.gcreator.pineapple.pinedl.statements.BitwiseBinaryOperation;
+import org.gcreator.pineapple.pinedl.statements.BitwiseOrOperation;
 import org.gcreator.pineapple.pinedl.statements.Block;
 import org.gcreator.pineapple.pinedl.statements.BooleanConstant;
 import org.gcreator.pineapple.pinedl.statements.DeclAssign;
@@ -64,6 +67,7 @@ import org.gcreator.pineapple.pinedl.statements.NotOperation;
 import org.gcreator.pineapple.pinedl.statements.NullConstant;
 import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
+import org.gcreator.pineapple.pinedl.statements.ReturnStatement;
 import org.gcreator.pineapple.pinedl.statements.StringConstant;
 import org.gcreator.pineapple.pinedl.statements.SubtractionOperation;
 import org.gcreator.pineapple.pinedl.statements.SumOperation;
@@ -377,6 +381,7 @@ public abstract class BaseGenerator {
                             context,
                             "Class not found exception"));
                 }
+                context.declareVariable(declaration.name, declaration.type);
                 translation.stringEquivalent += " = " + value.stringEquivalent;
             }
         } else if (leaf instanceof EqualOperation) {
@@ -1030,8 +1035,72 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += "(" + right.stringEquivalent;
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
+        } else if (leaf instanceof BitwiseBinaryOperation){
+            BitwiseBinaryOperation op = (BitwiseBinaryOperation) leaf;
+            TranslatedLeaf left = translateLeaf(op.left, context, false);
+            TranslatedLeaf right = translateLeaf(op.right, context, false);
+            translation.errors.addAll(left.errors);
+            translation.errors.addAll(right.errors);
+            Type leftType = left.inspectedType;
+            Type rightType = right.inspectedType;
+            if(leftType.typeCategory!=TypeCategory.PRIMITIVE || //
+                    rightType.typeCategory!=TypeCategory.PRIMITIVE){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Only primitive types can be used in bitwise operations"));
+            } else if(leftType.primitiveType!=rightType.primitiveType){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Left side and right side of bitwise operation do not have the same types."));
+            } else if(leftType.primitiveType==PrimitiveType.BOOL){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Attempting to use boolean in bitwise operation.\n" //
+                        + "You should use logical operations instead."));
+            } else if(leftType.primitiveType!=PrimitiveType.INT && //
+                    leftType.primitiveType!=PrimitiveType.CHAR){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Only integers and characters can be used in bitwise operations."));
+            }
+            translation.inspectedType = leftType;
+            translation.stringEquivalent = "(" + left.stringEquivalent + ") ";
+            if(leaf instanceof BitwiseAndOperation){
+                translation.stringEquivalent += '&';
+            } else if(leaf instanceof BitwiseOrOperation){
+                translation.stringEquivalent += '|';
+            } else{
+                translation.stringEquivalent += '^';
+            }
+            translation.stringEquivalent += ' ';
+            translation.stringEquivalent += right.stringEquivalent + ')';
+        } else if(leaf instanceof ReturnStatement){
+            ReturnStatement ret = (ReturnStatement) leaf;
+            translation.stringEquivalent = "return ";
+            Type type = context.getFunctionReturnType();
+            if(ret.value==null){
+                if(type!=null&&!type.equals(Type.VOID)){
+                    translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Void return statements can only be used in constructors and void methods."));
+                }
+            }
+            else{
+                TranslatedLeaf value = translateLeaf(ret.value, context, false);
+                translation.errors.addAll(value.errors);
+                if(type==null||type.equals(Type.VOID)){
+                    translation.errors.add(new TranslationError(true, leaf, context, //
+                        "Void methods and constructors can only have void return statements."));
+                }
+                else{
+                    try{
+                        if(!typeMatches(type, value.inspectedType)){
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Method return type and type of return statement must match."));
+                        }
+                    } catch(ClassNotFoundException e){
+                        e.printStackTrace();
+                    }
+                }
+                translation.stringEquivalent += value.stringEquivalent;
+            }
         }
-        //TODO: &, |, ^, <<, >>, for, etc.
+        //TODO:  <<, >>, for, try/catch, throw, etc.
 
         if (!(leaf instanceof Block) && isStatement) {
             translation.stringEquivalent += ";\n";

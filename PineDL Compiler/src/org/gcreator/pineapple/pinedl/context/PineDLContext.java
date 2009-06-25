@@ -23,6 +23,8 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl.context;
 
 import java.util.Hashtable;
+import org.gcreator.pineapple.pinedl.Function;
+import org.gcreator.pineapple.pinedl.FunctionConstructorBase;
 import org.gcreator.pineapple.pinedl.PineClass;
 import org.gcreator.pineapple.pinedl.Type;
 
@@ -40,18 +42,18 @@ public class PineDLContext {
     public PineDLContext root = null;
     public Flag flag = null;
     public PineClass contentClass = null;
-    private String functionName = null;
+    private FunctionConstructorBase function = null;
     private Hashtable<String, Type> vars = new Hashtable<String, Type>();
 
-    public PineDLContext(String function) {
+    public PineDLContext(FunctionConstructorBase function) {
         this.root = null;
-        functionName = function;
+        this.function = function;
     }
 
     public PineDLContext(PineDLContext root) {
         this.root = root;
         if (root != null) {
-            functionName = root.functionName;
+            this.function = root.function;
         }
         contentClass = root.contentClass;
     }
@@ -84,12 +86,31 @@ public class PineDLContext {
     }
 
     public String getFunctionName() {
-        return functionName;
+        if(function==null){
+            return "&lt;none&gt;";
+        }
+        return function.getName();
+    }
+    
+    /**
+     * Returns the return type of the function
+     * Or null if in constructor
+     * @return the return type of the function
+     */
+    public Type getFunctionReturnType(){
+        if(function==null){
+            return null;
+        }
+        if(function instanceof Function){
+            return ((Function) function).returnType;
+        }
+        return null;
     }
 
     @Override
     public String toString() {
-        String s = "[ root="+root+", function_name="+functionName+", vars={";
+        String s = "[ root="+root+", function_name=";
+        s += (function==null?"null":function.getName())+", vars={";
         for (String k : vars.keySet()) {
             s += k+"="+vars.get(k)+",";
         }

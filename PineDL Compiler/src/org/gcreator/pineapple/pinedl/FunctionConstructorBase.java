@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,60 +20,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
+
 package org.gcreator.pineapple.pinedl;
 
 import java.util.Vector;
-import org.gcreator.pineapple.pinedl.statements.Expression;
+import org.gcreator.pineapple.pinedl.statements.Block;
 
 /**
- * Represents a constructor
+ *
  * @author Luís Reis
  */
-public class Constructor extends FunctionConstructorBase{
-
-    public Vector<Expression> superArguments = null;
-
-    @Override
-    public String toString() {
-        String s = access.toString();
-
-        s += " this(";
-
-        boolean first = true;
-        for (Argument a : arguments) {
-            if (!first) {
-                s += ", ";
-            }
-            s += a.toString();
-            first = false;
-        }
-
-        s += ")";
-
-        if (superArguments != null) {
-            s += ": super(";
-            first = true;
-            for (Expression e : superArguments) {
-                if (!first) {
-                    s += ", ";
-                }
-                s += e.toString();
-                first = false;
-            }
-            s += ")";
-        }
-
-        s += content.toString();
-
-        return s;
-    }
-
-    public Constructor optimize() {
-        content.optimize();
-        return this;
-    }
+public abstract class FunctionConstructorBase {
+    public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
+    public Block content = new Block();
+    public Vector<Argument> arguments = new Vector<Argument>();
     
-    public String getName(){
-        return "&lt;constructor&gt;";
-    }
+    public abstract String getName();
 }

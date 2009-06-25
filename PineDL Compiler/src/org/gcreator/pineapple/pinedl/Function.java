@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,18 @@ THE SOFTWARE.
 package org.gcreator.pineapple.pinedl;
 
 import java.util.Collections;
-import java.util.Vector;
-import org.gcreator.pineapple.pinedl.statements.Block;
 
 /**
  * Represents a function.
  *
  * @author Luís Reis
  */
-public class Function {
+public class Function extends FunctionConstructorBase{
 
-    public AccessControlKeyword access = AccessControlKeyword.PUBLIC;
     public Type returnType = null;
     public boolean isStatic = false;
     public boolean isFinal;
     public String name = "";
-    public Vector<Argument> arguments = new Vector<Argument>();
-    public Block content = new Block();
 
     public Function() {
     }
@@ -78,5 +73,9 @@ public class Function {
     public Function optimize() {
         content.optimize();
         return this;
+    }
+    
+    public String getName(){
+        return name;
     }
 }

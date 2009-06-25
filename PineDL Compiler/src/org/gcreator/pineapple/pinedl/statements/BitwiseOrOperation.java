@@ -28,7 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a | operation
  * @author Luís Reis
  */
-public class BitwiseOrOperation extends BinaryOperation {
+public class BitwiseOrOperation extends BitwiseBinaryOperation {
 
     public BitwiseOrOperation() {
     }

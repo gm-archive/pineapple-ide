@@ -118,7 +118,8 @@ public class Type {
             return false;
         }
         if (typeCategory == TypeCategory.PRIMITIVE) {
-            return t.primitiveType == this.primitiveType;
+            boolean same = t.primitiveType == this.primitiveType;
+            return same;
         } else if (typeCategory == TypeCategory.ARRAY) {
             return this.arrayType.equals(t.arrayType);
         } else if  (typeCategory == TypeCategory.CLASS) {
@@ -130,5 +131,15 @@ public class Type {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + (this.typeCategory != null ? this.typeCategory.hashCode() : 0);
+        hash = 59 * hash + (this.type != null ? this.type.hashCode() : 0);
+        hash = 59 * hash + (this.arrayType != null ? this.arrayType.hashCode() : 0);
+        hash = 59 * hash + (this.primitiveType != null ? this.primitiveType.hashCode() : 0);
+        return hash;
     }
 }

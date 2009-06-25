@@ -145,7 +145,7 @@ public class CppGenerator extends BaseGenerator {
             String s = detokenize(cls.clsName) + "::" + detokenize(cls.clsName) + '(';
 
             boolean isFirst = true;
-            PineDLContext vars = new PineDLContext("&lt;constructor&gt;");
+            PineDLContext vars = new PineDLContext(c);
             vars.contentClass = cls;
             for (Argument a : c.arguments) {
                 if (!isFirst) {
@@ -218,7 +218,7 @@ public class CppGenerator extends BaseGenerator {
                     detokenize(cls.clsName) + "::" + detokenize(method.name) + '(';
 
             boolean isFirst = true;
-            PineDLContext vars = new PineDLContext(method.name);
+            PineDLContext vars = new PineDLContext(method);
             vars.contentClass = cls;
             for (Argument a : method.arguments) {
                 if (!isFirst) {
@@ -262,7 +262,7 @@ public class CppGenerator extends BaseGenerator {
 
             String s = retrieveType(v.type, true) + " " + detokenize(cls.clsName) + "::" + detokenize(v.name);
             if (v.defaultValue != null) {
-                PineDLContext context2 = new PineDLContext("<none>");
+                PineDLContext context2 = new PineDLContext((Function) null);
                 s += " = ";
                 TranslatedLeaf translation = translateLeaf(v.defaultValue, context2, false);
                 for (TranslationError error : translation.errors) {

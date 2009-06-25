@@ -28,7 +28,7 @@ import org.gcreator.pineapple.pinedl.Leaf;
  * Represents a ^ operation
  * @author Luís Reis
  */
-public class BitwiseXorOperation extends BinaryOperation {
+public class BitwiseXorOperation extends BitwiseBinaryOperation {
 
     public BitwiseXorOperation() {
     }
