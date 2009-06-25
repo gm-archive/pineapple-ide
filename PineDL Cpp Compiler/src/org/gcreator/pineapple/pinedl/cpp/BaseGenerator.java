@@ -88,9 +88,8 @@ public abstract class BaseGenerator {
     protected GameCompiler cmp = null;
     public PineClass cls = null;
     protected String fname = "";
-    //protected Vector<String> context = null;
-    protected boolean successful = true;
     protected OutputStream out = null;
+    public boolean successful = true;
 
     /**
      * Creates a new {@link BaseGenerator}.
@@ -103,30 +102,10 @@ public abstract class BaseGenerator {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return "::Pineapple::Array<" + retrieveType(t.arrayType, reference) + ">*";
+            return "::Pineapple::Array<" + retrieveType(t.arrayType, reference) + ">" + (reference?"*":"");
         }
         if (t.type.length != 1) {
             return typeToString(t, reference);
-        }
-
-        if (t.type.length == 1) {
-            if (t.type[0].equals("Texture")) {
-                return "::Pineapple::Texture" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Actor")) {
-                return "::Pineapple::Actor" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Scene")) {
-                return "::Pineapple::Scene" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Math")) {
-                return "::Pineapple::Math" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Key")) {
-                return "::Pineapple::Key";// + (reference ? "*" : "");
-            } else if (t.type[0].equals("Keyboard")) {
-                return "::Pineapple::Keyboard" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Color")) {
-                return "::Pineapple::Color" + (reference ? "*" : "");
-            } else if (t.type[0].equals("Drawing")) {
-                return "::Pineapple::Drawing" + (reference ? "*" : "");
-            }
         }
 
         GlobalLibrary.ClassDefinition definition = classFromName(t.type);
@@ -139,7 +118,7 @@ public abstract class BaseGenerator {
             Type type = new Type();
             type.typeCategory = TypeCategory.CLASS;
             type.type = fullName;
-            return typeToString(type, reference);
+            return definition.exportCppType() + (reference?"*":"");
         }
         /*for (String s : context) {
         if (s.equals(t.type[t.type.length - 1])) {
@@ -1099,6 +1078,20 @@ public abstract class BaseGenerator {
                 }
                 translation.stringEquivalent += value.stringEquivalent;
             }
+        } else if (leaf instanceof TypeCast){
+            TypeCast cast = (TypeCast) leaf;
+            TranslatedLeaf exp = translateLeaf(cast.exp, context, false);
+            translation.errors.addAll(exp.errors);
+            translation.stringEquivalent = "((";
+            if(exp.inspectedType.typeCategory!=cast.type.typeCategory){
+                translation.errors.add(new TranslationError(true, leaf, context, //
+                    "Invalid cast"));
+            }
+            translation.stringEquivalent += retrieveType(cast.type, true);
+            translation.stringEquivalent += ") ";
+            translation.stringEquivalent += exp.stringEquivalent;
+            translation.stringEquivalent += ')';
+            translation.inspectedType = exp.inspectedType;
         }
         //TODO:  <<, >>, for, try/catch, throw, etc.
 

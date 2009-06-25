@@ -43,7 +43,7 @@ import org.gcreator.pineapple.pinedl.statements.VariableReference;
  * @author Luís Reis
  */
 public class CppGenerator extends BaseGenerator {
-
+    
     public CppGenerator(OutputStream out, GameCompiler cmp, String fname,
             PineClass cls) {
         try {
