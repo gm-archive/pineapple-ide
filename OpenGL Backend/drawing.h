@@ -43,13 +43,13 @@ namespace Pineapple
 
         /* Simple Shapes */
 
-        void drawCircle(GLint x,GLint y, GLint r, bool filled = true);
-        void drawLine(GLint x1,GLint y1, GLint x2, GLint y2);
-        void drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
-        void drawRoundRect(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
-        void drawEllipse(GLint x1, GLint y1, GLint x2, GLint y2, bool filled = true);
-        void drawTriangle(GLint x1, GLint y1, GLint x2, GLint y2, GLint x3, GLint y3, bool filled = true);
-        void drawPoint(GLint x, GLint y);
+        void drawCircle(GLdouble x,GLdouble y, GLdouble r, bool filled = true);
+        void drawLine(GLdouble x1,GLdouble y1, GLdouble x2, GLdouble y2);
+        void drawRectangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
+        void drawRoundRect(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
+        void drawEllipse(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
+        void drawTriangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, GLdouble x3, GLdouble y3, bool filled = true);
+        void drawPoint(GLdouble x, GLdouble y);
     };
 }
 

@@ -58,7 +58,7 @@ void Drawing::drawColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
 
 
 /* Simple Shapes */
-void Drawing::drawCircle(GLint x,GLint y, GLint r, bool filled) {
+void Drawing::drawCircle(GLdouble x,GLdouble y, GLdouble r, bool filled) {
     drawBegin((filled) ? DRAW_POLYGON : DRAW_LINE_LOOP);
     for (float a = 0; a < M_PI * 2; a += M_PI*2/(abs(r)*4))//  Circumference of circle = 2PI * r
     {
@@ -67,14 +67,14 @@ void Drawing::drawCircle(GLint x,GLint y, GLint r, bool filled) {
     drawEnd();
 }
 
-void Drawing::drawLine(GLint x1,GLint y1, GLint x2, GLint y2) {
+void Drawing::drawLine(GLdouble x1,GLdouble y1, GLdouble x2, GLdouble y2) {
     drawBegin(DRAW_LINES);
     drawVertex(x1, y1);
     drawVertex(x2, y2);
     drawEnd();
 }
 
-void Drawing::drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)
+void Drawing::drawRectangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled)
 {
     drawBegin((filled) ? DRAW_QUADS : DRAW_LINE_LOOP);
     drawVertex(x1, y1);
@@ -84,7 +84,7 @@ void Drawing::drawRectangle(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)
     drawEnd();
 }
 
-void Drawing::drawPoint(GLint x, GLint y)
+void Drawing::drawPoint(GLdouble x, GLdouble y)
 {
     drawBegin(DRAW_POINTS);
     drawVertex(x, y);
@@ -93,7 +93,7 @@ void Drawing::drawPoint(GLint x, GLint y)
 
 
 // Borrowed from ENIGMA
-void Drawing::drawEllipse(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)
+void Drawing::drawEllipse(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled)
 {
   double x = (x1+x2)/2;
   double y = (y1+y2)/2;
@@ -117,7 +117,7 @@ void Drawing::drawEllipse(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)
 
 
 // Borrowed from ENIGMA
-void Drawing::drawRoundRect(GLint x1, GLint y1, GLint x2, GLint y2, bool filled)
+void Drawing::drawRoundRect(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled)
 {
     double hr = (x2-x1)/2.0; if (hr<4) hr=4;
     double vr = (y2-y1)/2.0; if (vr<4) vr=4;
