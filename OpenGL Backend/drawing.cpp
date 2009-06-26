@@ -61,7 +61,7 @@ void Drawing::drawColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
 /* Simple Shapes */
 void Drawing::drawCircle(GLdouble x,GLdouble y, GLdouble r, bool filled) {
     drawBegin((filled) ? DRAW_POLYGON : DRAW_LINE_LOOP);
-    for (float a = 0; a < M_PI * 2; a += M_PI*2/(abs(r)*4))//  Circumference of circle = 2PI * r
+    for (float a = 0; a < M_PI * 2; a += M_PI*2/(Math::abs(r)*4))//  Circumference of circle = 2PI * r
     {
         drawVertex(x + sin(a) * r, y + cos(a) * r);
     }
