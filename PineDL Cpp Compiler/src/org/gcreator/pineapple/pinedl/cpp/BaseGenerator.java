@@ -379,15 +379,14 @@ public abstract class BaseGenerator {
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);
             translation.errors.addAll(right.errors);
-            System.out.println("Method="+cls.clsName+"."+context.getFunctionName());
+            System.out.println("Method=" + cls.clsName + "." + context.getFunctionName());
             Type leftType = left.inspectedType;
             System.out.println("leftType=" + leftType);
             Type rightType = right.inspectedType;
             System.out.println("rightType=" + rightType);
-            if(leftType==null){
+            if (leftType == null) {
                 translation.stringEquivalent = "/*INVALID*/";
-            }
-            else if (leftType.equals(Type.FLOAT) && rightType.equals(Type.INT)) {
+            } else if (leftType.equals(Type.FLOAT) && rightType.equals(Type.INT)) {
                 translation.stringEquivalent = left.stringEquivalent + " = (float) " + right.stringEquivalent;
             } else {
                 try {
@@ -694,10 +693,14 @@ public abstract class BaseGenerator {
             }
             boolean matched = false;
             Vector<GlobalLibrary.MethodDefinition> methods = getCurrentClass().getMethods(functionName);
-            System.out.println("methods.size="+methods.size());
+            System.out.println("methods.size=" + methods.size());
             functionLoop:
             for (GlobalLibrary.MethodDefinition method : methods) {
                 int size = method.arguments.size();
+                if (size != argumentVector.size()) {
+                    //does not match
+                    continue functionLoop;
+                }
                 System.out.println("method has " + size + " arguments.");
                 for (int i = 0; i < size; i++) {
                     try {
@@ -709,7 +712,7 @@ public abstract class BaseGenerator {
                     } catch (PineClassNotFoundException e) {
                         e.printStackTrace();
                     //We're not interested in this particular
-                    //type of exceptions
+                    //type of exception
                     }
                 }
                 matched = true;
@@ -717,9 +720,36 @@ public abstract class BaseGenerator {
             }
 
             if (!matched) {
+                String funame = functionName + " (";
+                int i = 0;
+                for (Type t : argumentVector) {
+                    funame += t.toString();
+                    if (i++ + 1 < argumentVector.size()) {
+                        funame += ", ";
+                    }
+                }
+                funame += ")";
+
+
+
+                String suggestions = "";
+                if (methods.size() > 0) {
+                    suggestions = "<br/>Suggestions:";
+                    for (GlobalLibrary.MethodDefinition m : methods) {
+                        String f = m.name + "(";
+                        int q = 0;
+                        for (GlobalLibrary.VariableDefinition d : m.arguments) {
+                            f += d.type.toString();
+                            if (q++ + 1 < m.arguments.size()) {
+                                f += ", ";
+                            }
+                        }
+                        f += ")";
+                        suggestions += "<br/>" + f;
+                    }
+                }
                 translation.errors.add(new TranslationError(true, leaf, context,
-                        "Could not find a method named " + functionName +
-                        " with the intended arguments."));
+                        "Could not find a method " + funame + suggestions));
             }
 
             translation.stringEquivalent += ')';
@@ -813,9 +843,15 @@ public abstract class BaseGenerator {
                             translation.stringEquivalent += tLeaf.stringEquivalent;
                             isFirst = false;
                         }
+
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
-                            for (int i = 0; i < method.arguments.size(); i++) {
+                            int size = method.arguments.size();
+                            if (size != argumentVector.size()) {
+                                //does not match
+                                continue functionLoop;
+                            }
+                            for (int i = 0; i < size; i++) {
                                 try {
                                     Type type1 = method.arguments.get(i).type; //Intended
                                     Type type2 = argumentVector.get(i).inspectedType; //Used
