@@ -63,8 +63,6 @@ import org.gcreator.pineapple.pinedl.statements.NegationOperation;
 import org.gcreator.pineapple.pinedl.statements.NequalOperation;
 import org.gcreator.pineapple.pinedl.statements.NewArray;
 import org.gcreator.pineapple.pinedl.statements.NewCall;
-import org.gcreator.pineapple.pinedl.statements.NotOperation;
-import org.gcreator.pineapple.pinedl.statements.NullConstant;
 import org.gcreator.pineapple.pinedl.statements.PrePostFixOperator;
 import org.gcreator.pineapple.pinedl.statements.RetrieverExpression;
 import org.gcreator.pineapple.pinedl.statements.ReturnStatement;
@@ -326,11 +324,11 @@ public abstract class BaseGenerator {
                 TranslatedLeaf child = translateLeaf(childLeaf, newContext, true);
                 translation.errors.addAll(child.errors);
                 translation.stringEquivalent += child.stringEquivalent;
-                if(child.assuresReturn){
+                if (child.assuresReturn) {
                     translation.assuresReturn = true;
-                    if(childLeaf!=block.content.lastElement()){
+                    if (childLeaf != block.content.lastElement()) {
                         translation.errors.add(new TranslationError(
-                            false, leaf, context, "Unreachable statements"));
+                                false, leaf, context, "Unreachable statements"));
                     }
                     break childLoop;
                 }
@@ -364,7 +362,7 @@ public abstract class BaseGenerator {
                                 context,
                                 "Implicitly converting " + valueType + " to " + type));
                     }
-                } catch (ClassNotFoundException e) {
+                } catch (PineClassNotFoundException e) {
                     translation.errors.add(new TranslationError(true,
                             declaration,
                             context,
@@ -399,7 +397,7 @@ public abstract class BaseGenerator {
                                 context,
                                 "Implicitly converting " + rightType + " to " + leftType));
                     }
-                } catch (ClassNotFoundException e) {
+                } catch (PineClassNotFoundException e) {
                     translation.errors.add(new TranslationError(true,
                             operation,
                             context,
@@ -628,7 +626,7 @@ public abstract class BaseGenerator {
                 TranslatedLeaf elseCase = translateLeaf(ifStatement.elseCase, context, true);
                 translation.errors.addAll(elseCase.errors);
                 translation.stringEquivalent += elseCase.stringEquivalent;
-                if(then.assuresReturn&&elseCase.assuresReturn){
+                if (then.assuresReturn && elseCase.assuresReturn) {
                     translation.assuresReturn = true;
                 }
             }
@@ -708,7 +706,7 @@ public abstract class BaseGenerator {
                         if (!typeMatches(type1, type2)) {
                             continue functionLoop;
                         }
-                    } catch (ClassNotFoundException e) {
+                    } catch (PineClassNotFoundException e) {
                         e.printStackTrace();
                     //We're not interested in this particular
                     //type of exceptions
@@ -824,7 +822,7 @@ public abstract class BaseGenerator {
                                     if (!typeMatches(type1, type2)) {
                                         continue functionLoop;
                                     }
-                                } catch (ClassNotFoundException e) {
+                                } catch (PineClassNotFoundException e) {
                                     //We're not interested in this particular
                                     //type of exceptions
                                 }
@@ -962,7 +960,7 @@ public abstract class BaseGenerator {
                                     if (!typeMatches(type1, type2)) {
                                         continue functionLoop;
                                     }
-                                } catch (ClassNotFoundException e) {
+                                } catch (PineClassNotFoundException e) {
                                     //We're not interested in this particular
                                     //type of exceptions
                                 }
@@ -1109,7 +1107,7 @@ public abstract class BaseGenerator {
                             translation.errors.add(new TranslationError(true, leaf, context, //
                                     "Method return type and type of return statement must match."));
                         }
-                    } catch (ClassNotFoundException e) {
+                    } catch (PineClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
@@ -1261,8 +1259,9 @@ public abstract class BaseGenerator {
         throw new Exception("Invalid arguments");
     }
     //Note that if t2 extends t1, then true
+
     public boolean typeMatches(Type t1, Type t2)
-            throws ClassNotFoundException {
+            throws PineClassNotFoundException {
         if (t2 == null) {
             return (t1.typeCategory != TypeCategory.PRIMITIVE) || t1.primitiveType == PrimitiveType.STRING;
         }
@@ -1280,9 +1279,9 @@ public abstract class BaseGenerator {
         GlobalLibrary.ClassDefinition cls1 = classFromName(type1);
         GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
         if (cls1 == null || cls2 == null) {
-            System.out.println("1:"+Arrays.toString(type1)+":"+cls1);
-            System.out.println("2:"+Arrays.toString(type2)+":"+cls2);
-            throw new ClassNotFoundException();
+            System.out.println("1:" + Arrays.toString(type1) + ":" + cls1);
+            System.out.println("2:" + Arrays.toString(type2) + ":" + cls2);
+            throw new PineClassNotFoundException();
         }
         if (Arrays.equals(cls1.packageName, cls2.packageName)) {
             if (cls1.name.equals(cls2.name)) {
@@ -1331,5 +1330,16 @@ public abstract class BaseGenerator {
             return "protected";
         }
         return "public";
+    }
+
+    public static class PineClassNotFoundException extends Exception {
+
+        public PineClassNotFoundException() {
+            super("OMG class not found");
+        }
+
+        public PineClassNotFoundException(String msg) {
+            super(msg);
+        }
     }
 }

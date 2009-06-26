@@ -47,49 +47,49 @@ public class GlobalLibrary {
     public static Vector<ClassDefinition> coreClasses = new Vector<ClassDefinition>();
     public static Vector<ClassDefinition> userDefinedClasses = new Vector<ClassDefinition>();
 
-    public static ClassDefinition getCoreClassFromName(String name){
-        for(ClassDefinition coreClass : coreClasses){
-            if(coreClass.name.equals(name)){
+    public static ClassDefinition getCoreClassFromName(String name) {
+        for (ClassDefinition coreClass : coreClasses) {
+            if (coreClass.name.equals(name)) {
                 return coreClass;
             }
         }
         return null;
     }
-    
-    public static ClassDefinition getUserDefinedClassFromName(String name, String[] packageName){
-        for(ClassDefinition definition : userDefinedClasses){
-            if(!definition.name.equals(name)){
+
+    public static ClassDefinition getUserDefinedClassFromName(String name, String[] packageName) {
+        for (ClassDefinition definition : userDefinedClasses) {
+            if (!definition.name.equals(name)) {
                 continue;
             }
-            if(Arrays.equals(definition.packageName, packageName)){
+            if (Arrays.equals(definition.packageName, packageName)) {
                 return definition;
             }
         }
         return null;
     }
-    
-    public static ClassDefinition getClassFromName(String name, String[] packageName){
+
+    public static ClassDefinition getClassFromName(String name, String[] packageName) {
         ClassDefinition definition = getUserDefinedClassFromName(name, packageName);
-        if(definition!=null){
+        if (definition != null) {
             return definition;
         }
-        if(packageName.length==1&&packageName[0].equals("Pineapple")){
+        if (packageName.length == 1 && packageName[0].equals("Pineapple")) {
             return getCoreClassFromName(name);
         }
         return null;
     }
-    
-    public static ClassDefinition addUserClass(PineClass userClass){
+
+    public static ClassDefinition addUserClass(PineClass userClass) {
         ClassDefinition clsDefinition = new ClassDefinition(userClass.clsName,
                 userClass.packageName);
-        for(Variable v : userClass.variables){
+        for (Variable v : userClass.variables) {
             clsDefinition.fields.add(
                     new FieldDefinition(v.name, v.type, v.isStatic, v.isFinal, v.access));
         }
-        for(Function f : userClass.functions){
+        for (Function f : userClass.functions) {
             MethodDefinition m = new MethodDefinition(f.name, f.returnType, f.isStatic, f.isFinal);
             m.access = f.access;
-            for(Argument arg : f.arguments){
+            for (Argument arg : f.arguments) {
                 VariableDefinition v = new VariableDefinition(arg.name, arg.type, arg.defaultValue);
             }
             clsDefinition.methods.add(m);
@@ -97,7 +97,8 @@ public class GlobalLibrary {
         userDefinedClasses.add(clsDefinition);
         return clsDefinition;
     }
-    
+
+
     static {
         /* Functions provided by libPineapple.a, the OpenGL Backend */
 
@@ -132,81 +133,81 @@ public class GlobalLibrary {
 
         m = new MethodDefinition("drawColor", new Type("Pineapple.Color"), true, true);
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("c", new Type("Pineapple.Color")));
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("c", new Type("Pineapple.Color")));
         m.arguments.add(new VariableDefinition("a", Type.FLOAT));
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("r", Type.FLOAT));
         m.arguments.add(new VariableDefinition("g", Type.FLOAT));
         m.arguments.add(new VariableDefinition("b", Type.FLOAT));
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("r", Type.FLOAT));
         m.arguments.add(new VariableDefinition("g", Type.FLOAT));
         m.arguments.add(new VariableDefinition("b", Type.FLOAT));
         m.arguments.add(new VariableDefinition("a", Type.FLOAT));
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawLine", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         c.methods.add(m);
-        
+
         m = new MethodDefinition("drawCircle", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawRectangle", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawRoundRect", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawEllipse", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawTriangle", Type.VOID);
-        m.arguments.add(new VariableDefinition("x1", Type.INT));
-        m.arguments.add(new VariableDefinition("y1", Type.INT));
-        m.arguments.add(new VariableDefinition("x2", Type.INT));
-        m.arguments.add(new VariableDefinition("y2", Type.INT));
-        m.arguments.add(new VariableDefinition("x3", Type.INT));
-        m.arguments.add(new VariableDefinition("y3", Type.INT));
+        m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y1", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("x3", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y3", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
         m = new MethodDefinition("drawPoint", Type.VOID);
-        m.arguments.add(new VariableDefinition("x", Type.INT));
-        m.arguments.add(new VariableDefinition("y", Type.INT));
+        m.arguments.add(new VariableDefinition("x", Type.FLOAT));
+        m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         c.methods.add(m);
 
         coreClasses.add(c);
@@ -291,7 +292,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("visible", Type.BOOL));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("getTexture", new Type("Texture")));
-        
+
         coreClasses.add(c);
 
         c = new ClassDefinition("Scene");
@@ -330,9 +331,9 @@ public class GlobalLibrary {
         c.methods.add(m);
         c.methods.add(new MethodDefinition("getWidth", Type.INT));
         c.methods.add(new MethodDefinition("getHeight", Type.INT));
-        
+
         coreClasses.add(c);
-        
+
         c = new ClassDefinition("Background");
         coreClasses.add(c);
         
@@ -350,11 +351,11 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getGreen", Type.FLOAT));
         c.methods.add(new MethodDefinition("getBlue", Type.FLOAT));
         c.methods.add(new MethodDefinition("getAlpha", Type.FLOAT));
-        
+
         c.fields.add(new FieldDefinition("RED", new Type("Color"), true, true));
-        
+
         coreClasses.add(c);
-        
+
         c = new ClassDefinition("Key");
         c.fields.add(new FieldDefinition("Unknown", Type.INT, true, true));
         c.fields.add(new FieldDefinition("First", Type.INT, true, true));
@@ -396,7 +397,7 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("Greater", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Question", Type.INT, true, true));
         c.fields.add(new FieldDefinition("At", Type.INT, true, true));
-        
+
         c.fields.add(new FieldDefinition("LeftBracket", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Backslash", Type.INT, true, true));
         c.fields.add(new FieldDefinition("RightBracket", Type.INT, true, true));
@@ -430,11 +431,11 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("Y", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Z", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Delete", Type.INT, true, true));
-        
-        for(int i = 0; i <= 95; i++){
-            c.fields.add(new FieldDefinition("World"+i, Type.INT, true, true));
+
+        for (int i = 0; i <= 95; i++) {
+            c.fields.add(new FieldDefinition("World" + i, Type.INT, true, true));
         }
-        
+
         c.fields.add(new FieldDefinition("KP0", Type.INT, true, true));
         c.fields.add(new FieldDefinition("KP1", Type.INT, true, true));
         c.fields.add(new FieldDefinition("KP2", Type.INT, true, true));
@@ -452,7 +453,7 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("KPPlus", Type.INT, true, true));
         c.fields.add(new FieldDefinition("KPEnter", Type.INT, true, true));
         c.fields.add(new FieldDefinition("KPEquals", Type.INT, true, true));
-        
+
         c.fields.add(new FieldDefinition("Up", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Down", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Right", Type.INT, true, true));
@@ -462,11 +463,11 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("End", Type.INT, true, true));
         c.fields.add(new FieldDefinition("PageUp", Type.INT, true, true));
         c.fields.add(new FieldDefinition("PageDown", Type.INT, true, true));
-        
-        for(int i = 1; i <= 15; i++){
-            c.fields.add(new FieldDefinition("F"+i, Type.INT, true, true));
+
+        for (int i = 1; i <= 15; i++) {
+            c.fields.add(new FieldDefinition("F" + i, Type.INT, true, true));
         }
-        
+
         c.fields.add(new FieldDefinition("NumLock", Type.INT, true, true));
         c.fields.add(new FieldDefinition("CapsLock", Type.INT, true, true));
         c.fields.add(new FieldDefinition("ScrollLock", Type.INT, true, true));
@@ -482,7 +483,7 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("RSuper", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Mode", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Compose", Type.INT, true, true));
-        
+
         c.fields.add(new FieldDefinition("Help", Type.INT, true, true));
         c.fields.add(new FieldDefinition("Print", Type.INT, true, true));
         c.fields.add(new FieldDefinition("SysReq", Type.INT, true, true));
@@ -519,67 +520,67 @@ public class GlobalLibrary {
             this.enums = new Vector<EnumDefinition>();
             this.packageName = new String[]{"Pineapple"};
         }
-        
-        public ClassDefinition(String name, String[] packageName){
+
+        public ClassDefinition(String name, String[] packageName) {
             this(name);
             this.packageName = packageName;
         }
-        
-        public Vector<MethodDefinition> getMethods(String fname){
+
+        public Vector<MethodDefinition> getMethods(String fname) {
             Vector<MethodDefinition> md = new Vector<MethodDefinition>();
-            for(MethodDefinition method : methods){
-                if(method.name.equals(fname)){
+            for (MethodDefinition method : methods) {
+                if (method.name.equals(fname)) {
                     md.add(method);
                 }
             }
-            if(parent!=null){
+            if (parent != null) {
                 md.addAll(parent.getMethods(fname));
             }
             return md;
         }
-        
-        public FieldDefinition getField(String fname){
+
+        public FieldDefinition getField(String fname) {
             System.out.println("Looking for field " + fname + " in class " + name);
-            for(FieldDefinition field : fields){
-                if(field.name.equals(fname)){
+            for (FieldDefinition field : fields) {
+                if (field.name.equals(fname)) {
                     System.out.println("FOUND!");
                     return field;
                 }
             }
-            if(parent!=null){
+            if (parent != null) {
                 System.out.println("Seeking in base class");
                 return parent.getInheritedField(fname);
             }
             System.out.println("No base class");
             return null;
         }
-        
-        public FieldDefinition getInheritedField(String fname){
+
+        public FieldDefinition getInheritedField(String fname) {
             System.out.println("Looking for field " + fname + " in class " + name);
-            for(FieldDefinition field : fields){
-                if(field.name.equals(fname)&&field.access!=AccessControlKeyword.PRIVATE){
+            for (FieldDefinition field : fields) {
+                if (field.name.equals(fname) && field.access != AccessControlKeyword.PRIVATE) {
                     System.out.println("FOUND");
                     return field;
                 }
             }
-            if(parent!=null){
+            if (parent != null) {
                 System.out.println("Seeking in base class");
                 return parent.getInheritedField(fname);
             }
             System.out.println("No base class");
             return null;
         }
-        
-        public boolean inheritsFrom(ClassDefinition possibleParent){
-            if(parent==possibleParent){
+
+        public boolean inheritsFrom(ClassDefinition possibleParent) {
+            if (parent == possibleParent) {
                 return true;
             }
-            return parent!=null&&parent.inheritsFrom(possibleParent);
+            return parent != null && parent.inheritsFrom(possibleParent);
         }
-        
-        public String exportCppType(){
+
+        public String exportCppType() {
             String result = "";
-            for(String s : packageName){
+            for (String s : packageName) {
                 result += "::" + s;
             }
             return result + "::" + name;
@@ -587,6 +588,7 @@ public class GlobalLibrary {
     }
 
     public static class FieldDefinition {
+
         public String name;
         public AccessControlKeyword access;
         public boolean isStatic;
@@ -619,6 +621,7 @@ public class GlobalLibrary {
     }
 
     public static class MethodDefinition {
+
         public String name;
         public AccessControlKeyword access;
         public Vector<VariableDefinition> arguments;
@@ -640,17 +643,19 @@ public class GlobalLibrary {
         }
     }
 
-    public static class VariableDefinition  {
+    public static class VariableDefinition {
+
         public String name;
         public Type type;
         public AccessControlKeyword access;
         public Constant defaultValue = null;
-        
+
         public VariableDefinition(String name, Type type) {
             this.name = name;
             this.type = type;
             this.access = AccessControlKeyword.PUBLIC;
         }
+
         public VariableDefinition(String name, Type type, Constant defaultValue) {
             this(name, type);
             this.defaultValue = defaultValue;
@@ -658,6 +663,7 @@ public class GlobalLibrary {
     }
 
     public static class ConstructorDefinition {
+
         public AccessControlKeyword access;
         public Vector<VariableDefinition> arguments;
 
@@ -669,6 +675,7 @@ public class GlobalLibrary {
     }
 
     public static class EnumDefinition {
+
         String name;
         public AccessControlKeyword access;
         public Vector<String> values;
