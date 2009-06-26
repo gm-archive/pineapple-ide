@@ -102,7 +102,7 @@ public abstract class BaseGenerator {
             return typeToString(t, reference);
         }
         if (t.typeCategory == TypeCategory.ARRAY) {
-            return "::Pineapple::Array<" + retrieveType(t.arrayType, reference) + ">" + (reference?"*":"");
+            return "::Pineapple::Array<" + retrieveType(t.arrayType, reference) + ">" + (reference ? "*" : "");
         }
         if (t.type.length != 1) {
             return typeToString(t, reference);
@@ -118,7 +118,7 @@ public abstract class BaseGenerator {
             Type type = new Type();
             type.typeCategory = TypeCategory.CLASS;
             type.type = fullName;
-            return definition.exportCppType() + (reference?"*":"");
+            return definition.exportCppType() + (reference ? "*" : "");
         }
         /*for (String s : context) {
         if (s.equals(t.type[t.type.length - 1])) {
@@ -172,9 +172,10 @@ public abstract class BaseGenerator {
         successful = false;
         final String msg = message;
         System.out.println(msg);
-        
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
                 GameCompiler.compFrame.writeLine(msg);
             }
         });
@@ -375,21 +376,25 @@ public abstract class BaseGenerator {
             System.out.println("leftType=" + leftType);
             Type rightType = right.inspectedType;
             System.out.println("rightType=" + rightType);
-            try {
-                if (!typeMatches(leftType, rightType)) {
+            if (leftType.equals(Type.FLOAT) && rightType.equals(Type.INT)) {
+                translation.stringEquivalent = left.stringEquivalent + " = (float) " + right.stringEquivalent;
+            } else {
+                try {
+                    if (!typeMatches(leftType, rightType)) {
+                        translation.errors.add(new TranslationError(true,
+                                operation,
+                                context,
+                                "Implicitly converting " + rightType + " to " + leftType));
+                    }
+                } catch (ClassNotFoundException e) {
                     translation.errors.add(new TranslationError(true,
                             operation,
                             context,
-                            "Implicitly converting " + rightType + " to " + leftType));
+                            "Class not found exception"));
                 }
-            } catch (ClassNotFoundException e) {
-                translation.errors.add(new TranslationError(true,
-                        operation,
-                        context,
-                        "Class not found exception"));
+                translation.stringEquivalent = left.stringEquivalent + " = " + right.stringEquivalent;
             }
-            translation.inspectedType = rightType;
-            translation.stringEquivalent = left.stringEquivalent + " = " + right.stringEquivalent;
+            translation.inspectedType = leftType;
         } else if (leaf instanceof SumOperation) {
             SumOperation operation = (SumOperation) leaf;
             TranslatedLeaf leftLeaf = translateLeaf(operation.left, context, false);
@@ -645,11 +650,10 @@ public abstract class BaseGenerator {
                         context,
                         "Variable " + varRef.name + " not found."));
             }
-            if(varRef.name.equals("super")){
+            if (varRef.name.equals("super")) {
                 translation.inspectedType = cls.superClass;
                 translation.stringEquivalent = classFromName(cls.superClass.type).exportCppType() + "::";
-            }
-            else{
+            } else {
                 translation.inspectedType = t;
                 String detokenizedName = detokenize(varRef.name);
                 translation.stringEquivalent = detokenize(detokenizedName);
@@ -665,7 +669,7 @@ public abstract class BaseGenerator {
             Vector<Type> argumentVector = new Vector<Type>();
             boolean isFirst = true;
             for (Expression e : function.arguments) {
-                if(!isFirst){
+                if (!isFirst) {
                     translation.stringEquivalent += ", ";
                 }
                 TranslatedLeaf parsedArgument = translateLeaf(e, context, false);
@@ -837,10 +841,9 @@ public abstract class BaseGenerator {
                 Type leftType = leftLeaf.inspectedType;
                 translation.errors.addAll(leftLeaf.errors);
                 translation.stringEquivalent = leftLeaf.stringEquivalent;
-                if(!(ret.left instanceof VariableReference)){
+                if (!(ret.left instanceof VariableReference)) {
                     translation.stringEquivalent += "->";
-                }
-                else if(!((VariableReference) ret.left).name.equals("super")){
+                } else if (!((VariableReference) ret.left).name.equals("super")) {
                     translation.stringEquivalent += "->";
                 }
                 if (leftType.typeCategory == TypeCategory.PRIMITIVE) {
@@ -909,8 +912,7 @@ public abstract class BaseGenerator {
                         if (field == null) {
                             translation.errors.add(new TranslationError(true, leaf, context, //
                                     "Could not find field " + varRef.name + " in " + leftType));
-                        }
-                        else{
+                        } else {
                             System.out.println("Assigning type to " + field.type);
                             translation.inspectedType = field.type;
                         }
@@ -963,7 +965,7 @@ public abstract class BaseGenerator {
         } else if (leaf instanceof ArrayReference) {
             System.out.println("Reached ArrayReference");
             ArrayReference ar = (ArrayReference) leaf;
-            System.out.println("ar.base="+ar.base.toString());
+            System.out.println("ar.base=" + ar.base.toString());
             TranslatedLeaf base = translateLeaf(ar.base, context, false, false);
             TranslatedLeaf exp = translateLeaf(ar.exp, context, false, false);
             translation.errors.addAll(base.errors);
@@ -984,7 +986,7 @@ public abstract class BaseGenerator {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Only integers can be used as array keys."));
             }
-        } else if (leaf instanceof EqualsOperation){
+        } else if (leaf instanceof EqualsOperation) {
             EqualsOperation operation = (EqualsOperation) leaf;
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
@@ -994,7 +996,7 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ") == (" + right.stringEquivalent;
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
-        } else if (leaf instanceof NequalOperation){
+        } else if (leaf instanceof NequalOperation) {
             EqualsOperation operation = (EqualsOperation) leaf;
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
@@ -1004,34 +1006,34 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ") != (" + right.stringEquivalent;
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
-        } else if (leaf instanceof LogicalBinaryOperation){
+        } else if (leaf instanceof LogicalBinaryOperation) {
             System.out.println("Reaching LogicalBinaryOperation");
             LogicalBinaryOperation operation = (LogicalBinaryOperation) leaf;
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);
             translation.errors.addAll(right.errors);
-            System.out.println("left.inspectedType="+left.inspectedType);
-            if(!left.inspectedType.equals(Type.BOOL)){
+            System.out.println("left.inspectedType=" + left.inspectedType);
+            if (!left.inspectedType.equals(Type.BOOL)) {
                 System.out.println("left is not BOOL");
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Attempting to use non-boolean on left side of logical operation"));
             }
-            if(!right.inspectedType.equals(Type.BOOL)){
+            if (!right.inspectedType.equals(Type.BOOL)) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Attempting to use non-boolean on right side of logical operation"));
             }
             translation.stringEquivalent = "(" + left.stringEquivalent;
             translation.stringEquivalent += ')';
-            if(leaf instanceof LogicalAndOperation){
+            if (leaf instanceof LogicalAndOperation) {
                 translation.stringEquivalent += "&&";
-            } else if(leaf instanceof LogicalOrOperation){
+            } else if (leaf instanceof LogicalOrOperation) {
                 translation.stringEquivalent += "||";
             }
             translation.stringEquivalent += "(" + right.stringEquivalent;
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
-        } else if (leaf instanceof BitwiseBinaryOperation){
+        } else if (leaf instanceof BitwiseBinaryOperation) {
             BitwiseBinaryOperation op = (BitwiseBinaryOperation) leaf;
             TranslatedLeaf left = translateLeaf(op.left, context, false);
             TranslatedLeaf right = translateLeaf(op.right, context, false);
@@ -1039,70 +1041,68 @@ public abstract class BaseGenerator {
             translation.errors.addAll(right.errors);
             Type leftType = left.inspectedType;
             Type rightType = right.inspectedType;
-            if(leftType.typeCategory!=TypeCategory.PRIMITIVE || //
-                    rightType.typeCategory!=TypeCategory.PRIMITIVE){
+            if (leftType.typeCategory != TypeCategory.PRIMITIVE || //
+                    rightType.typeCategory != TypeCategory.PRIMITIVE) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Only primitive types can be used in bitwise operations"));
-            } else if(leftType.primitiveType!=rightType.primitiveType){
+            } else if (leftType.primitiveType != rightType.primitiveType) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Left side and right side of bitwise operation do not have the same types."));
-            } else if(leftType.primitiveType==PrimitiveType.BOOL){
+            } else if (leftType.primitiveType == PrimitiveType.BOOL) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Attempting to use boolean in bitwise operation.\n" //
                         + "You should use logical operations instead."));
-            } else if(leftType.primitiveType!=PrimitiveType.INT && //
-                    leftType.primitiveType!=PrimitiveType.CHAR){
+            } else if (leftType.primitiveType != PrimitiveType.INT && //
+                    leftType.primitiveType != PrimitiveType.CHAR) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
                         "Only integers and characters can be used in bitwise operations."));
             }
             translation.inspectedType = leftType;
             translation.stringEquivalent = "(" + left.stringEquivalent + ") ";
-            if(leaf instanceof BitwiseAndOperation){
+            if (leaf instanceof BitwiseAndOperation) {
                 translation.stringEquivalent += '&';
-            } else if(leaf instanceof BitwiseOrOperation){
+            } else if (leaf instanceof BitwiseOrOperation) {
                 translation.stringEquivalent += '|';
-            } else{
+            } else {
                 translation.stringEquivalent += '^';
             }
             translation.stringEquivalent += ' ';
             translation.stringEquivalent += right.stringEquivalent + ')';
-        } else if(leaf instanceof ReturnStatement){
+        } else if (leaf instanceof ReturnStatement) {
             ReturnStatement ret = (ReturnStatement) leaf;
             translation.stringEquivalent = "return ";
             Type type = context.getFunctionReturnType();
-            if(ret.value==null){
-                if(type!=null&&!type.equals(Type.VOID)){
+            if (ret.value == null) {
+                if (type != null && !type.equals(Type.VOID)) {
                     translation.errors.add(new TranslationError(true, leaf, context, //
-                        "Void return statements can only be used in constructors and void methods."));
+                            "Void return statements can only be used in constructors and void methods."));
                 }
-            }
-            else{
+            } else {
                 TranslatedLeaf value = translateLeaf(ret.value, context, false);
                 translation.errors.addAll(value.errors);
-                if(type==null||type.equals(Type.VOID)){
+                if (type == null || type.equals(Type.VOID)) {
                     translation.errors.add(new TranslationError(true, leaf, context, //
-                        "Void methodset and constructors can only have void return statements."));
-                }
-                else{
-                    try{
-                        if(!typeMatches(type, value.inspectedType)){
+                            "Void methodset and constructors can only have void return statements."));
+                } else {
+                    try {
+                        if (!typeMatches(type, value.inspectedType)) {
                             translation.errors.add(new TranslationError(true, leaf, context, //
-                                "Method return type and type of return statement must match."));
+                                    "Method return type and type of return statement must match."));
                         }
-                    } catch(ClassNotFoundException e){
+                    } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
                 translation.stringEquivalent += value.stringEquivalent;
             }
-        } else if (leaf instanceof TypeCast){
+        } else if (leaf instanceof TypeCast) {
             TypeCast cast = (TypeCast) leaf;
             TranslatedLeaf exp = translateLeaf(cast.exp, context, false);
             translation.errors.addAll(exp.errors);
             translation.stringEquivalent = "((";
-            if(exp.inspectedType.typeCategory!=cast.type.typeCategory){
+            if (exp.inspectedType.typeCategory != cast.type.typeCategory) {
                 translation.errors.add(new TranslationError(true, leaf, context, //
-                    "Invalid cast"));
+                        "Invalid cast"));
             }
             translation.stringEquivalent += retrieveType(cast.type, true);
             translation.stringEquivalent += ") ";
@@ -1289,8 +1289,9 @@ public abstract class BaseGenerator {
         final String msg = message;
         System.out.println(msg);
 
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
                 GameCompiler.compFrame.writeLine(msg);
             }
         });

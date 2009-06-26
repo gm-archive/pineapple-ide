@@ -214,9 +214,14 @@ public class GameCompiler {
                             Pineapple is run. */
                             copyLib(!copiedLib);
                             copiedLib = true;
-                            compFrame.writeLine("Compiling C++ code");
-                            generateMain();
-                            compile();
+                            if(worked){
+                                compFrame.writeLine("Compiling C++ code");
+                                generateMain();
+                                compile();
+                            }
+                            else{
+                                compFrame.writeLine("<font color='red'>Failed to compile.</font>");
+                            }
                         } catch (Exception ex) {
                             compFrame.writeLine("<font color='red'>COMPILE EXCEPTION: " + ex.getMessage() + "</font>");
                             ex.printStackTrace();
