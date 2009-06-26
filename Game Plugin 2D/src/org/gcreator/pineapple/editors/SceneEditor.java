@@ -77,7 +77,13 @@ public class SceneEditor extends DocumentPane {
      */
     public SceneEditor(BasicFile f) {
         super(f);
-        scene = new Scene(f);
+        try{
+            scene = new Scene(f);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            scene = new Scene();
+        }
         initComponents();
         panel = new BehaviourPanel(scene, this);
         panel.setVisible(true);
@@ -160,6 +166,7 @@ public class SceneEditor extends DocumentPane {
     public boolean saveBackend() {
         boolean success = false;
         try {
+            panel.save();
             scene.save(file);
             success = true;
         } catch (IOException ex) {

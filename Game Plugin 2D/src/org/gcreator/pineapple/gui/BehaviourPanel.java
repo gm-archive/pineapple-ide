@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
 Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -126,6 +126,13 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         t = new TableColumn(i++, 20);
         t.setHeaderValue("Default Value");
         fieldsTable.addColumn(t);
+        
+        fieldsTable.getModel().addTableModelListener(new TableModelListener() {
+
+            public void tableChanged(TableModelEvent e) {
+                setModified(true);
+            }
+        });
 
     }
 

@@ -30,8 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -72,12 +70,6 @@ public final class ActorEditor extends DocumentPane {
         initComponents();
         behaviour = new BehaviourPanel(actor, this);
         behaviour.setVisible(true);
-        behaviour.fieldsTable.getModel().addTableModelListener(new TableModelListener() {
-
-            public void tableChanged(TableModelEvent e) {
-                setModified(true);
-            }
-        });
         depthSpinner.setValue(actor.getZ());
         depthSpinner.addChangeListener(new ChangeListener() {
 
