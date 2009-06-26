@@ -103,65 +103,65 @@ public class GlobalLibrary {
         /* Drawing functions */
         ClassDefinition c = new ClassDefinition("Drawing");
         MethodDefinition m;
-        m = new MethodDefinition("drawBegin", Type.VOID, true, true);
+        m = new MethodDefinition("drawBegin", Type.VOID);
         m.arguments.add(new VariableDefinition("mode", Type.INT));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawEnd", Type.VOID, true, true);
+        m = new MethodDefinition("drawEnd", Type.VOID);
         c.methods.add(m);
 
-        m = new MethodDefinition("drawVertex", Type.VOID, true, true);
+        m = new MethodDefinition("drawVertex", Type.VOID);
         m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         m.arguments.add(new VariableDefinition("z", Type.FLOAT, new IntConstant(0)));
         m.arguments.add(new VariableDefinition("w", Type.FLOAT, new IntConstant(1)));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawTranslate", Type.VOID, true, true);
+        m = new MethodDefinition("drawTranslate", Type.VOID);
         m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         m.arguments.add(new VariableDefinition("z", Type.FLOAT, new IntConstant(0)));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawPop", Type.VOID, true, true);
+        m = new MethodDefinition("drawPop", Type.VOID);
         c.methods.add(m);
 
-        m = new MethodDefinition("drawPush", Type.VOID, true, true);
+        m = new MethodDefinition("drawPush", Type.VOID);
         c.methods.add(m);
 
         m = new MethodDefinition("drawColor", new Type("Pineapple.Color"), true, true);
         c.methods.add(m);
         
-        m = new MethodDefinition("drawColor", Type.VOID, true, true);
+        m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("c", new Type("Pineapple.Color")));
         c.methods.add(m);
         
-        m = new MethodDefinition("drawColor", Type.VOID, true, true);
+        m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("c", new Type("Pineapple.Color")));
         m.arguments.add(new VariableDefinition("a", Type.FLOAT));
         c.methods.add(m);
         
-        m = new MethodDefinition("drawColor", Type.VOID, true, true);
+        m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("r", Type.FLOAT));
         m.arguments.add(new VariableDefinition("g", Type.FLOAT));
         m.arguments.add(new VariableDefinition("b", Type.FLOAT));
         c.methods.add(m);
         
-        m = new MethodDefinition("drawColor", Type.VOID, true, true);
+        m = new MethodDefinition("drawColor", Type.VOID);
         m.arguments.add(new VariableDefinition("r", Type.FLOAT));
         m.arguments.add(new VariableDefinition("g", Type.FLOAT));
         m.arguments.add(new VariableDefinition("b", Type.FLOAT));
         m.arguments.add(new VariableDefinition("a", Type.FLOAT));
         c.methods.add(m);
         
-        m = new MethodDefinition("drawLine", Type.VOID, true, true);
+        m = new MethodDefinition("drawLine", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
         m.arguments.add(new VariableDefinition("y2", Type.INT));
         c.methods.add(m);
         
-        m = new MethodDefinition("drawCircle", Type.VOID, true, true);
+        m = new MethodDefinition("drawCircle", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
@@ -169,7 +169,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawRectangle", Type.VOID, true, true);
+        m = new MethodDefinition("drawRectangle", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
@@ -177,7 +177,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawRoundRect", Type.VOID, true, true);
+        m = new MethodDefinition("drawRoundRect", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
@@ -185,7 +185,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawEllipse", Type.VOID, true, true);
+        m = new MethodDefinition("drawEllipse", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
@@ -193,7 +193,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawTriangle", Type.VOID, true, true);
+        m = new MethodDefinition("drawTriangle", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.INT));
         m.arguments.add(new VariableDefinition("y1", Type.INT));
         m.arguments.add(new VariableDefinition("x2", Type.INT));
@@ -203,7 +203,7 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
 
-        m = new MethodDefinition("drawPoint", Type.VOID, true, true);
+        m = new MethodDefinition("drawPoint", Type.VOID);
         m.arguments.add(new VariableDefinition("x", Type.INT));
         m.arguments.add(new VariableDefinition("y", Type.INT));
         c.methods.add(m);

@@ -636,7 +636,7 @@ public abstract class BaseGenerator {
             //The others should be intercepted in RetrieverExpression parsing
             VariableReference varRef = (VariableReference) leaf;
             Type t = getTypeOfVariable(varRef, context);
-            if (t == null || !t.equals("super")) {
+            if (t == null && !varRef.name.equals("super")) {
                 if (inRetrieverExpression) {
                     return null;
                 }
@@ -645,9 +645,9 @@ public abstract class BaseGenerator {
                         context,
                         "Variable " + varRef.name + " not found."));
             }
-            if(t.equals("super")){
+            if(varRef.name.equals("super")){
                 translation.inspectedType = cls.superClass;
-                translation.stringEquivalent = classFromName(cls.superClass.type).exportCppType();
+                translation.stringEquivalent = classFromName(cls.superClass.type).exportCppType() + "::";
             }
             else{
                 translation.inspectedType = t;
@@ -663,11 +663,16 @@ public abstract class BaseGenerator {
             String functionName = function.name;
             translation.stringEquivalent = detokenize(functionName) + '(';
             Vector<Type> argumentVector = new Vector<Type>();
+            boolean isFirst = true;
             for (Expression e : function.arguments) {
+                if(!isFirst){
+                    translation.stringEquivalent += ", ";
+                }
                 TranslatedLeaf parsedArgument = translateLeaf(e, context, false);
                 translation.errors.addAll(parsedArgument.errors);
                 translation.stringEquivalent += parsedArgument.stringEquivalent;
                 argumentVector.add(parsedArgument.inspectedType);
+                isFirst = false;
             }
             boolean matched = false;
             functionLoop:
@@ -778,7 +783,7 @@ public abstract class BaseGenerator {
                         translation.stringEquivalent += '(';
                         boolean isFirst = true;
                         for (Expression e : funRef.arguments) {
-                            if (isFirst) {
+                            if (!isFirst) {
                                 translation.stringEquivalent += ", ";
                             }
                             TranslatedLeaf tLeaf = translateLeaf(e, context, false, false);
@@ -832,6 +837,12 @@ public abstract class BaseGenerator {
                 Type leftType = leftLeaf.inspectedType;
                 translation.errors.addAll(leftLeaf.errors);
                 translation.stringEquivalent = leftLeaf.stringEquivalent;
+                if(!(ret.left instanceof VariableReference)){
+                    translation.stringEquivalent += "->";
+                }
+                else if(!((VariableReference) ret.left).name.equals("super")){
+                    translation.stringEquivalent += "->";
+                }
                 if (leftType.typeCategory == TypeCategory.PRIMITIVE) {
                     if (leftType.primitiveType == PrimitiveType.STRING) {
                         if (ret.right instanceof VariableReference) {
@@ -912,7 +923,7 @@ public abstract class BaseGenerator {
                         translation.stringEquivalent += '(';
                         boolean isFirst = true;
                         for (Expression e : funRef.arguments) {
-                            if (isFirst) {
+                            if (!isFirst) {
                                 translation.stringEquivalent += ", ";
                             }
                             TranslatedLeaf tLeaf = translateLeaf(e, context, false, false);
