@@ -48,6 +48,15 @@ public class TranslatedLeaf {
     public Type inspectedType;
     
     /**
+     * Assures that this leaf is associated with a mandatory return statement<br/>
+     * Note that
+     * if(kkk){ return; } else {} should have this property set to false
+     * since the else statement is not associated with a return statement, and thus
+     * is possible to execute this statement without encountering a return statement.
+     */
+    public boolean assuresReturn = false;
+    
+    /**
      * Contains errors and warnings
      */
     public Vector<TranslationError> errors;

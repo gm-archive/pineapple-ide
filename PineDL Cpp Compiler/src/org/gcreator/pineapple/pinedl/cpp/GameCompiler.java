@@ -202,9 +202,12 @@ public class GameCompiler {
                             for(int i = 0; i < parsers.size(); i++){
                                 InitialParser parser = parsers.get(i);
                                 GlobalLibrary.ClassDefinition cDef = clsDef.get(i);
-                                System.out.println("Array="+Arrays.toString(parser.cls.superClass.type));
-                                cDef.parent = parser.classFromName(parser.cls.superClass.type);
-                                System.out.println("Parent=" + cDef.parent);
+                                if(parser.cls.superClass!=null){
+                                    cDef.parent = parser.classFromName(parser.cls.superClass.type);
+                                }
+                                else{
+                                    cDef.parent = null;
+                                }
                             }
                             for (File script : tmp.keySet()) {
                                 generateHeader(script, tmp.get(script));

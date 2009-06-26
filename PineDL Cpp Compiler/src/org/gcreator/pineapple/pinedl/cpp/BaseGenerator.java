@@ -321,10 +321,19 @@ public abstract class BaseGenerator {
             newContext.declareVariable("this", new Type(fname));
             translation.stringEquivalent = "{\n";
 
+            childLoop:
             for (Leaf childLeaf : block.content) {
                 TranslatedLeaf child = translateLeaf(childLeaf, newContext, true);
                 translation.errors.addAll(child.errors);
                 translation.stringEquivalent += child.stringEquivalent;
+                if(child.assuresReturn){
+                    translation.assuresReturn = true;
+                    if(childLeaf!=block.content.lastElement()){
+                        translation.errors.add(new TranslationError(
+                            false, leaf, context, "Unreachable statements"));
+                    }
+                    break childLoop;
+                }
             }
 
             translation.inspectedType = null; //Not an expression
@@ -615,6 +624,9 @@ public abstract class BaseGenerator {
                 TranslatedLeaf elseCase = translateLeaf(ifStatement.elseCase, context, true);
                 translation.errors.addAll(elseCase.errors);
                 translation.stringEquivalent += elseCase.stringEquivalent;
+                if(then.assuresReturn&&elseCase.assuresReturn){
+                    translation.assuresReturn = true;
+                }
             }
         } else if (leaf instanceof WhileStatement) {
             WhileStatement statement = (WhileStatement) leaf;
@@ -1071,6 +1083,7 @@ public abstract class BaseGenerator {
         } else if (leaf instanceof ReturnStatement) {
             ReturnStatement ret = (ReturnStatement) leaf;
             translation.stringEquivalent = "return ";
+            translation.assuresReturn = true;
             Type type = context.getFunctionReturnType();
             if (ret.value == null) {
                 if (type != null && !type.equals(Type.VOID)) {
@@ -1260,6 +1273,8 @@ public abstract class BaseGenerator {
         GlobalLibrary.ClassDefinition cls1 = classFromName(type1);
         GlobalLibrary.ClassDefinition cls2 = classFromName(type2);
         if (cls1 == null || cls2 == null) {
+            System.out.println("1:"+Arrays.toString(type1)+":"+cls1);
+            System.out.println("2:"+Arrays.toString(type2)+":"+cls2);
             throw new ClassNotFoundException();
         }
         if (Arrays.equals(cls1.packageName, cls2.packageName)) {
@@ -1282,11 +1297,14 @@ public abstract class BaseGenerator {
         out.write('\n');
     }
 
+    /**
+     * Unlike errors, warnings do not stop the compilation
+     * @param warning The warning to display
+     */
     protected void throwWarning(String warning) {
-        String message = "[WARNING] ";
+        String message = "<font color='#ff7700'>WARNING: ";
         message += warning;
-        successful = false;
-        final String msg = message;
+        final String msg = message + "</font>";
         System.out.println(msg);
 
         SwingUtilities.invokeLater(new Runnable() {

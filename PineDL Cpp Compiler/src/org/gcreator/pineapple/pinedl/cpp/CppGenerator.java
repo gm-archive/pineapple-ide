@@ -247,6 +247,12 @@ public class CppGenerator extends BaseGenerator {
                     throwWarning(error.generateFullErrorMessage());
                 }
             }
+            
+            if(!translation.assuresReturn&&!method.returnType.equals(Type.VOID)){
+                TranslationError error = new TranslationError(true, null, vars,
+                        "All code paths MUST return.");
+                throwError(error.generateFullErrorMessage());
+            }
 
             writeLine(translation.stringEquivalent);
 
