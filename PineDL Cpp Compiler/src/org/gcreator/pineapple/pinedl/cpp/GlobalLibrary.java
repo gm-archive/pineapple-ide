@@ -178,6 +178,11 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("y2", Type.FLOAT));
         m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
         c.methods.add(m);
+        
+        m = new MethodDefinition("drawRectangle", Type.VOID);
+        m.arguments.add(new VariableDefinition("r", new Type("Pineapple.Rectangle")));
+        m.arguments.add(new VariableDefinition("filled", Type.BOOL, BooleanConstant.TRUE));
+        c.methods.add(m);
 
         m = new MethodDefinition("drawRoundRect", Type.VOID);
         m.arguments.add(new VariableDefinition("x1", Type.FLOAT));
@@ -209,7 +214,35 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("x", Type.FLOAT));
         m.arguments.add(new VariableDefinition("y", Type.FLOAT));
         c.methods.add(m);
+        
+        m = new MethodDefinition("drawPoint", Type.VOID);
+        m.arguments.add(new VariableDefinition("p", new Type("Pineapple.Point")));
+        c.methods.add(m);
 
+        coreClasses.add(c);
+        
+        c = new ClassDefinition("Point");
+        c.constructors.add(new ConstructorDefinition());
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("x", Type.FLOAT),
+                new VariableDefinition("y", Type.FLOAT)));
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("p", new Type("Pineapple.Point"))));
+        c.methods.add(new MethodDefinition("getX", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getY", Type.FLOAT));
+        coreClasses.add(c);
+        
+        c = new ClassDefinition("Rectangle");
+        c.constructors.add(new ConstructorDefinition());
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("p1", new Type("Pineapple.Point")),
+                new VariableDefinition("p2", new Type("Pineapple.Point"))));
+        c.constructors.add(new ConstructorDefinition(
+                new VariableDefinition("p", new Type("Pineapple.Rectangle"))));
+        c.methods.add(new MethodDefinition("getTopLeftPoint", new Type("Pineapple.Point")));
+        c.methods.add(new MethodDefinition("getBottomRightPoint", new Type("Pineapple.Point")));
+        c.methods.add(new MethodDefinition("getWidth", Type.FLOAT));
+        c.methods.add(new MethodDefinition("getHeight", Type.FLOAT));
         coreClasses.add(c);
 
         c = new ClassDefinition("Actor");
