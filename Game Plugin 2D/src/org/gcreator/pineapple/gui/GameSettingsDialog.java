@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -310,16 +310,16 @@ private void moveDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 }//GEN-LAST:event_moveDownActionPerformed
 
     public void updateSceneOrder() {
-        String sceneList = "";
+        String listOfScenes = "";
         boolean isFirst = true;
         for (BasicFile f : sceneOrder) {
             if (!isFirst) {
-                sceneList += ";";
+                listOfScenes += ";";
             }
-            sceneList += f.getPath();
+            listOfScenes += f.getPath();
             isFirst = false;
         }
-        p.getSettings().put("scene-order", sceneList);
+        p.getSettings().put("scene-order", listOfScenes);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
