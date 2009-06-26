@@ -20,7 +20,7 @@ protected:
     double width, height;
     double x, y;
     double depth;
-    bool autoDraw;
+    bool visible;
 
 public:
     Actor(double x = 0, double y = 0, double depth = 0);
@@ -68,8 +68,8 @@ public:
     virtual void onKeyUp(int key) {}
     virtual void onKeyPressed(int key) {}
 
-    bool isAutoDrawn() { return autoDraw; }
-    void setAutoDrawn(bool autoDraw) { this->autoDraw = autoDraw; }
+    bool isVisible() { return visible; }
+    void setVisible(bool visible) { this->visible = visible; }
 
     Texture* getTexture();
 };

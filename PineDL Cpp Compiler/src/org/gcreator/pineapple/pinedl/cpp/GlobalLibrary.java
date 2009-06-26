@@ -225,7 +225,7 @@ public class GlobalLibrary {
         c.fields.add(new FieldDefinition("x", Type.FLOAT, AccessControlKeyword.PROTECTED));
         c.fields.add(new FieldDefinition("y", Type.FLOAT, AccessControlKeyword.PROTECTED));
         c.fields.add(new FieldDefinition("depth", Type.FLOAT, AccessControlKeyword.PROTECTED));
-        c.fields.add(new FieldDefinition("autoDraw", Type.BOOL, AccessControlKeyword.PROTECTED));
+        c.fields.add(new FieldDefinition("visible", Type.BOOL, AccessControlKeyword.PROTECTED));
         c.methods.add(new MethodDefinition("getX", Type.FLOAT));
         c.methods.add(new MethodDefinition("getY", Type.FLOAT));
         c.methods.add(new MethodDefinition("getHSpeed", Type.FLOAT));
@@ -285,9 +285,9 @@ public class GlobalLibrary {
         m = new MethodDefinition("onKeyDown", Type.VOID);
         m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
-        c.methods.add(new MethodDefinition("isAutoDrawn", Type.BOOL));
-        m = new MethodDefinition("setAutoDrawn", Type.VOID);
-        m.arguments.add(new VariableDefinition("autoDraw", Type.BOOL));
+        c.methods.add(new MethodDefinition("isVisible", Type.BOOL));
+        m = new MethodDefinition("setVisible", Type.VOID);
+        m.arguments.add(new VariableDefinition("visible", Type.BOOL));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("getTexture", new Type("Texture")));
         

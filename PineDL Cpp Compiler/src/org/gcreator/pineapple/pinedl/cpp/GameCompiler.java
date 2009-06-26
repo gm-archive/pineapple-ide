@@ -680,7 +680,6 @@ public class GameCompiler {
 
             if (evt.getType().equals(Event.TYPE_DRAW)) {
                 w.println("\tpublic void draw(Drawing d) {");
-                w.println("\tsuper.draw(d);");
                 w.print(outputEvent(a, evt));
 
                 w.println("\t}");
