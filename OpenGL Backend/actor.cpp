@@ -21,7 +21,7 @@ Actor::Actor(double x, double y, double depth)
     motion = new VectorXY(0, 0);
     gravity = new VectorRV(270, 0);
     friction = 0;
-    autoDraw = true;
+    visible = true;
 }
 
 //
@@ -84,7 +84,7 @@ void Actor::move()
 //
 void Actor::draw(Drawing* d)
 {
-    if (texture < 0 || !autoDraw)
+    if (texture < 0)
         return;
     Texture* tex = TextureList::Get_Texture(texture);
     tex->draw(x, y, width, height, angle);

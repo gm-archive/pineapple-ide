@@ -93,10 +93,12 @@ void Scene::drawActors(Drawing* d)
     list<Actor*>::iterator i = actors.begin();
     while (i != actors.end())
     {
-        glPushMatrix();
-        (*i)->draw(d);
-        glPopMatrix();
-	d->drawColor(Color::WHITE);
+        if((*i)->isVisible()){
+            glPushMatrix();
+            (*i)->draw(d);
+            glPopMatrix();
+            d->drawColor(Color::WHITE);
+        }
         i++;
     }
 }
