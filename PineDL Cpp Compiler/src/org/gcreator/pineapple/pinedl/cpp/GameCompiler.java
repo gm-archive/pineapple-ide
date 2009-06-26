@@ -672,7 +672,7 @@ public class GameCompiler {
 
             if (evt.getType().equals(Event.TYPE_DRAW)) {
                 w.println("\tpublic void draw(Drawing d) {");
-                w.println("\tActor.draw(d);");
+                w.println("\tsuper.draw(d);");
                 w.print(outputEvent(a, evt));
 
                 w.println("\t}");
@@ -775,7 +775,7 @@ public class GameCompiler {
 
         for (Scene.Background b : scene.backgrounds) {
             String iname = b.image.getName().replaceAll("\\.", "_");
-            w.println("\t\taddBackground(new Background(" + iname + ", " +
+            w.println("\t\taddBackground(new Background(TextureList." + iname + ", " +
                     b.x + ", " + b.y + ", " + b.drawImage + ", " +
                     b.hrepeat + ", " + b.vrepeat + "));");
         }

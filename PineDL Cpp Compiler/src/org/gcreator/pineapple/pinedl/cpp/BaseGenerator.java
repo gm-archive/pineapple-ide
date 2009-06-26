@@ -360,9 +360,9 @@ public abstract class BaseGenerator {
                             context,
                             "Class not found exception"));
                 }
-                context.declareVariable(declaration.name, declaration.type);
                 translation.stringEquivalent += " = " + value.stringEquivalent;
             }
+            context.declareVariable(declaration.name, declaration.type);
         } else if (leaf instanceof EqualOperation) {
             EqualOperation operation = (EqualOperation) leaf;
             System.out.println("operation.left=" + operation.left.toString());
@@ -636,7 +636,7 @@ public abstract class BaseGenerator {
             //The others should be intercepted in RetrieverExpression parsing
             VariableReference varRef = (VariableReference) leaf;
             Type t = getTypeOfVariable(varRef, context);
-            if (t == null) {
+            if (t == null || !t.equals("super")) {
                 if (inRetrieverExpression) {
                     return null;
                 }
@@ -645,9 +645,15 @@ public abstract class BaseGenerator {
                         context,
                         "Variable " + varRef.name + " not found."));
             }
-            translation.inspectedType = t;
-            String detokenizedName = detokenize(varRef.name);
-            translation.stringEquivalent = detokenize(detokenizedName);
+            if(t.equals("super")){
+                translation.inspectedType = cls.superClass;
+                translation.stringEquivalent = classFromName(cls.superClass.type).exportCppType();
+            }
+            else{
+                translation.inspectedType = t;
+                String detokenizedName = detokenize(varRef.name);
+                translation.stringEquivalent = detokenize(detokenizedName);
+            }
         } else if (leaf instanceof FunctionReference) {
             //Should ONLY track the left side of a retriever sequence
             //So, in a().b().c().d(), although a(), b(), c() and d() are all instances
@@ -1091,7 +1097,7 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ") ";
             translation.stringEquivalent += exp.stringEquivalent;
             translation.stringEquivalent += ')';
-            translation.inspectedType = exp.inspectedType;
+            translation.inspectedType = cast.type;
         }
         //TODO:  <<, >>, for, try/catch, throw, etc.
 
