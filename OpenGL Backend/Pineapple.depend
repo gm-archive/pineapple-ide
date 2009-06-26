@@ -191,10 +191,10 @@
 
 1245949958 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/keycodes.h
 
-1245190736 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.h
-	<math.h>
+1246050717 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.h
 	<SDL/SDL_opengl.h>
 	"color.h"
+	"shapes.h"
 
 1245190736 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/color.h
 
@@ -237,11 +237,12 @@
 1245190736 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/color.cpp
 	"color.h"
 
-1245190736 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.cpp
+1246050864 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.cpp
 	"drawing.h"
 	<cstdlib>
 	<iostream>
 	<cstdio>
+	<cmath>
 
 1245190736 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/io.cpp
 	"io.h"
@@ -257,7 +258,7 @@
 1245190736 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/keyboard.cpp
 	"keyboard.h"
 
-1245950033 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/scene.cpp
+1246026330 source:/home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/scene.cpp
 	"SDL/SDL.h"
 	"SDL/SDL_opengl.h"
 	<vector>
@@ -308,4 +309,8 @@
 	"scene.h"
 	"application.h"
 	"texturelist.h"
+
+1246051107 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/shapes.h
+	"exceptions.h"
+	"pamath.h"
 

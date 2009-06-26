@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="actor.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="1760" topLine="57" />
+	<File name="actor.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="1740" topLine="0" />
 	</File>
-	<File name="actor.h" open="1" top="1" tabpos="7">
-		<Cursor position="350" topLine="0" />
+	<File name="actor.h" open="0" top="0" tabpos="7">
+		<Cursor position="1018" topLine="38" />
 	</File>
 	<File name="application.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="718" topLine="1" />
@@ -25,29 +25,32 @@
 	<File name="color.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="41652" topLine="730" />
 	</File>
-	<File name="drawing.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="1581" topLine="90" />
+	<File name="drawing.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="2036" topLine="75" />
 	</File>
-	<File name="drawing.h" open="0" top="0" tabpos="4">
-		<Cursor position="947" topLine="34" />
+	<File name="drawing.h" open="0" top="0" tabpos="2">
+		<Cursor position="1562" topLine="17" />
 	</File>
-	<File name="exceptions.h" open="0" top="0" tabpos="1">
+	<File name="exceptions.h" open="0" top="0" tabpos="3">
 		<Cursor position="118" topLine="0" />
 	</File>
 	<File name="keyboard.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="21" topLine="0" />
 	</File>
-	<File name="keycodes.h" open="1" top="0" tabpos="3">
+	<File name="keycodes.h" open="0" top="0" tabpos="3">
 		<Cursor position="390" topLine="0" />
 	</File>
-	<File name="pamath.h" open="0" top="0" tabpos="0">
-		<Cursor position="242" topLine="24" />
+	<File name="pamath.h" open="0" top="0" tabpos="4">
+		<Cursor position="242" topLine="0" />
 	</File>
-	<File name="scene.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1708" topLine="70" />
+	<File name="scene.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="1543" topLine="55" />
 	</File>
-	<File name="scene.h" open="1" top="0" tabpos="5">
-		<Cursor position="863" topLine="9" />
+	<File name="scene.h" open="0" top="0" tabpos="5">
+		<Cursor position="403" topLine="9" />
+	</File>
+	<File name="shapes.h" open="1" top="1" tabpos="1">
+		<Cursor position="1292" topLine="0" />
 	</File>
 	<File name="texture.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="120" topLine="0" />
@@ -56,7 +59,7 @@
 		<Cursor position="184" topLine="0" />
 	</File>
 	<File name="texturelist.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="349" topLine="0" />
+		<Cursor position="1979" topLine="82" />
 	</File>
 	<File name="texturelist.h" open="0" top="0" tabpos="7">
 		<Cursor position="583" topLine="0" />
@@ -79,10 +82,10 @@
 	<File name="view.h" open="0" top="0" tabpos="5">
 		<Cursor position="50" topLine="0" />
 	</File>
-	<File name="window.cpp" open="1" top="0" tabpos="4">
+	<File name="window.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="319" topLine="0" />
 	</File>
-	<File name="window.h" open="1" top="0" tabpos="6">
+	<File name="window.h" open="0" top="0" tabpos="6">
 		<Cursor position="290" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

@@ -1,9 +1,9 @@
-#ifndef DRAWING_H_INCLUDED
-#define DRAWING_H_INCLUDED
+#ifndef _DRAWING_H_INCLUDED
+#define _DRAWING_H_INCLUDED
 
-#include <math.h>
 #include <SDL/SDL_opengl.h>
 #include "color.h"
+#include "shapes.h"
 
 #define RAD2DEG 0.0174532925
 
@@ -46,10 +46,12 @@ namespace Pineapple
         void drawCircle(GLdouble x,GLdouble y, GLdouble r, bool filled = true);
         void drawLine(GLdouble x1,GLdouble y1, GLdouble x2, GLdouble y2);
         void drawRectangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
+        void drawRectangle(Rectangle* r, bool filled = true);
         void drawRoundRect(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
         void drawEllipse(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled = true);
         void drawTriangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, GLdouble x3, GLdouble y3, bool filled = true);
         void drawPoint(GLdouble x, GLdouble y);
+        void drawPoint(Point* p);
     };
 }
 

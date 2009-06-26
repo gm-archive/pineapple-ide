@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstdio>
+#include <cmath>
 
 using namespace Pineapple;
 
@@ -84,6 +85,11 @@ void Drawing::drawRectangle(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, 
     drawEnd();
 }
 
+void Drawing::drawRectangle(Rectangle* r, bool filled)
+{
+    drawRectangle(r->p1->getX(), r->p1->getY(), r->p2->getX(), r->p2->getY(), filled);
+}
+
 void Drawing::drawPoint(GLdouble x, GLdouble y)
 {
     drawBegin(DRAW_POINTS);
@@ -91,6 +97,10 @@ void Drawing::drawPoint(GLdouble x, GLdouble y)
     drawEnd();
 }
 
+void Drawing::drawPoint(Point* p)
+{
+    drawPoint(p->getX(), p->getY());
+}
 
 // Borrowed from ENIGMA
 void Drawing::drawEllipse(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2, bool filled)
