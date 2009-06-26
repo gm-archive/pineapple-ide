@@ -42,7 +42,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -722,7 +721,6 @@ public class GameCompiler {
     private void printCreateEvent(PrintWriter w, Actor a, Event evt) throws IOException {
         w.println("\tpublic this(float x, float y, float depth) : super(x, y, depth) {");
         w.println("\t\tsetDepth(depth);");
-        w.println("\t\tautoDraw = " + a.isAutoDrawn() + ";");
         if (a.getImage() != null) {
             w.print(("\t\ttexture = TextureList."));
             String iname = a.getImage().getName();
@@ -760,11 +758,58 @@ public class GameCompiler {
         w.println();
         printFields(scene.fields, w);
         w.println();
-        w.print("\tpublic this() : super");
-
-        w.print("(" + scene.getWidth() + ", " + scene.getHeight());
-
-        w.println(") {");
+        
+        boolean hasCreate = false;
+        
+        for(Event evt : scene.events){
+            if(evt.getType().equals(Event.TYPE_CREATE)){
+                w.print("\tpublic this() : super");
+                w.print("(" + scene.getWidth() + ", " + scene.getHeight());
+                w.println("){");
+                
+                w.print(evt.getPineDL()+'\n');
+                
+                w.println("}");
+                w.println();
+                hasCreate = true;
+            } else if(evt.getType().equals(Event.TYPE_UPDATE)){
+                w.println("\tpublic void update(){");
+                w.print(evt.getPineDL()+'\n');
+                w.println("}");
+                w.println();
+            } else if(evt.getType().equals(Event.TYPE_DRAW)){
+                w.println("\tpublic void draw(Drawing d){");
+                w.print(evt.getPineDL()+'\n');
+                w.println("}");
+                w.println();
+            } else if(evt.getType().equals(Event.TYPE_KEYPRESS)){
+                w.println("\tpublic void onKeyDown(int key){");
+                w.print(evt.getPineDL()+'\n');
+                w.println("}");
+                w.println();
+            } else if(evt.getType().equals(Event.TYPE_KEYRELEASE)){
+                w.println("\tpublic void onKeyUp(int key){");
+                w.print(evt.getPineDL()+'\n');
+                w.println("}");
+                w.println();
+            } else if(evt.getType().equals(Event.TYPE_KEYPRESSED)){
+                w.println("\tpublic void onKeyPressed(int key){");
+                w.print(evt.getPineDL()+'\n');
+                w.println("}");
+                w.println();
+            }
+        }
+        
+        if(!hasCreate){
+            w.print("\tpublic this() : super");
+            w.print("(" + scene.getWidth() + ", " + scene.getHeight());
+            w.println("){");
+            w.println("setupScene();");
+            w.println("}");
+            w.println();
+        }
+        
+        w.println("private void setupScene(){");
 
         Color c = scene.getBackgroundColor();
         String cs = ((Integer) c.getRed()).toString();

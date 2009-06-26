@@ -381,11 +381,15 @@ public abstract class BaseGenerator {
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);
             translation.errors.addAll(right.errors);
+            System.out.println("Method="+cls.clsName+"."+context.getFunctionName());
             Type leftType = left.inspectedType;
             System.out.println("leftType=" + leftType);
             Type rightType = right.inspectedType;
             System.out.println("rightType=" + rightType);
-            if (leftType.equals(Type.FLOAT) && rightType.equals(Type.INT)) {
+            if(leftType==null){
+                translation.stringEquivalent = "/*INVALID*/";
+            }
+            else if (leftType.equals(Type.FLOAT) && rightType.equals(Type.INT)) {
                 translation.stringEquivalent = left.stringEquivalent + " = (float) " + right.stringEquivalent;
             } else {
                 try {
@@ -691,9 +695,12 @@ public abstract class BaseGenerator {
                 isFirst = false;
             }
             boolean matched = false;
+            Vector<GlobalLibrary.MethodDefinition> methods = getCurrentClass().getMethods(functionName);
+            System.out.println("methods.size="+methods.size());
             functionLoop:
-            for (GlobalLibrary.MethodDefinition method : getCurrentClass().getMethods(functionName)) {
+            for (GlobalLibrary.MethodDefinition method : methods) {
                 int size = method.arguments.size();
+                System.out.println("method has " + size + " arguments.");
                 for (int i = 0; i < size; i++) {
                     try {
                         Type type1 = method.arguments.get(i).type; //Intended

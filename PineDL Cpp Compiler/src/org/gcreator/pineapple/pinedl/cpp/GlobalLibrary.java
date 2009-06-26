@@ -92,6 +92,7 @@ public class GlobalLibrary {
             for(Argument arg : f.arguments){
                 VariableDefinition v = new VariableDefinition(arg.name, arg.type, arg.defaultValue);
             }
+            clsDefinition.methods.add(m);
         }
         userDefinedClasses.add(clsDefinition);
         return clsDefinition;
@@ -306,6 +307,9 @@ public class GlobalLibrary {
         c.methods.add(m);
         c.methods.add(new MethodDefinition("update", Type.VOID));
         c.methods.add(new MethodDefinition("draw", Type.VOID));
+        m = new MethodDefinition("draw", Type.VOID);
+        m.arguments.add(new VariableDefinition("d", new Type("Drawing")));
+        c.methods.add(m);
         m = new MethodDefinition("addActor", Type.VOID);
         m.arguments.add(new VariableDefinition("actor", new Type("Actor")));
         c.methods.add(m);
@@ -327,6 +331,9 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getWidth", Type.INT));
         c.methods.add(new MethodDefinition("getHeight", Type.INT));
         
+        coreClasses.add(c);
+        
+        c = new ClassDefinition("Background");
         coreClasses.add(c);
         
         c = new ClassDefinition("Color");

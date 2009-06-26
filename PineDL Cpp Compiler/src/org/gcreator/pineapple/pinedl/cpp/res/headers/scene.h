@@ -31,7 +31,8 @@ public:
     void setBackground(Color* bgColor){ this->bgColor = bgColor; }
 
     virtual void update();
-    virtual void draw();
+    void draw();
+    virtual void draw(Drawing* d);
 
     virtual void addActor(Actor* actor);
     virtual void addView(View* view);
