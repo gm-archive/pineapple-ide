@@ -2,10 +2,10 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="actor.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="1976" topLine="57" />
+		<Cursor position="1760" topLine="57" />
 	</File>
-	<File name="actor.h" open="1" top="0" tabpos="7">
-		<Cursor position="1743" topLine="38" />
+	<File name="actor.h" open="1" top="1" tabpos="7">
+		<Cursor position="350" topLine="0" />
 	</File>
 	<File name="application.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="718" topLine="1" />
@@ -44,7 +44,7 @@
 		<Cursor position="242" topLine="24" />
 	</File>
 	<File name="scene.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="2433" topLine="112" />
+		<Cursor position="1708" topLine="70" />
 	</File>
 	<File name="scene.h" open="1" top="0" tabpos="5">
 		<Cursor position="863" topLine="9" />
@@ -55,7 +55,7 @@
 	<File name="texture.h" open="0" top="0" tabpos="3">
 		<Cursor position="184" topLine="0" />
 	</File>
-	<File name="texturelist.cpp" open="1" top="1" tabpos="8">
+	<File name="texturelist.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="349" topLine="0" />
 	</File>
 	<File name="texturelist.h" open="0" top="0" tabpos="7">

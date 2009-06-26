@@ -74,9 +74,13 @@ void Scene::draw()
         Drawing* d = new Drawing();
         View* v = views[i];
         v->set(bgColor);
-        drawBackgrounds();
-        drawActors(d);
+        draw(d);
     }
+}
+
+void Scene::draw(Drawing* d){
+    drawBackgrounds();
+    drawActors(d);
 }
 
 bool compareActors(Actor*& a, Actor*& b)
