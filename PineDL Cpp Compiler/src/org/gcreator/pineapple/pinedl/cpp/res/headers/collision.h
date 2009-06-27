@@ -20,7 +20,7 @@ class CollisionManager
             if(r1x+r1width<r2x) return false;
             if(r1y>r2y+r2height) return false;
             if(r1y+r1height<r2y) return false;
-            return true;r1
+            return true;
         }
 };
 
