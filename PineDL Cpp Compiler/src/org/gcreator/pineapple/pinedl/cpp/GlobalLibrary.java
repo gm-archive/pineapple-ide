@@ -244,6 +244,13 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getWidth", Type.FLOAT));
         c.methods.add(new MethodDefinition("getHeight", Type.FLOAT));
         coreClasses.add(c);
+        
+        c = new ClassDefinition("CollisionManager");
+        m = new MethodDefinition("rectangleIntersects", Type.BOOL);
+        m.arguments.add(new VariableDefinition("r1", new Type("Pineapple.Rectangle")));
+        m.arguments.add(new VariableDefinition("r2", new Type("Pineapple.Rectangle")));
+        c.methods.add(m);
+        coreClasses.add(c);
 
         c = new ClassDefinition("Actor");
         c.constructors.add(new ConstructorDefinition(
@@ -385,7 +392,35 @@ public class GlobalLibrary {
         c.methods.add(new MethodDefinition("getBlue", Type.FLOAT));
         c.methods.add(new MethodDefinition("getAlpha", Type.FLOAT));
 
+        c.fields.add(new FieldDefinition("TRANSPARENT_WHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("SNOW", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("GHOST_WHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("GHOSTWHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("WHITE_SMOKE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("WHITESMOKE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("GAINSBORO", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("FLORAL_WHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("FLORALWHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("OLD_LACE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("OLDLACE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("LINEN", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("ANTIQUE_WHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("ANTIQUEWHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("PAPAYA_WHIP", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("PAPAYAWHIP", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("BLANCHED_ALMOND", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("BLANCHEDALMOND", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("BISQUE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("PEACH_PUFF", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("PEACHPUFF", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("NAVAJO_WHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("NAVAJOWHITE", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("MOCCASIN", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("CORNSILK", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("IVORY", new Type("Color"), true, true));
+        
         c.fields.add(new FieldDefinition("RED", new Type("Color"), true, true));
+        c.fields.add(new FieldDefinition("BLUE", new Type("Color"), true, true));
 
         coreClasses.add(c);
 

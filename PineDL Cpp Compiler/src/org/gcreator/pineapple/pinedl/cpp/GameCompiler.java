@@ -374,6 +374,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "array.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "application.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "background.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "collision.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "drawing.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "exceptions.h", replace);
@@ -382,6 +383,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "keycodes.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "pamath.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "scene.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "shapes.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "texture.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "texturelist.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "timer.h", replace);
@@ -874,6 +876,7 @@ public class GameCompiler {
         headerH.println("#include \"array.h\"");
         headerH.println("#include \"application.h\"");
         headerH.println("#include \"background.h\"");
+        headerH.println("#include \"collision.h\"");
         headerH.println("#include \"color.h\"");
         headerH.println("#include \"drawing.h\"");
         headerH.println("#include \"exceptions.h\"");
@@ -888,6 +891,7 @@ public class GameCompiler {
         headerH.println("#include \"vector.h\"");
         headerH.println("#include \"view.h\"");
         headerH.println("#include \"window.h\"");
+        headerH.println("#include \"shapes.h\"");
     }
 
     private void loadConfig() {
