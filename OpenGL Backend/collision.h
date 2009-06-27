@@ -39,11 +39,23 @@ class CollisionManager
             double r2y = r2p->getY();
             double r2width = r2->getWidth();
             double r2height = r2->getHeight();
-            if(r1x==r2x+r2width) return false;
-            if(r1x+r1width==r2x) return false;
-            if(r1y==r2y+r2height) return false;
-            if(r1y+r1height==r2y) return false;
-            return true;
+            
+            if(rectangleIntersects(r1, r2)) return false;
+            
+            bool ymatch = r1y<=r2y+r2height && r1y+r1height>=r2y;
+            
+            if(ymatch){
+                if(r1x==r2x+r2width) return true;
+                if(r1x+r1width==r2x) return true;
+            }
+            
+            bool xmatch = r1x+r1width>=r2x && r1x<=r2x+r2width;
+            
+            if(xmatch){
+                if(r1y==r2y+r2height) return true;
+                if(r1y+r1height==r2y) return true;
+            }
+            return false;
         }
 };
 
