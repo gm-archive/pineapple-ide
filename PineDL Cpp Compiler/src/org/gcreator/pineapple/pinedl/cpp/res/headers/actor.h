@@ -72,6 +72,17 @@ public:
     void setVisible(bool visible) { this->visible = visible; }
 
     Texture* getTexture();
+
+    virtual void verifyCollisions();
+
+    virtual void handleCollision(Actor* other){}
+
+    virtual Rectangle* getRectangle(){
+        Texture* tex = getTexture();
+        if(tex==NULL){ return NULL; }
+        return new Rectangle(x, y, x+tex->getWidth(), y+tex->getHeight());
+    }
+
 };
 
 }

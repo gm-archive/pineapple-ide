@@ -23,6 +23,8 @@ protected:
 
     virtual void drawActors(Drawing* d);
     virtual void drawBackgrounds();
+
+    friend class Actor;
 public:
     Scene(int width, int height);
     virtual ~Scene();
