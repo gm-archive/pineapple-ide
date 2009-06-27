@@ -170,13 +170,13 @@ public abstract class BaseGenerator {
         successful = false;
         final String msg = message;
         System.out.println(msg);
-
-        SwingUtilities.invokeLater(new Runnable() {
+        GameCompiler.compFrame.writeLine(msg);
+        /*SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                GameCompiler.compFrame.writeLine(msg);
+                
             }
-        });
+        });*/
     }
 
     protected String detokenize(String id) {
@@ -847,18 +847,24 @@ public abstract class BaseGenerator {
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
                             int size = method.arguments.size();
+                            System.out.println("if("+size+"!="+argumentVector.size());
                             if (size != argumentVector.size()) {
                                 //does not match
                                 continue functionLoop;
                             }
+                            System.out.println("Proceeding");
                             for (int i = 0; i < size; i++) {
                                 try {
                                     Type type1 = method.arguments.get(i).type; //Intended
                                     Type type2 = argumentVector.get(i).inspectedType; //Used
+                                    System.out.println("Comparing types " + type1 + " and " + type2);
                                     if (!typeMatches(type1, type2)) {
+                                        System.out.println("Not matched");
                                         continue functionLoop;
                                     }
+                                    System.out.println("Matched");
                                 } catch (PineClassNotFoundException e) {
+                                    System.out.println("PineClassNotFound");
                                     //We're not interested in this particular
                                     //type of exceptions
                                 }
@@ -868,14 +874,13 @@ public abstract class BaseGenerator {
                                 }
                             }
                             translation.inspectedType = method.returnType;
-
+                        }
+                        if (translation.inspectedType == null) {
+                            translation.errors.add(new TranslationError(true, leaf, context, //
+                                "Could not find method " + funRef.name));
                         }
 
                         translation.stringEquivalent += ')';
-                        if (translation.inspectedType == null) {
-                            translation.errors.add(new TranslationError(true, leaf, context, //
-                                    "Could not find method " + funRef.name));
-                        }
                     }
                 } else {
                     if (inRetrieverExpression) {
@@ -989,28 +994,38 @@ public abstract class BaseGenerator {
                         }
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
+                            if(argumentVector.size()>method.arguments.size()){
+                                continue functionLoop;
+                            }
                             for (int i = 0; i < method.arguments.size(); i++) {
-                                try {
-                                    Type type1 = method.arguments.get(i).type; //Intended
-                                    Type type2 = argumentVector.get(i).inspectedType; //Used
-                                    if (!typeMatches(type1, type2)) {
+                                GlobalLibrary.VariableDefinition varDef = method.arguments.get(i);
+                                if (i >= argumentVector.size()) {
+                                    if(varDef.defaultValue==null){
                                         continue functionLoop;
                                     }
-                                } catch (PineClassNotFoundException e) {
-                                    //We're not interested in this particular
-                                    //type of exceptions
+                                } else {
+                                    try {
+                                        Type type2 = argumentVector.get(i).inspectedType; //Used
+                                        Type type1 = varDef.type; //Intended
+                                        if (!typeMatches(type1, type2)) {
+                                            continue functionLoop;
+                                        }
+                                    } catch (PineClassNotFoundException e) {
+                                        //We're not interested in this particular
+                                        //type of exceptions
+                                    }
                                 }
-                                if (method.isStatic) {
-                                    translation.errors.add(new TranslationError(true, leaf, context, //
-                                            "Using static method as non-static"));
-                                }
+                                translation.inspectedType = method.returnType;
                             }
-                            translation.inspectedType = method.returnType;
-                        }
-                        translation.stringEquivalent += ')';
-                        if (translation.inspectedType == null) {
-                            translation.errors.add(new TranslationError(true, leaf, context, //
-                                    "Could not find method " + funRef.name));
+                            if (method.isStatic) {
+                                translation.errors.add(new TranslationError(true, leaf, context, //
+                                        "Using static method " + funRef.name + " as non-static"));
+                            }
+                            translation.stringEquivalent += ')';
+                            if (translation.inspectedType == null) {
+                                translation.errors.add(new TranslationError(true, leaf, context, //
+                                        "Could not find method " + funRef.name));
+                            }
                         }
                     }
                 }
@@ -1295,7 +1310,6 @@ public abstract class BaseGenerator {
         throw new Exception("Invalid arguments");
     }
     //Note that if t2 extends t1, then true
-
     public boolean typeMatches(Type t1, Type t2)
             throws PineClassNotFoundException {
         if (t2 == null) {

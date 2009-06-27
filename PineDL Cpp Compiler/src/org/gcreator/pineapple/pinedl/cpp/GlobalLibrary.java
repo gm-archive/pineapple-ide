@@ -131,7 +131,7 @@ public class GlobalLibrary {
         m = new MethodDefinition("drawPush", Type.VOID);
         c.methods.add(m);
 
-        m = new MethodDefinition("drawColor", new Type("Pineapple.Color"), true, true);
+        m = new MethodDefinition("drawColor", new Type("Pineapple.Color"));
         c.methods.add(m);
 
         m = new MethodDefinition("drawColor", Type.VOID);
@@ -246,7 +246,7 @@ public class GlobalLibrary {
         coreClasses.add(c);
         
         c = new ClassDefinition("CollisionManager");
-        m = new MethodDefinition("rectangleIntersects", Type.BOOL);
+        m = new MethodDefinition("rectangleIntersects", Type.BOOL, true, true);
         m.arguments.add(new VariableDefinition("r1", new Type("Pineapple.Rectangle")));
         m.arguments.add(new VariableDefinition("r2", new Type("Pineapple.Rectangle")));
         c.methods.add(m);

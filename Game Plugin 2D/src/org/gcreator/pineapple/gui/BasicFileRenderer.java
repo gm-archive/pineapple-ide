@@ -46,11 +46,16 @@ public class BasicFileRenderer extends DefaultListCellRenderer{
         }
         
         String path = ((BasicFile) value).getPath();
+        System.out.println("path="+path);
         int indexofdot = path.lastIndexOf('.');
         int indexofslash = path.lastIndexOf('/');
-        setText("<html>" + path.substring(0, indexofslash)
-                + path.substring(indexofslash+1, indexofdot)
-                + "<font color='gray'>." + path.substring(indexofdot+1) + "</font>");
+        String beforeSlash = path.substring(0, indexofslash);
+        System.out.println("beforeSlash="+beforeSlash);
+        String text = "<html><div>" + beforeSlash
+                + "/" + path.substring(indexofslash+1, indexofdot)
+                + "<font color='gray'>." + path.substring(indexofdot+1) + "</font></div>";
+        System.out.println("text="+text);
+        setText(text);
         
         return this;
     }

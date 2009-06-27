@@ -230,6 +230,7 @@ public class CppGenerator extends BaseGenerator {
                 s += retrieveType(a.type, true);
                 s += ' ';
                 s += detokenize(a.name);
+                System.out.println("Declaring variable(argument) " + a.name);
                 vars.declareVariable(a.name, a.type);
                 isFirst = false;
             }
