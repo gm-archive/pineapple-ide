@@ -250,6 +250,10 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("r1", new Type("Pineapple.Rectangle")));
         m.arguments.add(new VariableDefinition("r2", new Type("Pineapple.Rectangle")));
         c.methods.add(m);
+        m = new MethodDefinition("rectangleIsTangent", Type.BOOL, true, true);
+        m.arguments.add(new VariableDefinition("r1", new Type("Pineapple.Rectangle")));
+        m.arguments.add(new VariableDefinition("r2", new Type("Pineapple.Rectangle")));
+        c.methods.add(m);
         coreClasses.add(c);
 
         c = new ClassDefinition("Actor");
