@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.pinedl.cpp;
 
 import org.gcreator.pineapple.pinedl.Leaf;
@@ -31,25 +30,24 @@ import org.gcreator.pineapple.pinedl.context.PineDLContext;
  * @author Luís Reis
  */
 public class TranslationError {
+
     public boolean isFatal;
     public Leaf leaf;
     public PineDLContext context;
-    
     /**
      * Should be ONLY the method, not the "in function NAME: etc."
      */
     public String errorMessage;
-    
+
     public TranslationError(boolean isFatal, Leaf leaf, PineDLContext context,
-            String errorMessage){
+            String errorMessage) {
         this.isFatal = isFatal;
         this.leaf = leaf;
         this.context = context;
         this.errorMessage = errorMessage;
     }
-    
-    public String generateFullErrorMessage(){
-        return "In " + context.contentClass.clsName + "." + context.getFunctionName()
-                + ": " + errorMessage;
+
+    public String generateFullErrorMessage() {
+        return "In " + context.contentClass.clsName + "." + context.getFunctionName() + ":"+leaf.line+": " + errorMessage;
     }
 }

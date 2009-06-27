@@ -1,6 +1,5 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,11 +33,11 @@ import org.gcreator.pineapple.pinedl.Type;
  */
 public class PineDLContext {
 
-    public enum Flag{
+    public enum Flag {
+
         StaticData,
         ContentData
     }
-    
     public PineDLContext root = null;
     public Flag flag = null;
     public PineClass contentClass = null;
@@ -86,22 +85,22 @@ public class PineDLContext {
     }
 
     public String getFunctionName() {
-        if(function==null){
+        if (function == null) {
             return "&lt;none&gt;";
         }
         return function.getName();
     }
-    
+
     /**
      * Returns the return type of the function
      * Or null if in constructor
      * @return the return type of the function
      */
-    public Type getFunctionReturnType(){
-        if(function==null){
+    public Type getFunctionReturnType() {
+        if (function == null) {
             return null;
         }
-        if(function instanceof Function){
+        if (function instanceof Function) {
             return ((Function) function).returnType;
         }
         return null;
@@ -109,10 +108,10 @@ public class PineDLContext {
 
     @Override
     public String toString() {
-        String s = "[ root="+root+", function_name=";
-        s += (function==null?"null":function.getName())+", vars={";
+        String s = "[ root=" + root + ", function_name=";
+        s += (function == null ? "null" : function.getName()) + ", vars={";
         for (String k : vars.keySet()) {
-            s += k+"="+vars.get(k)+",";
+            s += k + "=" + vars.get(k) + ",";
         }
         s += "} ]";
         return s;

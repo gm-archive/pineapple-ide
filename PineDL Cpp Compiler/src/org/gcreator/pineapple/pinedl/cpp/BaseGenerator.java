@@ -78,7 +78,8 @@ import org.gcreator.pineapple.pinedl.statements.WhileStatement;
  * from PineDL tokens from the parser and was created
  * to avoid having duplicate code in the {@link HGenerator}
  * and the {@link CppGenerator}.
- * 
+ *
+ * @author Luís Reis
  * @author Serge Humphrey
  */
 public abstract class BaseGenerator {
@@ -118,11 +119,6 @@ public abstract class BaseGenerator {
             type.type = fullName;
             return definition.exportCppType() + (reference ? "*" : "");
         }
-        /*for (String s : context) {
-        if (s.equals(t.type[t.type.length - 1])) {
-        return s;
-        }
-        }*/
 
         throwError("In file " + fname + ": Unknown type " + t.toString());
         return "---";
@@ -171,12 +167,6 @@ public abstract class BaseGenerator {
         final String msg = message;
         System.out.println(msg);
         GameCompiler.compFrame.writeLine(msg);
-        /*SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                
-            }
-        });*/
     }
 
     protected String detokenize(String id) {
@@ -730,26 +720,8 @@ public abstract class BaseGenerator {
                 }
                 funame += ")";
 
-
-
-                String suggestions = "";
-                if (methods.size() > 0) {
-                    suggestions = "<br/>Suggestions:";
-                    for (GlobalLibrary.MethodDefinition m : methods) {
-                        String f = m.name + "(";
-                        int q = 0;
-                        for (GlobalLibrary.VariableDefinition d : m.arguments) {
-                            f += d.type.toString();
-                            if (q++ + 1 < m.arguments.size()) {
-                                f += ", ";
-                            }
-                        }
-                        f += ")";
-                        suggestions += "<br/>" + f;
-                    }
-                }
                 translation.errors.add(new TranslationError(true, leaf, context,
-                        "Could not find a method " + funame + suggestions));
+                        "Could not find a method " + funame));
             }
 
             translation.stringEquivalent += ')';
@@ -827,7 +799,7 @@ public abstract class BaseGenerator {
                         }
                     } else if (rightLeaf instanceof FunctionReference) {
                         FunctionReference funRef = (FunctionReference) rightLeaf;
-                        Vector<GlobalLibrary.MethodDefinition> methods = //
+                        Vector<GlobalLibrary.MethodDefinition> methods = // \\
                                 referencedType.getMethods(funRef.name);
                         Vector<TranslatedLeaf> argumentVector = new Vector<TranslatedLeaf>();
                         translation.stringEquivalent += detokenize(funRef.name);
@@ -847,7 +819,7 @@ public abstract class BaseGenerator {
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
                             int size = method.arguments.size();
-                            System.out.println("if("+size+"!="+argumentVector.size());
+                            System.out.println("if(" + size + "!=" + argumentVector.size());
                             if (size != argumentVector.size()) {
                                 //does not match
                                 continue functionLoop;
@@ -865,19 +837,20 @@ public abstract class BaseGenerator {
                                     System.out.println("Matched");
                                 } catch (PineClassNotFoundException e) {
                                     System.out.println("PineClassNotFound");
-                                    //We're not interested in this particular
-                                    //type of exceptions
+                                //We're not interested in this particular
+                                //type of exceptions
                                 }
                                 if (!method.isStatic) {
                                     translation.errors.add(new TranslationError(true, leaf, context, //
-                                            "Attempting to use non-static method as static."));
+                                            "Cannot reference non-static method ``" + funRef.name +
+                                            "'' from static context"));
                                 }
                             }
                             translation.inspectedType = method.returnType;
                         }
                         if (translation.inspectedType == null) {
                             translation.errors.add(new TranslationError(true, leaf, context, //
-                                "Could not find method " + funRef.name));
+                                    "Could not find method " + funRef.name));
                         }
 
                         translation.stringEquivalent += ')';
@@ -994,13 +967,13 @@ public abstract class BaseGenerator {
                         }
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
-                            if(argumentVector.size()>method.arguments.size()){
+                            if (argumentVector.size() > method.arguments.size()) {
                                 continue functionLoop;
                             }
                             for (int i = 0; i < method.arguments.size(); i++) {
                                 GlobalLibrary.VariableDefinition varDef = method.arguments.get(i);
                                 if (i >= argumentVector.size()) {
-                                    if(varDef.defaultValue==null){
+                                    if (varDef.defaultValue == null) {
                                         continue functionLoop;
                                     }
                                 } else {
@@ -1310,6 +1283,7 @@ public abstract class BaseGenerator {
         throw new Exception("Invalid arguments");
     }
     //Note that if t2 extends t1, then true
+
     public boolean typeMatches(Type t1, Type t2)
             throws PineClassNotFoundException {
         if (t2 == null) {

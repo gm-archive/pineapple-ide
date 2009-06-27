@@ -198,13 +198,12 @@ public class GameCompiler {
                                 tmp.put(script, parser.cls);
                             }
                             generateTextureList();
-                            for(int i = 0; i < parsers.size(); i++){
+                            for (int i = 0; i < parsers.size(); i++) {
                                 InitialParser parser = parsers.get(i);
                                 GlobalLibrary.ClassDefinition cDef = clsDef.get(i);
-                                if(parser.cls.superClass!=null){
+                                if (parser.cls.superClass != null) {
                                     cDef.parent = parser.classFromName(parser.cls.superClass.type);
-                                }
-                                else{
+                                } else {
                                     cDef.parent = null;
                                 }
                             }
@@ -216,12 +215,11 @@ public class GameCompiler {
                             Pineapple is run. */
                             copyLib(!copiedLib);
                             copiedLib = true;
-                            if(worked){
+                            if (worked) {
                                 compFrame.writeLine("Compiling C++ code");
                                 generateMain();
                                 compile();
-                            }
-                            else{
+                            } else {
                                 compFrame.writeLine("<font color='red'>Failed to compile.</font>");
                             }
                         } catch (Exception ex) {
@@ -262,7 +260,7 @@ public class GameCompiler {
         w = new PrintWriter(cpp);
         w.println("#include \"texturelist.h\"");
         w.println();
-        
+
         Vector<BasicFile> simgs = new Vector<BasicFile>();
         GlobalLibrary.ClassDefinition textureList =
                 new GlobalLibrary.ClassDefinition("TextureList");
@@ -271,7 +269,7 @@ public class GameCompiler {
             name = name.replaceAll("_zlib$", "");
             System.out.println("Adding field " + name + " to TextureList.");
             textureList.fields.add(
-                new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
+                    new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
         }
         GlobalLibrary.coreClasses.add(textureList);
         w.println("void Pineapple::TextureList::init()\n{");
@@ -290,7 +288,7 @@ public class GameCompiler {
         w.println("\tTextureList::START_IMAGES = new unsigned int[" + simgs.size() + "];");
         int i = 0;
         for (BasicFile f : simgs) {
-            if(f!=null){
+            if (f != null) {
                 w.println("\tTextureList::START_IMAGES[" + i++ + "] = " + f.getName().replaceAll("\\.", "_") + ";");
             }
         }
@@ -760,49 +758,49 @@ public class GameCompiler {
         w.println();
         printFields(scene.fields, w);
         w.println();
-        
+
         boolean hasCreate = false;
-        
-        for(Event evt : scene.events){
-            if(evt.getType().equals(Event.TYPE_CREATE)){
+
+        for (Event evt : scene.events) {
+            if (evt.getType().equals(Event.TYPE_CREATE)) {
                 w.print("\tpublic this() : super");
                 w.print("(" + scene.getWidth() + ", " + scene.getHeight());
                 w.println("){");
-                
-                w.print(evt.getPineDL()+'\n');
-                
+
+                w.print(evt.getPineDL() + '\n');
+
                 w.println("}");
                 w.println();
                 hasCreate = true;
-            } else if(evt.getType().equals(Event.TYPE_UPDATE)){
+            } else if (evt.getType().equals(Event.TYPE_UPDATE)) {
                 w.println("\tpublic void update(){");
-                w.print(evt.getPineDL()+'\n');
+                w.print(evt.getPineDL() + '\n');
                 w.println("}");
                 w.println();
-            } else if(evt.getType().equals(Event.TYPE_DRAW)){
+            } else if (evt.getType().equals(Event.TYPE_DRAW)) {
                 w.println("\tpublic void draw(Drawing d){");
-                w.print(evt.getPineDL()+'\n');
+                w.print(evt.getPineDL() + '\n');
                 w.println("}");
                 w.println();
-            } else if(evt.getType().equals(Event.TYPE_KEYPRESS)){
+            } else if (evt.getType().equals(Event.TYPE_KEYPRESS)) {
                 w.println("\tpublic void onKeyDown(int key){");
-                w.print(evt.getPineDL()+'\n');
+                w.print(evt.getPineDL() + '\n');
                 w.println("}");
                 w.println();
-            } else if(evt.getType().equals(Event.TYPE_KEYRELEASE)){
+            } else if (evt.getType().equals(Event.TYPE_KEYRELEASE)) {
                 w.println("\tpublic void onKeyUp(int key){");
-                w.print(evt.getPineDL()+'\n');
+                w.print(evt.getPineDL() + '\n');
                 w.println("}");
                 w.println();
-            } else if(evt.getType().equals(Event.TYPE_KEYPRESSED)){
+            } else if (evt.getType().equals(Event.TYPE_KEYPRESSED)) {
                 w.println("\tpublic void onKeyPressed(int key){");
-                w.print(evt.getPineDL()+'\n');
+                w.print(evt.getPineDL() + '\n');
                 w.println("}");
                 w.println();
             }
         }
-        
-        if(!hasCreate){
+
+        if (!hasCreate) {
             w.print("\tpublic this() : super");
             w.print("(" + scene.getWidth() + ", " + scene.getHeight());
             w.println("){");
@@ -810,7 +808,7 @@ public class GameCompiler {
             w.println("}");
             w.println();
         }
-        
+
         w.println("private void setupScene(){");
 
         Color c = scene.getBackgroundColor();
@@ -967,13 +965,11 @@ public class GameCompiler {
     private void printFields(Vector<Field> fields, PrintWriter w) {
         for (Field v : fields) {
             w.print("\t");
-            if(v.getAccess()==ClassResource.Field.Access.PRIVATE){
+            if (v.getAccess() == ClassResource.Field.Access.PRIVATE) {
                 w.print("private ");
-            }
-            else if(v.getAccess()==ClassResource.Field.Access.PROTECTED){
+            } else if (v.getAccess() == ClassResource.Field.Access.PROTECTED) {
                 w.print("protected ");
-            }
-            else{
+            } else {
                 w.print("public ");
             }
             //w.print(v.getAccess().toString().toLowerCase() + " ");

@@ -29,7 +29,7 @@ import org.gcreator.pineapple.pinedl.statements.Expression;
  * Represents a constructor
  * @author Luís Reis
  */
-public class Constructor extends FunctionConstructorBase{
+public class Constructor extends FunctionConstructorBase {
 
     public Vector<Expression> superArguments = null;
 
@@ -72,8 +72,8 @@ public class Constructor extends FunctionConstructorBase{
         content.optimize();
         return this;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return "&lt;constructor&gt;";
     }
 }

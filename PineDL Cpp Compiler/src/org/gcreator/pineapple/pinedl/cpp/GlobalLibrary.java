@@ -351,7 +351,6 @@ public class GlobalLibrary {
         m.arguments.add(new VariableDefinition("bgColor", new Type("Color")));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("update", Type.VOID));
-        c.methods.add(new MethodDefinition("draw", Type.VOID));
         m = new MethodDefinition("draw", Type.VOID);
         m.arguments.add(new VariableDefinition("d", new Type("Drawing")));
         c.methods.add(m);

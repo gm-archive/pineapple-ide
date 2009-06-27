@@ -29,7 +29,7 @@ import java.util.Collections;
  *
  * @author Luís Reis
  */
-public class Function extends FunctionConstructorBase{
+public class Function extends FunctionConstructorBase {
 
     public Type returnType = null;
     public boolean isStatic = false;
@@ -74,8 +74,8 @@ public class Function extends FunctionConstructorBase{
         content.optimize();
         return this;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
     }
 }
