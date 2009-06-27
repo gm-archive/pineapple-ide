@@ -1,6 +1,10 @@
 #ifndef _COLLISION_H_INCLUDED
 #define _COLLISION_H_INCLUDED
 
+#include "shapes.h"
+
+namespace Pineapple{
+
 class CollisionManager
 {
     public:
@@ -42,5 +46,7 @@ class CollisionManager
             return true;
         }
 };
+
+}
 
 #endif
