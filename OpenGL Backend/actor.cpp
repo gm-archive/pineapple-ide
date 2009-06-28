@@ -2,6 +2,8 @@
 #include "vector.h"
 #include "actor.h"
 #include "texturelist.h"
+#include "collision.h"
+#include <list>
 
 using namespace Pineapple;
 
@@ -96,3 +98,26 @@ Texture* Actor::getTexture()
         return NULL;
     return TextureList::Get_Texture(texture);
 }
+
+void Actor::verifyCollisions()
+{
+    Rectangle* selfRect = getRectangle();
+    if(selfRect==NULL){
+        return;
+    }
+    list<Actor*> actors = Application::getScene()->actors;
+    list<Actor*>::iterator i = actors.begin();
+    while(i!=actors.end()){
+        Actor* other = (*i);
+        i++;
+        if(this==other) continue;
+        Rectangle* otherRect = other->getRectangle();
+        if(otherRect==NULL){
+            continue;
+        }
+        if(CollisionManager::rectangleCollides(selfRect, otherRect)){
+            handleCollision(other);
+        }
+    }
+}
+

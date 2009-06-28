@@ -47,6 +47,7 @@ void Scene::update()
     list<Actor*>::iterator i = actors.begin();
     while (i != actors.end())
     {
+        (*i)->verifyCollisions();
         (*i)->update();
         (*i)->move();
         i++;
