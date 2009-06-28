@@ -707,6 +707,14 @@ public class GameCompiler {
 
                 w.println("\t}");
             }
+            
+            if (evt.getType().equals(Event.TYPE_COLLISION)) {
+                w.println("\tpublic void handleCollision(Actor other) {");
+
+                w.print(outputEvent(a, evt));
+
+                w.println("\t}");
+            }
         }
 
         if (!hasCreate) {
