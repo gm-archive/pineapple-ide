@@ -33,6 +33,7 @@ import javax.swing.event.ChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.gcreator.pineapple.events.Event;
 import org.gcreator.pineapple.formats.Actor;
 import org.gcreator.pineapple.gui.BehaviourPanel;
 import org.gcreator.pineapple.gui.DocumentPane;
@@ -70,6 +71,7 @@ public final class ActorEditor extends DocumentPane {
         initComponents();
         behaviour = new BehaviourPanel(actor, this);
         behaviour.setVisible(true);
+        behaviour.addEventType(Event.TYPE_COLLISION);
         depthSpinner.setValue(actor.getZ());
         depthSpinner.addChangeListener(new ChangeListener() {
 

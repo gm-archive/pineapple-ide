@@ -28,6 +28,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import org.gcreator.pineapple.events.Event;
 
 /**
  * An event tab renderer. Puts the image on the left of the tab.
@@ -58,17 +59,19 @@ public class EventTabRenderer extends JPanel {
         public Icon getIcon() {
             JTabbedPane t = tabs.get();
             String s = t.getTitleAt(t.indexOfTabComponent(EventTabRenderer.this));
-            if (s.equals("Create Event")) {
+            if (s.equals(Event.TYPE_CREATE)) {
                 return EventCellRenderer.CREATE_IMAGE;
-            } else if (s.equals("Destroy Event")) {
+            } else if (s.equals(Event.TYPE_DESTROY)) {
                 return EventCellRenderer.DESTROY_IMAGE;
-            } else if (s.equals("Draw Event")) {
+            } else if (s.equals(Event.TYPE_DRAW)) {
                 return EventCellRenderer.DRAW_IMAGE;
-            } else if (s.equals("Update Event")) {
+            } else if (s.equals(Event.TYPE_UPDATE)) {
                 return EventCellRenderer.UPDATE_IMAGE;
-            } else if (s.equals("Key Press Event")) {
+            } else if (s.equals(Event.TYPE_KEYPRESS)) {
                 return EventCellRenderer.KEY_IMAGE;
-            } else if (s.equals("Key Release Event")) {
+            } else if (s.equals(Event.TYPE_KEYRELEASE)) {
+                return EventCellRenderer.KEY_IMAGE;
+            } else if (s.equals(Event.TYPE_KEYPRESSED)) {
                 return EventCellRenderer.KEY_IMAGE;
             }
             return null;

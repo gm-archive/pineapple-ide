@@ -718,7 +718,6 @@ public abstract class BaseGenerator {
                         funame += ", ";
                     }
                 }
-                funame += ")";
 
                 translation.errors.add(new TranslationError(true, leaf, context,
                         "Could not find a method " + funame));
@@ -965,6 +964,7 @@ public abstract class BaseGenerator {
                             translation.stringEquivalent += tLeaf.stringEquivalent;
                             isFirst = false;
                         }
+                        translation.stringEquivalent += ')';
                         functionLoop:
                         for (GlobalLibrary.MethodDefinition method : methods) {
                             if (argumentVector.size() > method.arguments.size()) {
@@ -994,7 +994,6 @@ public abstract class BaseGenerator {
                                 translation.errors.add(new TranslationError(true, leaf, context, //
                                         "Using static method " + funRef.name + " as non-static"));
                             }
-                            translation.stringEquivalent += ')';
                             if (translation.inspectedType == null) {
                                 translation.errors.add(new TranslationError(true, leaf, context, //
                                         "Could not find method " + funRef.name));
@@ -1038,7 +1037,7 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += ')';
             translation.inspectedType = Type.BOOL;
         } else if (leaf instanceof NequalOperation) {
-            EqualsOperation operation = (EqualsOperation) leaf;
+            NequalOperation operation = (NequalOperation) leaf;
             TranslatedLeaf left = translateLeaf(operation.left, context, false);
             TranslatedLeaf right = translateLeaf(operation.right, context, false);
             translation.errors.addAll(left.errors);

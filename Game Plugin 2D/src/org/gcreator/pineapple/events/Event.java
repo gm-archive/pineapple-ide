@@ -69,6 +69,12 @@ public class Event {
     public static final String TYPE_KEYPRESSED = "Key Pressed Event";
 
     /**
+     * Actors only
+     * Called when a collision is found
+     */
+    public static final String TYPE_COLLISION = "Collision Event";
+    
+    /**
      * Creates a new {@link Event}.
      * 
      * @param type The type of the event.

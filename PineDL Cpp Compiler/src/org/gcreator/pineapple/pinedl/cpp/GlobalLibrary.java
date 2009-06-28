@@ -325,17 +325,22 @@ public class GlobalLibrary {
         m = new MethodDefinition("onKeyDown", Type.VOID);
         m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
-        m = new MethodDefinition("onKeyDown", Type.VOID);
+        m = new MethodDefinition("onKeyUp", Type.VOID);
         m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
-        m = new MethodDefinition("onKeyDown", Type.VOID);
+        m = new MethodDefinition("onKeyPressed", Type.VOID);
         m.arguments.add(new VariableDefinition("Key", Type.INT));
         c.methods.add(m);
         c.methods.add(new MethodDefinition("isVisible", Type.BOOL));
         m = new MethodDefinition("setVisible", Type.VOID);
         m.arguments.add(new VariableDefinition("visible", Type.BOOL));
         c.methods.add(m);
-        c.methods.add(new MethodDefinition("getTexture", new Type("Texture")));
+        c.methods.add(new MethodDefinition("getTexture", new Type("Pineapple.Texture")));
+        c.methods.add(new MethodDefinition("verifyCollisions", Type.VOID));
+        m = new MethodDefinition("handleCollision", Type.VOID);
+        m.arguments.add(new VariableDefinition("other", new Type("Pineapple.Actor")));
+        c.methods.add(m);
+        c.methods.add(new MethodDefinition("getRectangle", new Type("Pineapple.Rectangle")));
 
         coreClasses.add(c);
 

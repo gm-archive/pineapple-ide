@@ -58,7 +58,13 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
     public ClassResource res;
     public DocumentPane pane;
     protected TableRowSorter<TableModel> sorter;
+    private Vector<String> strings = new Vector<String>();
 
+    public void addEventType(String evt){
+        strings.add(evt);
+        eventList.updateUI();
+    }
+    
     /** 
      * Creates new form BehaviourPanel
      * 
@@ -66,6 +72,13 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
      * @param pane The {@link DocumentPane} that this panel should belong to.
      */
     public BehaviourPanel(ClassResource obj, DocumentPane pane) {
+        strings.add(Event.TYPE_CREATE);
+        strings.add(Event.TYPE_UPDATE);
+        strings.add(Event.TYPE_DESTROY);
+        strings.add(Event.TYPE_DRAW);
+        strings.add(Event.TYPE_KEYPRESS);
+        strings.add(Event.TYPE_KEYRELEASE);
+        strings.add(Event.TYPE_KEYPRESSED);
         initComponents();
         res = obj;
         this.pane = pane;
@@ -180,9 +193,8 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
         eventsTab.setLayout(new java.awt.BorderLayout());
 
         eventList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Create Event", "Update Event", "Draw Event", "Destroy Event", "Key Press Event", "Key Release Event", "Key Pressed Event" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public int getSize() { return strings.size(); }
+            public Object getElementAt(int i) { return strings.get(i); }
         });
         eventList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         eventList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
