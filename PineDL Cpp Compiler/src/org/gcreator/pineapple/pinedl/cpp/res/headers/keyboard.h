@@ -1,16 +1,17 @@
-#ifndef KEYBOARD_H
-#define KEYBOARD_H
+#ifndef _KEYBOARD_H
+#define _KEYBOARD_H
 
-#define WINTRANSPARENT TRANSPARENT
+#define _WINTRANSPARENT TRANSPARENT
 #undef TRANSPARENT
 #define TRANSPARENT _SDL_TRANSPARENT
 #include "SDL/SDL.h"
 #undef TRANSPARENT
 #include "keycodes.h"
+#include "core.h"
 
 namespace Pineapple {
 
-class Keyboard
+class Keyboard : public Object
 {
     static Uint8* keys;
 public:

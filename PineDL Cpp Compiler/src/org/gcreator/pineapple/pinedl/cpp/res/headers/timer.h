@@ -1,9 +1,11 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef _TIMER_H
+#define _TIMER_H
+
+#include "core.h"
 
 namespace Pineapple {
 
-class Timer
+class Timer : public Object
 {
 private:
     int startTicks;

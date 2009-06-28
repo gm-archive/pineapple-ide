@@ -91,7 +91,7 @@ public class CompilerFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Compiling Game");
-        setMinimumSize(new java.awt.Dimension(300, 200));
+        setMinimumSize(new java.awt.Dimension(400, 300));
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 

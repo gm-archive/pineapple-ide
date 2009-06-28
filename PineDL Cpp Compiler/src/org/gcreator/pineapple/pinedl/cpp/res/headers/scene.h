@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef _SCENE_H
+#define _SCENE_H
 
 #include "actor.h"
 #include "view.h"
@@ -7,10 +7,11 @@
 #include "keyboard.h"
 #include <vector>
 #include <list>
+#include "core.h"
 
 namespace Pineapple {
 
-class Scene
+class Scene : public Object
 {
 protected:
     std::list<Actor*> actors;

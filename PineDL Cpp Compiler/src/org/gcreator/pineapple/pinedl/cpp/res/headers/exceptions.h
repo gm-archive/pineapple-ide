@@ -2,10 +2,11 @@
 #define _EXCEPTIONS_H_
 
 #include <string>
+#include "core.h"
 
 namespace Pineapple {
 
-class Exception{
+class Exception : public Object{
     private:
         std::string message;
     public:

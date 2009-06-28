@@ -3,10 +3,14 @@
 
 #include "texture.h"
 #include <vector>
+#include "core.h"
+
+using namespace Pineapple;
+using namespace std;
 
 namespace Pineapple
 {
-    class TextureList
+    class TextureList : public Object
     {
     protected:
         static Texture* Load_Compressed_Texture(FILE*, unsigned int, unsigned int);
@@ -19,7 +23,7 @@ namespace Pineapple
             unsigned long long decompressed_size;
             Texture* tex;
         };
-        static std::vector<ImageData*> images;
+        static vector<ImageData*> images;
         static long archive_size;
         static long archive_data_start;
         static unsigned int* START_IMAGES;
@@ -27,7 +31,6 @@ namespace Pineapple
     public:
         static void init();
         static Texture* Get_Texture(unsigned int);
-        #include "texturelistdefined.h"
     };
 }
 

@@ -1,13 +1,14 @@
-#include "exceptions.h"
+#ifndef _ARRAY_H_INCLUDED
+#define _ARRAY_H_INCLUDED
 
-#ifndef ARRAY_H_INCLUDED
-#define ARRAY_H_INCLUDED
+#include "exceptions.h"
+#include "core.h"
 
 namespace Pineapple
 {
 
     template<class T>
-    class Array
+    class Array : public Object
     {
     private:
         T* arrayContent;
@@ -29,7 +30,7 @@ namespace Pineapple
             {
                 throw new IndexOutOfBoundsException();
             }
-            return arrayContent[length];
+            return arrayContent[pos];
         }
         T& operator[](int pos)
         {

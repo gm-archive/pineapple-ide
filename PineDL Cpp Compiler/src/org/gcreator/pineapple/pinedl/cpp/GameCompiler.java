@@ -374,6 +374,7 @@ public class GameCompiler {
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "background.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "collision.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "color.h", replace);
+        copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "core.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "drawing.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "exceptions.h", replace);
         copyFile("/org/gcreator/pineapple/pinedl/cpp/res/headers/", outputFolder, "io.h", replace);

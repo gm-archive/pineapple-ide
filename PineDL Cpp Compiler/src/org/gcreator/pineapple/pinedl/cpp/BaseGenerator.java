@@ -1358,7 +1358,7 @@ public abstract class BaseGenerator {
     public static class PineClassNotFoundException extends Exception {
 
         public PineClassNotFoundException() {
-            super("OMG class not found");
+            super("Class not found");
         }
 
         public PineClassNotFoundException(String msg) {

@@ -98,13 +98,19 @@ public class GlobalLibrary {
         return clsDefinition;
     }
 
+    public static ClassDefinition ObjectClass;
 
     static {
         /* Functions provided by libPineapple.a, the OpenGL Backend */
-
+        
         /* Drawing functions */
-        ClassDefinition c = new ClassDefinition("Drawing");
+        ClassDefinition c;
+        
         MethodDefinition m;
+        
+        coreClasses.add(ObjectClass = new ClassDefinition("Object", (ClassDefinition) null));
+        
+        c = new ClassDefinition("Drawing");
         m = new MethodDefinition("drawBegin", Type.VOID);
         m.arguments.add(new VariableDefinition("mode", Type.INT));
         c.methods.add(m);
@@ -586,8 +592,13 @@ public class GlobalLibrary {
         public Vector<ConstructorDefinition> constructors;
         public Vector<EnumDefinition> enums;
 
-        protected ClassDefinition(String name) {
+        protected ClassDefinition(String name){
+            this(name, ObjectClass);
+        }
+        
+        protected ClassDefinition(String name, ClassDefinition parent) {
             this.name = name;
+            this.parent = parent;
             this.access = AccessControlKeyword.PUBLIC;
             this.classes = new Vector<ClassDefinition>();
             this.methods = new Vector<MethodDefinition>();

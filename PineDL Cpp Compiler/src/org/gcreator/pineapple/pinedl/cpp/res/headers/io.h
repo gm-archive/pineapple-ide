@@ -2,9 +2,10 @@
 #define _IO_H_
 
 #include <string>
+#include "core.h"
 
 namespace Pineapple{
-    class InputStream{
+    class InputStream : public Object{
         virtual int read() = 0;
         const std::string readAll(){
             std::string value = std::string("");
@@ -21,7 +22,8 @@ namespace Pineapple{
         }
         virtual void close(){}
     };
-    class OutputStream{
+
+    class OutputStream : public Object{
         virtual void write(int chr) = 0;
         virtual void write(char chr){ write((int) chr); }
         void write(std::string string){
@@ -31,7 +33,8 @@ namespace Pineapple{
         }
         virtual void close(){}
     };
-    class FileInputStream{
+
+    class FileInputStream : public Object{
         private:
             void* file;
             bool closed;
@@ -40,7 +43,8 @@ namespace Pineapple{
             virtual int read();
             virtual void close();
     };
-    class FileOutputStream{
+
+    class FileOutputStream : public Object{
         private:
             void* file;
             bool closed;
