@@ -31,6 +31,4 @@ public abstract class Leaf {
     public Leaf optimize() {
         return this;
     }
-
-    public int line = -1;
 }

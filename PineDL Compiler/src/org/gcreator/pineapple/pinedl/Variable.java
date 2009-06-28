@@ -37,7 +37,6 @@ public class Variable {
     public Expression defaultValue;
     public Type type = null;
     public String name = "";
-    public int line;
 
     public Variable() {
     }

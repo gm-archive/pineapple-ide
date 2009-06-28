@@ -1,6 +1,5 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<serge_1994@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
