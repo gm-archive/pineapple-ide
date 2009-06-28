@@ -47,6 +47,6 @@ public class TranslationError {
     }
 
     public String generateFullErrorMessage() {
-        return "In " + context.contentClass.clsName + "." + context.getFunctionName() + ":"+leaf.line+": " + errorMessage;
+        return "In " + context.contentClass.clsName + "." + context.getFunctionName() + ":" + errorMessage;
     }
 }
