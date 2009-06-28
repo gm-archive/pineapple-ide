@@ -3,10 +3,11 @@
 
 #include "exceptions.h"
 #include "pamath.h"
+#include "core.h"
 
 namespace Pineapple
 {
-    class Point
+    class Point : public Object
     {
         private:
             double x;
@@ -24,7 +25,7 @@ namespace Pineapple
             double getY(){ return y; }
     };
 
-    class Rectangle
+    class Rectangle : public Object
     {
         public:
             Point* p1;

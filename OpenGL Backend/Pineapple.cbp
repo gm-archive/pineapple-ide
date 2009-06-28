@@ -50,6 +50,7 @@
 			<Option virtualFolder="APIs/Collision API/" />
 		</Unit>
 		<Unit filename="color.cpp" />
+		<Unit filename="color.h" />
 		<Unit filename="core.h" />
 		<Unit filename="drawing.cpp">
 			<Option virtualFolder="APIs/Drawing API/" />

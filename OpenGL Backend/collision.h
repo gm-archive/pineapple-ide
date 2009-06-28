@@ -2,10 +2,11 @@
 #define _COLLISION_H_INCLUDED
 
 #include "shapes.h"
+#include "core.h"
 
 namespace Pineapple{
 
-class CollisionManager
+class CollisionManager : public Object
 {
     public:
         static bool rectangleIntersects(Rectangle* r1, Rectangle* r2)

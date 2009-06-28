@@ -1,8 +1,10 @@
 #ifndef _COLOR_H_
 #define _COLOR_H_
 
+#include "core.h"
+
 namespace Pineapple{
-    class Color{
+    class Color : public Object{
         private:
             float r,g,b,a;
         public:

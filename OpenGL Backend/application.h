@@ -3,10 +3,11 @@
 
 #include "scene.h"
 #include <string>
+#include "core.h"
 
 namespace Pineapple {
 
-class Application
+class Application : public Object
 {
     static int speed;
     static bool running;

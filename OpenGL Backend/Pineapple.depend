@@ -158,9 +158,10 @@
 	"collision.h"
 	<list>
 
-1246198221 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/application.h
+1246201212 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/application.h
 	"scene.h"
 	<string>
+	"core.h"
 
 1246199078 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/scene.h
 	"actor.h"
@@ -200,12 +201,14 @@
 1246199023 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/keycodes.h
 	"core.h"
 
-1246050717 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.h
+1246200949 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/drawing.h
 	<SDL/SDL_opengl.h>
 	"color.h"
 	"shapes.h"
+	"core.h"
 
-1245190736 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/color.h
+1246201190 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/color.h
+	"core.h"
 
 1246199225 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/view.h
 	"color.h"
@@ -326,14 +329,16 @@
 	"application.h"
 	"texturelist.h"
 
-1246051107 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/shapes.h
+1246200965 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/shapes.h
 	"exceptions.h"
 	"pamath.h"
+	"core.h"
 
 1246200116 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/core.h
 	<cstdio>
 	<string>
 
-1246122595 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/collision.h
+1246200939 /home/luis/NetBeansProjects/Sabre/Trunk/OpenGL Backend/collision.h
 	"shapes.h"
+	"core.h"
 

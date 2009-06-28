@@ -4,6 +4,7 @@
 #include <SDL/SDL_opengl.h>
 #include "color.h"
 #include "shapes.h"
+#include "core.h"
 
 #define RAD2DEG 0.0174532925
 
@@ -23,7 +24,7 @@
 
 namespace Pineapple
 {
-    class Drawing
+    class Drawing : public Object
     {
       public:
         void drawBegin(GLenum mode);

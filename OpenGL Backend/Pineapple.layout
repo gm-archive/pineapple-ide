@@ -10,8 +10,8 @@
 	<File name="application.cpp" open="0" top="0" tabpos="10">
 		<Cursor position="718" topLine="1" />
 	</File>
-	<File name="application.h" open="0" top="0" tabpos="10">
-		<Cursor position="105" topLine="0" />
+	<File name="application.h" open="1" top="1" tabpos="11">
+		<Cursor position="99" topLine="0" />
 	</File>
 	<File name="array.h" open="0" top="0" tabpos="3">
 		<Cursor position="35" topLine="0" />
@@ -22,20 +22,23 @@
 	<File name="background.h" open="0" top="0" tabpos="8">
 		<Cursor position="8" topLine="0" />
 	</File>
-	<File name="collision.h" open="0" top="0" tabpos="3">
-		<Cursor position="2575" topLine="0" />
+	<File name="collision.h" open="1" top="0" tabpos="7">
+		<Cursor position="556" topLine="0" />
 	</File>
 	<File name="color.cpp" open="0" top="0" tabpos="1">
 		<Cursor position="41652" topLine="730" />
 	</File>
-	<File name="core.h" open="1" top="1" tabpos="6">
+	<File name="color.h" open="1" top="0" tabpos="10">
+		<Cursor position="108" topLine="0" />
+	</File>
+	<File name="core.h" open="1" top="0" tabpos="6">
 		<Cursor position="397" topLine="0" />
 	</File>
 	<File name="drawing.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="1735" topLine="51" />
 	</File>
-	<File name="drawing.h" open="0" top="0" tabpos="2">
-		<Cursor position="1562" topLine="0" />
+	<File name="drawing.h" open="1" top="0" tabpos="8">
+		<Cursor position="671" topLine="0" />
 	</File>
 	<File name="exceptions.h" open="0" top="0" tabpos="3">
 		<Cursor position="138" topLine="0" />
@@ -61,8 +64,8 @@
 	<File name="scene.h" open="0" top="0" tabpos="5">
 		<Cursor position="26" topLine="0" />
 	</File>
-	<File name="shapes.h" open="0" top="0" tabpos="2">
-		<Cursor position="1292" topLine="23" />
+	<File name="shapes.h" open="1" top="0" tabpos="9">
+		<Cursor position="216" topLine="0" />
 	</File>
 	<File name="texture.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="120" topLine="0" />
