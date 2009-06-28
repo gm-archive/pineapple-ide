@@ -1,6 +1,7 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef _ACTOR_H
+#define _ACTOR_H
 
+#include "core.h"
 #include "vector.h"
 #include "texture.h"
 #include "keyboard.h"
@@ -8,7 +9,7 @@
 
 namespace Pineapple {
 
-class Actor
+class Actor : public Object
 {
 private:
     Vector* motion;

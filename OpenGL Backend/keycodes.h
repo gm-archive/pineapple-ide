@@ -1,5 +1,7 @@
-#ifndef KEYCODES_H
-#define KEYCODES_H
+#ifndef _KEYCODES_H
+#define _KEYCODES_H
+
+#include "core.h"
 
 namespace Pineapple {
 
@@ -11,7 +13,7 @@ namespace Pineapple {
 //as international virtual keycodes.  We'll follow in the footsteps of X11...
 //The names of the keys
 //
-class Key {
+class Key : public Object{
 	public:
 	//The keyboard syms have been cleverly chosen to map to ASCII
 	static const int Unknown	= 0;
@@ -268,7 +270,7 @@ class Key {
 //
 //Enumeration of valid key mods (possibly OR'd together)
 //
-class KeyMod{
+class KeyMod : public Object{
 	static const int ModNone  = 0x0000;
 	static const int ModLShift= 0x0001;
 	static const int ModRShift= 0x0002;

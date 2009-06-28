@@ -1,7 +1,8 @@
-#ifndef PAMATH_H
-#define PAMATH_H
+#ifndef _PAMATH_H
+#define _PAMATH_H
 
 #include <cmath>
+#include "core.h"
 
 namespace Pineapple
 {

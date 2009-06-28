@@ -1,10 +1,11 @@
-#ifndef BACKGROUND_H_INCLUDED
-#define BACKGROUND_H_INCLUDED
+#ifndef _BACKGROUND_H_INCLUDED
+#define _BACKGROUND_H_INCLUDED
 
+#include "core.h"
 
 namespace Pineapple {
 class Scene;
-class Background
+class Background : public Object
 {
   public:
     bool visible;

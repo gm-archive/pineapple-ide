@@ -3,13 +3,14 @@
 
 #include "texture.h"
 #include <vector>
+#include "core.h"
 
 using namespace Pineapple;
 using namespace std;
 
 namespace Pineapple
 {
-    class TextureList
+    class TextureList : public Object
     {
     protected:
         static Texture* Load_Compressed_Texture(FILE*, unsigned int, unsigned int);

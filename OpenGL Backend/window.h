@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include "keycodes.h"
+#include "core.h"
 
 namespace Pineapple {
 
-class Window
+class Window : public Object
 {
     static int width;
     static int height;

@@ -2,10 +2,11 @@
 #define VIEW_H
 
 #include "color.h"
+#include "core.h"
 
 namespace Pineapple {
 
-class View
+class View : public Object
 {
     int px;
     int py;

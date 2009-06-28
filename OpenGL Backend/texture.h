@@ -1,13 +1,14 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef _TEXTURE_H
+#define _TEXTURE_H
 
 #include "SDL/SDL_opengl.h"
 #include "SDL/SDL.h"
 #include <string>
+#include "core.h"
 
 namespace Pineapple {
 
-class Texture
+class Texture : public Object
 {
 private:
     int width;

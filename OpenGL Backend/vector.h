@@ -1,12 +1,12 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef _VECTOR_H
+#define _VECTOR_H
 
 #include "pamath.h"
-using namespace Pineapple::Math;
+#include "core.h"
 
 namespace Pineapple {
 
-class Vector
+class Vector : public Object
 {
 public:
     virtual void setX(float x) = 0;
@@ -40,20 +40,20 @@ public:
 
     void setDirection(float d)
     {
-        x = cos(d * pi/180) * (180/pi) * getSpeed();
-        y = -sin(d * pi/180) * (180/pi) * getSpeed();
+        x = cos(d * Pineapple::Math::pi/180) * (180/Pineapple::Math::pi) * getSpeed();
+        y = -sin(d * Pineapple::Math::pi/180) * (180/Pineapple::Math::pi) * getSpeed();
         direction = d;
     }
 
     void setSpeed(float s)
     {
-        x = cos(getDirection() * pi/180) * s;
-        y = -sin(getDirection() * pi/180) * s;
+        x = cos(getDirection() * Pineapple::Math::pi/180) * s;
+        y = -sin(getDirection() * Pineapple::Math::pi/180) * s;
     }
 
     float getDirection()
     {
-        return (x == 0 && y == 0) ? direction : (direction = atan2(x, y) * 180/pi);
+        return (x == 0 && y == 0) ? direction : (direction = atan2(x, y) * 180/Pineapple::Math::pi);
     }
     float getSpeed()
     {
@@ -80,18 +80,18 @@ public:
     float getDirection() { return direction; }
     float getSpeed() { return speed; }
 
-    float getX() { return cos(direction * pi/180) * speed; }
-    float getY() { return -sin(direction * pi/180) * speed; }
+    float getX() { return cos(direction * Pineapple::Math::pi/180) * speed; }
+    float getY() { return -sin(direction * Pineapple::Math::pi/180) * speed; }
 
     void setX(float x)
     {
-        direction = atan2(x, getY()) * 180/pi;
+        direction = atan2(x, getY()) * 180/Pineapple::Math::pi;
         speed = sqrt(x * x + getY() * getY());
     }
 
     void setY(float y)
     {
-        direction = atan2(getX(), y) * 180/pi;
+        direction = atan2(getX(), y) * 180/Pineapple::Math::pi;
         speed = sqrt(getX() * getX() + y * y);
     }
 

@@ -73,7 +73,7 @@ void Actor::setMotionMode(Motion m)
 void Actor::move()
 {
     if (friction != 0)
-        motion->setSpeed(sign(motion->getSpeed()) * (abs(motion->getSpeed()) - friction));
+        motion->setSpeed(::Pineapple::Math::sign(motion->getSpeed()) * (abs(motion->getSpeed()) - friction));
     if (getGravity() != 0)
         motion->add(gravity);
 
