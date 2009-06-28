@@ -994,11 +994,11 @@ public abstract class BaseGenerator {
                                 translation.errors.add(new TranslationError(true, leaf, context, //
                                         "Using static method " + funRef.name + " as non-static"));
                             }
-                            if (translation.inspectedType == null) {
+                        }
+                        if (translation.inspectedType == null) {
                                 translation.errors.add(new TranslationError(true, leaf, context, //
                                         "Could not find method " + funRef.name));
                             }
-                        }
                     }
                 }
             }
