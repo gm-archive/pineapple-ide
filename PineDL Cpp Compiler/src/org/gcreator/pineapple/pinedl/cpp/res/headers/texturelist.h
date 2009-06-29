@@ -30,6 +30,7 @@ namespace Pineapple
         static unsigned int N_START_IMAGES;
     public:
         static void init();
+#include "texturelistdefined.h"
         static Texture* Get_Texture(unsigned int);
     };
 }

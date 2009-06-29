@@ -1,5 +1,5 @@
-#ifndef _VECTOR_H
-#define _VECTOR_H
+#ifndef _PINEDL_VECTOR_H
+#define _PINEDL_VECTOR_H
 
 #include "pamath.h"
 #include "core.h"

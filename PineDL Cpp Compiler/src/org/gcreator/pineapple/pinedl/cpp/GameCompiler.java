@@ -258,8 +258,6 @@ public class GameCompiler {
         w.println();
         w.close();
         w = new PrintWriter(cpp);
-        w.println("#include \"texturelist.h\"");
-        w.println();
 
         Vector<BasicFile> simgs = new Vector<BasicFile>();
         GlobalLibrary.ClassDefinition textureList =
@@ -272,6 +270,7 @@ public class GameCompiler {
                     new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
         }
         GlobalLibrary.coreClasses.add(textureList);
+        w.println("#include \"texturelist.h\"");
         w.println("void Pineapple::TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
@@ -364,7 +363,6 @@ public class GameCompiler {
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "jpeg.dll", replace);
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "libpng12-0.dll", replace);
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "libtiff-3.dll", replace);
-            copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", binFolder, "zlib1.dll", replace);
             copyFile("/org/gcreator/pineapple/pinedl/cpp/res/windows/", outputFolder, "libPineapple.a", replace);
         }
         compFrame.writeLine("Copying header files");
@@ -395,7 +393,8 @@ public class GameCompiler {
         headerH.println("#endif");
         headerH.close();
         Vector<String> command = new Vector<String>();
-        command.add("g++");
+        String compiler = "g++";
+        command.add(compiler);
         command.add("-o");
         command.add(outputFile.getAbsolutePath());
         for (File script : pineScripts) {
@@ -407,6 +406,15 @@ public class GameCompiler {
         command.add((new File(outputFolder, "libPineapple.a")).getAbsolutePath());
 
         int c;
+        Process version = Runtime.getRuntime().exec(compiler + " --version");
+        InputStream veris = new BufferedInputStream(version.getInputStream());
+        String verout = "";
+        while ((c = veris.read()) != -1) {
+            verout += (char) c;
+        }
+        version.waitFor();
+        compFrame.writeLine("g++ --version:\n" + verout);
+        
         if (profile == CompilationProfile.UNIX_GCC) {
             Process sdlconfig = Runtime.getRuntime().exec("sdl-config --cflags --libs");
             InputStream sdlis = new BufferedInputStream(sdlconfig.getInputStream());
@@ -431,6 +439,7 @@ public class GameCompiler {
             command.add("-lSDL_image");
             command.add("-lglu32");
             command.add("-lopengl32");
+            command.add("-lz");
         }
 
 
