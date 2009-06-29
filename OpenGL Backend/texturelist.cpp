@@ -1,6 +1,7 @@
 #include "texturelist.h"
 #include "application.h"
 #include <iostream>
+
 #include <zlib.h>
 
 vector<TextureList::ImageData*> TextureList::images = vector<TextureList::ImageData*>();

@@ -342,3 +342,179 @@
 	"shapes.h"
 	"core.h"
 
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\actor.cpp
+	"application.h"
+	"vector.h"
+	"actor.h"
+	"texturelist.h"
+	"collision.h"
+	<list>
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\application.h
+	"scene.h"
+	<string>
+	"core.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\scene.h
+	"actor.h"
+	"view.h"
+	"background.h"
+	"keyboard.h"
+	<vector>
+	<list>
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\actor.h
+	"core.h"
+	"vector.h"
+	"texture.h"
+	"keyboard.h"
+	"drawing.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\core.h
+	<cstdio>
+	<string>
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\vector.h
+	"pamath.h"
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\pamath.h
+	<cmath>
+	"core.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\texture.h
+	"SDL/SDL_opengl.h"
+	"SDL/SDL.h"
+	<string>
+	"core.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\keyboard.h
+	"SDL/SDL.h"
+	"keycodes.h"
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\keycodes.h
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\drawing.h
+	<SDL/SDL_opengl.h>
+	"color.h"
+	"shapes.h"
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\color.h
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\shapes.h
+	"exceptions.h"
+	"pamath.h"
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\exceptions.h
+	<string>
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\view.h
+	"color.h"
+	"core.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\background.h
+	"core.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\texturelist.h
+	"texture.h"
+	<vector>
+	"core.h"
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\collision.h
+	"shapes.h"
+	"core.h"
+
+1246303920 source:c:\documents and settings\luís\workspace\opengl backend\application.cpp
+	"SDL/SDL_opengl.h"
+	"scene.h"
+	"application.h"
+	<cstdio>
+	<direct.h>
+	<windows.h>
+	<unistd.h>
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\background.cpp
+	"scene.h"
+	"background.h"
+	"texturelist.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\color.cpp
+	"color.h"
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\core.cpp
+	"core.h"
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\drawing.cpp
+	"drawing.h"
+	<cstdlib>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\io.cpp
+	"io.h"
+	"exceptions.h"
+	<cstdio>
+
+1246297981 c:\documents and settings\luís\workspace\opengl backend\io.h
+	<string>
+	"core.h"
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\keyboard.cpp
+	"keyboard.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\scene.cpp
+	"SDL/SDL.h"
+	"SDL/SDL_opengl.h"
+	<vector>
+	<list>
+	"application.h"
+	"actor.h"
+	"scene.h"
+	"window.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\window.h
+	<string>
+	<vector>
+	"keycodes.h"
+	"core.h"
+
+1246297982 source:c:\documents and settings\luís\workspace\opengl backend\texture.cpp
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	"SDL/SDL_opengl.h"
+	"texture.h"
+	"exceptions.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\timer.cpp
+	"SDL/SDL.h"
+	"timer.h"
+
+1246297982 c:\documents and settings\luís\workspace\opengl backend\timer.h
+	"core.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\vector.cpp
+	"vector.h"
+	"pamath.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\view.cpp
+	"SDL/SDL_opengl.h"
+	"view.h"
+	"window.h"
+
+1246297981 source:c:\documents and settings\luís\workspace\opengl backend\window.cpp
+	"SDL/SDL.h"
+	"SDL/SDL_opengl.h"
+	"window.h"
+	"timer.h"
+	"scene.h"
+	"application.h"
+	"texturelist.h"
+

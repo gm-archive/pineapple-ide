@@ -46,7 +46,7 @@ std::string Application::getCurrentDirectory()
 	if(!GetCurrentDir(cPath, sizeof(cPath))){
 	    return "";
 	}
-	cPath[sizeof(cPath) - 1] = '\0';
+	cPath[sizeof(cPath)/sizeof(cPath[0]) - 1] = '\0';
 
 	#ifdef WIN32
 	  char fPath[FILENAME_MAX+1];
