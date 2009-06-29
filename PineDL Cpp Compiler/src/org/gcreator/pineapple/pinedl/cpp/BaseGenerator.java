@@ -748,7 +748,7 @@ public abstract class BaseGenerator {
         } else if (leaf instanceof NewCall) {
             NewCall newCall = (NewCall) leaf;
             translation.stringEquivalent = "new ";
-            translation.stringEquivalent += typeToString(newCall.type, false);
+            translation.stringEquivalent += retrieveType(newCall.type, false);
             translation.stringEquivalent += '(';
 
             boolean first = true;
