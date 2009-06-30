@@ -50,6 +50,7 @@ import org.gcreator.pineapple.pinedl.statements.Expression;
 import org.gcreator.pineapple.pinedl.statements.FunctionReference;
 import org.gcreator.pineapple.pinedl.statements.IfStatement;
 import org.gcreator.pineapple.pinedl.statements.IntConstant;
+import org.gcreator.pineapple.pinedl.statements.IsOperation;
 import org.gcreator.pineapple.pinedl.statements.LessEqualOperation;
 import org.gcreator.pineapple.pinedl.statements.LessOperation;
 import org.gcreator.pineapple.pinedl.statements.LogicalAndOperation;
@@ -1150,6 +1151,13 @@ public abstract class BaseGenerator {
             translation.stringEquivalent += exp.stringEquivalent;
             translation.stringEquivalent += ')';
             translation.inspectedType = cast.type;
+        } else if (leaf instanceof IsOperation) {
+            IsOperation isOp = (IsOperation) leaf;
+            TranslatedLeaf exp = translateLeaf(isOp.exp, context, false);
+            Type t = isOp.type;
+            translation.inspectedType = Type.BOOL;
+            translation.stringEquivalent = "::Pineapple::_isInstanceof<" + retrieveType(t, true) +
+                    ">(" + exp.stringEquivalent + ')';
         }
         //TODO:  <<, >>, for, try/catch, throw, etc.
 
