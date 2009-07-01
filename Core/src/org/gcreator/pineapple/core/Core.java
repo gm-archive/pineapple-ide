@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,8 @@ import org.gcreator.pineapple.managers.PluginManager;
 public final class Core {
 
     /* 0.97... -> Alpha
-     * ...006 -> 6       */
-    private static final double version = 0.97006;
+     * ...007 -> 6       */
+    private static final double version = 0.97007;
     private static final StaticContext staticContext = new StaticContext();
     
     /**
@@ -70,13 +70,13 @@ public final class Core {
     protected static void load() {
         
         /* Logging code for testing releases */
-        try {
-            java.text.DateFormat d = java.text.DateFormat.getDateInstance();
-            System.setErr(new java.io.PrintStream(("error-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-            System.setOut(new java.io.PrintStream(("output-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+        //try {
+        //    java.text.DateFormat d = java.text.DateFormat.getDateInstance();
+        //    System.setErr(new java.io.PrintStream(("error-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+        //    System.setOut(new java.io.PrintStream(("output-log-" + d.format(java.util.Calendar.getInstance().getTime()) + ".log").replaceAll("/", "-")));
+        //} catch (java.io.IOException e) {
+        //    e.printStackTrace();
+        //}
         
         /* End of logging code */
 
