@@ -362,7 +362,8 @@ compop returns [Expression e = null]
 	(LESS q=bitw_shift_op {e=new LessOperation(e, q);}
 	|MORE q=bitw_shift_op {e=new MoreOperation(e, q);}
 	|LESS_EQ q=bitw_shift_op {e=new LessEqualOperation(e, q);}
-	|MORE_EQ q=bitw_shift_op {e=new MoreEqualOperation(e, q);})
+	|MORE_EQ q=bitw_shift_op {e=new MoreEqualOperation(e, q);}
+	|('is' m=type {e=new IsOperation(e, m);}))
 	)*;
 	
 comp2op returns [Expression e = null]
@@ -497,4 +498,3 @@ WHITESPACE : (
     )
     )
  { $channel = HIDDEN; };
-
