@@ -265,8 +265,9 @@ public class GameCompiler {
         GlobalLibrary.ClassDefinition textureList =
                 new GlobalLibrary.ClassDefinition("TextureList");
         for (File image : imageFiles) {
-            String name = image.getName().replaceAll("\\.", "_");
-            name = name.replaceAll("_zlib$", "");
+            String name = imageNames.get(image);
+            int index = name.lastIndexOf('.');
+            name = name.substring(0, index) + "_" + name.substring(index + 1);
             System.out.println("Adding field " + name + " to TextureList.");
             textureList.fields.add(
                     new GlobalLibrary.FieldDefinition(name, Type.INT, true, true, AccessControlKeyword.PUBLIC));
