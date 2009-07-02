@@ -27,6 +27,7 @@ package org.gcreator.pineapple.project.standard;
 import javax.imageio.ImageIO;
 import org.gcreator.pineapple.editors.ImagePreviewer;
 import org.gcreator.pineapple.gui.DocumentPane;
+import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.FormatSupporter;
 
@@ -37,6 +38,17 @@ import org.gcreator.pineapple.project.io.FormatSupporter;
  * @author Serge Humphrey
  */
 public class ImageSupporter implements FormatSupporter {
+
+    public ImageSupporter() {
+        String base = "files.formats.formatsupporter.remember.";
+        for (String s : ImageIO.getReaderFileSuffixes()) {
+            String k = base + s;
+            if (!SettingsManager.exists(k)) {
+                SettingsManager.set(k, this.getClass().getCanonicalName());
+            }
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -48,6 +60,7 @@ public class ImageSupporter implements FormatSupporter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return "Java ImageIO Image Loader";
     }
@@ -55,6 +68,7 @@ public class ImageSupporter implements FormatSupporter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription(String type) {
         String s = "Displays an image.";
         return s;
@@ -63,6 +77,7 @@ public class ImageSupporter implements FormatSupporter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept(String format) {
         /* Don't load images */
         for (String s : ImageIO.getReaderFileSuffixes()) {

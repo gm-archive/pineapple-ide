@@ -132,7 +132,10 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
     public void handleEvent(Event e) {
         if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
             PineappleCore.addFormatSupporter(this);
-            SettingsManager.set("files.formats.formatsupporter.remember.pdl", "org.gcreator.pineapple.syntax.PineDLPlugin");
+            String pdlk = "files.formats.formatsupporter.remember.pdl";
+            if (!SettingsManager.exists(pdlk)) {
+                SettingsManager.set(pdlk, "org.gcreator.pineapple.syntax.PineDLPlugin");
+            }
         }
     }
 

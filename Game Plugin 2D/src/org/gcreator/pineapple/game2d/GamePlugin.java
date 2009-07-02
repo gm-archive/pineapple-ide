@@ -183,7 +183,9 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             String base = "files.formats.formatsupporter.remember.";
             String fs = this.getClass().getCanonicalName();
             for (String format : formats) {
-                SettingsManager.set(base + format, fs);
+                if (!SettingsManager.exists(base + format)) {
+                    SettingsManager.set(base + format, fs);
+                }
             }
         } else if (e.getEventType().equals(PineappleGUI.TREE_MENU_INVOKED) && PineappleCore.getProject() != null) {
             JPopupMenu menu = (JPopupMenu) e.getArguments()[0];
