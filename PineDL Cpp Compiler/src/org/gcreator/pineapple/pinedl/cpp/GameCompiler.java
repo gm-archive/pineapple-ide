@@ -99,6 +99,7 @@ public class GameCompiler {
     HashMap<String, ClassResource> clsres = new HashMap<String, ClassResource>();
     //HashMap<String, PineClass> classContext = new HashMap<String, PineClass>();
     static boolean copiedLib = false;
+    int scenes = 0;
 
     public GameCompiler(final Project p) {
         this(p, getDefaultProfile());
@@ -164,6 +165,7 @@ public class GameCompiler {
                                     createActorScript(e);
                                 } else if (format.equals("scene")) {
                                     createSceneScript(e);
+                                    scenes++;
                                 } else if (format.equals("pdl")) {
                                     copyScript(e);
                                 } else {
@@ -274,8 +276,13 @@ public class GameCompiler {
         w.println("void Pineapple::TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
+
         if (mainScene == null) {
-            throw new Exception("<font color='red'>Hey you! Add some scenes to your project and set the scene order in Tools>Game Settings.<br/>BUILD FAILED</font>");
+            if (scenes == 0) {
+                throw new Exception("<font color='red'>Hey you! Add some scenes to your project and set the scene order in Tools>Game Settings.<br/>BUILD FAILED</font>");
+            } else {
+                throw new Exception("<font color='red'>Hey you! Set the scene order in Tools>Game Settings>Scene Order.<br/>BUILD FAILED</font>");
+            }
         }
         for (Scene.ActorInScene s : mainScene.actors) {
             if (!simgs.contains(s.actor.getImage())) {
