@@ -45,7 +45,8 @@ public class MainFrame extends JFrame implements EventHandler {
      */
     public void initialize() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(640, 480);
+        this.setSize(800, 600);
+        setLocationRelativeTo(null);
         EventManager.addEventHandler(this, DefaultEventTypes.WINDOW_DISPOSED, EventPriority.LOW);
     }
 
