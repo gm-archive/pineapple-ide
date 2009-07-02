@@ -239,7 +239,7 @@ public class GameCompiler {
         }
     }
 
-    public void generateTextureList() throws IOException {
+    public void generateTextureList() throws Exception {
         File h = new File(outputFolder, "texturelistdefined.h");
         File cpp = new File(outputFolder, "TextureListDefined.cpp");
         PrintWriter w = new PrintWriter(h);
@@ -274,6 +274,9 @@ public class GameCompiler {
         w.println("void Pineapple::TextureList::init()\n{");
         w.println("\tTextureList::archive_size = " + imageArchive.length() + ";");
         /* Figure out what images needed to be loaded at the game start. */
+        if (mainScene == null) {
+            throw new Exception("<font color='red'>Hey you! Add some scenes to your project and set the scene order in Tools>Game Settings.<br/>BUILD FAILED</font>");
+        }
         for (Scene.ActorInScene s : mainScene.actors) {
             if (!simgs.contains(s.actor.getImage())) {
                 simgs.add(s.actor.getImage());
