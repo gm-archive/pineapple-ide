@@ -26,6 +26,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.Plugin;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -131,6 +132,7 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
     public void handleEvent(Event e) {
         if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
             PineappleCore.addFormatSupporter(this);
+            SettingsManager.set("files.formats.formatsupporter.remember.pdl", "org.gcreator.pineapple.syntax.PineDLPlugin");
         }
     }
 
