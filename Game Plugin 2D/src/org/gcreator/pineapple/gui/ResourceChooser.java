@@ -22,6 +22,7 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui;
 
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import org.gcreator.pineapple.validators.ResourceValidator;
@@ -59,6 +60,7 @@ public class ResourceChooser extends JPanel {
 
     public ResourceChooser() {
         super(new GridBagLayout());
+        setBackground(Color.WHITE);
         label = new JLabel();
         label.setText("<none>");
         label.setVisible(true);
