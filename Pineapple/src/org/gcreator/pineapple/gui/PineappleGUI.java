@@ -1214,7 +1214,7 @@ public class PineappleGUI implements EventHandler {
             SettingsManager.set(TREE_SORT_MODE_KEY, sortMode.name());
         } else if (evt.getEventType().equals(FILE_CHOOSER_CREATED)) {
             String action = (String) evt.getArguments()[1];
-            if (!(action==null||action.equals("")||action.equals("open-file")||action.equals("open-image"))) {
+            if (!(action == null || action.equals("") || action.equals("open-file") || action.equals("open-image"))) {
                 return;
             }
             final JFileChooser c = (JFileChooser) evt.getArguments()[0];
@@ -1232,7 +1232,7 @@ public class PineappleGUI implements EventHandler {
                     if (image[0] == null) {
                         return;
                     }
-                    final JDialog d = new JDialog((Window)c.getTopLevelAncestor());
+                    final JDialog d = new JDialog((Window) c.getTopLevelAncestor());
                     d.setUndecorated(true);
                     d.setLayout(new BorderLayout());
                     JLabel l;
@@ -1241,15 +1241,16 @@ public class PineappleGUI implements EventHandler {
                     d.addFocusListener(new FocusListener() {
 
                         @Override
-                        public void focusGained(FocusEvent e) {}
+                        public void focusGained(FocusEvent e) {
+                        }
 
                         @Override
                         public void focusLost(FocusEvent e) {
-                           d.dispose();
+                            d.dispose();
                         }
-
                     });
                     l.addMouseListener(new MouseAdapter() {
+
                         @Override
                         public void mousePressed(MouseEvent e) {
                             if (e.getClickCount() >= 2) {
@@ -1258,8 +1259,8 @@ public class PineappleGUI implements EventHandler {
                         }
                     });
                     Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-                    d.setSize(Math.min(ss.width*2/3, image[0].getWidth(null)+14),
-                            Math.min(ss.height * 2/3, image[0].getWidth(null)+14));
+                    d.setSize(Math.min(ss.width * 2 / 3, image[0].getWidth(null) + 14),
+                            Math.min(ss.height * 2 / 3, image[0].getWidth(null) + 14));
                     d.setLocationRelativeTo(c.getRootPane());
                     d.setVisible(true);
                 }
@@ -1286,27 +1287,12 @@ public class PineappleGUI implements EventHandler {
                         if (f != null && f.getName().contains(".")) {
                             String s = f.getName();
                             String ext = s.substring(s.lastIndexOf('.') + 1);
-                            boolean isImg = false;
-                            for (String e : ImageIO.getReaderFileSuffixes()) {
-                                if (ext.equalsIgnoreCase(e)) {
-                                    try {
-                                        Image a = ImageIO.read(f);
-                                        image[0] = a;
-                                        x.setEnabled(true);
-                                        img.setIcon(new ImageIcon(a.getScaledInstance((a.getWidth(null) >= a.getHeight(null)) ? 170 : -1,
-                                                (a.getWidth(null) < a.getHeight(null)) ? 134 : -1,
-                                                Image.SCALE_FAST)));
-                                    } catch (Exception ex) {
-                                        img.setIcon(null);
-                                        image[0] = null;
-                                        x.setEnabled(false);
-                                    }
-                                    img.updateUI();
-                                    isImg = true;
-                                    break;
-                                }
-                            }
-                            if (!isImg) {
+                            Image[] imgs = getImageFromFile(f, new Dimension(170, 134), Image.SCALE_FAST);
+                            if (imgs[0] != null) {
+                                img.setIcon(new ImageIcon(imgs[1]));
+                                image[0] = imgs[0];
+                                x.setEnabled(true);
+                            } else {
                                 img.setIcon(null);
                                 image[0] = null;
                                 x.setEnabled(false);
@@ -1980,6 +1966,15 @@ public class PineappleGUI implements EventHandler {
                             PineappleCore.getProject().add(e);
                         } catch (FileNotFoundException ex) {
                             Logger.getLogger(PineappleGUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    String fn = bf.getName();
+                    int n = fn.lastIndexOf('.');
+                    if (n > 0) {
+                        String ext = fn.substring(n + 1);
+                        for (String s : ImageIO.getReaderFileSuffixes()) {
+                            if (ext.equalsIgnoreCase(ext)) {
+                            }
                         }
                     }
                     updateTreeUI();
@@ -2820,6 +2815,25 @@ public class PineappleGUI implements EventHandler {
             updateTreeUI();
         }
         //</editor-fold>
+    }
+
+    private Image[] getImageFromFile(File f, Dimension size, int scaling) {
+        String s = f.getName();
+        String ext = s.substring(s.lastIndexOf('.') + 1);
+        Image a = null, b = null;
+        for (String e : ImageIO.getReaderFileSuffixes()) {
+            if (ext.equalsIgnoreCase(e)) {
+                try {
+                    a = ImageIO.read(f);
+                    b = a.getScaledInstance((a.getWidth(null) >= a.getHeight(null)) ? size.width : -1,
+                            (a.getWidth(null) < a.getHeight(null)) ? size.height : -1,
+                            scaling);
+                } catch (Exception ex) {
+                }
+                break;
+            }
+        }
+        return new Image[]{a,b};
     }
     //</editor-fold>
 }
