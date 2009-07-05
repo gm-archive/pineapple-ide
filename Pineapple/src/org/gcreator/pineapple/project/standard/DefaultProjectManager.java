@@ -635,11 +635,6 @@ public class DefaultProjectManager implements ProjectManager {
     }
 
     private void updateTreeUI() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                PineappleGUI.tree.updateUI();
-            }
-        });
+        PineappleGUI.tree.updateUI();
     }
 }

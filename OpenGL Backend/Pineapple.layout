@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Windows Release" />
+	<ActiveTarget name="Release" />
 	<File name="actor.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="1499" topLine="0" />
 	</File>
@@ -77,7 +77,7 @@
 		<Cursor position="178" topLine="0" />
 	</File>
 	<File name="texturelist.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="757" topLine="0" />
+		<Cursor position="770" topLine="0" />
 	</File>
 	<File name="texturelist.h" open="0" top="0" tabpos="7">
 		<Cursor position="233" topLine="0" />

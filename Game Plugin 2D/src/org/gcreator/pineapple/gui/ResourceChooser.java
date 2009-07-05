@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -61,6 +62,7 @@ public class ResourceChooser extends JPanel {
     public ResourceChooser() {
         super(new GridBagLayout());
         setBackground(Color.WHITE);
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
         label = new JLabel();
         label.setText("<none>");
         label.setVisible(true);
