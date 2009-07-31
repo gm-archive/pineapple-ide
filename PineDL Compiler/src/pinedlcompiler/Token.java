@@ -101,10 +101,22 @@ public final class Token{
         LOGICAL_OREQUAL,
         LOGICAL_XOR,
         QUESTIONMARK, //?
-        COLON, //:
-        COMMA, //,
-        DOT, //.
-        SEMICOLON, //;
+        /**
+         * :
+         */
+        COLON,
+        /**
+         * ,
+         */
+        COMMA,
+        /**
+         * .
+         */
+        DOT,
+        /**
+         * ;
+         */
+        SEMICOLON,
         LOWER, //<
         LOWEREQUAL, //<=
         EQUALS, //==

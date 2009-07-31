@@ -19,11 +19,14 @@ public class Main {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         Lexer l = null;
-        //for(int i = 0; i < 1; i++){
-          //  for(int j = 0; j < 1; j++){
-                l = run();
-            //}
-        //}
+        l = run();
+        Parser p = new Parser(l.getTokens(), new Library());
+        try{
+            p.parse();
+        }
+        catch(ParserException e){
+            e.printStackTrace();
+        }
         System.out.println("Took: " + (System.currentTimeMillis() - start));
         for(Token t : l.getTokens()){
             //System.out.println(t);

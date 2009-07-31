@@ -17,6 +17,14 @@ public class Node {
      */
     public Token token = null;
 
+    public Node(){
+
+    }
+
+    public Node(Token token){
+        this.token = token;
+    }
+
     public final int getLine(){
         return token.line;
     }
