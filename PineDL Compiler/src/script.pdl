@@ -1,4 +1,8 @@
 class Character{
     public this(name, sprite, category, attacks...){
     }
+
+    public function act(){
+
+    }
 }

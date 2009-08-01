@@ -13,6 +13,7 @@ import pinedlcompiler.tree.ClassContentNode;
 import pinedlcompiler.tree.ClassNode;
 import pinedlcompiler.tree.ConstructorNode;
 import pinedlcompiler.tree.DocumentNode;
+import pinedlcompiler.tree.MethodNode;
 import pinedlcompiler.tree.Node;
 import pinedlcompiler.tree.StatementNode;
 
@@ -43,6 +44,25 @@ public final class Parser {
         public Return(int i, T node){
             this.i = i;
             this.node = node;
+        }
+    }
+
+    public class StatementContext{
+        public boolean firstInConstructor = false;
+
+        public StatementContext(){
+
+        }
+
+        public StatementContext(StatementContext other){
+            if(other==null) throw new NullPointerException("Argument mustn't be null");
+            this.firstInConstructor = other.firstInConstructor;
+        }
+
+        public StatementContext notFirst(){
+            StatementContext c = new StatementContext(this);
+            c.firstInConstructor = false;
+            return c;
         }
     }
 
@@ -94,7 +114,7 @@ public final class Parser {
                 t = demandToken(i++);
             }
             Return<ClassContentNode> content = parseClassContent(i);
-            i += content.i;
+            i = content.i;
             n.content = content.node;
             return new Return(i, n);
         }
@@ -118,6 +138,12 @@ public final class Parser {
             if(c!=null){
                 i = c.i;
                 node.addConstructor(c.node);
+                continue;
+            }
+            Return<MethodNode> m = parseMethod(i);
+            if(m!=null){
+                i = m.i;
+                node.addMethod(m.node);
                 continue;
             }
             throw todo("parseClassContent");
@@ -151,6 +177,9 @@ public final class Parser {
                 demandType(t, Token.Type.COMMA);
                 t = demandToken(i++, Token.Type.WORD);
             }
+            else{
+                demandType(t, Token.Type.WORD);
+            }
             isFirst = false;
             ArgumentListNode.Argument arg = new ArgumentListNode.Argument();
             arg.name = t.text;
@@ -161,28 +190,90 @@ public final class Parser {
             }
             if(t.type==Token.Type.VARARGS){
                 arg.varargs = true;
-                t = demandToken(i++);
+                t = demandToken(i++, Token.Type.RPAREN);
+                break;
             }
         }
 
-        Return<StatementNode> r = parseStatement(i, true);
+        StatementContext c = new StatementContext();
+        c.firstInConstructor = true;
+        Return<StatementNode> r = parseStatement(i, c);
         if(r==null){
             throw buildException(t, "Invalid constructor content");
         }
-        i = r.i;
+        i = r.i+1;
         constr.content = r.node;
         return new Return<ConstructorNode>(i, constr);
     }
 
-    public Return<StatementNode> parseStatement(int i, boolean firstInConstructor) throws ParserException{
-        Return<BlockNode> r = parseBlockStatement(i, firstInConstructor);
+    public Return<MethodNode> parseMethod(int i) throws ParserException{
+        Token accessToken = demandToken(i++);
+        Token t = accessToken;
+        Token.Type access = Token.Type.PUBLIC;
+        if(accessModifier.contains(accessToken.type)){
+            access = accessToken.type;
+            t = demandToken(i++);
+        }
+        if(t.type!=Token.Type.FUNCTION){
+            return null;
+        }
+
+        t = demandToken(i++, Token.Type.WORD);
+        MethodNode method = new MethodNode(t);
+        method.name = t.text;
+        method.accessModifier = accessToken;
+        ArgumentListNode arglist = new ArgumentListNode(demandToken(i++, Token.Type.LPAREN));
+        method.arguments = arglist;
+
+        boolean isFirst = true;
+
+        t = demandToken(i++);
+        while(true){
+            if(t.type==Token.Type.RPAREN){
+                break;
+            }
+            if(!isFirst){
+                demandType(t, Token.Type.COMMA);
+                t = demandToken(i++, Token.Type.WORD);
+            }
+            else{
+                demandType(t, Token.Type.WORD);
+            }
+            isFirst = false;
+            ArgumentListNode.Argument arg = new ArgumentListNode.Argument();
+            arg.name = t.text;
+            arglist.arguments.add(arg);
+            t = demandToken(i++);
+            if(t.type==Token.Type.EQUAL){
+                throw todo("Default arguments not yet implemented");
+            }
+            if(t.type==Token.Type.VARARGS){
+                arg.varargs = true;
+                t = demandToken(i++, Token.Type.RPAREN);
+                break;
+            }
+        }
+
+        StatementContext c = new StatementContext();
+        c.firstInConstructor = true;
+        Return<StatementNode> r = parseStatement(i, c);
+        if(r==null){
+            throw buildException(t, "Invalid constructor content");
+        }
+        i = r.i+1;
+        method.content = r.node;
+        return new Return<MethodNode>(i, method);
+    }
+
+    public Return<StatementNode> parseStatement(int i, StatementContext context) throws ParserException{
+        Return<BlockNode> r = parseBlockStatement(i, context);
         if(r!=null){
             return new Return<StatementNode>(r.i, r.node);
         }
         throw todo("parseStatement");
     }
 
-    public Return<BlockNode> parseBlockStatement(int i, boolean firstInConstructor) throws ParserException{
+    public Return<BlockNode> parseBlockStatement(int i, StatementContext context) throws ParserException{
         Token t = demandToken(i++);
         if(t.type!=Token.Type.BLKBEG){
             return null;
@@ -193,13 +284,13 @@ public final class Parser {
             if(t.type==Token.Type.BLKEND){
                 return new Return<BlockNode>(i, blk);
             }
-            Return<StatementNode> r = parseStatement(i, firstInConstructor);
+            Return<StatementNode> r = parseStatement(i, context);
             if(r==null){
                 throw buildException(t, "Invalid expression.");
             }
             i = r.i;
             blk.statements.add(r.node);
-            firstInConstructor = false;
+            context = context.notFirst();
         }
     }
 

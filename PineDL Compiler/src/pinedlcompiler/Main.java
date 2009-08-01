@@ -6,6 +6,7 @@
 package pinedlcompiler;
 
 import java.io.InputStream;
+import java.util.List;
 
 /**
  *
@@ -28,8 +29,9 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println("Took: " + (System.currentTimeMillis() - start));
-        for(Token t : l.getTokens()){
-            //System.out.println(t);
+        List<Token> tokens = l.getTokens();
+        for(int i = 0; i < tokens.size(); i++){
+            System.out.println("["+i+"] " + tokens.get(i));
         }
     }
     
