@@ -114,6 +114,10 @@ public final class Token{
          */
         DOT,
         /**
+         * ...
+         */
+        VARARGS,
+        /**
          * ;
          */
         SEMICOLON,

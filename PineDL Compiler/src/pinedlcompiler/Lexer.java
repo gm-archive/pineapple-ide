@@ -68,6 +68,7 @@ public final class Lexer {
         keywords.put("super", Token.Type.SUPER);
         
         threeCharTokens.put("&&=", Token.Type.LOGICAL_ANDEQUAL);
+        threeCharTokens.put("...", Token.Type.VARARGS);
         twoCharTokens.put("++", Token.Type.INCREMENT);
         twoCharTokens.put("+=", Token.Type.PLUSEQUAL);
         twoCharTokens.put("--", Token.Type.DECREMENT);
