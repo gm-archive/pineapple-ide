@@ -10,6 +10,7 @@ import java.util.Vector;
 import pinedlcompiler.tree.ArgumentListNode;
 import pinedlcompiler.tree.BlockNode;
 import pinedlcompiler.tree.BooleanConstant;
+import pinedlcompiler.tree.CharConstant;
 import pinedlcompiler.tree.ClassContentNode;
 import pinedlcompiler.tree.ClassNode;
 import pinedlcompiler.tree.ConstantNode;
@@ -18,6 +19,7 @@ import pinedlcompiler.tree.DocumentNode;
 import pinedlcompiler.tree.MethodNode;
 import pinedlcompiler.tree.Node;
 import pinedlcompiler.tree.StatementNode;
+import pinedlcompiler.tree.StringConstant;
 
 /**
  *
@@ -213,7 +215,21 @@ public final class Parser {
         if(constToken.type==Token.Type.TRUE||constToken.type==Token.Type.FALSE){
             return new Return<ConstantNode>(i, new BooleanConstant(constToken));
         }
-        throw todo("Char constants, string constants, null constant and numeric constants");
+        if(constToken.type==Token.Type.CHARCONST){
+            return new Return<ConstantNode>(i, new CharConstant(constToken));
+        }
+        if(constToken.type==Token.Type.STRINGCONST){
+            return new Return<ConstantNode>(i, new StringConstant(constToken));
+        }
+        return null;
+        //The following todo error is commented to allow progress
+        //in other areas
+        //throw todo("null constant and numeric constants");
+    }
+
+    public Return<ConstantNode> parseReference(int i) throws ParserException{
+        Token ref = demandToken(i++);
+        throw todo("parseReference");
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
@@ -308,8 +324,8 @@ public final class Parser {
         throw todo("parseFunction");
     }
 
-    public ParserException todo(String function){
-        return new ParserException("[TODO] " + function);
+    public ParserException todo(String message){
+        return new ParserException("[TODO] " + message);
     }
 
     public Token demandToken(int i) throws ParserException{
