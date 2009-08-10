@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Vector;
 import pinedlcompiler.tree.ArgumentListNode;
 import pinedlcompiler.tree.BlockNode;
+import pinedlcompiler.tree.BooleanConstant;
 import pinedlcompiler.tree.ClassContentNode;
 import pinedlcompiler.tree.ClassNode;
+import pinedlcompiler.tree.ConstantNode;
 import pinedlcompiler.tree.ConstructorNode;
 import pinedlcompiler.tree.DocumentNode;
 import pinedlcompiler.tree.MethodNode;
@@ -100,7 +102,7 @@ public final class Parser {
         }
     }
 
-    public Return parseClass(int i) throws ParserException{
+    public Return<ClassNode> parseClass(int i) throws ParserException{
         Token t = tokens.get(i);
         if(t.type==Token.Type.CLASS){
             i++;
@@ -116,7 +118,7 @@ public final class Parser {
             Return<ClassContentNode> content = parseClassContent(i);
             i = content.i;
             n.content = content.node;
-            return new Return(i, n);
+            return new Return<ClassNode>(i, n);
         }
         return null;
     }
@@ -146,7 +148,7 @@ public final class Parser {
                 node.addMethod(m.node);
                 continue;
             }
-            throw todo("parseClassContent");
+            throw todo("parseClassContent: Fields and nested classes");
         }
     }
 
@@ -204,6 +206,14 @@ public final class Parser {
         i = r.i+1;
         constr.content = r.node;
         return new Return<ConstructorNode>(i, constr);
+    }
+
+    public Return<ConstantNode> parseConstant(int i) throws ParserException{
+        Token constToken = demandToken(i++);
+        if(constToken.type==Token.Type.TRUE||constToken.type==Token.Type.FALSE){
+            return new Return<ConstantNode>(i, new BooleanConstant(constToken));
+        }
+        throw todo("Char constants, string constants, null constant and numeric constants");
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
