@@ -18,8 +18,10 @@ import pinedlcompiler.tree.ConstructorNode;
 import pinedlcompiler.tree.DocumentNode;
 import pinedlcompiler.tree.MethodNode;
 import pinedlcompiler.tree.Node;
+import pinedlcompiler.tree.Reference;
 import pinedlcompiler.tree.StatementNode;
 import pinedlcompiler.tree.StringConstant;
+import pinedlcompiler.tree.VariableReference;
 
 /**
  *
@@ -224,12 +226,58 @@ public final class Parser {
         return null;
         //The following todo error is commented to allow progress
         //in other areas
-        //throw todo("null constant and numeric constants");
+        //throw todo("null constant, this constant, super constant?,
+        //type constants and numeric constants");
     }
 
-    public Return<ConstantNode> parseReference(int i) throws ParserException{
+    public Return<Reference> parseReference(int i) throws ParserException{
         Token ref = demandToken(i++);
-        throw todo("parseReference");
+        if(ref.type!=Token.Type.WORD){
+            return null;
+        }
+        String name = ref.text;
+        if(!hasTokensLeft(i)){
+            return new Return<Reference>(i, new VariableReference(ref));
+        }
+        Token t = demandToken(i++);
+        if(t.type==Token.Type.LPAREN){
+            throw todo("parseReference: function");
+        }
+        return new Return<Reference>(i-1, new VariableReference(ref));
+        //Composed references like a.b are handled elsewhere.
+    }
+
+    public Return<Reference> parseComposedReference(int i) throws ParserException{
+        //todo: super() statements
+        Return<ConstantNode> c = parseConstant(i);
+        Reference r = null;
+        if(c==null){
+            Return<Reference> ref = parseReference(i);
+            if(ref==null){
+                return null;
+            }
+            i = ref.i;
+            r = ref.node;
+        }
+        else{
+            r = c.node;
+            i = c.i;
+        }
+        while(true){
+            if(!hasTokensLeft(i)){
+                return new Return<Reference>(i, r);
+            }
+
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.DOT){
+                return new Return<Reference>(i, r);
+            }
+
+            //Call parseReference again
+            //Then create composed reference
+            //And proceed with the loop again
+            throw todo("parseComposedReference");
+        }
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
@@ -326,6 +374,10 @@ public final class Parser {
 
     public ParserException todo(String message){
         return new ParserException("[TODO] " + message);
+    }
+
+    public boolean hasTokensLeft(int i){
+        return i<tokens.size();
     }
 
     public Token demandToken(int i) throws ParserException{

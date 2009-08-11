@@ -11,7 +11,7 @@ import pinedlcompiler.Token;
  *
  * @author luis
  */
-public class ConstantNode extends ExpressionNode{
+public class ConstantNode extends Reference{
     public ConstantNode(){}
     public ConstantNode(Token t){
         super(t);
