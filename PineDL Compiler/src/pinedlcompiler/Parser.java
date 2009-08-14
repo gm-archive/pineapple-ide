@@ -15,6 +15,7 @@ import pinedlcompiler.tree.ClassContentNode;
 import pinedlcompiler.tree.ClassNode;
 import pinedlcompiler.tree.ConstantNode;
 import pinedlcompiler.tree.ConstructorNode;
+import pinedlcompiler.tree.DeclarationNode;
 import pinedlcompiler.tree.DocumentNode;
 import pinedlcompiler.tree.ExpressionNode;
 import pinedlcompiler.tree.MethodNode;
@@ -158,13 +159,9 @@ public final class Parser {
     }
 
     public Return<ConstructorNode> parseConstructor(int i) throws ParserException{
+        //TODO: Fix access modifier token
         Token accessToken = demandToken(i++);
         Token t = accessToken;
-        Token.Type access = Token.Type.PUBLIC;
-        if(accessModifier.contains(accessToken.type)){
-            access = accessToken.type;
-            t = demandToken(i++);
-        }
         if(t.type!=Token.Type.THIS){
             return null;
         }
@@ -380,9 +377,41 @@ public final class Parser {
     public Return<StatementNode> parseStatement(int i, StatementContext context) throws ParserException{
         Return<BlockNode> r = parseBlockStatement(i, context);
         if(r!=null){
-            return new Return<StatementNode>(r.i, r.node);
+            return (Return) r;
+        }
+        Return<DeclarationNode> decl = parseDeclaration(i);
+        if(decl!=null){
+            return (Return) decl;
         }
         throw todo("parseStatement");
+    }
+    
+    public Return<DeclarationNode> parseDeclaration(int i) throws ParserException{
+        Token t = demandToken(i++);
+        if(t.type!=Token.Type.VAR&&t.type!=Token.Type.CONST){
+            return null;
+        }
+        DeclarationNode decl = new DeclarationNode(t);
+        Token name = demandToken(i++, Token.Type.WORD);
+        decl.name = name.text;
+        Token next = demandToken(i++);
+        if(next.type==Token.Type.SEMICOLON){
+            if(t.type==Token.Type.CONST){
+                //"var x;" is valid
+                //but "const x;" is not
+                throw buildException(next, "Constant declarations must have an associated value");
+            }
+            return new Return<DeclarationNode>(i, decl);
+        }
+        demandType(next, Token.Type.EQUAL); //var x ! 2; is invalid, for example
+        Return<ExpressionNode> e = parseExpression(i);
+        if(e==null){
+            throw buildException(next, "Invalid expression");
+        }
+        i = e.i;
+        decl.defaultValue = e.node;
+        demandToken(i++, Token.Type.SEMICOLON);
+        return new Return<DeclarationNode>(i, decl);
     }
 
     public Return<BlockNode> parseBlockStatement(int i, StatementContext context) throws ParserException{

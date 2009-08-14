@@ -14,4 +14,23 @@ import java.util.Vector;
  */
 public class DocumentNode extends Node{
     public List<Node> content = new Vector<Node>();
+    
+    @Override
+    public String toString(){
+        String s = "";
+        
+        boolean isFirst = true;
+        
+        for(Node node : content){
+            if(isFirst){
+                isFirst = false;
+            }
+            else{
+                s += "\n\n";
+            }
+            s += node.toString();
+        }
+        
+        return s;
+    }
 }

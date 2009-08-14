@@ -20,4 +20,10 @@ public class MethodNode extends Node{
     public MethodNode(Token token){
         super(token);
     }
+    
+    @Override
+    public String toString(){
+        String s = accessModifier.toString() + " " + name;
+        return s + arguments.toString() + content.toString();
+    }
 }

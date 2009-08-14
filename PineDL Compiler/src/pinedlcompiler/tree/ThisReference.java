@@ -15,4 +15,9 @@ public class ThisReference extends Reference{
     public ThisReference(Token t){
         super(t);
     }
+    
+    @Override
+    public String toString(){
+        return "this";
+    }
 }

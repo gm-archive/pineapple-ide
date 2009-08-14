@@ -18,4 +18,9 @@ public class CharConstant extends ConstantNode{
         super(t);
         value = t.text.charAt(0);
     }
+    
+    @Override
+    public String toString(){
+        return "'\\" + ((int) value) + "'";
+    }
 }

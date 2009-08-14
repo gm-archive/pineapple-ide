@@ -20,4 +20,9 @@ public class BooleanConstant extends ConstantNode{
             value = true;
         }
     }
+    
+    @Override
+    public String toString(){
+        return Boolean.toString(value);
+    }
 }

@@ -29,10 +29,11 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println("Took: " + (System.currentTimeMillis() - start));
-        List<Token> tokens = l.getTokens();
+        System.out.println(p.getDocumentNode().toString());
+        /*List<Token> tokens = l.getTokens();
         for(int i = 0; i < tokens.size(); i++){
             System.out.println("["+i+"] " + tokens.get(i));
-        }
+        }*/
     }
     
     public static Lexer run(){

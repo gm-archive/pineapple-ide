@@ -19,4 +19,15 @@ public class ClassNode extends Node{
     public ClassNode(Token t){
         super(t);
     }
+    
+    @Override
+    public String toString(){
+        String s = "class ";
+        s += name;
+        if(base!=null){
+            s += " : ";
+            s += base;
+        }
+        return s + content.toString();
+    }
 }

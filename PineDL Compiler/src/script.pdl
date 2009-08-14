@@ -3,6 +3,9 @@ class Character{
     }
 
     public function act(){
+        const a = true;
+        var b;
 
+        var c = "A";
     }
 }

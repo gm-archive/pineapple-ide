@@ -24,4 +24,15 @@ public class BlockNode extends StatementNode{
         super(t);
         statements = new Vector<StatementNode>();
     }
+    
+    @Override
+    public String toString(){
+        String s = "{\n";
+        
+        for(StatementNode node : statements){
+            s += node.toString() + ";\n";
+        }
+        
+        return s + "}\n";
+    }
 }
