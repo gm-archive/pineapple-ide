@@ -16,6 +16,7 @@ import pinedlcompiler.tree.ClassNode;
 import pinedlcompiler.tree.ConstantNode;
 import pinedlcompiler.tree.ConstructorNode;
 import pinedlcompiler.tree.DocumentNode;
+import pinedlcompiler.tree.ExpressionNode;
 import pinedlcompiler.tree.MethodNode;
 import pinedlcompiler.tree.Node;
 import pinedlcompiler.tree.Reference;
@@ -278,6 +279,43 @@ public final class Parser {
             //And proceed with the loop again
             throw todo("parseComposedReference");
         }
+    }
+
+    public Return<ExpressionNode> parsePrimitive(int i) throws ParserException{
+        Token t = demandToken(i);
+        if(t.type==Token.Type.PLUS){
+            i++;
+        }
+        else if(t.type==Token.Type.MINUS){
+            throw todo("negation"); //Implement stuff like '-x'
+        }
+        else if(t.type==Token.Type.LPAREN){
+            i++;
+            Return<ExpressionNode> exp = parseExpression(i);
+            if(exp==null){
+                throw buildException(demandToken(i), "Invalid exception");
+            }
+            demandToken(i++, Token.Type.RPAREN);
+            return new Return<ExpressionNode>(i, exp.node);
+        }
+        else if(t.type==Token.Type.NEW){
+            throw todo("'new' expression");
+        }
+        Return<ConstantNode> con = parseConstant(i);
+        if(con!=null){
+            return (Return) con; //I believe that, in this case
+                                //this operation is safe
+        }
+        Return<Reference> ref = parseComposedReference(i);
+        if(ref!=null){
+            return (Return) ref;
+        }
+        return null;
+    }
+
+    public Return<ExpressionNode> parseExpression(int i) throws ParserException{
+        //TODO
+        return parsePrimitive(i);
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
