@@ -3,27 +3,26 @@
  * and open the template in the editor.
  */
 
-package pinedlcompiler.tree;
+package org.gcreator.pineapple.pinedl.tree;
 
-import pinedlcompiler.Token;
+import org.gcreator.pineapple.pinedl.Token;
 
 /**
  *
  * @author luis
  */
-public class MethodNode extends Node{
+public class ConstructorNode extends Node{
     public Token accessModifier;
-    public String name;
     public ArgumentListNode arguments;
     public StatementNode content;
 
-    public MethodNode(Token token){
+    public ConstructorNode(Token token){
         super(token);
     }
     
     @Override
     public String toString(){
-        String s = accessModifier.toString() + " " + name;
-        return s + arguments.toString() + content.toString();
+        return accessModifier.toString() + " this" + arguments.toString()
+                + content.toString();
     }
 }

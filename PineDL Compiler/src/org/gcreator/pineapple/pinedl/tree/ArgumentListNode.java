@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package pinedlcompiler.tree;
+package org.gcreator.pineapple.pinedl.tree;
 
 import java.util.List;
 import java.util.Vector;
-import pinedlcompiler.Token;
+import org.gcreator.pineapple.pinedl.Token;
 
 /**
  *

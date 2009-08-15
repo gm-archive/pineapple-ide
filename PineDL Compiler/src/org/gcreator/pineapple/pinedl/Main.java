@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package pinedlcompiler;
+package org.gcreator.pineapple.pinedl;
 
 import java.io.InputStream;
 import java.util.List;

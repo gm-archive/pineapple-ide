@@ -3,14 +3,14 @@
  * and open the template in the editor.
  */
 
-package pinedlcompiler;
+package org.gcreator.pineapple.pinedl;
 
 /**
  *
  * @author luis
  */
-public class LexerException extends Exception{
-    public LexerException(String message){
+public class ParserException extends Exception{
+    public ParserException(String message){
         super(message);
     }
 }

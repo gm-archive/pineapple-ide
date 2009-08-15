@@ -3,27 +3,27 @@
  * and open the template in the editor.
  */
 
-package pinedlcompiler;
+package org.gcreator.pineapple.pinedl;
 
 import java.util.List;
 import java.util.Vector;
-import pinedlcompiler.tree.ArgumentListNode;
-import pinedlcompiler.tree.BlockNode;
-import pinedlcompiler.tree.BooleanConstant;
-import pinedlcompiler.tree.CharConstant;
-import pinedlcompiler.tree.ClassContentNode;
-import pinedlcompiler.tree.ClassNode;
-import pinedlcompiler.tree.ConstantNode;
-import pinedlcompiler.tree.ConstructorNode;
-import pinedlcompiler.tree.DeclarationNode;
-import pinedlcompiler.tree.DocumentNode;
-import pinedlcompiler.tree.ExpressionNode;
-import pinedlcompiler.tree.MethodNode;
-import pinedlcompiler.tree.Node;
-import pinedlcompiler.tree.Reference;
-import pinedlcompiler.tree.StatementNode;
-import pinedlcompiler.tree.StringConstant;
-import pinedlcompiler.tree.VariableReference;
+import org.gcreator.pineapple.pinedl.tree.ArgumentListNode;
+import org.gcreator.pineapple.pinedl.tree.BlockNode;
+import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
+import org.gcreator.pineapple.pinedl.tree.CharConstant;
+import org.gcreator.pineapple.pinedl.tree.ClassContentNode;
+import org.gcreator.pineapple.pinedl.tree.ClassNode;
+import org.gcreator.pineapple.pinedl.tree.ConstantNode;
+import org.gcreator.pineapple.pinedl.tree.ConstructorNode;
+import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
+import org.gcreator.pineapple.pinedl.tree.DocumentNode;
+import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
+import org.gcreator.pineapple.pinedl.tree.MethodNode;
+import org.gcreator.pineapple.pinedl.tree.Node;
+import org.gcreator.pineapple.pinedl.tree.Reference;
+import org.gcreator.pineapple.pinedl.tree.StatementNode;
+import org.gcreator.pineapple.pinedl.tree.StringConstant;
+import org.gcreator.pineapple.pinedl.tree.VariableReference;
 
 /**
  *
@@ -247,6 +247,7 @@ public final class Parser {
 
     public Return<Reference> parseComposedReference(int i) throws ParserException{
         //todo: super() statements
+        //todo: new X() and [1, 2, 3] statements
         Return<ConstantNode> c = parseConstant(i);
         Reference r = null;
         if(c==null){
@@ -290,13 +291,10 @@ public final class Parser {
             i++;
             Return<ExpressionNode> exp = parseExpression(i);
             if(exp==null){
-                throw buildException(demandToken(i), "Invalid exception");
+                return null;
             }
             demandToken(i++, Token.Type.RPAREN);
             return new Return<ExpressionNode>(i, exp.node);
-        }
-        else if(t.type==Token.Type.NEW){
-            throw todo("'new' expression");
         }
         Return<ConstantNode> con = parseConstant(i);
         if(con!=null){
@@ -310,9 +308,46 @@ public final class Parser {
         return null;
     }
 
+    public Return<ExpressionNode> parsePrePostOperator(int i) throws ParserException{
+        Token t = demandToken(i++);
+        if(t.type==Token.Type.INCREMENT){
+            throw todo("++x operator");
+        }
+        else if(t.type==Token.Type.DECREMENT){
+            throw todo("--x operator");
+        }
+        i--;
+        Return<ExpressionNode> primitive = parsePrimitive(i);
+        if(primitive==null){
+            return null;
+        }
+        i = primitive.i;
+        t = demandToken(i++);
+        if(t.type==Token.Type.INCREMENT){
+            throw todo("x++ operator");
+        }
+        else if(t.type==Token.Type.DECREMENT){
+            throw todo("x-- operator");
+        }
+        i--;
+        return primitive;
+    }
+    
+    public Return<ExpressionNode> parseNotCast(int i) throws ParserException{
+        Token t = demandToken(i++);
+        if(t.type==Token.Type.LOGICAL_NOT){
+            throw todo("Logical not operator");
+        }
+        else if(t.type==Token.Type.LPAREN){
+            //Eventually try to handle casts here
+        }
+        i--;
+        return parsePrePostOperator(i);
+    }
+    
     public Return<ExpressionNode> parseExpression(int i) throws ParserException{
         //TODO
-        return parsePrimitive(i);
+        return parsePrePostOperator(i);
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
