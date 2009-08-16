@@ -8,6 +8,7 @@ package org.gcreator.pineapple.pinedl;
 import java.util.List;
 import java.util.Vector;
 import org.gcreator.pineapple.pinedl.tree.ArgumentListNode;
+import org.gcreator.pineapple.pinedl.tree.AssignNode;
 import org.gcreator.pineapple.pinedl.tree.BlockNode;
 import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
 import org.gcreator.pineapple.pinedl.tree.CharConstant;
@@ -20,6 +21,7 @@ import org.gcreator.pineapple.pinedl.tree.DocumentNode;
 import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
 import org.gcreator.pineapple.pinedl.tree.MethodNode;
 import org.gcreator.pineapple.pinedl.tree.Node;
+import org.gcreator.pineapple.pinedl.tree.NumericConstant;
 import org.gcreator.pineapple.pinedl.tree.Reference;
 import org.gcreator.pineapple.pinedl.tree.StatementNode;
 import org.gcreator.pineapple.pinedl.tree.StringConstant;
@@ -221,6 +223,9 @@ public final class Parser {
         if(constToken.type==Token.Type.STRINGCONST){
             return new Return<ConstantNode>(i, new StringConstant(constToken));
         }
+        if(constToken.type==Token.Type.INTCONST||constToken.type==Token.Type.FLOATCONST){
+            return new Return<ConstantNode>(i, new NumericConstant(constToken));
+        }
         return null;
         //The following todo error is commented to allow progress
         //in other areas
@@ -267,10 +272,11 @@ public final class Parser {
                 return new Return<Reference>(i, r);
             }
 
-            Token t = demandToken(i++);
+            Token t = demandToken(i);
             if(t.type!=Token.Type.DOT){
                 return new Return<Reference>(i, r);
             }
+            i++;
 
             //Call parseReference again
             //Then create composed reference
@@ -281,6 +287,7 @@ public final class Parser {
 
     public Return<ExpressionNode> parsePrimitive(int i) throws ParserException{
         Token t = demandToken(i);
+        System.out.println("parsePrimitive: " + t);
         if(t.type==Token.Type.PLUS){
             i++;
         }
@@ -291,19 +298,16 @@ public final class Parser {
             i++;
             Return<ExpressionNode> exp = parseExpression(i);
             if(exp==null){
-                return null;
+                throw buildException(t, "Invalid expression");
             }
+            i = exp.i;
             demandToken(i++, Token.Type.RPAREN);
             return new Return<ExpressionNode>(i, exp.node);
         }
-        Return<ConstantNode> con = parseConstant(i);
-        if(con!=null){
-            return (Return) con; //I believe that, in this case
-                                //this operation is safe
-        }
         Return<Reference> ref = parseComposedReference(i);
         if(ref!=null){
-            return (Return) ref;
+            return (Return) ref; //I believe that, in this case, this
+                                //cast is safe
         }
         return null;
     }
@@ -341,13 +345,67 @@ public final class Parser {
         else if(t.type==Token.Type.LPAREN){
             //Eventually try to handle casts here
         }
-        i--;
+        --i;
         return parsePrePostOperator(i);
     }
     
+    public Return<ExpressionNode> parseMult(int i) throws ParserException{
+        //TODO
+        return parseNotCast(i);
+    }
+    
+    public Return<ExpressionNode> parseSum(int i) throws ParserException{
+        //TODO
+        return parseMult(i);
+    }
+    
+    public Return<ExpressionNode> parseShift(int i) throws ParserException{
+        //TODO
+        return parseSum(i);
+    }
+    
+    public Return<ExpressionNode> parseComparison(int i) throws ParserException{
+        //TODO
+        return parseShift(i);
+    }
+    
+    public Return<ExpressionNode> parseComparison2(int i) throws ParserException{
+        //TODO
+        return parseComparison(i);
+    }
+    
+    //TODO: Bitwise and logical stuff
+    //TODO: Ternary conditional
+    
+    public Return<ExpressionNode> parseAssign(int i) throws ParserException{
+        //TODO: +=, -=, etc.
+        System.out.println("parseAssign");
+        Return<ExpressionNode> r1 = parseComparison2(i);
+        if(r1==null){
+            return null;
+        }
+        i = r1.i;
+        ExpressionNode lvalue = r1.node;
+        Token t = demandToken(i++);
+        if(t.type==Token.Type.EQUAL){
+            AssignNode node = new AssignNode(t);
+            Return<ExpressionNode> r2 = parseAssign(i);
+            if(r2==null){
+                return null;
+            }
+            i = r2.i;
+            ExpressionNode rvalue = r2.node;
+            node.lvalue = lvalue;
+            node.rvalue = rvalue;
+            return new Return<ExpressionNode>(i, node);
+        }
+        return r1;
+    }
+    
+    
     public Return<ExpressionNode> parseExpression(int i) throws ParserException{
         //TODO
-        return parsePrePostOperator(i);
+        return parseAssign(i);
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
@@ -417,6 +475,12 @@ public final class Parser {
         Return<DeclarationNode> decl = parseDeclaration(i);
         if(decl!=null){
             return (Return) decl;
+        }
+        Return<ExpressionNode> exp = parseExpression(i);
+        if(exp!=null){
+            i = exp.i;
+            demandToken(i++, Token.Type.SEMICOLON);
+            return (Return) exp;
         }
         throw todo("parseStatement");
     }

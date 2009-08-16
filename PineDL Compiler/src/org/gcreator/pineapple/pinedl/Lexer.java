@@ -177,7 +177,10 @@ public final class Lexer {
                 curPos += out;
                 continue;
             }
-            //TODO: Float numbers
+            if((out = parseFloatConstant(file, content, cChar, curPos, rSize)) != -1){
+                curPos += out;
+                continue;
+            }
             if((out = parseStringConstant(file, content, curPos, rSize)) != -1){
                 curPos += out;
                 continue;
@@ -194,7 +197,7 @@ public final class Lexer {
         if(!isDigit(cChar)){
             return -1;
         }
-        //TODO: Negative constants
+        //Negative constants should be handled in the parser
         final Token t = new Token(currentLine);
         t.type = Token.Type.INTCONST;
         
@@ -306,8 +309,23 @@ public final class Lexer {
         return -1;
     }
     
+    private int parseFloatConstant(String file, String subset, char cChar, int curPos, int size)
+            throws LexerException{
+        
+        if(cChar=='.'){
+            //Handle .1 and .3e4 numbers
+            
+            //TODO
+        }
+        else if(!isDigit(cChar)){
+            //Handle 3.0 and 3.2e2 numbers
+        }
+        return -1; //Not a float
+        
+    }
+    
     private int parseCharConstant(String file, String subset, int curPos, int size)
-    throws LexerException{
+            throws LexerException{
         char cChar = subset.charAt(0);
         if(cChar!='\'') return -1;
         Token t = new Token(currentLine);

@@ -4,8 +4,10 @@ class Character{
 
     public function act(){
         const a = true;
-        var b;
+        var b = 2;
+        var z;
 
         var c = "A";
+        //c = b = '\n';
     }
 }
