@@ -11,7 +11,7 @@ import org.gcreator.pineapple.pinedl.Token;
  *
  * @author luis
  */
-public class ExpressionNode extends Node{
+public class ExpressionNode extends StatementNode{
     public ExpressionNode(){}
     public ExpressionNode(Token t){
         super(t);

@@ -55,6 +55,11 @@ public final class Parser {
             this.i = i;
             this.node = node;
         }
+        
+        @Override
+        public String toString(){
+            return "Return[i="+i+", node="+node+"]";
+        }
     }
 
     public class StatementContext{
@@ -382,29 +387,40 @@ public final class Parser {
         System.out.println("parseAssign");
         Return<ExpressionNode> r1 = parseComparison2(i);
         if(r1==null){
+            System.out.println("r1==null");
+            System.out.println("at "+demandToken(i));
             return null;
         }
         i = r1.i;
         ExpressionNode lvalue = r1.node;
         Token t = demandToken(i++);
+        System.out.println("t="+t);
         if(t.type==Token.Type.EQUAL){
+            System.out.println("Equal");
             AssignNode node = new AssignNode(t);
+            System.out.println("Nested parseAssign");
             Return<ExpressionNode> r2 = parseAssign(i);
+            System.out.println("r2="+r2);
             if(r2==null){
+                System.out.println("return null;");
                 return null;
             }
             i = r2.i;
             ExpressionNode rvalue = r2.node;
             node.lvalue = lvalue;
             node.rvalue = rvalue;
+            System.out.println("Returning...");
             return new Return<ExpressionNode>(i, node);
         }
+        i--;
+        System.out.println("Not EQUAL, so we'll stay with this: " + r1);
         return r1;
     }
     
     
     public Return<ExpressionNode> parseExpression(int i) throws ParserException{
         //TODO
+        System.out.println("parseExpression");
         return parseAssign(i);
     }
 
@@ -477,10 +493,11 @@ public final class Parser {
             return (Return) decl;
         }
         Return<ExpressionNode> exp = parseExpression(i);
+        System.out.println("parsing expression. got " + exp);
         if(exp!=null){
             i = exp.i;
             demandToken(i++, Token.Type.SEMICOLON);
-            return (Return) exp;
+            return new Return(i, exp.node);
         }
         throw todo("parseStatement");
     }

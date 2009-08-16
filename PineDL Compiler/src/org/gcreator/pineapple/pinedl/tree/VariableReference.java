@@ -18,4 +18,9 @@ public class VariableReference extends Reference{
         super(t);
         varname = t.text;
     }
+    
+    @Override
+    public String toString(){
+        return varname;
+    }
 }
