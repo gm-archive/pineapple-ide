@@ -8,6 +8,6 @@ class Character{
         var z;
 
         var c = "A";
-        c = b = '\n';
+        c = b = 3>2;
     }
 }

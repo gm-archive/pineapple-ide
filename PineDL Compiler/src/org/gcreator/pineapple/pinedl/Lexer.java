@@ -67,8 +67,12 @@ public final class Lexer {
         keywords.put("this", Token.Type.THIS);
         keywords.put("super", Token.Type.SUPER);
         
+        threeCharTokens.put("<<=", Token.Type.LSHIFT_EQUAL);
+        threeCharTokens.put(">>=", Token.Type.RSHIFT_EQUAL);
         threeCharTokens.put("&&=", Token.Type.LOGICAL_ANDEQUAL);
+        threeCharTokens.put("||=", Token.Type.LOGICAL_OREQUAL);
         threeCharTokens.put("...", Token.Type.VARARGS);
+        
         twoCharTokens.put("++", Token.Type.INCREMENT);
         twoCharTokens.put("+=", Token.Type.PLUSEQUAL);
         twoCharTokens.put("--", Token.Type.DECREMENT);
@@ -76,23 +80,37 @@ public final class Lexer {
         twoCharTokens.put("*=", Token.Type.MULTEQUAL);
         twoCharTokens.put("/=", Token.Type.DIVEQUAL);
         twoCharTokens.put("%=", Token.Type.MODEQUAL);
-        
+        twoCharTokens.put("&=", Token.Type.BITWISE_ANDEQUAL);
+        twoCharTokens.put("|=", Token.Type.BITWISE_OREQUAL);
+        twoCharTokens.put("^=", Token.Type.BITWISE_XOREQUAL);
+        twoCharTokens.put("<<", Token.Type.LSHIFT);
+        twoCharTokens.put(">>", Token.Type.RSHIFT);
+        twoCharTokens.put("&&", Token.Type.LOGICAL_AND);
+        twoCharTokens.put("||", Token.Type.LOGICAL_OR);
+        twoCharTokens.put("<=", Token.Type.LOWEREQUAL);
         twoCharTokens.put(">=", Token.Type.GREATEREQUAL);
+        twoCharTokens.put("==", Token.Type.EQUALS);
+        twoCharTokens.put("!=", Token.Type.NOTEQUAL);
         twoCharTokens.put("=>", Token.Type.KEYASSIGN);
+        
         singleTokens.put('=', Token.Type.EQUAL);
         singleTokens.put('+', Token.Type.PLUS);
         singleTokens.put('-', Token.Type.MINUS);
         singleTokens.put('*', Token.Type.MULT);
         singleTokens.put('/', Token.Type.DIV);
         singleTokens.put('%', Token.Type.MOD);
-        
+        singleTokens.put('&', Token.Type.BITWISE_AND);
+        singleTokens.put('|', Token.Type.BITWISE_OR);
+        singleTokens.put('^', Token.Type.BITWISE_XOR);
         singleTokens.put(':', Token.Type.COLON);
         singleTokens.put(',', Token.Type.COMMA);
         singleTokens.put('.', Token.Type.DOT);
         singleTokens.put(';', Token.Type.SEMICOLON);
-        
+        singleTokens.put('?', Token.Type.QUESTIONMARK);
+        singleTokens.put('<', Token.Type.LOWER);
+        singleTokens.put('>', Token.Type.GREATER);
+        singleTokens.put('~', Token.Type.BITWISE_NOT);
         singleTokens.put('!', Token.Type.LOGICAL_NOT);
-        
         singleTokens.put('(', Token.Type.LPAREN);
         singleTokens.put(')', Token.Type.RPAREN);
         singleTokens.put('[', Token.Type.LARRAY);

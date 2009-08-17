@@ -7,6 +7,7 @@ package org.gcreator.pineapple.pinedl;
 
 import java.util.List;
 import java.util.Vector;
+import org.gcreator.pineapple.pinedl.attributes.ComparisonType;
 import org.gcreator.pineapple.pinedl.tree.ArgumentListNode;
 import org.gcreator.pineapple.pinedl.tree.AssignNode;
 import org.gcreator.pineapple.pinedl.tree.BlockNode;
@@ -14,6 +15,7 @@ import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
 import org.gcreator.pineapple.pinedl.tree.CharConstant;
 import org.gcreator.pineapple.pinedl.tree.ClassContentNode;
 import org.gcreator.pineapple.pinedl.tree.ClassNode;
+import org.gcreator.pineapple.pinedl.tree.ComparisonNode;
 import org.gcreator.pineapple.pinedl.tree.ConstantNode;
 import org.gcreator.pineapple.pinedl.tree.ConstructorNode;
 import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
@@ -43,7 +45,7 @@ public final class Parser {
         accessModifier.add(Token.Type.PRIVATE);
     }
 
-    public class Return<T extends Node>{
+    public final class Return<T extends Node>{
         public int i = 0;
         public T node = null;
 
@@ -370,13 +372,69 @@ public final class Parser {
     }
     
     public Return<ExpressionNode> parseComparison(int i) throws ParserException{
-        //TODO
-        return parseShift(i);
+        Return<ExpressionNode> left = parseShift(i);
+        i = left.i;
+        ExpressionNode node = left.node;
+        Token next = demandToken(i);
+        ComparisonType type = null;
+        if(next.type==Token.Type.GREATER){
+            i++;
+            type = ComparisonType.GREATER;
+        }
+        else if(next.type==Token.Type.GREATEREQUAL){
+            i++;
+            type = ComparisonType.GREATER_EQUAL;
+        }
+        else if(next.type==Token.Type.LOWER){
+            i++;
+            type = ComparisonType.LOWER;
+        }
+        else if(next.type==Token.Type.LOWEREQUAL){
+            i++;
+            type = ComparisonType.LOWER_EQUAL;
+        }
+        else{
+            return left;
+        }
+        ComparisonNode comp = new ComparisonNode(next);
+        comp.type = type;
+        comp.left = node;
+        Return<ExpressionNode> exp = parseShift(i);
+        if(exp==null){
+            throw buildException(demandToken(i), "Invalid expression");
+        }
+        i = exp.i;
+        comp.right = exp.node;
+        return new Return<ExpressionNode>(i, comp);
     }
     
     public Return<ExpressionNode> parseComparison2(int i) throws ParserException{
-        //TODO
-        return parseComparison(i);
+        Return<ExpressionNode> left = parseComparison(i);
+        i = left.i;
+        ExpressionNode node = left.node;
+        Token next = demandToken(i);
+        ComparisonType type = null;
+        if(next.type==Token.Type.EQUALS){
+            i++;
+            type = ComparisonType.EQUAL;
+        }
+        else if(next.type==Token.Type.NOTEQUAL){
+            i++;
+            type = ComparisonType.NOT_EQUAL;
+        }
+        else{
+            return left;
+        }
+        ComparisonNode comp = new ComparisonNode(next);
+        comp.type = type;
+        comp.left = node;
+        Return<ExpressionNode> exp = parseComparison(i);
+        if(exp==null){
+            throw buildException(demandToken(i), "Invalid expression");
+        }
+        i = exp.i;
+        comp.right = exp.node;
+        return new Return<ExpressionNode>(i, comp);
     }
     
     //TODO: Bitwise and logical stuff

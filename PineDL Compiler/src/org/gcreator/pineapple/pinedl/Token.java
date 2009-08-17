@@ -99,7 +99,6 @@ public final class Token{
         LOGICAL_ANDEQUAL,
         LOGICAL_OR,
         LOGICAL_OREQUAL,
-        LOGICAL_XOR,
         QUESTIONMARK, //?
         /**
          * :
