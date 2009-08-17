@@ -19,21 +19,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+package org.gcreator.pineapple.pinedl.tree;
 
-class Character{
-    public this(name, sprite, category, attacks...){
+import org.gcreator.pineapple.pinedl.Token;
+
+/**
+ *
+ * @author Luís Reis
+ */
+public class ShiftNode extends BinaryOperatorNode{
+    /**
+     * true for left shift, false for right shift
+     */
+    public boolean lshift = true;
+    
+    public ShiftNode(Token t){
+        super(t);
     }
-
-    public function act(){
-        const a = true;
-        var b = 2;
-        var z;
-
-        var c = 1;
-        c = z = (3+2*c) > 5;
-
-        c = !true;
-
-        var d = 1<<4|1<<3;
+    
+    @Override
+    public String toString(){
+        return '(' + left.toString() + ") " + (lshift?"<<":">>") + " (" + right.toString() + ')';
     }
 }

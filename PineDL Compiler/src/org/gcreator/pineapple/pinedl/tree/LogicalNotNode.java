@@ -11,18 +11,13 @@ import org.gcreator.pineapple.pinedl.Token;
  *
  * @author Luís Reis
  */
-public class SumNode extends BinaryOperatorNode{
-    /**
-     * true for +, false for -
-     */
-    public boolean add = true;
-    
-    public SumNode(Token t){
+public class LogicalNotNode extends UnaryOperatorNode{
+    public LogicalNotNode(Token t){
         super(t);
     }
     
     @Override
     public String toString(){
-        return '(' + left.toString() + ") " + (add?'+':'-') + " (" + right.toString() + ')';
+        return "!(" + exp + ")";
     }
 }

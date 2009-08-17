@@ -1,7 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
 
 package org.gcreator.pineapple.pinedl;
 
@@ -10,6 +27,9 @@ import java.util.Vector;
 import org.gcreator.pineapple.pinedl.attributes.ComparisonType;
 import org.gcreator.pineapple.pinedl.tree.ArgumentListNode;
 import org.gcreator.pineapple.pinedl.tree.AssignNode;
+import org.gcreator.pineapple.pinedl.tree.BinaryOperatorNode;
+import org.gcreator.pineapple.pinedl.tree.BitwiseAndOperator;
+import org.gcreator.pineapple.pinedl.tree.BitwiseOrOperator;
 import org.gcreator.pineapple.pinedl.tree.BlockNode;
 import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
 import org.gcreator.pineapple.pinedl.tree.CharConstant;
@@ -19,12 +39,17 @@ import org.gcreator.pineapple.pinedl.tree.ComparisonNode;
 import org.gcreator.pineapple.pinedl.tree.ConstantNode;
 import org.gcreator.pineapple.pinedl.tree.ConstructorNode;
 import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
+import org.gcreator.pineapple.pinedl.tree.DivNode;
 import org.gcreator.pineapple.pinedl.tree.DocumentNode;
 import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
+import org.gcreator.pineapple.pinedl.tree.LogicalNotNode;
 import org.gcreator.pineapple.pinedl.tree.MethodNode;
+import org.gcreator.pineapple.pinedl.tree.ModNode;
+import org.gcreator.pineapple.pinedl.tree.MultNode;
 import org.gcreator.pineapple.pinedl.tree.Node;
 import org.gcreator.pineapple.pinedl.tree.NumericConstant;
 import org.gcreator.pineapple.pinedl.tree.Reference;
+import org.gcreator.pineapple.pinedl.tree.ShiftNode;
 import org.gcreator.pineapple.pinedl.tree.StatementNode;
 import org.gcreator.pineapple.pinedl.tree.StringConstant;
 import org.gcreator.pineapple.pinedl.tree.SumNode;
@@ -348,7 +373,10 @@ public final class Parser {
     public Return<ExpressionNode> parseNotCast(int i) throws ParserException{
         Token t = demandToken(i++);
         if(t.type==Token.Type.LOGICAL_NOT){
-            throw todo("Logical not operator");
+            Return<ExpressionNode> prepost = parsePrePostOperator(i);
+            LogicalNotNode n = new LogicalNotNode(t);
+            n.exp = prepost.node;
+            return new Return(prepost.i, n);
         }
         else if(t.type==Token.Type.LPAREN){
             //Eventually try to handle casts here
@@ -358,8 +386,37 @@ public final class Parser {
     }
     
     public Return<ExpressionNode> parseMult(int i) throws ParserException{
-        //TODO: *, /, %
-        return parseNotCast(i);
+        Return<ExpressionNode> ret = parseNotCast(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            BinaryOperatorNode bin;
+            if(t.type==Token.Type.MULT){
+                bin = new MultNode(t);
+            }
+            else if(t.type==Token.Type.DIV){
+                bin = new DivNode(t);
+            }
+            else if(t.type==Token.Type.MOD){
+                bin = new ModNode(t);
+            }
+            else{
+                return ret;
+            }
+            bin.left = left;
+            ret = parseNotCast(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            bin.right = ret.node;
+            ret = new Return(i, bin);
+            left = bin;
+        }
     }
     
     public Return<ExpressionNode> parseSum(int i) throws ParserException{
@@ -395,8 +452,35 @@ public final class Parser {
     }
     
     public Return<ExpressionNode> parseShift(int i) throws ParserException{
-        //TODO
-        return parseSum(i);
+        Return<ExpressionNode> ret = parseSum(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            boolean lshift = true;
+            if(t.type==Token.Type.LSHIFT){
+            }
+            else if(t.type==Token.Type.RSHIFT){
+                lshift = false;
+            }
+            else{
+                return ret;
+            }
+            ShiftNode sum = new ShiftNode(t);
+            sum.lshift = lshift;
+            sum.left = left;
+            ret = parseSum(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
     }
     
     public Return<ExpressionNode> parseComparison(int i) throws ParserException{
@@ -503,11 +587,60 @@ public final class Parser {
         return r1;
     }
     
+    public Return<ExpressionNode> parseBitwiseAnd(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseAssign(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.BITWISE_AND){
+                return ret;
+            }
+            BitwiseAndOperator sum = new BitwiseAndOperator(t);
+            sum.left = left;
+            ret = parseAssign(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
+    }
+    
+    public Return<ExpressionNode> parseBitwiseOr(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseBitwiseAnd(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.BITWISE_OR){
+                return ret;
+            }
+            BitwiseOrOperator sum = new BitwiseOrOperator(t);
+            sum.left = left;
+            ret = parseBitwiseAnd(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
+    }
     
     public Return<ExpressionNode> parseExpression(int i) throws ParserException{
         //TODO
         System.out.println("parseExpression");
-        return parseAssign(i);
+        return parseBitwiseOr(i);
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
