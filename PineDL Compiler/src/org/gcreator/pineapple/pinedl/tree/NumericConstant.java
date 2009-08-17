@@ -18,4 +18,9 @@ public class NumericConstant extends ConstantNode{
         super(t);
         number = Double.valueOf(t.text);
     }
+    
+    @Override
+    public String toString(){
+        return ""+number;
+    }
 }

@@ -24,6 +24,6 @@ public class ComparisonNode extends ExpressionNode{
     
     @Override
     public String toString(){
-        return left.toString() + ' ' + type.toString() + ' ' + right.toString();
+        return '(' + left.toString() + ") " + type.toString() + " (" + right.toString() + ')';
     }
 }

@@ -27,6 +27,7 @@ import org.gcreator.pineapple.pinedl.tree.NumericConstant;
 import org.gcreator.pineapple.pinedl.tree.Reference;
 import org.gcreator.pineapple.pinedl.tree.StatementNode;
 import org.gcreator.pineapple.pinedl.tree.StringConstant;
+import org.gcreator.pineapple.pinedl.tree.SumNode;
 import org.gcreator.pineapple.pinedl.tree.VariableReference;
 
 /**
@@ -357,13 +358,40 @@ public final class Parser {
     }
     
     public Return<ExpressionNode> parseMult(int i) throws ParserException{
-        //TODO
+        //TODO: *, /, %
         return parseNotCast(i);
     }
     
     public Return<ExpressionNode> parseSum(int i) throws ParserException{
-        //TODO
-        return parseMult(i);
+        Return<ExpressionNode> ret = parseMult(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            boolean add = true;
+            if(t.type==Token.Type.PLUS){
+            }
+            else if(t.type==Token.Type.MINUS){
+                add = false;
+            }
+            else{
+                return ret;
+            }
+            SumNode sum = new SumNode(t);
+            sum.add = add;
+            sum.left = left;
+            ret = parseMult(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
     }
     
     public Return<ExpressionNode> parseShift(int i) throws ParserException{

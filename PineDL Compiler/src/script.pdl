@@ -7,7 +7,7 @@ class Character{
         var b = 2;
         var z;
 
-        var c = "A";
-        c = b = 3>2;
+        var c = 1;
+        c = z = (3+2) > 5;
     }
 }
