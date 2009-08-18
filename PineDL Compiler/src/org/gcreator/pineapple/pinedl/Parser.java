@@ -59,6 +59,7 @@ import org.gcreator.pineapple.pinedl.tree.StringConstant;
 import org.gcreator.pineapple.pinedl.tree.SumNode;
 import org.gcreator.pineapple.pinedl.tree.TernaryConditionalOperator;
 import org.gcreator.pineapple.pinedl.tree.VariableReference;
+import org.gcreator.pineapple.pinedl.tree.WhileStatement;
 
 /**
  *
@@ -813,18 +814,11 @@ public final class Parser {
     }
 
     public Return<StatementNode> parseStatement(int i, StatementContext context) throws ParserException{
-        Return<BlockNode> r = parseBlockStatement(i, context);
-        if(r!=null){
-            return (Return) r;
-        }
-        Return<DeclarationNode> decl = parseDeclaration(i);
-        if(decl!=null){
-            return (Return) decl;
-        }
-        Return<IfStatement> ifstmt = parseIfStatement(i, context);
-        if(ifstmt!=null){
-            return (Return) ifstmt;
-        }
+        Return r;
+        if((r= parseBlockStatement(i, context))!=null) return r;
+        if((r= parseDeclaration(i))!=null) return r;
+        if((r= parseIfStatement(i, context))!=null) return r;
+        if((r= parseWhileStatement(i, context))!=null) return r;
         Return<ExpressionNode> exp = parseExpression(i);
         System.out.println("parsing expression. got " + exp);
         if(exp!=null){
@@ -894,6 +888,29 @@ public final class Parser {
             ifStmt.elseCase = stmt.node;
         }
         return new Return(i, ifStmt);
+    }
+    
+        public Return<WhileStatement> parseWhileStatement(int i, StatementContext context) throws ParserException{
+        Token t = demandToken(i++);
+        IfStatement whileStmt = new IfStatement(t);
+        if(t.type!=Token.Type.WHILE){
+            return null;
+        }
+        demandToken(i++, Token.Type.LPAREN);
+        Return<ExpressionNode> condition = parseExpression(i);
+        if(condition==null){
+            throw buildException(t, "Invalid condition");
+        }
+        i = condition.i;
+        whileStmt.condition = condition.node;
+        demandToken(i++, Token.Type.RPAREN);
+        Return<StatementNode> stmt = parseStatement(i, context.notFirst());
+        if(stmt==null){
+            throw buildException(t, "Expected statement after if case");
+        }
+        i = stmt.i;
+        whileStmt.then = stmt.node;
+        return new Return(i, whileStmt);
     }
     
     public Return<BlockNode> parseBlockStatement(int i, StatementContext context) throws ParserException{
