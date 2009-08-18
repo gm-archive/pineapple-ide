@@ -52,6 +52,7 @@ import org.gcreator.pineapple.pinedl.tree.ModNode;
 import org.gcreator.pineapple.pinedl.tree.MultNode;
 import org.gcreator.pineapple.pinedl.tree.Node;
 import org.gcreator.pineapple.pinedl.tree.NumericConstant;
+import org.gcreator.pineapple.pinedl.tree.PrePostOperator;
 import org.gcreator.pineapple.pinedl.tree.Reference;
 import org.gcreator.pineapple.pinedl.tree.ShiftNode;
 import org.gcreator.pineapple.pinedl.tree.StatementNode;
@@ -353,10 +354,26 @@ public final class Parser {
     public Return<ExpressionNode> parsePrePostOperator(int i) throws ParserException{
         Token t = demandToken(i++);
         if(t.type==Token.Type.INCREMENT){
-            throw todo("++x operator");
+            Return<ExpressionNode> primitive = parsePrimitive(i);
+            if(primitive==null){
+                throw buildException(t, "Invalid expression");
+            }
+            PrePostOperator op = new PrePostOperator(t);
+            op.inc = true;
+            op.pre = true;
+            op.exp = primitive.node;
+            return new Return<ExpressionNode>(primitive.i, op);
         }
         else if(t.type==Token.Type.DECREMENT){
-            throw todo("--x operator");
+            Return<ExpressionNode> primitive = parsePrimitive(i);
+            if(primitive==null){
+                throw buildException(t, "Invalid expression");
+            }
+            PrePostOperator op = new PrePostOperator(t);
+            op.inc = false;
+            op.pre = true;
+            op.exp = primitive.node;
+            return new Return<ExpressionNode>(primitive.i, op);
         }
         i--;
         Return<ExpressionNode> primitive = parsePrimitive(i);
@@ -366,12 +383,19 @@ public final class Parser {
         i = primitive.i;
         t = demandToken(i++);
         if(t.type==Token.Type.INCREMENT){
-            throw todo("x++ operator");
+            PrePostOperator op = new PrePostOperator(t);
+            op.inc = true;
+            op.pre = false;
+            op.exp = primitive.node;
+            return new Return<ExpressionNode>(i, op);
         }
         else if(t.type==Token.Type.DECREMENT){
-            throw todo("x-- operator");
+            PrePostOperator op = new PrePostOperator(t);
+            op.inc = false;
+            op.pre = false;
+            op.exp = primitive.node;
+            return new Return<ExpressionNode>(i, op);
         }
-        i--;
         return primitive;
     }
     

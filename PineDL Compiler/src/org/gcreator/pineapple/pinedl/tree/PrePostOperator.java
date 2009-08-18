@@ -20,30 +20,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-class Character{
-    public this(name, sprite, category, attacks...){
+package org.gcreator.pineapple.pinedl.tree;
+
+import org.gcreator.pineapple.pinedl.Token;
+
+/**
+ *
+ * @author Luís Reis
+ */
+public class PrePostOperator extends ExpressionNode{
+    /**
+     * true for ++x, false for x++
+     */
+    public boolean pre = false;
+    
+    /**
+     * true for x++, false for x--
+     */
+    public boolean inc = true;
+    
+    public ExpressionNode exp;
+    
+    public PrePostOperator(){
+        super();
     }
-
-    public function act(){
-        const a = true;
-        var b = 2;
-        var z;
-
-        var c = 1;
-        c = z = (3+2*c) > 5;
-
-        c = !true;
-
-        var d = 
-            1<<4|1<<3>2 && 1 == 1?
-                "A":"B"
-            ;
-
-        if(d=="A") true;
-        else if(d=="B") false;
-        else "A";
-
-        var i = 0;
-        while(i < 10) i++;
+    
+    public PrePostOperator(Token t){
+        super(t);
+    }
+    
+    @Override
+    public String toString(){
+        if(pre){
+            return (inc ? "++" : "--") + exp;
+        }
+        return exp + (inc ? "++" : "--");
     }
 }
