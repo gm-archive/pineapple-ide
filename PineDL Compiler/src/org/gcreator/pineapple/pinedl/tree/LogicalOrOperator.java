@@ -20,27 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-class Character{
-    public this(name, sprite, category, attacks...){
+package org.gcreator.pineapple.pinedl.tree;
+
+import org.gcreator.pineapple.pinedl.Token;
+
+/**
+ *
+ * @author Luís Reis
+ */
+public class LogicalOrOperator extends BinaryOperatorNode{
+    public LogicalOrOperator(Token t){
+        super(t);
     }
-
-    public function act(){
-        const a = true;
-        var b = 2;
-        var z;
-
-        var c = 1;
-        c = z = (3+2*c) > 5;
-
-        c = !true;
-
-        var d = 
-            1<<4|1<<3>2 && 1 == 1?
-                "A":"B"
-            ;
-
-        if(d=="A") true;
-        else if(d=="B") false;
-        else "A";
+    
+    @Override
+    public String toString(){
+        return "(" + left + ") || (" + right + ')';
     }
 }

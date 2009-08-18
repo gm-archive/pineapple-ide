@@ -30,6 +30,7 @@ import org.gcreator.pineapple.pinedl.tree.AssignNode;
 import org.gcreator.pineapple.pinedl.tree.BinaryOperatorNode;
 import org.gcreator.pineapple.pinedl.tree.BitwiseAndOperator;
 import org.gcreator.pineapple.pinedl.tree.BitwiseOrOperator;
+import org.gcreator.pineapple.pinedl.tree.BitwiseXorOperator;
 import org.gcreator.pineapple.pinedl.tree.BlockNode;
 import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
 import org.gcreator.pineapple.pinedl.tree.CharConstant;
@@ -42,7 +43,10 @@ import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
 import org.gcreator.pineapple.pinedl.tree.DivNode;
 import org.gcreator.pineapple.pinedl.tree.DocumentNode;
 import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
+import org.gcreator.pineapple.pinedl.tree.IfStatement;
+import org.gcreator.pineapple.pinedl.tree.LogicalAndOperator;
 import org.gcreator.pineapple.pinedl.tree.LogicalNotNode;
+import org.gcreator.pineapple.pinedl.tree.LogicalOrOperator;
 import org.gcreator.pineapple.pinedl.tree.MethodNode;
 import org.gcreator.pineapple.pinedl.tree.ModNode;
 import org.gcreator.pineapple.pinedl.tree.MultNode;
@@ -53,6 +57,7 @@ import org.gcreator.pineapple.pinedl.tree.ShiftNode;
 import org.gcreator.pineapple.pinedl.tree.StatementNode;
 import org.gcreator.pineapple.pinedl.tree.StringConstant;
 import org.gcreator.pineapple.pinedl.tree.SumNode;
+import org.gcreator.pineapple.pinedl.tree.TernaryConditionalOperator;
 import org.gcreator.pineapple.pinedl.tree.VariableReference;
 
 /**
@@ -320,7 +325,6 @@ public final class Parser {
 
     public Return<ExpressionNode> parsePrimitive(int i) throws ParserException{
         Token t = demandToken(i);
-        System.out.println("parsePrimitive: " + t);
         if(t.type==Token.Type.PLUS){
             i++;
         }
@@ -485,6 +489,9 @@ public final class Parser {
     
     public Return<ExpressionNode> parseComparison(int i) throws ParserException{
         Return<ExpressionNode> left = parseShift(i);
+        if(left==null){
+            return null;
+        }
         i = left.i;
         ExpressionNode node = left.node;
         Token next = demandToken(i);
@@ -522,6 +529,8 @@ public final class Parser {
     
     public Return<ExpressionNode> parseComparison2(int i) throws ParserException{
         Return<ExpressionNode> left = parseComparison(i);
+        if(left==null)
+            return null;
         i = left.i;
         ExpressionNode node = left.node;
         Token next = demandToken(i);
@@ -549,46 +558,8 @@ public final class Parser {
         return new Return<ExpressionNode>(i, comp);
     }
     
-    //TODO: Bitwise and logical stuff
-    //TODO: Ternary conditional
-    
-    public Return<ExpressionNode> parseAssign(int i) throws ParserException{
-        //TODO: +=, -=, etc.
-        System.out.println("parseAssign");
-        Return<ExpressionNode> r1 = parseComparison2(i);
-        if(r1==null){
-            System.out.println("r1==null");
-            System.out.println("at "+demandToken(i));
-            return null;
-        }
-        i = r1.i;
-        ExpressionNode lvalue = r1.node;
-        Token t = demandToken(i++);
-        System.out.println("t="+t);
-        if(t.type==Token.Type.EQUAL){
-            System.out.println("Equal");
-            AssignNode node = new AssignNode(t);
-            System.out.println("Nested parseAssign");
-            Return<ExpressionNode> r2 = parseAssign(i);
-            System.out.println("r2="+r2);
-            if(r2==null){
-                System.out.println("return null;");
-                return null;
-            }
-            i = r2.i;
-            ExpressionNode rvalue = r2.node;
-            node.lvalue = lvalue;
-            node.rvalue = rvalue;
-            System.out.println("Returning...");
-            return new Return<ExpressionNode>(i, node);
-        }
-        i--;
-        System.out.println("Not EQUAL, so we'll stay with this: " + r1);
-        return r1;
-    }
-    
     public Return<ExpressionNode> parseBitwiseAnd(int i) throws ParserException{
-        Return<ExpressionNode> ret = parseAssign(i);
+        Return<ExpressionNode> ret = parseComparison2(i);
         if(ret==null){
             return null;
         }
@@ -601,7 +572,7 @@ public final class Parser {
             }
             BitwiseAndOperator sum = new BitwiseAndOperator(t);
             sum.left = left;
-            ret = parseAssign(i);
+            ret = parseComparison2(i);
             if(ret==null){
                 throw buildException(t, "Invalid expression");
             }
@@ -637,10 +608,149 @@ public final class Parser {
         }
     }
     
+    public Return<ExpressionNode> parseBitwiseXor(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseBitwiseOr(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.BITWISE_XOR){
+                return ret;
+            }
+            BitwiseXorOperator sum = new BitwiseXorOperator(t);
+            sum.left = left;
+            ret = parseBitwiseOr(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
+    }
+    
+    public Return<ExpressionNode> parseLogicalAnd(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseBitwiseXor(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.LOGICAL_AND){
+                return ret;
+            }
+            LogicalAndOperator sum = new LogicalAndOperator(t);
+            sum.left = left;
+            ret = parseBitwiseXor(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
+    }
+    
+    public Return<ExpressionNode> parseLogicalOr(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseLogicalAnd(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        ExpressionNode left = ret.node;
+        while(true){
+            Token t = demandToken(i++);
+            if(t.type!=Token.Type.LOGICAL_OR){
+                return ret;
+            }
+            LogicalOrOperator sum = new LogicalOrOperator(t);
+            sum.left = left;
+            ret = parseLogicalAnd(i);
+            if(ret==null){
+                throw buildException(t, "Invalid expression");
+            }
+            i = ret.i;
+            sum.right = ret.node;
+            ret = new Return(i, sum);
+            left = sum;
+        }
+    }
+    
+    public Return<ExpressionNode> parseTernaryConditional(int i) throws ParserException{
+        Return<ExpressionNode> ret = parseLogicalOr(i);
+        if(ret==null){
+            return null;
+        }
+        i = ret.i;
+        Token t = demandToken(i++);
+        if(t.type!=Token.Type.QUESTIONMARK){
+            System.out.println("Not QUESTIONMARK. Instead, got " + t.type);
+            return ret;
+        }
+        Return<ExpressionNode> left = parseExpression(i);
+        if(left==null){
+            throw buildException(t, "Invalid expression");
+        }
+        i = left.i;
+        demandToken(i++, Token.Type.COLON);
+        Return<ExpressionNode> right = parseExpression(i);
+        if(right==null){
+            throw buildException(t, "Invalid expression");
+        }
+        i = right.i;
+        TernaryConditionalOperator ternary = new TernaryConditionalOperator(t);
+        ternary.condition = ret.node;
+        ternary.trueValue = left.node;
+        ternary.falseValue = right.node;
+        return new Return(i, ternary);
+    }
+    
+    public Return<ExpressionNode> parseAssign(int i) throws ParserException{
+        //TODO: +=, -=, etc.
+        System.out.println("parseAssign");
+        Return<ExpressionNode> r1 = parseTernaryConditional(i);
+        if(r1==null){
+            System.out.println("r1==null");
+            System.out.println("at "+demandToken(i));
+            return null;
+        }
+        i = r1.i;
+        ExpressionNode lvalue = r1.node;
+        Token t = demandToken(i++);
+        System.out.println("t="+t);
+        if(t.type==Token.Type.EQUAL){
+            System.out.println("Equal");
+            AssignNode node = new AssignNode(t);
+            System.out.println("Nested parseAssign");
+            //The next statement MUST call "parseAssign" and NOT
+            //any other function(such as parseTernaryConditional)
+            //This is this way to handle statements like
+            //a = (b = c)
+            Return<ExpressionNode> r2 = parseAssign(i);
+            System.out.println("r2="+r2);
+            if(r2==null){
+                System.out.println("return null;");
+                return null;
+            }
+            i = r2.i;
+            ExpressionNode rvalue = r2.node;
+            node.lvalue = lvalue;
+            node.rvalue = rvalue;
+            return new Return<ExpressionNode>(i, node);
+        }
+        i--;
+        return r1;
+    }
+    
     public Return<ExpressionNode> parseExpression(int i) throws ParserException{
-        //TODO
-        System.out.println("parseExpression");
-        return parseBitwiseOr(i);
+        return parseAssign(i);
     }
 
     public Return<MethodNode> parseMethod(int i) throws ParserException{
@@ -711,6 +821,10 @@ public final class Parser {
         if(decl!=null){
             return (Return) decl;
         }
+        Return<IfStatement> ifstmt = parseIfStatement(i, context);
+        if(ifstmt!=null){
+            return (Return) ifstmt;
+        }
         Return<ExpressionNode> exp = parseExpression(i);
         System.out.println("parsing expression. got " + exp);
         if(exp!=null){
@@ -718,7 +832,7 @@ public final class Parser {
             demandToken(i++, Token.Type.SEMICOLON);
             return new Return(i, exp.node);
         }
-        throw todo("parseStatement");
+        throw todo("parseStatement " + demandToken(i));
     }
     
     public Return<DeclarationNode> parseDeclaration(int i) throws ParserException{
@@ -749,6 +863,39 @@ public final class Parser {
         return new Return<DeclarationNode>(i, decl);
     }
 
+    public Return<IfStatement> parseIfStatement(int i, StatementContext context) throws ParserException{
+        Token t = demandToken(i++);
+        IfStatement ifStmt = new IfStatement(t);
+        if(t.type!=Token.Type.IF){
+            return null;
+        }
+        demandToken(i++, Token.Type.LPAREN);
+        Return<ExpressionNode> condition = parseExpression(i);
+        if(condition==null){
+            throw buildException(t, "Invalid condition");
+        }
+        i = condition.i;
+        ifStmt.condition = condition.node;
+        demandToken(i++, Token.Type.RPAREN);
+        Return<StatementNode> stmt = parseStatement(i, context.notFirst());
+        if(stmt==null){
+            throw buildException(t, "Expected statement after if case");
+        }
+        i = stmt.i;
+        ifStmt.then = stmt.node;
+        t = demandToken(i);
+        if(t.type==Token.Type.ELSE){
+            i++;
+            stmt = parseStatement(i, context.notFirst());
+            if(stmt==null){
+                throw buildException(t, "Expected statement after else case");
+            }
+            i = stmt.i;
+            ifStmt.elseCase = stmt.node;
+        }
+        return new Return(i, ifStmt);
+    }
+    
     public Return<BlockNode> parseBlockStatement(int i, StatementContext context) throws ParserException{
         Token t = demandToken(i++);
         if(t.type!=Token.Type.BLKBEG){
