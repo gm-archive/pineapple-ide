@@ -39,11 +39,12 @@ class Character{
                 "A":"B"
             ;
 
-        if(d=="A") true;
-        else if(d=="B") false;
-        else "A";
+        if(d=="A") b++;
+        else if(d=="B") b--;
+        else d=1;
 
-        var i = 0;
-        while(i < 10) i++;
+        for(var i = 0; i < 10; i++){
+            b = i;
+        }
     }
 }

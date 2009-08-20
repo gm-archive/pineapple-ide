@@ -26,41 +26,23 @@ import org.gcreator.pineapple.pinedl.Token;
 
 /**
  *
- * @author luis
+ * @author Luís Reis
  */
-public class StringConstant extends ConstantNode{
-    public String value = "";
-
-    public StringConstant(Token t){
+public class ForStatement extends StatementNode{
+    public StatementNode start;
+    public ExpressionNode condition;
+    public ExpressionNode loopExec;
+    public StatementNode then;
+    
+    public ForStatement(){
+        
+    }
+    public ForStatement(Token t){
         super(t);
-        value = t.text;
     }
     
     @Override
     public String toString(){
-        String s = "\"";
-        
-        for(char c : value.toCharArray()){
-            if(c=='\n'){
-                s += "\\n";
-            }
-            else if(c=='\r'){
-                s += "\\r";
-            }
-            else if(c=='\t'){
-                s += "\\t";
-            }
-            else if(c=='\\'){
-                s += "\\\\";
-            }
-            else if((c>='a'&&c<='z')||(c>='A'&&c<='Z')||c=='_'||(c>='0'&&c<='9')){
-                s += c;
-            }
-            else{
-                s += "\\" + (int) c;
-            }
-        }
-        
-        return s + "\"";
+        return "for("+start+"; "+condition+"; " + loopExec + ')' + then;
     }
 }

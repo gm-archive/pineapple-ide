@@ -43,6 +43,7 @@ import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
 import org.gcreator.pineapple.pinedl.tree.DivNode;
 import org.gcreator.pineapple.pinedl.tree.DocumentNode;
 import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
+import org.gcreator.pineapple.pinedl.tree.ForStatement;
 import org.gcreator.pineapple.pinedl.tree.IfStatement;
 import org.gcreator.pineapple.pinedl.tree.LogicalAndOperator;
 import org.gcreator.pineapple.pinedl.tree.LogicalNotNode;
@@ -247,7 +248,7 @@ public final class Parser {
         if(r==null){
             throw buildException(t, "Invalid constructor content");
         }
-        i = r.i+1;
+        i = r.i;
         constr.content = r.node;
         return new Return<ConstructorNode>(i, constr);
     }
@@ -716,7 +717,6 @@ public final class Parser {
         i = ret.i;
         Token t = demandToken(i++);
         if(t.type!=Token.Type.QUESTIONMARK){
-            System.out.println("Not QUESTIONMARK. Instead, got " + t.type);
             return ret;
         }
         Return<ExpressionNode> left = parseExpression(i);
@@ -739,29 +739,21 @@ public final class Parser {
     
     public Return<ExpressionNode> parseAssign(int i) throws ParserException{
         //TODO: +=, -=, etc.
-        System.out.println("parseAssign");
         Return<ExpressionNode> r1 = parseTernaryConditional(i);
         if(r1==null){
-            System.out.println("r1==null");
-            System.out.println("at "+demandToken(i));
             return null;
         }
         i = r1.i;
         ExpressionNode lvalue = r1.node;
         Token t = demandToken(i++);
-        System.out.println("t="+t);
         if(t.type==Token.Type.EQUAL){
-            System.out.println("Equal");
             AssignNode node = new AssignNode(t);
-            System.out.println("Nested parseAssign");
             //The next statement MUST call "parseAssign" and NOT
             //any other function(such as parseTernaryConditional)
             //This is this way to handle statements like
             //a = (b = c)
             Return<ExpressionNode> r2 = parseAssign(i);
-            System.out.println("r2="+r2);
             if(r2==null){
-                System.out.println("return null;");
                 return null;
             }
             i = r2.i;
@@ -781,9 +773,7 @@ public final class Parser {
     public Return<MethodNode> parseMethod(int i) throws ParserException{
         Token accessToken = demandToken(i++);
         Token t = accessToken;
-        Token.Type access = Token.Type.PUBLIC;
         if(accessModifier.contains(accessToken.type)){
-            access = accessToken.type;
             t = demandToken(i++);
         }
         if(t.type!=Token.Type.FUNCTION){
@@ -832,7 +822,7 @@ public final class Parser {
         if(r==null){
             throw buildException(t, "Invalid constructor content");
         }
-        i = r.i+1;
+        i = r.i;
         method.content = r.node;
         return new Return<MethodNode>(i, method);
     }
@@ -843,8 +833,8 @@ public final class Parser {
         if((r= parseDeclaration(i))!=null) return r;
         if((r= parseIfStatement(i, context))!=null) return r;
         if((r= parseWhileStatement(i, context))!=null) return r;
+        if((r= parseForStatement(i, context))!=null) return r;
         Return<ExpressionNode> exp = parseExpression(i);
-        System.out.println("parsing expression. got " + exp);
         if(exp!=null){
             i = exp.i;
             demandToken(i++, Token.Type.SEMICOLON);
@@ -914,9 +904,9 @@ public final class Parser {
         return new Return(i, ifStmt);
     }
     
-        public Return<WhileStatement> parseWhileStatement(int i, StatementContext context) throws ParserException{
+    public Return<WhileStatement> parseWhileStatement(int i, StatementContext context) throws ParserException{
         Token t = demandToken(i++);
-        IfStatement whileStmt = new IfStatement(t);
+        WhileStatement whileStmt = new WhileStatement(t);
         if(t.type!=Token.Type.WHILE){
             return null;
         }
@@ -930,11 +920,56 @@ public final class Parser {
         demandToken(i++, Token.Type.RPAREN);
         Return<StatementNode> stmt = parseStatement(i, context.notFirst());
         if(stmt==null){
-            throw buildException(t, "Expected statement after if case");
+            throw buildException(t, "Expected statement after while case");
         }
         i = stmt.i;
         whileStmt.then = stmt.node;
         return new Return(i, whileStmt);
+    }
+    
+    public Return<ForStatement> parseForStatement(int i, StatementContext context) throws ParserException{
+        Token t = demandToken(i++);
+        ForStatement forStmt = new ForStatement(t);
+        if(t.type!=Token.Type.FOR){
+            return null;
+        }
+        demandToken(i++, Token.Type.LPAREN);
+        //We'll have to avoid some things here, like for(if(...);;true;)
+        Return<StatementNode> first = parseStatement(i, context.notFirst());
+        if(first==null){
+            throw buildException(t, "Invalid statement");
+        }
+        else if(!(first.node instanceof ExpressionNode)&&!(first.node instanceof DeclarationNode)){
+            throw buildException(t, "Invalid statement ("+first.node.getClass().getCanonicalName()+")");
+        }
+        i = first.i;
+        
+        //; is already in statement
+        
+        Return<ExpressionNode> condition = parseExpression(i);
+        if(condition==null){
+            throw buildException(t, "Invalid condition");
+        }
+        i = condition.i;
+        
+        demandToken(i++, Token.Type.SEMICOLON);
+        
+        Return<ExpressionNode> exec = parseExpression(i);
+        if(exec!=null){
+            i = exec.i;
+            forStmt.loopExec = exec.node;
+        }
+        
+        forStmt.start = first.node;
+        forStmt.condition = condition.node;
+        demandToken(i++, Token.Type.RPAREN);
+        Return<StatementNode> stmt = parseStatement(i, context.notFirst());
+        if(stmt==null){
+            throw buildException(t, "Expected statement after for case");
+        }
+        i = stmt.i;
+        forStmt.then = stmt.node;
+        return new Return(i, forStmt);
     }
     
     public Return<BlockNode> parseBlockStatement(int i, StatementContext context) throws ParserException{
@@ -946,7 +981,7 @@ public final class Parser {
         while(true){
             t = demandToken(i);
             if(t.type==Token.Type.BLKEND){
-                return new Return<BlockNode>(i, blk);
+                return new Return<BlockNode>(i+1, blk);
             }
             Return<StatementNode> r = parseStatement(i, context);
             if(r==null){
@@ -959,7 +994,7 @@ public final class Parser {
     }
 
     public Return parseFunction(int i) throws ParserException{
-        throw todo("parseFunction");
+        throw todo("parseFunction with i="+i+" (" + demandToken(i) + ')');
     }
 
     public ParserException todo(String message){
