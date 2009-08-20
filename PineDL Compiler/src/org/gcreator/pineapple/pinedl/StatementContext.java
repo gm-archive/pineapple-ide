@@ -20,33 +20,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-class Character{
-    public this(name, sprite, category, attacks...){
-    }
+package org.gcreator.pineapple.pinedl;
 
-    public function act(){
-        const a = true;
-        var b = 2;
-        var z;
+/**
+ *
+ * @author Luís Reis
+ */
+    public class StatementContext{
+        public boolean firstInConstructor = false;
+        public boolean inLoop = false;
 
-        var c = 1;
-        c = z = (3+2*c) > 5;
+        public StatementContext(){
 
-        c = !true;
+        }
 
-        var d = 
-            1<<4|1<<3>2 && 1 == 1?
-                "A":"B"
-            ;
+        public StatementContext(StatementContext other){
+            if(other==null) throw new IllegalArgumentException("Argument mustn't be null");
+            this.firstInConstructor = other.firstInConstructor;
+            this.inLoop = other.inLoop;
+        }
 
-        if(d=="A") b++;
-        else if(d=="B") b--;
-        else d=1;
-
-        for(var i = 0; i < 10; i++){
-            b = i;
-            continue;
-            if(i>8) break;
+        public StatementContext notFirst(){
+            StatementContext c = new StatementContext(this);
+            c.firstInConstructor = false;
+            return c;
+        }
+        
+        public StatementContext inLoop(){
+            StatementContext c = new StatementContext(this);
+            c.inLoop = true;
+            return c;
         }
     }
-}

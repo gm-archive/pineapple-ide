@@ -33,12 +33,14 @@ import org.gcreator.pineapple.pinedl.tree.BitwiseOrOperator;
 import org.gcreator.pineapple.pinedl.tree.BitwiseXorOperator;
 import org.gcreator.pineapple.pinedl.tree.BlockNode;
 import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
+import org.gcreator.pineapple.pinedl.tree.Break;
 import org.gcreator.pineapple.pinedl.tree.CharConstant;
 import org.gcreator.pineapple.pinedl.tree.ClassContentNode;
 import org.gcreator.pineapple.pinedl.tree.ClassNode;
 import org.gcreator.pineapple.pinedl.tree.ComparisonNode;
 import org.gcreator.pineapple.pinedl.tree.ConstantNode;
 import org.gcreator.pineapple.pinedl.tree.ConstructorNode;
+import org.gcreator.pineapple.pinedl.tree.Continue;
 import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
 import org.gcreator.pineapple.pinedl.tree.DivNode;
 import org.gcreator.pineapple.pinedl.tree.DocumentNode;
@@ -95,25 +97,6 @@ public final class Parser {
         @Override
         public String toString(){
             return "Return[i="+i+", node="+node+"]";
-        }
-    }
-
-    public class StatementContext{
-        public boolean firstInConstructor = false;
-
-        public StatementContext(){
-
-        }
-
-        public StatementContext(StatementContext other){
-            if(other==null) throw new NullPointerException("Argument mustn't be null");
-            this.firstInConstructor = other.firstInConstructor;
-        }
-
-        public StatementContext notFirst(){
-            StatementContext c = new StatementContext(this);
-            c.firstInConstructor = false;
-            return c;
         }
     }
 
@@ -834,6 +817,18 @@ public final class Parser {
         if((r= parseIfStatement(i, context))!=null) return r;
         if((r= parseWhileStatement(i, context))!=null) return r;
         if((r= parseForStatement(i, context))!=null) return r;
+        if(context.inLoop){
+            Token t = demandToken(i++);
+            if(t.type==Token.Type.BREAK){
+                demandToken(i++, Token.Type.SEMICOLON);
+                return new Return<StatementNode>(i, new Break(t));
+            }
+            if(t.type==Token.Type.CONTINUE){
+                demandToken(i++, Token.Type.SEMICOLON);
+                return new Return<StatementNode>(i, new Continue(t));
+            }
+            i--;
+        }
         Return<ExpressionNode> exp = parseExpression(i);
         if(exp!=null){
             i = exp.i;
@@ -918,7 +913,7 @@ public final class Parser {
         i = condition.i;
         whileStmt.condition = condition.node;
         demandToken(i++, Token.Type.RPAREN);
-        Return<StatementNode> stmt = parseStatement(i, context.notFirst());
+        Return<StatementNode> stmt = parseStatement(i, context.notFirst().inLoop());
         if(stmt==null){
             throw buildException(t, "Expected statement after while case");
         }
@@ -935,7 +930,7 @@ public final class Parser {
         }
         demandToken(i++, Token.Type.LPAREN);
         //We'll have to avoid some things here, like for(if(...);;true;)
-        Return<StatementNode> first = parseStatement(i, context.notFirst());
+        Return<StatementNode> first = parseStatement(i, context.notFirst().inLoop());
         if(first==null){
             throw buildException(t, "Invalid statement");
         }
@@ -963,7 +958,7 @@ public final class Parser {
         forStmt.start = first.node;
         forStmt.condition = condition.node;
         demandToken(i++, Token.Type.RPAREN);
-        Return<StatementNode> stmt = parseStatement(i, context.notFirst());
+        Return<StatementNode> stmt = parseStatement(i, context.notFirst().inLoop());
         if(stmt==null){
             throw buildException(t, "Expected statement after for case");
         }
