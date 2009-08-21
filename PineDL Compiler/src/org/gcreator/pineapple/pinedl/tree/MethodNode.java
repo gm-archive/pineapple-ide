@@ -40,7 +40,7 @@ public class MethodNode extends Node{
     
     @Override
     public String toString(){
-        String s = accessModifier.toString() + " " + name;
+        String s = accessModifier.type.toString().toLowerCase() + " " + name;
         return s + arguments.toString() + content.toString();
     }
 }

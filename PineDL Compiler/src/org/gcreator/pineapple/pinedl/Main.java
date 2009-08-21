@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author luis
  */
-public class Main {
+public final class Main {
 
     /**
      * @param args the command line arguments
@@ -24,6 +24,7 @@ public class Main {
         Parser p = new Parser(l.getTokens(), new Library());
         try{
             p.parse();
+            System.out.println(p.getDocumentNode());
         }
         catch(ParserException e){
             e.printStackTrace();

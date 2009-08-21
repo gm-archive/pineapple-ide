@@ -45,6 +45,7 @@ import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
 import org.gcreator.pineapple.pinedl.tree.DivNode;
 import org.gcreator.pineapple.pinedl.tree.DocumentNode;
 import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
+import org.gcreator.pineapple.pinedl.tree.FieldNode;
 import org.gcreator.pineapple.pinedl.tree.ForStatement;
 import org.gcreator.pineapple.pinedl.tree.IfStatement;
 import org.gcreator.pineapple.pinedl.tree.LogicalAndOperator;
@@ -144,8 +145,13 @@ public final class Parser {
             t = demandToken(i);
             if(t.type==Token.Type.EXTENDS){
                 t = demandToken(++i, Token.Type.WORD);
-                n.base = t.text;
+                n.base.add(t.text);
                 t = demandToken(i++);
+                while(t.type==Token.Type.COMMA){
+                    t = demandToken(i++);
+                    n.base.add(t.text);
+                    t = demandToken(i++);
+                }
             }
             Return<ClassContentNode> content = parseClassContent(i);
             i = content.i;
@@ -164,9 +170,9 @@ public final class Parser {
         ClassContentNode node = new ClassContentNode(demandToken(i++, Token.Type.BLKBEG));
         Token t;
         while(true){
-            t = demandToken(i++);
+            t = demandToken(i);
             if(t.type==Token.Type.BLKEND){
-                return new Return<ClassContentNode>(i, node);
+                return new Return<ClassContentNode>(i+1, node);
             }
             Return<ConstructorNode> c = parseConstructor(i);
             if(c!=null){
@@ -180,7 +186,14 @@ public final class Parser {
                 node.addMethod(m.node);
                 continue;
             }
-            throw todo("parseClassContent: Fields and nested classes");
+            Return<FieldNode> f = parseField(i);
+            if(f!=null){
+                i = f.i;
+                node.addField(f.node);
+                continue;
+            }
+            
+            throw buildException(tokens.get(i), "Invalid class content");
         }
     }
 
@@ -188,6 +201,9 @@ public final class Parser {
         //TODO: Fix access modifier token
         Token accessToken = demandToken(i++);
         Token t = accessToken;
+        if(accessModifier.contains(t.type)){
+            t = demandToken(i++);
+        }
         if(t.type!=Token.Type.THIS){
             return null;
         }
@@ -753,6 +769,43 @@ public final class Parser {
         return parseAssign(i);
     }
 
+    public Return<FieldNode> parseField(int i) throws ParserException{
+        Token accessToken = demandToken(i++);
+        Token t = accessToken;
+        if(accessModifier.contains(accessToken.type)){
+            t = demandToken(i++);
+        }
+        if(t.type!=Token.Type.VAR&&t.type!=Token.Type.CONST){
+            return null;
+        }
+        
+        FieldNode f = new FieldNode(t);
+        f.accessModifier = accessToken;
+        
+        f.name = demandToken(i++, Token.Type.WORD).text;
+        
+        t = demandToken(i++);
+        
+        if(t.type==Token.Type.EQUAL){            
+            Return<ExpressionNode> exp = parseExpression(i);
+            if(exp==null){
+                throw buildException(t, "Invalid value for field " + f.name);
+            }
+            i = exp.i;
+            f.value = exp.node;
+            demandToken(i++, Token.Type.SEMICOLON);
+            return new Return<FieldNode>(i, f);
+        }
+        else if(t.type==Token.Type.SEMICOLON){
+            if(f.isConst){
+                throw buildException(t, "Constant fields must have a value");
+            }
+            return new Return<FieldNode>(i, f);
+        }
+        
+        throw buildException(t, "Unexpected token of type " + t.type);
+    }
+    
     public Return<MethodNode> parseMethod(int i) throws ParserException{
         Token accessToken = demandToken(i++);
         Token t = accessToken;

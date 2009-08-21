@@ -28,18 +28,25 @@ import org.gcreator.pineapple.pinedl.Token;
  *
  * @author luis
  */
-public class ConstructorNode extends Node{
+public class FieldNode extends Node{
+    public boolean isConst = false;
     public Token accessModifier;
-    public ArgumentListNode arguments;
-    public StatementNode content;
+    public String name;
+    public ExpressionNode value;
 
-    public ConstructorNode(Token token){
+    public FieldNode(Token token){
         super(token);
+        if(token.type==Token.Type.CONST){
+            isConst = true;
+        }
     }
     
     @Override
     public String toString(){
-        return accessModifier.type.toString().toLowerCase() + " this" +
-                arguments.toString() + content.toString();
+        String s = accessModifier.type.toString().toLowerCase() + " " + name;
+        if(value!=null){
+            s += " = " + value;
+        }
+        return s;
     }
 }

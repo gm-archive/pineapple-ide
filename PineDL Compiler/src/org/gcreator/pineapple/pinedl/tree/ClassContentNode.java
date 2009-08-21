@@ -33,12 +33,13 @@ import org.gcreator.pineapple.pinedl.Token;
 public class ClassContentNode extends Node{
     public List<ConstructorNode> constructors;
     public List<MethodNode> methods;
-    //TODO: Fields
+    public List<FieldNode> fields;
 
     public ClassContentNode(Token t){
         super(t);
         constructors = new Vector<ConstructorNode>();
         methods = new Vector<MethodNode>();
+        fields = new Vector<FieldNode>();
     }
 
     public void addConstructor(ConstructorNode constructor){
@@ -47,6 +48,10 @@ public class ClassContentNode extends Node{
 
     public void addMethod(MethodNode method){
         methods.add(method);
+    }
+    
+    public void addField(FieldNode field) {
+        fields.add(field);
     }
     
     @Override
@@ -63,6 +68,11 @@ public class ClassContentNode extends Node{
             s += "\n\t" + node.toString();
         }
         
-        return s + '}';
+        s += "\nFields:";
+        for(FieldNode node : fields){
+            s += "\n\t" + node.toString();
+        }
+        
+        return s + "\n}";
     }
 }

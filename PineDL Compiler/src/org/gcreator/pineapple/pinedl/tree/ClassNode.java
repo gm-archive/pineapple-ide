@@ -22,6 +22,8 @@ THE SOFTWARE.
 
 package org.gcreator.pineapple.pinedl.tree;
 
+import java.util.List;
+import java.util.Vector;
 import org.gcreator.pineapple.pinedl.Token;
 
 /**
@@ -30,7 +32,7 @@ import org.gcreator.pineapple.pinedl.Token;
  */
 public class ClassNode extends Node{
     public String name = null;
-    public String base = null;
+    public List<String> base = new Vector<String>();
     public ClassContentNode content = null;
 
     public ClassNode(Token t){
@@ -41,9 +43,12 @@ public class ClassNode extends Node{
     public String toString(){
         String s = "class ";
         s += name;
-        if(base!=null){
+        if(!base.isEmpty()){
             s += " : ";
-            s += base;
+            s += base.get(0);
+        }
+        for(int i = 1; i < base.size(); i++){
+            s += ", " + base.get(i);
         }
         return s + content.toString();
     }
