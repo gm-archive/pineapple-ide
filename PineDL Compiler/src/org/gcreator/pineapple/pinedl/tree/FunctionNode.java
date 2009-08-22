@@ -20,37 +20,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-class Character{
-    public var v;
-    public var w = 2;
-    public const x = 3;
+package org.gcreator.pineapple.pinedl.tree;
 
-    public this(name, sprite, category, attacks...){
+import org.gcreator.pineapple.pinedl.Token;
+
+/**
+ *
+ * @author luis
+ */
+public class FunctionNode extends Node{
+    public String name;
+    public ArgumentListNode arguments;
+    public StatementNode content;
+
+    public FunctionNode(Token token){
+        super(token);
     }
-
-    public function act(){
-        const a = true;
-        var b = 2;
-        var z;
-
-        var c = 1;
-        c = z = (3+2*c) > 5;
-
-        c = !true;
-
-        var d = 
-            1<<4|1<<3>2 && 1 == 1?
-                "A":"B"
-            ;
-
-        if(d=="A") b++;
-        else if(d=="B") b--;
-        else d=1;
-
-        for(var i = 0; i < 10; i++){
-            b = i;
-            continue;
-            if(i>8) break;
-        }
+    
+    @Override
+    public String toString(){
+        return name + arguments.toString() + content.toString();
     }
 }

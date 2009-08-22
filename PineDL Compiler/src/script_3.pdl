@@ -1,0 +1,144 @@
+/*
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+/*
+    This is a parsing speed test
+*/
+
+class Character{
+    public var v;
+    public var w = 2;
+    public const x = 3;
+
+    public this(name, sprite, category, attacks...){
+    }
+
+    public function act(){
+        const a = true;
+        var b = 2;
+        var z;
+
+        var c = 1;
+        c = z = (3+2*c) > 5;
+
+        c = !true;
+
+        var d = 
+            1<<4|1<<3>2 && 1 == 1?
+                "A":"B"
+            ;
+
+        if(d=="A") b++;
+        else if(d=="B") b--;
+        else d=1;
+
+        for(var i = 0; i < 10; i++){
+            b = i;
+            continue;
+            if(i>8) break;
+        }
+    }
+}
+
+function my_function() w++;
+function my_function2(){
+    for(var i = 0; i < 5; i++) w++;
+}
+
+class SomeClass extends Character, Character, Character{
+    public var m = 2;
+    public this(){
+        
+    }
+
+    public function s(v){
+        m = v;
+    }
+}
+/*
+Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+/*
+    This is a parsing speed test
+*/
+
+class P{
+    public function km(meter){
+        
+    }
+
+    public function xml(){}
+}
+
+class Character2{
+    public var v;
+    public var w = 2;
+    public const x = 3;
+
+    public this(name, sprite, category, attacks...){
+    }
+
+    public function act(){
+        const a = true;
+        var b = 2;
+        var z;
+
+        var c = 1;
+        c = z = (3+2*c) > 5;
+
+        c = !true;
+
+        var d = 
+            1<<4|1<<3>2 && 1 == 1?
+                "A":"B"
+            ;
+
+        if(d=="A") b++;
+        else if(d=="B") b--;
+        else d=1;
+
+        for(var i = 0; i < 10; i++){
+            b = i;
+            continue;
+            if(i>8) break;
+        }
+    }
+}

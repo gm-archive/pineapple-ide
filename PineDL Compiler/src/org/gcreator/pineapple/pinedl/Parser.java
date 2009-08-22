@@ -25,46 +25,7 @@ package org.gcreator.pineapple.pinedl;
 import java.util.List;
 import java.util.Vector;
 import org.gcreator.pineapple.pinedl.attributes.ComparisonType;
-import org.gcreator.pineapple.pinedl.tree.ArgumentListNode;
-import org.gcreator.pineapple.pinedl.tree.AssignNode;
-import org.gcreator.pineapple.pinedl.tree.BinaryOperatorNode;
-import org.gcreator.pineapple.pinedl.tree.BitwiseAndOperator;
-import org.gcreator.pineapple.pinedl.tree.BitwiseOrOperator;
-import org.gcreator.pineapple.pinedl.tree.BitwiseXorOperator;
-import org.gcreator.pineapple.pinedl.tree.BlockNode;
-import org.gcreator.pineapple.pinedl.tree.BooleanConstant;
-import org.gcreator.pineapple.pinedl.tree.Break;
-import org.gcreator.pineapple.pinedl.tree.CharConstant;
-import org.gcreator.pineapple.pinedl.tree.ClassContentNode;
-import org.gcreator.pineapple.pinedl.tree.ClassNode;
-import org.gcreator.pineapple.pinedl.tree.ComparisonNode;
-import org.gcreator.pineapple.pinedl.tree.ConstantNode;
-import org.gcreator.pineapple.pinedl.tree.ConstructorNode;
-import org.gcreator.pineapple.pinedl.tree.Continue;
-import org.gcreator.pineapple.pinedl.tree.DeclarationNode;
-import org.gcreator.pineapple.pinedl.tree.DivNode;
-import org.gcreator.pineapple.pinedl.tree.DocumentNode;
-import org.gcreator.pineapple.pinedl.tree.ExpressionNode;
-import org.gcreator.pineapple.pinedl.tree.FieldNode;
-import org.gcreator.pineapple.pinedl.tree.ForStatement;
-import org.gcreator.pineapple.pinedl.tree.IfStatement;
-import org.gcreator.pineapple.pinedl.tree.LogicalAndOperator;
-import org.gcreator.pineapple.pinedl.tree.LogicalNotNode;
-import org.gcreator.pineapple.pinedl.tree.LogicalOrOperator;
-import org.gcreator.pineapple.pinedl.tree.MethodNode;
-import org.gcreator.pineapple.pinedl.tree.ModNode;
-import org.gcreator.pineapple.pinedl.tree.MultNode;
-import org.gcreator.pineapple.pinedl.tree.Node;
-import org.gcreator.pineapple.pinedl.tree.NumericConstant;
-import org.gcreator.pineapple.pinedl.tree.PrePostOperator;
-import org.gcreator.pineapple.pinedl.tree.Reference;
-import org.gcreator.pineapple.pinedl.tree.ShiftNode;
-import org.gcreator.pineapple.pinedl.tree.StatementNode;
-import org.gcreator.pineapple.pinedl.tree.StringConstant;
-import org.gcreator.pineapple.pinedl.tree.SumNode;
-import org.gcreator.pineapple.pinedl.tree.TernaryConditionalOperator;
-import org.gcreator.pineapple.pinedl.tree.VariableReference;
-import org.gcreator.pineapple.pinedl.tree.WhileStatement;
+import org.gcreator.pineapple.pinedl.tree.*;
 
 /**
  *
@@ -82,7 +43,7 @@ public final class Parser {
         accessModifier.add(Token.Type.PRIVATE);
     }
 
-    public final class Return<T extends Node>{
+    public static final class Return<T extends Node>{
         public int i = 0;
         public T node = null;
 
@@ -123,7 +84,7 @@ public final class Parser {
                 document.content.add(r.node);
                 continue;
             }
-
+            
             r = parseFunction(i);
             if(r!=null){
                 i += r.i;
@@ -131,7 +92,8 @@ public final class Parser {
                 continue;
             }
 
-            throw buildException(tokens.get(i), "Unexpected token.");
+            
+            throw buildException(tokens.get(i), "Unexpected token (" + i + ") " + tokens.get(i).type);
         }
     }
 
@@ -860,6 +822,7 @@ public final class Parser {
         }
         i = r.i;
         method.content = r.node;
+        
         return new Return<MethodNode>(i, method);
     }
 
@@ -870,18 +833,19 @@ public final class Parser {
         if((r= parseIfStatement(i, context))!=null) return r;
         if((r= parseWhileStatement(i, context))!=null) return r;
         if((r= parseForStatement(i, context))!=null) return r;
-        if(context.inLoop){
-            Token t = demandToken(i++);
-            if(t.type==Token.Type.BREAK){
-                demandToken(i++, Token.Type.SEMICOLON);
-                return new Return<StatementNode>(i, new Break(t));
-            }
-            if(t.type==Token.Type.CONTINUE){
-                demandToken(i++, Token.Type.SEMICOLON);
-                return new Return<StatementNode>(i, new Continue(t));
-            }
-            i--;
+        Token t = demandToken(i++);
+        if(t.type==Token.Type.BREAK){
+            demandToken(i++, Token.Type.SEMICOLON);
+            return new Return<StatementNode>(i, new Break(t));
         }
+        if(t.type==Token.Type.CONTINUE){
+            if(!context.inLoop){
+                throw buildException(t, "continue statements must be in loops.");
+            }
+            demandToken(i++, Token.Type.SEMICOLON);
+            return new Return<StatementNode>(i, new Continue(t));
+        }
+        i--;
         Return<ExpressionNode> exp = parseExpression(i);
         if(exp!=null){
             i = exp.i;
@@ -1041,8 +1005,56 @@ public final class Parser {
         }
     }
 
-    public Return parseFunction(int i) throws ParserException{
-        throw todo("parseFunction with i="+i+" (" + demandToken(i) + ')');
+    public Return<FunctionNode> parseFunction(int i) throws ParserException{
+        Token t = demandToken(i++);
+        if(t.type!=Token.Type.FUNCTION){
+            return null;
+        }
+
+        t = demandToken(i++, Token.Type.WORD);
+        FunctionNode func = new FunctionNode(t);
+        func.name = t.text;
+        ArgumentListNode arglist = new ArgumentListNode(demandToken(i++, Token.Type.LPAREN));
+        func.arguments = arglist;
+
+        boolean isFirst = true;
+
+        t = demandToken(i++);
+        while(true){
+            if(t.type==Token.Type.RPAREN){
+                break;
+            }
+            if(!isFirst){
+                demandType(t, Token.Type.COMMA);
+                t = demandToken(i++, Token.Type.WORD);
+            }
+            else{
+                demandType(t, Token.Type.WORD);
+            }
+            isFirst = false;
+            ArgumentListNode.Argument arg = new ArgumentListNode.Argument();
+            arg.name = t.text;
+            arglist.arguments.add(arg);
+            t = demandToken(i++);
+            if(t.type==Token.Type.EQUAL){
+                throw todo("Default arguments not yet implemented");
+            }
+            if(t.type==Token.Type.VARARGS){
+                arg.varargs = true;
+                t = demandToken(i++, Token.Type.RPAREN);
+                break;
+            }
+        }
+
+        StatementContext c = new StatementContext();
+        c.firstInConstructor = true;
+        Return<StatementNode> r = parseStatement(i, c);
+        if(r==null){
+            throw buildException(t, "Invalid constructor content");
+        }
+        i = r.i;
+        func.content = r.node;
+        return new Return<FunctionNode>(i, func);
     }
 
     public ParserException todo(String message){

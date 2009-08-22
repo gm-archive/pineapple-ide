@@ -20,23 +20,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.gcreator.pineapple.pinedl.tree;
+class Character{
+    public var v;
+    public var w = 2;
+    public const x = 3;
 
-import org.gcreator.pineapple.pinedl.Token;
-
-/**
- *
- * @author luis
- */
-public class MethodNode extends FunctionNode{
-    public Token accessModifier;
-
-    public MethodNode(Token token){
-        super(token);
+    public this(name, sprite, category, attacks...){
     }
-    
-    @Override
-    public String toString(){
-        return accessModifier.type.toString().toLowerCase() + " " + super.toString();
+
+    public function act(){
+        const a = true;
+        var b = 2;
+        var z;
+
+        var c = 1;
+        c = z = (3+2*c) > 5;
+
+        c = !true;
+
+        var d = 
+            1<<4|1<<3>2 && 1 == 1?
+                "A":"B"
+            ;
+
+        if(d=="A") b++;
+        else if(d=="B") b--;
+        else d=1;
+
+        for(var i = 0; i < 10; i++){
+            b = i;
+            continue;
+            if(i>8) break;
+        }
+    }
+}
+
+function my_function() w++;
+function my_function2(){
+    for(var i = 0; i < 5; i++) w++;
+}
+
+class SomeClass extends Character, Character, Character{
+    public var m = 2;
+    public this(){
+        
+    }
+
+    public function s(v){
+        m = v;
     }
 }

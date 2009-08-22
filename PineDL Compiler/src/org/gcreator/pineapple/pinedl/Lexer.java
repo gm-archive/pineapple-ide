@@ -168,7 +168,7 @@ public final class Lexer {
                 curPos++;
                 currentLine++;
                 if(curPos<rSize-1){
-                    if(isLineBreak(file.charAt(curPos+1))){
+                    if(cChar=='\r'&&file.charAt(curPos)=='\n'){
                         //Watch for \r\n
                         curPos++;
                     }
@@ -335,8 +335,10 @@ public final class Lexer {
             
             //TODO
         }
-        else if(!isDigit(cChar)){
+        else if(isDigit(cChar)){
             //Handle 3.0 and 3.2e2 numbers
+            
+            //TODO
         }
         return -1; //Not a float
         
@@ -567,6 +569,7 @@ public final class Lexer {
                 return 2;
             }
         }
+        
         if(singleTokens.containsKey(chr)){
             Token t = new Token(currentLine);
             t.text = "" + chr;
