@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="CopyModule" default="default" basedir="..">
-     <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
        
     <description>Copies the module to the proper location</description>
     
-    <taskdef resource="org/apache/commons/vfs/tasks/tasks.properties"/>
     
     <target name="copy" depends="checkcopy" if="stxhl.exists">
        <copy file="Syntax Highlighter/dist/Syntax_Highlighter.jar" todir="Core/build/Plugins"/>

@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -90,6 +90,7 @@ public class GameSettingsDialog extends javax.swing.JDialog {
         });
         sceneList.setCellRenderer(new BasicFileRenderer());
         actorSelector.setResourceValidator(new SceneValidator());
+        this.setLocationRelativeTo(null);
     }
 
     private BasicFile getScene(String scene, Project p) {

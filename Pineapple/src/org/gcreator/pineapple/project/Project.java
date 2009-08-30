@@ -1,7 +1,7 @@
 
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
-import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.ProjectManager;
 import org.gcreator.pineapple.project.standard.DefaultProject;

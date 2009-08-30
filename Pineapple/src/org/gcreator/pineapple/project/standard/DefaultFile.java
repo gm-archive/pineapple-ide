@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.gcreator.pineapple.core.PineappleCore;
-import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
@@ -169,7 +168,7 @@ public class DefaultFile implements BasicFile {
             throw new IOException("Renaming failed for " + this.file+"\n Cannot rename to "+newName);
         }
         this.file = dest;
-        EventManager.fireEvent(this, PineappleGUI.FILE_RENAMED, oldPath, this);
+        EventManager.fireEvent(this, PineappleCore.FILE_RENAMED, oldPath, this);
         if (PineappleCore.getProject() != null && PineappleCore.getProject().getManager() instanceof DefaultProjectManager) {
             ((DefaultProjectManager) PineappleCore.getProject().getManager()).saveToManifest();
         }
@@ -239,7 +238,7 @@ public class DefaultFile implements BasicFile {
             // Directories go first
             if (this.isDirectory() == f.isDirectory()) {
                 /* Different sort modes */
-                if (PineappleGUI.sortMode == PineappleGUI.TreeSortMode.FILE_TYPE) {
+                if (PineappleCore.sortMode == PineappleCore.TreeSortMode.FILE_TYPE) {
                     // Find file extension
                     int tindex = this.getName().lastIndexOf('.');
                     int findex = f.getName().lastIndexOf('.');

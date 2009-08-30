@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CopyModule" default="default" basedir="..">
+    
+    <description>Copies the module to the proper location</description>
+    
+    <target name="copy" depends="checkcopy" if="applepie.exists">
+        <copy file="Apple Pie/dist/Apple_Pie.jar" todir="Core/build/Plugins"/>
+        <copy file="Apple Pie/dist/Apple_Pie.jar" todir="Core/dist/Plugins"/>
+        <copy file="Apple Pie/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" todir="Core/build/Plugins"/>
+        <copy file="Apple Pie/lib/TableLayout-bin-jdk1.1-2007-04-21.jar" todir="Core/dist/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-api-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-api-1.5.0.jar" todir="Core/dist/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-plaf-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-plaf-1.5.0.jar" todir="Core/dist/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-res-1.5.0.jar" todir="Core/build/Plugins"/>
+        <copy file="Apple Pie/lib/mydoggy-res-1.5.0.jar" todir="Core/dist/Plugins"/>
+    </target>
+
+    <target name="checkcopy">
+        <available file="Apple Pie/dist/Apple_Pie.jar" property="applepie.exists"/>
+    </target>
+
+    <target name="default" depends="copy">
+        <!-- Ensure all other modules are properly copied -->
+        <ant antfile="Core/copy-modules.xml" />
+    </target>
+    
+</project>

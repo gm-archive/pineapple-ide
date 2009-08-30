@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey <serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,64 +22,69 @@ THE SOFTWARE.
 */
 
 
-package org.gcreator.pineapple.project.standard;
+package org.gcreator.pineapple.gui.formats;
 
 import javax.imageio.ImageIO;
-import org.gcreator.pineapple.editors.TextEditor;
+import org.gcreator.pineapple.gui.editors.ImagePreviewer;
 import org.gcreator.pineapple.gui.DocumentPane;
-import org.gcreator.pineapple.core.PineappleCore;
-import org.gcreator.pineapple.plugins.EventHandler;
-import org.gcreator.pineapple.plugins.Event;
+import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.project.io.BasicFile;
-import org.gcreator.pineapple.project.io.FormatSupporter;
 
 /**
- * This class adds support for plain text documents in Pineapple.
+ * Allows you to load images in Pineapple
+ * using {@link javax.imageio.ImageIO}.
  * 
  * @author Serge Humphrey
  */
-public class PlainTextSupporter implements FormatSupporter, EventHandler {
-    
-    /**
-     * {@inheritDoc}
-     */
-    public DocumentPane load(BasicFile f) {
-        return new TextEditor(f);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void handleEvent(Event event) {
-        if (event.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
-            PineappleCore.addFormatSupporter(this);
+public class ImageSupporter implements FormatSupporter {
+
+    public ImageSupporter() {
+        String base = "files.formats.formatsupporter.remember.";
+        for (String s : ImageIO.getReaderFileSuffixes()) {
+            String k = base + s;
+            if (!SettingsManager.exists(k)) {
+                SettingsManager.set(k, this.getClass().getCanonicalName());
+            }
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DocumentPane load(BasicFile f) {
+        return new ImagePreviewer(f);
+    }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
-        return "Plain Text Editor";
+        return "Java ImageIO Image Loader";
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getDescription(String type) {
-        return "Supports simple plain-text documents";
+        String s = "Displays an image.";
+        return s;
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept(String format) {
         /* Don't load images */
         for (String s : ImageIO.getReaderFileSuffixes()) {
             if (s.equalsIgnoreCase(format)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
+
 }

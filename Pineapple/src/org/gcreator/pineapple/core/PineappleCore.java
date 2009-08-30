@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,15 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.core;
 
-import java.util.Hashtable;
 import java.util.Vector;
-import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.DefaultEventTypes;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.EventHandler;
 import org.gcreator.pineapple.plugins.EventPriority;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectType;
-import org.gcreator.pineapple.project.io.FormatSupporter;
-import org.gcreator.pineapple.project.standard.DefaultProjectType;
-import org.gcreator.pineapple.project.standard.ImageSupporter;
-import org.gcreator.pineapple.project.standard.PlainTextSupporter;
 
 /**
  * Preforms core-related pineapple tasks.
@@ -45,50 +40,13 @@ import org.gcreator.pineapple.project.standard.PlainTextSupporter;
 public final class PineappleCore {
 
     /**
-     * The {@link PineappleGUI} object.
-     */
-    private static PineappleGUI gui;
-    
-    /**
-     * The format supporters.
-     */
-    private static Vector<FormatSupporter> formats;
-    
-    /**
      * The project types.
      */
     private static Vector<ProjectType> projectTypes;
-        
     /**
      * The current project
      */
     private static Project project = null;
-
-    /**
-     * The file type names
-     */
-    public static Hashtable<String, String> fileTypeNames =
-            new Hashtable<String, String>();
-    
-    /**
-     * The file type descriptions
-     */
-    public static Hashtable<String, String> fileTypeDescriptions =
-            new Hashtable<String, String>();
-    
-    static {
-        fileTypeNames.put("txt", "Text File");
-        fileTypeDescriptions.put("txt", "A plain text file");
-    }
-    
-    /**
-     * Event called to add format supporters to
-     * the PineapplePlugin's list.
-     * 
-     * @see #addFormatSupporter(FormatSupporter) 
-     */
-    public static final String REGISTER_FORMATS = "register-formats";
-    
     /**
      * Event called to add project types to
      * the PineapplePlugin's list.
@@ -96,7 +54,6 @@ public final class PineappleCore {
      * @see #addProjectType(ProjectType) 
      */
     public static final String REGISTER_PROJECT_TYPES = "register-managers";
-
     /**
      * Event called when the project is changed.
      *
@@ -104,35 +61,64 @@ public final class PineappleCore {
      * @param arg1 the new project.
      */
     public static final String PROJECT_CHANGED = "project-changed";
-    
     /**
      * Event called when the project is renamed.
      */
     public static final String PROJECT_RENAMED = "project-renamed";
+    /**
+     * Event called when the GUI has been intialized.
+     */
+    public static final String GUI_INITIALIZED = "gui-intialized";
+    /**
+     * Event called when the project file hierarchy has been changed.
+     */
+    public static final String TREE_CHANGED = "tree-changed";
+    /**
+     * Event when a file is deleted from the filesystem.
+     */
+    public static final String FILE_DELETED = "file-deleted";
+    /**
+     * Event when a file is removed from the PineappleCore.getProject().
+     */
+    public static final String FILE_REMOVED = "file-removed";
+    /**
+     * Event when a file is renamed.<br/>
+     * Note: automatically called by {@link BasicFile#rename(java.lang.String)}.
+     *
+     * @param arg0 The relative old file path.
+     * @param arg1 The new file.
+     */
+    public static final String FILE_RENAMED = "file-renamed";
     
+    /**
+     * Called when the tree sort mode has been changed.
+     * @see  #sortMode
+     * @see TreeSortMode
+     */
+    public static final String TREE_SORT_MODE_CHANGED = "tree-sort-mode-changed";
+
+    public static enum TreeSortMode {
+
+        FILE_NAME, FILE_TYPE,
+    };
+    private static final String TREE_SORT_MODE_KEY = "pineapple.tree.sort_mode";
+    /**
+     * The way to sort files in the tree.
+     *
+     * @see TreeSortMode
+     */
+    public static TreeSortMode sortMode = TreeSortMode.FILE_NAME;
+
     /**
      * Initializes Pineapple's core:
      * - Registers event handlers
-     * - Constructs PineappleGUI
      */
     public static void intialize() {
         CoreEventHandler c = new CoreEventHandler();
-        EventManager.addEventHandler(c, REGISTER_FORMATS, EventPriority.MEDIUM);
         EventManager.addEventHandler(c, REGISTER_PROJECT_TYPES, EventPriority.MEDIUM);
+        EventManager.addEventHandler(c, GUI_INITIALIZED);
         EventManager.addEventHandler(c, DefaultEventTypes.PLUGINS_LOADED);
-        EventManager.addEventHandler(c, PineappleGUI.PINEAPPLE_GUI_INITIALIZED);
-        
-        gui = new PineappleGUI();
-    }
-
-    /**
-     * Adds a {@link FormatSupporter} to the list of available
-     * format supporters.
-     * 
-     * @param s The {@link FormatSupporter} to add.
-     */
-    public static void addFormatSupporter(FormatSupporter s) {
-        formats.add(s);
+        EventManager.addEventHandler(c, DefaultEventTypes.APPLICATION_INITIALIZED);
     }
 
     /**
@@ -143,18 +129,6 @@ public final class PineappleCore {
      */
     public static void addProjectType(ProjectType t) {
         projectTypes.add(t);
-    }
-    
-    /**
-     * Removes the given {@link FormatSupporter} from the list of 
-     * format supporters.
-     * 
-     * @param s The {@link FormatSupporter} to remove.
-     * @return Whether the list of formats did contain
-     * the given supporter.
-     */
-    public static boolean removeFormatSupporter(FormatSupporter s) {
-        return formats.remove(s);
     }
 
     /**
@@ -170,26 +144,11 @@ public final class PineappleCore {
     }
 
     /**
-     * @return The {@link PineappleGUI} instance.
-     */
-    public static PineappleGUI getGUI() {
-        return gui;
-    }
-
-    /**
      * @return A list of the available project types.
      */
     @SuppressWarnings("unchecked")
     public static Vector<ProjectType> getProjectTypes() {
         return (Vector<ProjectType>) projectTypes.clone();
-    }
-
-    /**
-     * @return A list of the available format supporters.
-     */
-    @SuppressWarnings("unchecked")
-    public static Vector<FormatSupporter> getFormatSupporters() {
-        return (Vector<FormatSupporter>) formats.clone();
     }
 
     private static class CoreEventHandler implements EventHandler {
@@ -200,30 +159,24 @@ public final class PineappleCore {
         @Override
         public void handleEvent(Event event) {
             if (event.getEventType().equals(DefaultEventTypes.PLUGINS_LOADED)) {
-
-                formats = new Vector<FormatSupporter>(4);
-                EventManager.fireEvent(this, REGISTER_FORMATS);
                 projectTypes = new Vector<ProjectType>(2);
                 EventManager.fireEvent(this, REGISTER_PROJECT_TYPES);
-                
-            } else if (event.getEventType().equals(REGISTER_FORMATS)) {
 
-                addFormatSupporter(new PlainTextSupporter());
-                addFormatSupporter(new ImageSupporter());
-
-            } else if (event.getEventType().equals(REGISTER_PROJECT_TYPES)) {
-
-                addProjectType(new DefaultProjectType());
-
-            } else if (event.getEventType().equals(REGISTER_PROJECT_TYPES)) {
-
-                PineappleCore.addProjectType(new DefaultProjectType());
-
-            } else if (event.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
+            } else if (event.getEventType().equals(GUI_INITIALIZED)) {
                 /* Fire PROJECT_CHANGED events if the project hasn't been set already. */
                 if (project == null) {
                     setProject(null);
                 }
+            } else if (event.getEventType().equals(DefaultEventTypes.APPLICATION_INITIALIZED)) {
+                // try to load the tree sort mode
+                if (SettingsManager.exists(TREE_SORT_MODE_KEY)) {
+                    try {
+                        sortMode = TreeSortMode.valueOf(SettingsManager.get(TREE_SORT_MODE_KEY));
+                    } catch (Exception exc) {
+                    }
+                }
+            } else if (event.getEventType().equals(TREE_SORT_MODE_CHANGED)) {
+                SettingsManager.set(TREE_SORT_MODE_KEY, sortMode.name());
             }
         }
     }
@@ -232,14 +185,14 @@ public final class PineappleCore {
      * Don't allow instantation */
     private PineappleCore() {
     }
-    
+
     /**
      * @return The project.
      */
     public static Project getProject() {
         return project;
     }
-    
+
     /**
      * Sets the project.
      * 

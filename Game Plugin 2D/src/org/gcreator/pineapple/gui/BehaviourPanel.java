@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ import org.gcreator.pineapple.formats.ClassResource;
 import org.gcreator.pineapple.formats.ClassResource.Field;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.Register;
-import org.gcreator.pineapple.syntax.PineDLEditor;
+import org.gcreator.pineapple.syntax.SyntaxEditor;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.validators.Glob;
 
@@ -155,8 +155,8 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
     public void save() {
         for (Component c : tabPane.getComponents()) {
-            if (c instanceof PineDLEditor) {
-                PineDLEditor e = (PineDLEditor) c;
+            if (c instanceof SyntaxEditor) {
+                SyntaxEditor e = (SyntaxEditor) c;
                 e.save();
             }
         }
@@ -407,7 +407,7 @@ private void deleteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {/
             tabLoop:
             for(int i = 0; i < compCount; i++){
                 Component obj = tabPane.getComponentAt(i);
-                if(obj instanceof PineDLEditor&&tabPane.getTitleAt(i).equals(val)){
+                if(obj instanceof SyntaxEditor&&tabPane.getTitleAt(i).equals(val)){
                     tabPane.remove(i);
                     break tabLoop;
                 }
@@ -511,7 +511,7 @@ private void removeFieldButtonActionPerformed(java.awt.event.ActionEvent evt) {/
                 };
             }
         };
-        final PineDLEditor p = new PineDLEditor(r);
+        final SyntaxEditor p = new SyntaxEditor(r);
         p.editor.getDocument().addDocumentListener(new DocumentListener() {
 
             public void change(DocumentEvent ev) {

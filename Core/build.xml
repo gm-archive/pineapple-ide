@@ -56,5 +56,11 @@
             <fileset dir="Core" includes="xbuild.xml"/>
         </subant>
     </target>
+
+    <target name="debug">
+        <subant target="debug">
+            <fileset dir="Core" includes="xbuild.xml"/>
+        </subant>
+    </target>
     
 </project>

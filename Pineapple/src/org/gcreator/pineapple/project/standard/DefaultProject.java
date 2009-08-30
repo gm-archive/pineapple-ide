@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import org.gcreator.pineapple.project.io.ProjectManager;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
-import org.gcreator.pineapple.gui.PineappleGUI;
+import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.plugins.EventHandler;
 import org.gcreator.pineapple.project.Project;
@@ -57,7 +57,7 @@ public class DefaultProject extends Project implements EventHandler {
      * 
      * @param name The name of the project. May be <tt>null</tt>.
      * @param folder The folder to use as the project folder. May be <strong>not</strong> <tt>null</tt>.
-     * @param type The project type class. May be <tt>null</tt>.
+     * @param type The project type class.
      * @param manager The manager for this project. May be <tt>null</tt>.
      * @param save Whether to save the project manifest first.
      */
@@ -66,10 +66,10 @@ public class DefaultProject extends Project implements EventHandler {
         this.files = new Vector<ProjectElement>();
         this.settings = new ProjectSettings<String, String>();
         this.manager = ((manager != null) ? manager : new DefaultProjectManager(this));
-        this.type = ((type != null) ? type : new DefaultProjectType());
+        this.type = type;
         this.treeNode = new ProjectTreeNode(this);
         this.settings.put("name", ((name != null) ? name : "Project"));
-        EventManager.addEventHandler(this, PineappleGUI.TREE_SORT_MODE_CHANGED);
+        EventManager.addEventHandler(this, PineappleCore.TREE_SORT_MODE_CHANGED);
         if (save) {
             saveLater();
         }
@@ -80,7 +80,7 @@ public class DefaultProject extends Project implements EventHandler {
      * 
      * @param name The name of the project. May be <tt>null</tt>.
      * @param folder The folder to use as the project folder. May be <strong>not</strong> <tt>null</tt>.
-     * @param type The project type class. May be <tt>null</tt>.
+     * @param type The project type class.
      * @param manager The manager for this project. May be <tt>null</tt>.
      */
     protected DefaultProject(String name, File folder, ProjectType type, DefaultProjectManager manager) {
@@ -236,7 +236,7 @@ public class DefaultProject extends Project implements EventHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void handleEvent(Event event) {
-        if (event.getEventType().equals(PineappleGUI.TREE_SORT_MODE_CHANGED)) {
+        if (event.getEventType().equals(PineappleCore.TREE_SORT_MODE_CHANGED)) {
             Collections.sort(files);
             // Outdate all folders
             for (ProjectElement e : files) {
@@ -244,7 +244,7 @@ public class DefaultProject extends Project implements EventHandler {
                     ((ProjectFolder)e).outdate();
                 }
             }
-            PineappleGUI.updateTreeUI();
+            EventManager.fireEvent(this, PineappleCore.TREE_CHANGED);
         }
     }
 

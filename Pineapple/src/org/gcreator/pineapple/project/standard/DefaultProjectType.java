@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey <serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,18 +34,18 @@ import org.gcreator.pineapple.project.io.BasicFile;
  * 
  * @author Serge Humphrey
  */
-public class DefaultProjectType implements ProjectType {
-    
+public abstract class DefaultProjectType implements ProjectType {
+
     protected final String FILE_TYPE;
     
     public DefaultProjectType() {
         FILE_TYPE = "pmf";
     }
-    
+
     public DefaultProjectType(String fileType) {
         FILE_TYPE = fileType;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -53,23 +53,7 @@ public class DefaultProjectType implements ProjectType {
     public Project create(String name, File folder) {
         return new DefaultProject(name, folder, this, null);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getName() {
-        return "Default";
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getDescription() {
-        return "This project type uses the file system for storage.";
-    }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -77,7 +61,7 @@ public class DefaultProjectType implements ProjectType {
     public Project load(File f, File folder) {
         return new DefaultProjectManager(f, folder, this, null).getProject();
     }
-    
+        
     /**
      * {@inheritDoc}
      */
@@ -85,12 +69,12 @@ public class DefaultProjectType implements ProjectType {
     public String[] getProjectFileTypes() {
         return new String[]{FILE_TYPE};
     }
-        
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public BasicFile createBasicFile(File f, Project p) {
+    public BasicFile createFile(File f, Project p) {
         return new DefaultFile(f, null, p);
     }
 }

@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import org.gcreator.pineapple.game2d.GameProjectType;
-import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.PineappleGUI;
 import org.gcreator.pineapple.pinedl.cpp.GameCompiler;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.EventPriority;
@@ -57,13 +57,13 @@ public class CppCompilerPlugin extends Plugin {
 
     @Override
     public void initialize() {
-        EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED, EventPriority.LOW);
+        EventManager.addEventHandler(this, PineappleCore.GUI_INITIALIZED, EventPriority.LOW);
         EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED, EventPriority.LOW);
     }
 
     @Override
     public void handleEvent(Event evt) {
-        if (evt.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
+        if (evt.getEventType().equals(PineappleCore.GUI_INITIALIZED)) {
             compile = new JMenuItem("Compile");
             compile.setVisible(true);
             compile.addActionListener(new ActionListener() {

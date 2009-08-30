@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ import javax.swing.JPopupMenu;
 import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.editors.ActorEditor;
 import org.gcreator.pineapple.editors.SceneEditor;
-import org.gcreator.pineapple.editors.TextEditor;
+import org.gcreator.pineapple.gui.editors.TextEditor;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.gui.GameSettingsDialog;
 import org.gcreator.pineapple.gui.PineappleGUI;
@@ -48,11 +48,12 @@ import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.gui.CheckResourceNamesPanel;
+import org.gcreator.pineapple.gui.base.GUIBase;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.Plugin;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.io.BasicFile;
-import org.gcreator.pineapple.project.io.FormatSupporter;
+import org.gcreator.pineapple.gui.formats.FormatSupporter;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
 import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.validators.Glob;
@@ -177,8 +178,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             }
         } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
             PineappleCore.addProjectType(new GameProjectType());
-        } else if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
-            PineappleCore.addFormatSupporter(this);
+        } else if (e.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
+            GUIBase.addFormatSupporter(this);
             /* Set the default FormatSupporters for certain types. */
             String base = "files.formats.formatsupporter.remember.";
             String fs = this.getClass().getCanonicalName();
@@ -249,7 +250,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                 checkres.setEnabled(PineappleCore.getProject() != null &&
                         PineappleCore.getProject().getProjectType() instanceof GameProjectType);
             }
-        } else if (e.getEventType().equals(PineappleGUI.FILE_RENAMED)) {
+        } else if (e.getEventType().equals(PineappleCore.FILE_RENAMED)) {
             Runnable r = new Runnable() {
 
                 public void run() {
@@ -312,17 +313,17 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     @Override
     public void initialize() {
         EventManager.addEventHandler(this, PineappleGUI.DOCUMENT_CHANGED);
-        EventManager.addEventHandler(this, PineappleGUI.FILE_RENAMED);
+        EventManager.addEventHandler(this, PineappleCore.FILE_RENAMED);
         EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
-        EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
+        EventManager.addEventHandler(this, GUIBase.REGISTER_FORMATS);
         EventManager.addEventHandler(this, PineappleGUI.TREE_MENU_INVOKED);
         EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED);
         EventManager.addEventHandler(this, PineappleCore.PROJECT_CHANGED);
-        PineappleCore.fileTypeNames.put("actor", "Game Actor");
-        PineappleCore.fileTypeDescriptions.put("actor",
+        GUIBase.fileTypeNames.put("actor", "Game Actor");
+        GUIBase.fileTypeDescriptions.put("actor",
                 "Game entities associated with a position and a behavior.");
-        PineappleCore.fileTypeNames.put("scene", "Game Scene");
-        PineappleCore.fileTypeDescriptions.put("scene",
+        GUIBase.fileTypeNames.put("scene", "Game Scene");
+        GUIBase.fileTypeDescriptions.put("scene",
                 "Game space units. Containers of actors.");
     }
 

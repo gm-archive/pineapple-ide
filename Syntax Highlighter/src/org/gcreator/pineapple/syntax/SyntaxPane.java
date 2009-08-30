@@ -1,6 +1,6 @@
 /*
     Copyright (C) 2009 Luís Reis<luiscubal@gmail.com>
-    Copyright (C) 2009 Serge Humphrey<bob@bobtheblueberry.com>
+    Copyright (C) 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
     This file is part of Syntax Highlighter.
 
@@ -32,7 +32,7 @@ import javax.swing.JMenu;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.gcreator.pineapple.editors.TextEditor;
+import org.gcreator.pineapple.gui.editors.TextEditor;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.project.io.BasicFile;
 
@@ -41,20 +41,20 @@ import org.gcreator.pineapple.project.io.BasicFile;
  *
  * @author Serge Humphrey
  */
-public class PineDLPane extends DocumentPane {
+public class SyntaxPane extends DocumentPane {
     
     private static final long serialVersionUID = 12665874653L;
-    protected PineDLEditor editor;
+    protected SyntaxEditor editor;
 
     /**
-     * Creates a new {@link PineDLPane}.
+     * Creates a new {@link SyntaxPane}.
      * 
      * @param file The file to open.
      */
-    public PineDLPane(BasicFile file) {
+    public SyntaxPane(BasicFile file) {
         super(file);
         this.setLayout(new BorderLayout());
-        this.editor = new PineDLEditor(file);
+        this.editor = new SyntaxEditor(file);
 
         String x;
         int i = file.getName().lastIndexOf('.');
@@ -67,8 +67,8 @@ public class PineDLPane extends DocumentPane {
         if (x == null) {
             editor.editor.setSyntaxEditingStyle(RSyntaxTextArea.NO_SYNTAX_STYLE);
         } else {
-            if (PineDLPlugin.styles.containsKey(x.toLowerCase())) {
-                editor.editor.setSyntaxEditingStyle(PineDLPlugin.styles.get(x.toLowerCase()));
+            if (SyntaxPlugin.styles.containsKey(x.toLowerCase())) {
+                editor.editor.setSyntaxEditingStyle(SyntaxPlugin.styles.get(x.toLowerCase()));
             } else {
                 editor.editor.setSyntaxEditingStyle(RSyntaxTextArea.NO_SYNTAX_STYLE);
             }

@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey<serge@bobtheblueberry.com>
 
 This file is part of Syntax Highlighter.
 
@@ -26,18 +26,19 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.gcreator.pineapple.gui.DocumentPane;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.base.GUIBase;
 import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.Plugin;
 import org.gcreator.pineapple.project.io.BasicFile;
-import org.gcreator.pineapple.project.io.FormatSupporter;
+import org.gcreator.pineapple.gui.formats.FormatSupporter;
 
 /**
  * The Syntax Highlighter core
  * 
  * @author Luís Reis
  */
-public class PineDLPlugin extends Plugin implements FormatSupporter {
+public class SyntaxPlugin extends Plugin implements FormatSupporter {
 
     public static Hashtable<String, Integer> styles = new Hashtable<String, Integer>();
     public static Hashtable<Integer, String> names = new Hashtable<Integer, String>();
@@ -130,8 +131,8 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void handleEvent(Event e) {
-        if (e.getEventType().equals(PineappleCore.REGISTER_FORMATS)) {
-            PineappleCore.addFormatSupporter(this);
+        if (e.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
+            GUIBase.addFormatSupporter(this);
             String pdlk = "files.formats.formatsupporter.remember.pdl";
             if (!SettingsManager.exists(pdlk)) {
                 SettingsManager.set(pdlk, "org.gcreator.pineapple.syntax.PineDLPlugin");
@@ -144,18 +145,18 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
      */
     @Override
     public void initialize() {
-        PineappleCore.fileTypeNames.put("pdl", "PineDL Script");
-        PineappleCore.fileTypeDescriptions.put("pdl",
+        GUIBase.fileTypeNames.put("pdl", "PineDL Script");
+        GUIBase.fileTypeDescriptions.put("pdl",
                 "Code written in the PineDL programming language.");
         
-        EventManager.addEventHandler(this, PineappleCore.REGISTER_FORMATS);
+        EventManager.addEventHandler(this,GUIBase.REGISTER_FORMATS);
     }
 
     /**
      * {@inheritDoc}
      */
     public DocumentPane load(BasicFile f) {
-        return new PineDLPane(f);
+        return new SyntaxPane(f);
     }
 
     /**
@@ -174,9 +175,9 @@ public class PineDLPlugin extends Plugin implements FormatSupporter {
         boolean old = enabled;
         super.setEnabled(b);
         if (b && !old) {
-            PineappleCore.addFormatSupporter(this);
+            GUIBase.addFormatSupporter(this);
         } else if (!b && old) {
-            PineappleCore.removeFormatSupporter(this);
+            GUIBase.removeFormatSupporter(this);
         }
     }
     

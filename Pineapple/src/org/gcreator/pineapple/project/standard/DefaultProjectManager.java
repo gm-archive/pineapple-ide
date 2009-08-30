@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,8 +44,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.gcreator.pineapple.gui.CopyFileDialog;
-import org.gcreator.pineapple.gui.PineappleGUI;
+import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.ProjectFolder;
@@ -205,22 +204,6 @@ public class DefaultProjectManager implements ProjectManager {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String[] getImportFileTypes() {
-        return null; /* No Importing supported yet. */
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String[] getExportFileTypes() {
-        return null; /* No Exporting supported yet. */
-    }
-
-    /**
      * Saves the project to a manifest.
      * 
      */
@@ -336,20 +319,6 @@ public class DefaultProjectManager implements ProjectManager {
      * {@inheritDoc}
      */
     @Override
-    public void importFile(File f) {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void exportFile(File f) {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public BasicFile copyFileToProject(File file, ProjectFolder folder, String newName) {
         File newFile = copyFile(file, newName,
                 ((folder != null)
@@ -417,7 +386,7 @@ public class DefaultProjectManager implements ProjectManager {
                 }
                 updateTreeUI();
             } catch (IOException ex) {
-                Logger.getLogger(CopyFileDialog.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     if (in != null) {
@@ -427,7 +396,7 @@ public class DefaultProjectManager implements ProjectManager {
                         out.close();
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(CopyFileDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else if (file.isDirectory()) {
@@ -447,19 +416,19 @@ public class DefaultProjectManager implements ProjectManager {
      */
     @Override
     public BasicFile getFile(String path) throws FileNotFoundException {
-       return getFile(path, project);
+        return getFile(path, project);
     }
 
     private BasicFile getFile(String path, Project p) throws FileNotFoundException {
-       DefaultFile f = new DefaultFile(new File(p.getProjectFolder(), path), null, p);
-       f.element = p.createElement(f);
-       return f;
+        DefaultFile f = new DefaultFile(new File(p.getProjectFolder(), path), null, p);
+        f.element = p.createElement(f);
+        return f;
     }
 
     private final class ProjectXMLHandler implements ContentHandler {
 
         private Locator locator;
-        private  boolean files,  settings;
+        private boolean files,  settings;
         private boolean loading;
         private DefaultProject project;
 
@@ -635,6 +604,6 @@ public class DefaultProjectManager implements ProjectManager {
     }
 
     private void updateTreeUI() {
-        PineappleGUI.tree.updateUI();
+        EventManager.fireEvent(this, PineappleCore.TREE_CHANGED);
     }
 }

@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey <serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -84,5 +84,5 @@ public interface ProjectType {
      * @return A {@link Basicfile} implementation for a
      * given {@link java.io.File java.io.File}.
      */
-    public BasicFile createBasicFile(File f, Project p);
+    public BasicFile createFile(File f, Project p);
 }

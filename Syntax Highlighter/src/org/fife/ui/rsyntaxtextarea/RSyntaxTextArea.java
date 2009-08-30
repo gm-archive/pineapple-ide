@@ -57,7 +57,7 @@ import javax.swing.text.Highlighter;
 
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
-import org.gcreator.pineapple.syntax.PineDLEditor;
+import org.gcreator.pineapple.syntax.SyntaxEditor;
 
 /**
  * An extension of <code>RTextArea</code> that adds syntax highlighting
@@ -1560,6 +1560,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
     @Override
     protected void addMenuItems(JPopupMenu menu) {
           menu.addSeparator();
-          menu.add(PineDLEditor.createStyleMenu(this));
+          menu.add(SyntaxEditor.createStyleMenu(this));
     }
 }

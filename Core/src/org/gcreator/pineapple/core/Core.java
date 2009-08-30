@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -161,7 +161,7 @@ public final class Core {
         } else if (args[0].equalsIgnoreCase("--license") || args[0].equalsIgnoreCase("-l")) {
             System.out.println(
                     "Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>\n" +
-                    "Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>\n" +
+                    "Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>\n" +
                     "\n" +
                     "Permission is hereby granted, free of charge, to any person obtaining a copy\n" +
                     "of this software and associated documentation files (the \"Software\"), to deal\n" +

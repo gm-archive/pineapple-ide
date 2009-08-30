@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 This file is part of Syntax Highlighter.
 
@@ -36,7 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
-import org.gcreator.pineapple.editors.TextEditor;
+import org.gcreator.pineapple.gui.editors.TextEditor;
 import org.gcreator.pineapple.project.io.Register;
 
 /**
@@ -45,14 +45,14 @@ import org.gcreator.pineapple.project.io.Register;
  * @author Luís Reis
  * @author Serge Humphrey
  */
-public class PineDLEditor extends JPanel {
+public class SyntaxEditor extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private RTextScrollPane scroll;
     public RSyntaxTextArea editor;
     protected Register data;
 
-    public PineDLEditor(Register data) {
+    public SyntaxEditor(Register data) {
         this.setLayout(new BorderLayout());
         this.editor = new RSyntaxTextArea();
         this.data = data;
@@ -128,7 +128,7 @@ public class PineDLEditor extends JPanel {
         editMenu.add(selall);
 
         editMenu.addSeparator();
-        editMenu.add(PineDLEditor.createStyleMenu(editor));
+        editMenu.add(SyntaxEditor.createStyleMenu(editor));
 
 
         return true;
@@ -145,7 +145,7 @@ public class PineDLEditor extends JPanel {
 
         Vector<Integer> vi = new Vector<Integer>();
         vi.add(RSyntaxTextArea.NO_SYNTAX_STYLE);
-        for (int value : PineDLPlugin.styles.values()) {
+        for (int value : SyntaxPlugin.styles.values()) {
             if (!vi.contains(value)) {
                 vi.add(value);
             }
@@ -154,10 +154,10 @@ public class PineDLEditor extends JPanel {
         ButtonGroup menus = new ButtonGroup();
         for (final int value : vi) {
             JRadioButtonMenuItem menuItem;
-            menuItem = new JRadioButtonMenuItem(PineDLPlugin.names.get(value));
+            menuItem = new JRadioButtonMenuItem(SyntaxPlugin.names.get(value));
             menuItem.setSelected(r.getSyntaxEditingStyle() == value);
             menuItem.setAccelerator(null);
-            menuItem.setToolTipText(PineDLPlugin.names.get(value));
+            menuItem.setToolTipText(SyntaxPlugin.names.get(value));
             menuItem.setSelected(value == r.getSyntaxEditingStyle());
             menuItem.addActionListener(new ActionListener() {
 

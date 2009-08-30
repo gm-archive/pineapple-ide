@@ -4,6 +4,7 @@
     <description>Runs all of the copy-module scripts</description>
     
     <target name="default">
+      <ant antfile="Apple Pie/copy-module.xml" target="copy" />
       <ant antfile="Game Plugin 2D/copy-module.xml" target="copy" />
       <ant antfile="Pineapple/copy-module.xml" target="copy" />
       <ant antfile="PineDL Compiler/copy-module.xml" target="copy" />

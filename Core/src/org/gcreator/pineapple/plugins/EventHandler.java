@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.plugins;
 
 /**
- * An Event handeler is just like an AWT Event Listener,
+ * An Event handler is just like an AWT Event Listener,
  * but for Pineapple, not Swing.
  * 
  * @author Luís Reis

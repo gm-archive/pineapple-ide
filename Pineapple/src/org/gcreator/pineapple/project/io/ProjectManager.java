@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008, 2009 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -103,56 +103,6 @@ public interface ProjectManager {
      * @return The new {@link BasicFile} that was created.
      */
     public BasicFile copyFile(BasicFile file, ProjectFolder folder, String newName);
-    
-    /**
-     * Imports some file (such as a ZIP) to the project.
-     * Note that this isn't just called 'import' because
-     * that is a Java keyword.
-     * 
-     * @param f The file to import.
-     * 
-     * @see #getImportFileTypes()
-     *
-     * @deprecated Needs re-thinking.
-     */
-    @Deprecated
-    public void importFile(File f);
-    
-    /**
-     * Exports the project to a {@link java.io.File}.
-     * 
-     * @param f The file to export to.
-     * 
-     * @see #getExportFileTypes()
-     *
-     * @deprecated Needs re-thinking.
-     */
-    @Deprecated
-    public void exportFile(File f);
-    
-    /**
-     * Returns the file types that the manager can import.
-     * This is similar to {@link #getProjectFileTypes()}, however, importing
-     * projects may be done in a different way.
-     * 
-     * @return An array containing all of the file types that this
-     * manager can import.
-     *
-     * @deprecated Needs re-thinking.
-     */
-    @Deprecated
-    public String[] getImportFileTypes();
-    
-    /**
-     * Returns a list of file types that the manager can export projects to.
-     *
-     * @return An array containing all of the file types that this
-     * manager can export.
-     *
-     * @deprecated Needs re-thinking.
-     */
-    @Deprecated
-    public String[] getExportFileTypes();
 
     /**
      * Creates a {@link BasicFile} from the given path

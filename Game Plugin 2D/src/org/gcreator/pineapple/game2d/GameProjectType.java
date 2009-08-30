@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008 Serge Humphrey <bob@bobtheblueberry.com>
+Copyright (C) 2008 Serge Humphrey <serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public final class GameProjectType extends DefaultProjectType {
      */
     @Override
     public String getName() {
-        return "Game2D";
+        return "2D Game";
     }
     
     /**
@@ -51,7 +51,6 @@ public final class GameProjectType extends DefaultProjectType {
      */
     @Override
     public String getDescription() {
-        return "Based on the default project, this project " +
-                "allows you to create very nice 2D games";
+        return "A 2-Dimensional game";
     }
 }
