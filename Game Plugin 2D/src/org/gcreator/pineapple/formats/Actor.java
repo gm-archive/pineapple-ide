@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2008 Luís Reis<luiscubal@gmail.com>
-Copyright (C) 2008, 2009 Serge Humphrey<bob@bobtheblueberry.com>
+Copyright (C) 2008, 2009 Serge Humphrey<serge@bobtheblueberry.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -99,7 +99,9 @@ public class Actor extends ClassResource {
         if (i > 0) {
             this.setName(file.getName().substring(0, i));
         }
-        new ActorImporter(this, new BufferedInputStream(file.getReader()));
+        if (file.getLength() != 0) {
+            new ActorImporter(this, new BufferedInputStream(file.getReader()));
+        }
     }
 
     /**
