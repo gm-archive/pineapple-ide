@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+activated,editor,org.eclipse.cdt.ui,5.1.1.200909110608,"org.eclipse.cdt.ui.editor.CEditor",1255454908829
+activated,view,org.eclipse.ui.navigator.resources,3.4.1.M20090826-0800,"org.eclipse.ui.navigator.ProjectExplorer",1255454909888
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454913467
+executed,command,org.eclipse.ltk.ui.refactoring,3.4.100.v20090604,"org.eclipse.ltk.ui.refactoring.commands.deleteResources",1255454915390
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.delete",1255454915390
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454915697
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454919106
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.properties",1255454952848
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454953035
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454957634
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454958644
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454963442
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.properties",1255454985395
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454985615
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454987799
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454991170
+error,log,,,"Error logged from Debug Core: ",1255454994982
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255455006758
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255455010126
+activated,editor,org.eclipse.cdt.ui,5.1.1.200909110608,"org.eclipse.cdt.ui.editor.CEditor",1255455018748
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255455022236
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255455025204
+error,log,,,"Error logged from Debug Core: ",1255455027879
+activated,view,org.eclipse.ui.navigator.resources,3.4.1.M20090826-0800,"org.eclipse.ui.navigator.ProjectExplorer",1255455029596
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255455032036

@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.paste",1255454264163
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454268763
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454272978
+error,log,,,"Error logged from Debug Core: ",1255454278112
+started,bundle,org.eclipse.ltk.ui.refactoring,3.4.100.v20090604,"org.eclipse.ltk.ui.refactoring",1255454290662
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454291665
+executed,command,org.eclipse.ltk.ui.refactoring,3.4.100.v20090604,"org.eclipse.ltk.ui.refactoring.commands.deleteResources",1255454293658
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.delete",1255454293659
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454293889
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.paste",1255454295179
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454301467
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.properties",1255454320154
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454320252
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454322581
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454325909
+activated,editor,org.eclipse.cdt.ui,5.1.1.200909110608,"org.eclipse.cdt.ui.editor.CEditor",1255454333290
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454335304
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454338553
+activated,view,org.eclipse.ui.navigator.resources,3.4.1.M20090826-0800,"org.eclipse.ui.navigator.ProjectExplorer",1255454341249
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454344387
+executed,command,org.eclipse.ltk.ui.refactoring,3.4.100.v20090604,"org.eclipse.ltk.ui.refactoring.commands.deleteResources",1255454345744
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.delete",1255454345744
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454345974
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1255454348787
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.properties",1255454359934

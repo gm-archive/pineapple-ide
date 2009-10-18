@@ -1,0 +1,10 @@
+function xyz{
+	return class{
+		public new() x+=0xF;
+		
+		private var x;
+	};
+	
+	const y = 1.0;
+	const z = y*2 - 1.0 + 0.1 + 0123 - 0;
+}

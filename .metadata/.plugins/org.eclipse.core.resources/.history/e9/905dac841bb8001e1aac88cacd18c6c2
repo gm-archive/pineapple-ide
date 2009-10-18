@@ -1,0 +1,24 @@
+#include "pinec/lexer.h"
+#include <iostream>
+
+using namespace std;
+
+class EL : public ErrorListener{
+public:
+	virtual bool handleError(Error e){
+		cout<<e.m_line<<":"<<e.m_col<<" - "<<e.m_content;
+		return e.m_fatal;
+	}
+};
+
+int main(){
+
+	EL errorListener;
+	TokenServer tokenServer;
+
+	ifstream file("test.pdl");
+
+	pinec_lexer_run(file, tokenServer, errorListener);
+
+	return 0;
+}

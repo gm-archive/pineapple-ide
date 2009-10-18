@@ -1,0 +1,31 @@
+#include "pinec/lexer.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+class EL : public ErrorListener{
+public:
+	virtual bool handleError(Error e){
+		cout<<e.m_line<<":"<<e.m_col<<" - "<<e.m_content;
+		return e.m_fatal;
+	}
+};
+
+int main(){
+
+	EL errorListener;
+	TokenServer tokenServer;
+
+	ifstream file("test.pdl");
+
+	pinec_lexer_run(file, &tokenServer, &errorListener);
+
+	Token* t;
+	while((t=tokenServer.getToken())!=NULL){
+		cout<<t->m_line<<":"<<t->m_col<<" - "<<t->m_content<<"("<<t->m_type<<", "<<t->m_subtype<<")"<<endl;
+		delete t;
+	}
+
+	return 0;
+}

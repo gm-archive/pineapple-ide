@@ -1,0 +1,12 @@
+lexer.d lexer.o: ../lexer.cpp ../pinec/lexer.h ../pinec/tokentypes.h \
+  ../pinec/keywords.h ../pinec/lexer-types.h ../pinec/operators.h
+
+../pinec/lexer.h:
+
+../pinec/tokentypes.h:
+
+../pinec/keywords.h:
+
+../pinec/lexer-types.h:
+
+../pinec/operators.h:

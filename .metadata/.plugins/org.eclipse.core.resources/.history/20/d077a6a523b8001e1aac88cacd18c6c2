@@ -1,0 +1,13 @@
+tokenserver.d tokenserver.o: ../tokenserver.cpp ../pinec/lexer.h \
+  ../pinec/tokentypes.h ../pinec/keywords.h ../pinec/lexer-types.h \
+  ../pinec/operators.h
+
+../pinec/lexer.h:
+
+../pinec/tokentypes.h:
+
+../pinec/keywords.h:
+
+../pinec/lexer-types.h:
+
+../pinec/operators.h:
