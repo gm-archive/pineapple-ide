@@ -129,12 +129,8 @@ public class DefaultProjectManager implements ProjectManager {
         }
         DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
-            try {
-                ProjectElement e = project.createElement(ff);
-                project.add(e);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            ProjectElement e = project.createElement(ff);
+            project.add(e);
         } else {
             folder.reload();
         }
@@ -153,11 +149,7 @@ public class DefaultProjectManager implements ProjectManager {
         f.mkdir();
         DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
-            try {
-                project.add(project.createElement(ff));
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            project.add(project.createElement(ff));
         } else {
             folder.reload();
         }
@@ -329,11 +321,7 @@ public class DefaultProjectManager implements ProjectManager {
         if (folder != null) {
             folder.reload();
         } else {
-            try {
-                project.add(project.createElement(f));
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            project.add(project.createElement(f));
         }
         updateTreeUI();
         return f;
@@ -353,11 +341,7 @@ public class DefaultProjectManager implements ProjectManager {
         if (folder != null) {
             folder.reload();
         } else {
-            try {
-                project.add(project.createElement(f));
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            project.add(project.createElement(f));
         }
         updateTreeUI();
         return f;
@@ -428,7 +412,7 @@ public class DefaultProjectManager implements ProjectManager {
     private final class ProjectXMLHandler implements ContentHandler {
 
         private Locator locator;
-        private boolean files,  settings;
+        private boolean files, settings;
         private boolean loading;
         private DefaultProject project;
 

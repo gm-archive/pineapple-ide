@@ -136,4 +136,12 @@ public interface BasicFile extends Register, Comparable {
      * @param newElement The new {@link ProjectElement} for this file.
      */
     public void setElement(ProjectElement newElement);
+
+    /**
+     * Creates the new file if it doesn't already exist.
+     *
+     * @return Whether the file was really created.
+     * @throws IOException If something bad happens.
+     */
+    public boolean create() throws IOException;
 }

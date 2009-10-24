@@ -127,6 +127,12 @@ public class DefaultProject extends Project implements EventHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void add(ProjectElement e) {
+        for (ProjectElement q : files) {
+            if (q.equals(e)) {
+                System.err.println("Skipping duplicate file "+e);
+                return;
+            }
+        }
         files.add(e);
         Collections.sort(files);
         e.setParent(null);

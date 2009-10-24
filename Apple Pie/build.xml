@@ -2,15 +2,13 @@
 
 <!-- You may freely edit this file. -->
 
-<project name="PineappleModule" default="default" basedir="..">
+<project name="PineappleModule" default="default" basedir=".." >
     <description>Performs some useful tasks</description>
     
     <target name="clean">
-        <echo message="P1"/>
         <subant target="clean">
             <fileset dir="Apple Pie" includes="xbuild.xml"/>
         </subant>
-        <echo message="P2"/>
     </target>
     
     <target name="javadoc">
@@ -29,7 +27,6 @@
         <subant target="jar">
             <fileset dir="Apple Pie" includes="xbuild.xml"/>
         </subant>
-        
         <subant target="default" >
             <fileset dir="Apple Pie" includes="copy-module.xml"/>
         </subant>

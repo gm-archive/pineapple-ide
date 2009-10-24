@@ -19,7 +19,7 @@ is divided into following sections:
   - cleanup
 
         -->
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="Game_Plugin_2D-impl">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="Syntax_Highlighter-impl">
     <fail message="Please build using Ant 1.7.1 or higher.">
         <condition>
             <not>
@@ -59,9 +59,9 @@ is divided into following sections:
             <and>
                 <isset property="manifest.available"/>
                 <isset property="main.class"/>
-                <not>
+         <!--       <not>
                     <equals arg1="${main.class}" arg2="" trim="true"/>
-                </not>
+                </not>-->
             </and>
         </condition>
         <condition property="manifest.available+main.class+mkdist.available">
@@ -340,7 +340,6 @@ is divided into following sections:
         <ant antfile="${project.Apple_Pie}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.Core}/build.xml" inheritall="false" target="jar"/>
         <ant antfile="${project.Pineapple}/build.xml" inheritall="false" target="jar"/>
-        <ant antfile="${project.Syntax_Highlighter}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init,-check-automatic-build,-clean-after-automatic-build" name="-verify-automatic-build"/>
     <target depends="init" name="-check-automatic-build">
@@ -696,7 +695,6 @@ is divided into following sections:
         <ant antfile="${project.Apple_Pie}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.Core}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.Pineapple}/build.xml" inheritall="false" target="clean"/>
-        <ant antfile="${project.Syntax_Highlighter}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>

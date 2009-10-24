@@ -176,8 +176,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             } else {
                 palette.setAvailable(false);
             }
-        } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPES)) {
-            PineappleCore.addProjectType(new GameProjectType());
+        } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPE)) {
+            PineappleCore.projectType =  new GameProjectType();
         } else if (e.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
             GUIBase.addFormatSupporter(this);
             /* Set the default FormatSupporters for certain types. */
@@ -314,7 +314,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
     public void initialize() {
         EventManager.addEventHandler(this, PineappleGUI.DOCUMENT_CHANGED);
         EventManager.addEventHandler(this, PineappleCore.FILE_RENAMED);
-        EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPES);
+        EventManager.addEventHandler(this, PineappleCore.REGISTER_PROJECT_TYPE);
         EventManager.addEventHandler(this, GUIBase.REGISTER_FORMATS);
         EventManager.addEventHandler(this, PineappleGUI.TREE_MENU_INVOKED);
         EventManager.addEventHandler(this, PineappleGUI.PINEAPPLE_GUI_INITIALIZED);

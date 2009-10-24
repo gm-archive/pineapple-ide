@@ -112,4 +112,16 @@ public abstract class ProjectElement implements Comparable {
      * @return The name of this element.
      */
     public abstract String getName();
+
+    @Override
+    public boolean equals(Object e) {
+        if (e == null) {
+            return false;
+        }
+        if (!(e instanceof ProjectElement)) {
+            return false;
+        }
+        ProjectElement o = (ProjectElement)e;
+        return o.getFile().equals(this.getFile());
+    }
 }

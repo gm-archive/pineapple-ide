@@ -24,9 +24,10 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.project.io.BasicFile;
@@ -62,7 +63,7 @@ public abstract class Project {
      * Removes all of the files from the project.
      */
     public abstract void clear();
-    
+
     /**
      * Gets the index of the first occurance of an object
      * in the project. Not that this does not look inside
@@ -73,7 +74,7 @@ public abstract class Project {
      * object in the project.
      */
     public abstract int indexOf(Object o);
-    
+
     /**
      * Returns the {@link ProjectElement} at index <tt>index</tt>.
      * Same as getFiles().get(index).
@@ -111,11 +112,15 @@ public abstract class Project {
      * @param f The {@link java.io.File} which the element must exist.
      * @return An element that represents the given file.
      * 
-     * @throws java.io.FileNotFoundException If the given file does not exist.
      */
-    public ProjectElement createElement(BasicFile f) throws FileNotFoundException {
+    public ProjectElement createElement(BasicFile f) {
         if (!f.exists()) {
-            throw new FileNotFoundException("File '" + f.getPath() + "' does not exist.");
+            System.err.println("Warning: File " + f + " does not exist. Attempting to create it...");
+            try {
+                f.create();
+            } catch (IOException ex) {
+                Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         ProjectElement e;
         if (f.isDirectory()) {
@@ -199,24 +204,24 @@ public abstract class Project {
     public void rename(BasicFile f, String newName) throws IOException {
         f.rename(newName);
     }
-    
+
     /**
      * @return The {@link ProjectTreeNode} for the project.
      */
     public abstract ProjectTreeNode getTreeNode();
-    
+
     /**
      * @return An {@link Iterable} for iterating the project's elements.
      */
     public abstract Iterable<ProjectElement> getFiles();
-    
+
     /**
      * @return The name of the project.
      */
     public String getName() {
         return getSettings().get("name");
     }
-    
+
     /**
      * Sets the name of the project.
      * 

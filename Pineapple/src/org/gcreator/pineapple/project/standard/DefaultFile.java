@@ -299,4 +299,12 @@ public class DefaultFile implements BasicFile {
         DefaultFile f = (DefaultFile)o;
         return (f.project == this.project && f.getPath().equals(this.getPath()));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean create() throws IOException {
+        return file.createNewFile();
+    }
 }

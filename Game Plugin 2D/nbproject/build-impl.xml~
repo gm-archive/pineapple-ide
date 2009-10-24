@@ -59,9 +59,9 @@ is divided into following sections:
             <and>
                 <isset property="manifest.available"/>
                 <isset property="main.class"/>
-                <not>
+<!--                <not>
                     <equals arg1="${main.class}" arg2="" trim="true"/>
-                </not>
+                </not>-->
             </and>
         </condition>
         <condition property="manifest.available+main.class+mkdist.available">

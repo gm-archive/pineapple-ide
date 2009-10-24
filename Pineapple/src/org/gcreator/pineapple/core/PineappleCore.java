@@ -22,7 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.core;
 
-import java.util.Vector;
 import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.DefaultEventTypes;
@@ -39,21 +38,13 @@ import org.gcreator.pineapple.project.ProjectType;
  */
 public final class PineappleCore {
 
-    /**
-     * The project types.
-     */
-    private static Vector<ProjectType> projectTypes;
+    public static ProjectType projectType;
     /**
      * The current project
      */
     private static Project project = null;
-    /**
-     * Event called to add project types to
-     * the PineapplePlugin's list.
-     * 
-     * @see #addProjectType(ProjectType) 
-     */
-    public static final String REGISTER_PROJECT_TYPES = "register-managers";
+
+    public static final String REGISTER_PROJECT_TYPE = "register-projecttype";
     /**
      * Event called when the project is changed.
      *
@@ -115,40 +106,10 @@ public final class PineappleCore {
      */
     public static void intialize() {
         CoreEventHandler c = new CoreEventHandler();
-        EventManager.addEventHandler(c, REGISTER_PROJECT_TYPES, EventPriority.MEDIUM);
+        EventManager.addEventHandler(c, REGISTER_PROJECT_TYPE, EventPriority.MEDIUM);
         EventManager.addEventHandler(c, GUI_INITIALIZED);
         EventManager.addEventHandler(c, DefaultEventTypes.PLUGINS_LOADED);
         EventManager.addEventHandler(c, DefaultEventTypes.APPLICATION_INITIALIZED);
-    }
-
-    /**
-     * Adds a {@link ProjectType} to the list of available
-     * project types.
-     * 
-     * @param t The {@link ProjectType} to add.
-     */
-    public static void addProjectType(ProjectType t) {
-        projectTypes.add(t);
-    }
-
-    /**
-     * Removes the given {@link ProjectType} to the list of
-     * project types.
-     * 
-     * @param t The {@link ProjectType} to remove.
-     * @return Whether the list of formats did contain the
-     * given project type.
-     */
-    public static boolean removeProjectType(ProjectType t) {
-        return projectTypes.remove(t);
-    }
-
-    /**
-     * @return A list of the available project types.
-     */
-    @SuppressWarnings("unchecked")
-    public static Vector<ProjectType> getProjectTypes() {
-        return (Vector<ProjectType>) projectTypes.clone();
     }
 
     private static class CoreEventHandler implements EventHandler {
@@ -159,9 +120,7 @@ public final class PineappleCore {
         @Override
         public void handleEvent(Event event) {
             if (event.getEventType().equals(DefaultEventTypes.PLUGINS_LOADED)) {
-                projectTypes = new Vector<ProjectType>(2);
-                EventManager.fireEvent(this, REGISTER_PROJECT_TYPES);
-
+                EventManager.fireEvent(this, REGISTER_PROJECT_TYPE);
             } else if (event.getEventType().equals(GUI_INITIALIZED)) {
                 /* Fire PROJECT_CHANGED events if the project hasn't been set already. */
                 if (project == null) {
