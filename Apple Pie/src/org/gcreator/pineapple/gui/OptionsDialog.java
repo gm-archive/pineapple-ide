@@ -63,8 +63,8 @@ public final class OptionsDialog extends javax.swing.JDialog {
 
         EventManager.fireEvent(this, OPTIONS_DIALOG_CREATED, tabs);
 
-        // Dislay dialog
-        setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     private class LAFListModel extends AbstractListModel implements ComboBoxModel {

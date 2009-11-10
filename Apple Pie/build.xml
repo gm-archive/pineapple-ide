@@ -27,9 +27,9 @@
         <subant target="jar">
             <fileset dir="Apple Pie" includes="xbuild.xml"/>
         </subant>
+        <sleep milliseconds="2000"/>
         <subant target="default" >
             <fileset dir="Apple Pie" includes="copy-module.xml"/>
-        </subant>
-      
+        </subant>      
     </target>
 </project>

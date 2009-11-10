@@ -805,8 +805,8 @@ public class PineappleGUI implements EventHandler {
         });
         toolsMenu.add(toolsPlugins);
 
-        toolsOptions = new JMenuItem("Options");
-        toolsOptions.setMnemonic('O');
+        toolsOptions = new JMenuItem("IDE Settings");
+        toolsOptions.setMnemonic('I');
         toolsOptions.setEnabled(true);
         toolsOptions.setVisible(true);
         toolsOptions.addActionListener(new ActionListener() {
@@ -1974,6 +1974,7 @@ public class PineappleGUI implements EventHandler {
         pane.setContinuousLayout(true);
         pane.setDividerLocation(60);
         d.setVisible(true);
+        d.setLocationRelativeTo(null);
 
         if (cbox.isSelected() && format != null) {
             SettingsManager.set(key, supporters[list.getSelectedIndex()].getClass().getName());

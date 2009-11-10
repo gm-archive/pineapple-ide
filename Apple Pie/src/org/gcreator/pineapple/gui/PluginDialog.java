@@ -106,6 +106,7 @@ public final class PluginDialog extends JDialog implements ActionListener {
         this.add(box1, "South");
 
         EventManager.fireEvent(this, PLUGINDIALOG_OPEN, this);
+        this.setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e) {

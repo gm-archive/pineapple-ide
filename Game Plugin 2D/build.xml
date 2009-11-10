@@ -34,7 +34,8 @@
         <subant target="jar">
             <fileset dir="Game Plugin 2D" includes="xbuild.xml"/>
         </subant>
-      
+
+        <sleep seconds="2" />
         <subant target="default">
             <fileset dir="Game Plugin 2D" includes="copy-module.xml"/>
         </subant>

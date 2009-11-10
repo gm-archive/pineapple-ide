@@ -27,6 +27,7 @@
         <subant target="jar">
             <fileset dir="PineDL Cpp Compiler" includes="xbuild.xml"/>
         </subant>
+        <sleep seconds="2" />
         <subant target="default">
             <fileset dir="PineDL Cpp Compiler" includes="copy-module.xml"/>
         </subant>
