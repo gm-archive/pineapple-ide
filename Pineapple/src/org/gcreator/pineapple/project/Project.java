@@ -43,58 +43,8 @@ import org.gcreator.pineapple.tree.ProjectTreeNode;
 public abstract class Project {
 
     protected File projectFolder;
-
-    /**
-     * Adds a file to the project.
-     * 
-     * @param e The file to add.
-     */
-    public abstract void add(ProjectElement e);
-
-    /**
-     * Removes a file from the project.
-     * 
-     * @param e The file to remove.
-     * @return <tt>true</tt> if the element was in the list.
-     */
-    public abstract boolean remove(ProjectElement e);
-
-    /**
-     * Removes all of the files from the project.
-     */
-    public abstract void clear();
-
-    /**
-     * Gets the index of the first occurance of an object
-     * in the project. Not that this does not look inside
-     * folders inside the project, just the base elements.
-     * 
-     * @param o The element to find.
-     * @return The index of the first occurance of a given
-     * object in the project.
-     */
-    public abstract int indexOf(Object o);
-
-    /**
-     * Returns the {@link ProjectElement} at index <tt>index</tt>.
-     * Same as getFiles().get(index).
-     * 
-     * @param index The index to fetch.
-     * @return Returns the {@link ProjectElement} at index <tt>index</tt>.
-     * 
-     * @throws java.lang.IndexOutOfBoundsException If <tt>index</tt> was smaller 
-     * than zero or greater than or equal to {@link #getFileCount()}.
-     */
-    public abstract ProjectElement getFileAt(int index) throws IndexOutOfBoundsException;
-
-    /**
-     * Returns the number of elements belonging to this project.
-     * Same as getFiles().size()
-     * 
-     * @return The number of elements belonging to this project.
-     */
-    public abstract int getFileCount();
-
+    protected ProjectFolder files;
+    
     /**
      * Gets a {@link java.util.Hashtable} containing various settings for this
      * project.
@@ -211,11 +161,6 @@ public abstract class Project {
     public abstract ProjectTreeNode getTreeNode();
 
     /**
-     * @return An {@link Iterable} for iterating the project's elements.
-     */
-    public abstract Iterable<ProjectElement> getFiles();
-
-    /**
      * @return The name of the project.
      */
     public String getName() {
@@ -231,5 +176,15 @@ public abstract class Project {
         String old = getSettings().get("name");
         getSettings().put("name", s);
         EventManager.fireEvent(this, PineappleCore.PROJECT_RENAMED, old, s);
+    }
+
+    /**
+     * The project's resource files (images, scripts, etc.)
+     * are stored in a folder within the project's folder.
+     *
+     * @return A folder with all the project's resource files.
+     */
+    public ProjectFolder getFiles() {
+        return files;
     }
 }

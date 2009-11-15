@@ -23,7 +23,6 @@ THE SOFTWARE.
 package org.gcreator.pineapple.core;
 
 import org.gcreator.pineapple.managers.EventManager;
-import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.plugins.DefaultEventTypes;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.EventHandler;
@@ -80,25 +79,6 @@ public final class PineappleCore {
      * @param arg1 The new file.
      */
     public static final String FILE_RENAMED = "file-renamed";
-    
-    /**
-     * Called when the tree sort mode has been changed.
-     * @see  #sortMode
-     * @see TreeSortMode
-     */
-    public static final String TREE_SORT_MODE_CHANGED = "tree-sort-mode-changed";
-
-    public static enum TreeSortMode {
-
-        FILE_NAME, FILE_TYPE,
-    };
-    private static final String TREE_SORT_MODE_KEY = "pineapple.tree.sort_mode";
-    /**
-     * The way to sort files in the tree.
-     *
-     * @see TreeSortMode
-     */
-    public static TreeSortMode sortMode = TreeSortMode.FILE_NAME;
 
     /**
      * Initializes Pineapple's core:
@@ -126,16 +106,6 @@ public final class PineappleCore {
                 if (project == null) {
                     setProject(null);
                 }
-            } else if (event.getEventType().equals(DefaultEventTypes.APPLICATION_INITIALIZED)) {
-                // try to load the tree sort mode
-                if (SettingsManager.exists(TREE_SORT_MODE_KEY)) {
-                    try {
-                        sortMode = TreeSortMode.valueOf(SettingsManager.get(TREE_SORT_MODE_KEY));
-                    } catch (Exception exc) {
-                    }
-                }
-            } else if (event.getEventType().equals(TREE_SORT_MODE_CHANGED)) {
-                SettingsManager.set(TREE_SORT_MODE_KEY, sortMode.name());
             }
         }
     }

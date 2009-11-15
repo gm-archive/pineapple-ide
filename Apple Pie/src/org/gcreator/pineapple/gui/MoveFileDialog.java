@@ -122,7 +122,7 @@ public final class MoveFileDialog extends javax.swing.JDialog {
             rfname = text;
         }
         if (folder == null) {
-            for (ProjectElement e : project.getFiles()) {
+            for (ProjectElement e : project.getFiles().getChildren()) {
                 if (e.getName().equals(rfname)) {
                     finishButton.setEnabled(false);
                     setError("File already exists.");

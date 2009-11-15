@@ -94,7 +94,7 @@ public abstract class ProjectElement implements Comparable {
     public abstract Project getProject();
 
     /**
-     * @return Whether this elemetn can be deleted.
+     * @return Whether this element can be deleted.
      */
     public boolean allowsDelete() {
         return true;

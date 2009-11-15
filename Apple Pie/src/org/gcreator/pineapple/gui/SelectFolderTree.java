@@ -262,7 +262,7 @@ public final class SelectFolderTree extends JTree {
         
         private void reloadCache() {
             Vector<TreeNode> elements = new Vector<TreeNode>();
-            for (ProjectElement e : project.getFiles()) {
+            for (ProjectElement e : project.getFiles().getChildren()) {
                 if (!e.getTreeNode().isLeaf()) {
                     elements.add(new FolderTreeNode(this, (ProjectFolder) e));
                 }

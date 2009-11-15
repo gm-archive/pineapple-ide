@@ -56,7 +56,7 @@ public final class ProjectTreeNode extends DefaultMutableTreeNode implements Tre
      */
     @Override
     public BaseTreeNode getChildAt(int childIndex) {
-        return project.getFileAt(childIndex).getTreeNode();
+        return project.getFiles().getChildAt(childIndex).getTreeNode();
     }
 
     /**
@@ -66,7 +66,7 @@ public final class ProjectTreeNode extends DefaultMutableTreeNode implements Tre
      */
     @Override
     public int getChildCount() {
-        return project.getFileCount();
+        return project.getFiles().getChildrenCount();
     }
 
     /**
@@ -87,7 +87,7 @@ public final class ProjectTreeNode extends DefaultMutableTreeNode implements Tre
      */
     @Override
     public int getIndex(TreeNode node) {
-        return project.indexOf(((BaseTreeNode) node).getElement());
+        return project.getFiles().indexOf(((BaseTreeNode) node).getElement());
     }
 
     /**
@@ -118,12 +118,14 @@ public final class ProjectTreeNode extends DefaultMutableTreeNode implements Tre
 
             private int index = 0;
 
+            @Override
             public boolean hasMoreElements() {
-                return index < project.getFileCount();
+                return index < project.getFiles().getChildrenCount();
             }
 
+            @Override
             public Object nextElement() {
-                return project.getFileAt(index++).getTreeNode();
+                return project.getFiles().getChildAt(index++).getTreeNode();
             }
         };
     }

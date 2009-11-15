@@ -139,7 +139,7 @@ public final class FindResourcePanel extends JPanel implements ActionListener, M
         results.clear();
         go.setEnabled(false);
         try {
-            for (ProjectElement e : PineappleCore.getProject().getFiles()) {
+            for (ProjectElement e : PineappleCore.getProject().getFiles().getChildren()) {
                 search(s, e);
             }
             list.updateUI();

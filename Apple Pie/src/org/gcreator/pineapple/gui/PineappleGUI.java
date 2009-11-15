@@ -181,7 +181,6 @@ public class PineappleGUI implements EventHandler {
     public static JMenuItem fileExit;
     public static JMenuItem toolsPlugins;
     public static JMenuItem toolsOptions;
-    public static JMenuItem projectRemove;
     public static JMenu projectNew;
     public static JMenuItem projectOpen;
     public static JMenuItem projectAdd;
@@ -401,14 +400,12 @@ public class PineappleGUI implements EventHandler {
             public void valueChanged(TreeSelectionEvent e) {
                 Object o = e.getPath().getLastPathComponent();
                 if (o == null || !(o instanceof BaseTreeNode)) {
-                    projectRemove.setEnabled(false);
                     projectOpen.setEnabled(false);
                     projectDelete.setEnabled(false);
                     return;
                 }
                 BaseTreeNode node = (BaseTreeNode) o;
 
-                projectRemove.setEnabled((PineappleCore.getProject() != null) ? (PineappleCore.getProject().indexOf(node.getElement()) != -1) : false);
                 projectOpen.setEnabled(node instanceof FileTreeNode);
                 projectDelete.setEnabled(true);
             }
@@ -666,25 +663,7 @@ public class PineappleGUI implements EventHandler {
         });
         projectMenu.add(projectOpen);
 
-        projectRemove = new JMenuItem("Remove Selected from project");
-        projectRemove.setMnemonic('R');
-        projectRemove.setVisible(true);
-        projectRemove.setEnabled(false);
-        projectRemove.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                    return;
-                }
-                ProjectElement el = ((BaseTreeNode) tree.getSelectionPath().getLastPathComponent()).getElement();
-                PineappleCore.getProject().remove(el);
-                EventManager.fireEvent(this, PineappleCore.FILE_REMOVED, el);
-            }
-        });
-        projectMenu.add(projectRemove);
-
-        projectDelete = new JMenuItem("Delete Selected from Disk") {
+        projectDelete = new JMenuItem("Delete") {
 
             private static final long serialVersionUID = 1;
 
@@ -1254,7 +1233,7 @@ public class PineappleGUI implements EventHandler {
      */
     public void openProject() {
 
-        File f = showFileChooserSingle(createFileChooser("Select the project to open", new String[]{"gpf"}, "open-project", false));
+        File f = showFileChooserSingle(createFileChooser("Select the project to open", new String[]{"gpt"}, "open-project", false));
         if (f != null) {
             if (PineappleCore.getProject() != null) {
                 closeProject();
@@ -1346,32 +1325,7 @@ public class PineappleGUI implements EventHandler {
             newFile.setMnemonic('N');
             newFile.setVisible(true);
             menu.add(newFile);
-
-            JMenuItem tprojectAdd = new JMenuItem("Add File/Folder...") {
-
-                private static final long serialVersionUID = 1;
-
-                @Override
-                public boolean isEnabled() {
-                    return PineappleCore.getProject() != null && super.isEnabled();
-                }
-            };
-            tprojectAdd.setMnemonic('A');
-            tprojectAdd.setVisible(true);
-            tprojectAdd.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                        return;
-                    }
-                    openFile(true, true, null, false);
-                }
-            });
-            menu.add(tprojectAdd);
-
-            menu.addSeparator();
-
+            
             JMenuItem tfileSaveProject = new JMenuItem("Save Project") {
 
                 private static final long serialVersionUID = 1;
@@ -1590,26 +1544,8 @@ public class PineappleGUI implements EventHandler {
         menu.add(paste);
 
 
-        if (o instanceof BaseTreeNode &&
-                PineappleCore.getProject().indexOf(((BaseTreeNode) o).getElement()) >= 0) {
-            final BaseTreeNode t = (BaseTreeNode) o;
-
-            menu.addSeparator();
-            menu.add("Remove from Project").addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    if (!((JMenuItem) evt.getSource()).isEnabled()) {
-                        return;
-                    }
-                    PineappleCore.getProject().remove(t.getElement());
-                    EventManager.fireEvent(this, PineappleCore.FILE_REMOVED, t.getElement());
-                }
-            });
-        }
-
         if (o instanceof BaseTreeNode) {
-            JMenuItem del = new JMenuItem("Delete from Disk") {
+            JMenuItem del = new JMenuItem("Delete") {
 
                 private static final long serialVersionUID = 1;
 
@@ -1666,45 +1602,6 @@ public class PineappleGUI implements EventHandler {
                 }
             });
         }
-
-        JMenu viewOptions = new JMenu("View");
-
-        ButtonGroup sortGroup = new ButtonGroup();
-        JRadioButtonMenuItem sortByName = new JRadioButtonMenuItem("Sort by Name");
-        sortByName.setMnemonic('N');
-        sortByName.setSelected(PineappleCore.sortMode == PineappleCore.TreeSortMode.FILE_NAME);
-        sortByName.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (PineappleCore.sortMode != PineappleCore.TreeSortMode.FILE_NAME) {
-                    PineappleCore.sortMode = PineappleCore.TreeSortMode.FILE_NAME;
-                    EventManager.fireEvent(this, PineappleCore.TREE_SORT_MODE_CHANGED);
-                }
-            }
-        });
-        sortGroup.add(sortByName);
-        viewOptions.add(sortByName);
-
-        JRadioButtonMenuItem sortByType = new JRadioButtonMenuItem("Sort by Type");
-        sortByType.setMnemonic('T');
-        sortByType.setSelected(PineappleCore.sortMode == PineappleCore.TreeSortMode.FILE_TYPE);
-        sortByType.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (PineappleCore.sortMode != PineappleCore.TreeSortMode.FILE_TYPE) {
-                    PineappleCore.sortMode = PineappleCore.TreeSortMode.FILE_TYPE;
-                    EventManager.fireEvent(this, PineappleCore.TREE_SORT_MODE_CHANGED);
-                }
-            }
-        });
-        sortGroup.add(sortByType);
-        viewOptions.add(sortByType);
-
-        menu.addSeparator();
-        menu.add(viewOptions);
-
         menu.updateUI();
     }
     //<>/editor-fold>
@@ -1750,7 +1647,7 @@ public class PineappleGUI implements EventHandler {
                 boolean fileAdded = false;
                 if (addFile) {
                     BaseTreeNode node = null;
-                    for (ProjectElement e : PineappleCore.getProject().getFiles()) {
+                    for (ProjectElement e : PineappleCore.getProject().getFiles().getChildren()) {
                         if ((node = hasFile(f, e)) != null) {
                             break;
                         }
@@ -1776,7 +1673,7 @@ public class PineappleGUI implements EventHandler {
                     if (node == null && !fileAdded) {
                         ProjectElement e = PineappleCore.getProject().createElement(bf);
                         node = e.getTreeNode();
-                        PineappleCore.getProject().add(e);
+                        PineappleCore.getProject().getFiles().reload();
                     }
                     String fn = bf.getName();
                     int n = fn.lastIndexOf('.');
@@ -1836,9 +1733,9 @@ public class PineappleGUI implements EventHandler {
      */
     private void deleteFile(ProjectElement e) {
         if (JOptionPane.showConfirmDialog(tree,
-                "<html>Are you sure you want to delete this file from your file system?<br/>This will be permanent.</html>") == JOptionPane.YES_OPTION) {
+                "<html>Are you sure you want to delete this file?<br/>This will be FOREVER.</html>") == JOptionPane.YES_OPTION) {
             e.getFile().delete();
-            PineappleCore.getProject().remove(e);
+            PineappleCore.getProject().getFiles().reload();
             /* Remove any open documents for this file.*/
             for (DocumentPane d : dip.getDocuments()) {
                 if (d.getFile() == e.getFile()) {
@@ -2185,7 +2082,7 @@ public class PineappleGUI implements EventHandler {
 
     private boolean exists(String fname, ProjectFolder folder, Project project) {
         if (folder == null) {
-            for (ProjectElement e : project.getFiles()) {
+            for (ProjectElement e : project.getFiles().getChildren()) {
                 if (e.getName().equals(fname)) {
                     return true;
                 }
@@ -2386,7 +2283,7 @@ public class PineappleGUI implements EventHandler {
             Project p = null;
             if (last instanceof ProjectTreeNode) {
                 p = ((ProjectTreeNode) last).getProject();
-                children = p.getFiles();
+                children = p.getFiles().getChildren();
             } else if (last instanceof FolderTreeNode) {
                 f = ((FolderTreeNode) last).getElement();
                 children = f.getChildren();
@@ -2468,11 +2365,7 @@ public class PineappleGUI implements EventHandler {
 
         private void delete(ProjectElement e) {
             e.getFile().delete();
-            if (e.getParent() == null) {
-                e.getProject().remove(e);
-            } else {
-                e.getParent().reload();
-            }
+            e.getParent().reload();
             updateTreeUI();
         }
         //</editor-fold>

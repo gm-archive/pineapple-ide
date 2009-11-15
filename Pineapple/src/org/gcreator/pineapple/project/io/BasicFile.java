@@ -52,7 +52,8 @@ public interface BasicFile extends Register, Comparable {
     public long getLength();
     
     /**
-     * Deletes the file.
+     * Deletes the file. Note: Removing the file from the project
+     * will also delete the file.
      * 
      * @return Wheather the file deletion was successful.
      */
@@ -138,10 +139,28 @@ public interface BasicFile extends Register, Comparable {
     public void setElement(ProjectElement newElement);
 
     /**
-     * Creates the new file if it doesn't already exist.
+     * Creates the file if it doesn't already exist.
      *
      * @return Whether the file was really created.
      * @throws IOException If something bad happens.
      */
     public boolean create() throws IOException;
+
+
+    /**
+     * Creates the directory named by this abstract pathname.
+     *
+     * @return success
+     */
+    public boolean mkdir();
+
+    /**
+     * Creates the directory named by this abstract pathname, including any
+     * necessary but nonexistent parent directories.  Note that if this
+     * operation fails it may have succeeded in creating some of the necessary
+     * parent directories.
+     * 
+     * @return success
+     */
+    public boolean mkdirs();
 }

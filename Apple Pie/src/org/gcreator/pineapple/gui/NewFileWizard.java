@@ -138,7 +138,7 @@ public final class NewFileWizard extends javax.swing.JDialog {
             fname = text;
         }
         if (folder == null) {
-            for (ProjectElement e : project.getFiles()) {
+            for (ProjectElement e : project.getFiles().getChildren()) {
                 if (e.getName().equals(fname)) {
                     finishButton.setEnabled(false);
                     setError("File already exists.");

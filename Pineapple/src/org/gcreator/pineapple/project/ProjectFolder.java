@@ -24,6 +24,8 @@ package org.gcreator.pineapple.project;
 
 import java.util.Collections;
 import java.util.Vector;
+import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.tree.BaseTreeNode;
 import org.gcreator.pineapple.tree.FolderTreeNode;
@@ -50,6 +52,9 @@ public class ProjectFolder extends ProjectElement {
      * @throws java.lang.IllegalArgumentException If {@link java.io.File#isDirectory() folder.isDirecotry()} returns <tt>false</tt>.
      */
     public ProjectFolder(BasicFile folder, Project p) throws IllegalArgumentException {
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
         if (!folder.isDirectory()) {
             throw new IllegalArgumentException("Illegal Folder: " + folder);
         }
@@ -73,6 +78,7 @@ public class ProjectFolder extends ProjectElement {
         }
         Collections.sort(children);
         modified = folder.lastModified();
+        EventManager.fireEvent(this, PineappleCore.TREE_CHANGED);
     }
 
     /**

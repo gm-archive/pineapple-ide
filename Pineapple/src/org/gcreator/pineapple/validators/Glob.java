@@ -72,7 +72,7 @@ public final class Glob {
         if (root != null) {
             children = root.getChildren();
         } else {
-            children = PineappleCore.getProject().getFiles();
+            children = PineappleCore.getProject().getFiles().getChildren();
         }
         synchronized (children) {
             for (ProjectElement e : children) {

@@ -23,17 +23,10 @@ THE SOFTWARE.
 package org.gcreator.pineapple.project.standard;
 
 import java.io.File;
-import java.util.Collections;
-import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.project.io.ProjectManager;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Vector;
-import org.gcreator.pineapple.core.PineappleCore;
-import org.gcreator.pineapple.managers.EventManager;
-import org.gcreator.pineapple.plugins.EventHandler;
 import org.gcreator.pineapple.project.Project;
-import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.ProjectFolder;
 import org.gcreator.pineapple.project.ProjectType;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
@@ -43,15 +36,14 @@ import org.gcreator.pineapple.tree.ProjectTreeNode;
  * 
  * @author Serge Humphrey
  */
-public class DefaultProject extends Project implements EventHandler {
+public class DefaultProject extends Project {
 
-    protected Vector<ProjectElement> files;
     protected Hashtable<String, String> settings;
     protected DefaultProjectManager manager;
     protected ProjectType type;
     protected ProjectTreeNode treeNode;
     protected boolean managing = false;
-    
+
     /**
      * Creates a new {@link DefaultProject}.
      * 
@@ -63,13 +55,15 @@ public class DefaultProject extends Project implements EventHandler {
      */
     protected DefaultProject(String name, File folder, ProjectType type, DefaultProjectManager manager, boolean save) {
         this.projectFolder = folder;
-        this.files = new Vector<ProjectElement>();
+        File f = new File(folder, "files");
+        DefaultFile df = new DefaultFile(f, null, this);
+        this.files = new ProjectFolder(df, this);
+        df.element = this.files;
         this.settings = new ProjectSettings<String, String>();
         this.manager = ((manager != null) ? manager : new DefaultProjectManager(this));
         this.type = type;
         this.treeNode = new ProjectTreeNode(this);
         this.settings.put("name", ((name != null) ? name : "Project"));
-        EventManager.addEventHandler(this, PineappleCore.TREE_SORT_MODE_CHANGED);
         if (save) {
             saveLater();
         }
@@ -92,64 +86,8 @@ public class DefaultProject extends Project implements EventHandler {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Iterable<ProjectElement> getFiles() {
-        return files;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ProjectElement getFileAt(int index) throws IndexOutOfBoundsException {
-        return files.get(index);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getFileCount() {
-        return files.size();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
     public Hashtable<String, String> getSettings() {
         return settings;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void add(ProjectElement e) {
-        for (ProjectElement q : files) {
-            if (q.equals(e)) {
-                System.err.println("Skipping duplicate file "+e);
-                return;
-            }
-        }
-        files.add(e);
-        Collections.sort(files);
-        e.setParent(null);
-        manager.saveToManifest();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean remove(ProjectElement e) {
-        if (!e.allowsDelete()) {
-            return false;
-        }
-        boolean b = files.remove(e);
-        manager.saveToManifest();
-        return b;
     }
 
     /**
@@ -188,20 +126,6 @@ public class DefaultProject extends Project implements EventHandler {
      * {@inheritDoc}
      */
     @Override
-    public void clear() {
-        files.clear();
-        saveLater();
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        return files.indexOf(o);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getName() {
         return settings.get("name");
     }
@@ -214,7 +138,7 @@ public class DefaultProject extends Project implements EventHandler {
         super.setName(s);
         saveLater();
     }
-    
+
     private void saveLater() {
         if (managing) {
             return;
@@ -237,21 +161,6 @@ public class DefaultProject extends Project implements EventHandler {
     @Override
     public File getProjectFile() {
         return new File(getProjectFolder().getPath() + File.separator + "project." + getProjectType().getProjectFileTypes()[0]);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void handleEvent(Event event) {
-        if (event.getEventType().equals(PineappleCore.TREE_SORT_MODE_CHANGED)) {
-            Collections.sort(files);
-            // Outdate all folders
-            for (ProjectElement e : files) {
-                if (e instanceof ProjectFolder) {
-                    ((ProjectFolder)e).outdate();
-                }
-            }
-            EventManager.fireEvent(this, PineappleCore.TREE_CHANGED);
-        }
     }
 
     private class ProjectSettings<K, V> extends Hashtable<K, V> {

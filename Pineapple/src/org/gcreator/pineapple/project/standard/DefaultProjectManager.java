@@ -130,7 +130,7 @@ public class DefaultProjectManager implements ProjectManager {
         DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
             ProjectElement e = project.createElement(ff);
-            project.add(e);
+            project.getFiles().reload();
         } else {
             folder.reload();
         }
@@ -149,7 +149,8 @@ public class DefaultProjectManager implements ProjectManager {
         f.mkdir();
         DefaultFile ff = new DefaultFile(f, folder, project);
         if (folder == null) {
-            project.add(project.createElement(ff));
+            project.createElement(ff);
+            project.getFiles().reload();
         } else {
             folder.reload();
         }
@@ -222,7 +223,7 @@ public class DefaultProjectManager implements ProjectManager {
             root.setAttribute("name", project.getName());
             /* Files */
             Element files = doc.createElement("files");
-            for (ProjectElement p : project.getFiles()) {
+            for (ProjectElement p : project.getFiles().getChildren()) {
                 Element elem = doc.createElement("file");
                 elem.setAttribute("path", p.getFile().getPath());
                 files.appendChild(elem);
@@ -321,7 +322,8 @@ public class DefaultProjectManager implements ProjectManager {
         if (folder != null) {
             folder.reload();
         } else {
-            project.add(project.createElement(f));
+            project.createElement(f);
+            project.getFiles().reload();
         }
         updateTreeUI();
         return f;
@@ -341,7 +343,8 @@ public class DefaultProjectManager implements ProjectManager {
         if (folder != null) {
             folder.reload();
         } else {
-            project.add(project.createElement(f));
+            project.createElement(f);
+            project.getFiles().reload();
         }
         updateTreeUI();
         return f;
@@ -514,7 +517,8 @@ public class DefaultProjectManager implements ProjectManager {
                 } else {
                     try {
                         BasicFile f = getFile(path, this.project);
-                        project.add(f.getElement());
+                        f.getElement();
+                        project.getFiles().reload();
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
