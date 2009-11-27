@@ -1,0 +1,11 @@
+magic class AXYZ extends A, B, C{
+    public new(a, b, const c, var d, e, x:z, y:w, 10:alpha, 1.1:beta, omega){
+        /*const z = 2;
+
+        return this, error:z;*/
+    }
+
+    private function impl(){
+        
+    }
+}
