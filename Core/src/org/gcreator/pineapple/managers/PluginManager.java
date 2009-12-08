@@ -121,11 +121,11 @@ public final class PluginManager {
         if (!f.exists()) {
             System.out.println("Creating " + f);
             f.mkdir();
-            return;
+    /*****        return; *///
         }
         if (!f.isDirectory()) {
             System.out.println(f + " is Not a directory");
-            return;
+      ///****      return;*///
         }
         File[] fs = f.listFiles();
         for (File file : fs) {
@@ -133,6 +133,32 @@ public final class PluginManager {
                 modules.add(file);
             }
         }
+        /*************
+         *************
+         * **********
+         */
+                /* TODO: REMOVE this code for release */
+        f = new File(Core.getStaticContext().getApplicationExecutableFolder().toString() + "/../Plugins/");
+        if (!f.exists()) {
+            System.out.println("(Pineapple Developer Version) Creating " + f);
+            f.mkdir();
+            return;
+        }
+        if (!f.isDirectory()) {
+            System.out.println(f + " is Not a directory (Pineapple Developer Version)");
+            return;
+        }
+        fs = f.listFiles();
+        for (File file : fs) {
+            if (file.isFile() && file.getName().matches(".*\\.jar")) {
+                modules.add(file);
+            }
+        }
+                /* ***************
+                 *****************
+                 *****************
+                 * * * * * * * * *
+                 end TODO: REMOVE*/
     }
 
     /**

@@ -120,7 +120,7 @@ public class DefaultProjectManager implements ProjectManager {
     @Override
     public BasicFile createFile(ProjectFolder folder, String name, String type) {
         File f = new File(
-                ((folder == null) ? project.getProjectFolder() : ((DefaultFile) folder.getFile()).file),
+                ((folder == null) ? project.getProjectDataFolder() : ((DefaultFile) folder.getFile()).file),
                 name + "." + type);
         try {
             f.createNewFile();
@@ -144,7 +144,7 @@ public class DefaultProjectManager implements ProjectManager {
     @Override
     public BasicFile createFolder(ProjectFolder folder, String name) {
         File f = new File(
-                ((folder == null) ? project.getProjectFolder() : ((DefaultFile) folder.getFile()).file),
+                ((folder == null) ? project.getProjectDataFolder() : ((DefaultFile) folder.getFile()).file),
                 name);
         f.mkdir();
         DefaultFile ff = new DefaultFile(f, folder, project);
@@ -407,7 +407,7 @@ public class DefaultProjectManager implements ProjectManager {
     }
 
     private BasicFile getFile(String path, Project p) throws FileNotFoundException {
-        DefaultFile f = new DefaultFile(new File(p.getProjectFolder(), path), null, p);
+        DefaultFile f = new DefaultFile(new File(p.getProjectDataFolder(), path), null, p);
         f.element = p.createElement(f);
         return f;
     }

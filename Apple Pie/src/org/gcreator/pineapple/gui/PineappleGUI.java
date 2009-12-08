@@ -2017,7 +2017,7 @@ public class PineappleGUI implements EventHandler {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                BasicFile folder = PineappleCore.getProject().getManager().createFolder(f, getFileName("newFolder", f, PineappleCore.getProject()));
+                BasicFile folder = PineappleCore.getProject().getManager().createFolder(f, getFileName("newFolder", "", f, PineappleCore.getProject()));
                 try {
                     tree.startEditingAtPath(new TreePath(((DefaultMutableTreeNode) folder.getElement().getTreeNode()).getPath()));
                 } catch (Exception exc) {
@@ -2037,7 +2037,7 @@ public class PineappleGUI implements EventHandler {
                     String type = (String) GUIBase.fileTypeNames.keySet().toArray()[n];
                     openFile(PineappleCore.getProject().getManager().createFile(
                             f,
-                            getFileName("new" + type.toUpperCase() + "File", f, PineappleCore.getProject()),
+                            getFileName("new" + type.toUpperCase() + "File", "."+type, f, PineappleCore.getProject()),
                             type));
 
                 }
@@ -2066,13 +2066,13 @@ public class PineappleGUI implements EventHandler {
     //</editor-fold>
     //<>editor-fold defaultstate="collapsed" desc="getFileName(String, ProjectFolder, Project)               ">
 
-    private String getFileName(String fname, ProjectFolder folder, Project project) {
-        if (!exists(fname, folder, project)) {
+    private String getFileName(String fname, String ext, ProjectFolder folder, Project project) {
+        if (!exists(fname+ext, folder, project)) {
             return fname;
         }
 
         int i = 1;
-        while (exists(fname + i, folder, project)) {
+        while (exists(fname +ext+ i, folder, project)) {
             i++;
         }
         return fname + i;

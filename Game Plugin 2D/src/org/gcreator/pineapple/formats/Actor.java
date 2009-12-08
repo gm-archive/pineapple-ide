@@ -175,7 +175,7 @@ public class Actor extends ClassResource {
      * @return Wheter or not this actor's image should be
      * drawn automatically during the game.
      */
-    public boolean isAutoDrawn() {
+    public boolean isVisible() {
         return (Boolean)properties.get("render-automatically");
     }
 
@@ -184,7 +184,7 @@ public class Actor extends ClassResource {
      *
      * @param auto Whether or not to render this actor's image.
      */
-    public void setAutoDraw(boolean auto) {
+    public void setVisible(boolean auto) {
         properties.put("render-automatically", auto);
     }
 

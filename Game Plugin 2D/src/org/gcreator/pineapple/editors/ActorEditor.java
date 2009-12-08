@@ -37,7 +37,6 @@ import org.gcreator.pineapple.events.Event;
 import org.gcreator.pineapple.formats.Actor;
 import org.gcreator.pineapple.gui.BehaviourPanel;
 import org.gcreator.pineapple.gui.DocumentPane;
-import org.gcreator.pineapple.validators.ActorValidator;
 import org.gcreator.pineapple.validators.ImageValidator;
 import org.gcreator.pineapple.project.io.BasicFile;
 
@@ -92,16 +91,7 @@ public final class ActorEditor extends DocumentPane {
             }
         });
         
-        parentChooser.setResourceValidator(new ActorValidator());
-        parentChooser.setSelectedFile(actor.getParent());
-        parentChooser.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                actor.setParent(parentChooser.getSelectedFile());
-                setModified(true);
-            }
-        });
-        drawSpriteCheckBox.setSelected(actor.isAutoDrawn());
+        drawSpriteCheckBox.setSelected(actor.isVisible());
     }
     
     /**
@@ -147,9 +137,6 @@ public final class ActorEditor extends DocumentPane {
         drawSpriteCheckBox = new javax.swing.JCheckBox();
         spriteChooser = new org.gcreator.pineapple.gui.ResourceChooser();
         spriteLabel = new javax.swing.JLabel();
-        polymorhpismPanel = new javax.swing.JPanel();
-        parentChooser = new org.gcreator.pineapple.gui.ResourceChooser();
-        parentLabel = new javax.swing.JLabel();
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -178,7 +165,6 @@ public final class ActorEditor extends DocumentPane {
         view.setLayout(new java.awt.CardLayout());
         */
 
-        propertiesPanel.setMaximumSize(new java.awt.Dimension(100, 218));
         propertiesPanel.setMinimumSize(new java.awt.Dimension(100, 218));
         propertiesPanel.setPreferredSize(new java.awt.Dimension(100, 218));
 
@@ -189,7 +175,7 @@ public final class ActorEditor extends DocumentPane {
         depthLabel.setText("Depth (z):");
 
         drawSpriteCheckBox.setSelected(true);
-        drawSpriteCheckBox.setText("Draw sprite automatically");
+        drawSpriteCheckBox.setText("Visible");
         drawSpriteCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         drawSpriteCheckBox.setOpaque(true);
         drawSpriteCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -209,71 +195,40 @@ public final class ActorEditor extends DocumentPane {
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(spriteLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(spriteChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(depthLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(drawSpriteCheckBox))
-                .addGap(18, 18, 18))
+                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+                        .addComponent(drawSpriteCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         inGameRenderingPanelLayout.setVerticalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE))
-                    .addComponent(spriteChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+                .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(spriteChooser, 0, 0, Short.MAX_VALUE)
+                    .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(depthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(drawSpriteCheckBox)
-                .addContainerGap())
-        );
-
-        polymorhpismPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Polymorphism"));
-
-        parentLabel.setText("Parent:");
-
-        javax.swing.GroupLayout polymorhpismPanelLayout = new javax.swing.GroupLayout(polymorhpismPanel);
-        polymorhpismPanel.setLayout(polymorhpismPanelLayout);
-        polymorhpismPanelLayout.setHorizontalGroup(
-            polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(polymorhpismPanelLayout.createSequentialGroup()
-                .addComponent(parentLabel)
+                    .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(parentChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        polymorhpismPanelLayout.setVerticalGroup(
-            polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(polymorhpismPanelLayout.createSequentialGroup()
-                .addGroup(polymorhpismPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(parentChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(parentLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(drawSpriteCheckBox)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
         propertiesPanel.setLayout(propertiesPanelLayout);
         propertiesPanelLayout.setHorizontalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, propertiesPanelLayout.createSequentialGroup()
-                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(polymorhpismPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         propertiesPanelLayout.setVerticalGroup(
             propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(propertiesPanelLayout.createSequentialGroup()
-                .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(polymorhpismPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         view.add(propertiesPanel, "card2");
@@ -282,15 +237,16 @@ public final class ActorEditor extends DocumentPane {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-            .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
+                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 119, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -303,7 +259,7 @@ private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_membersToggleActionPerformed
 
 private void drawSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawSpriteCheckBoxActionPerformed
-    actor.setAutoDraw(drawSpriteCheckBox.isSelected());
+    actor.setVisible(drawSpriteCheckBox.isSelected());
     setModified(true);
 }//GEN-LAST:event_drawSpriteCheckBoxActionPerformed
 
@@ -313,9 +269,6 @@ private void drawSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JCheckBox drawSpriteCheckBox;
     private javax.swing.JPanel inGameRenderingPanel;
     private javax.swing.JToggleButton membersToggle;
-    private org.gcreator.pineapple.gui.ResourceChooser parentChooser;
-    private javax.swing.JLabel parentLabel;
-    private javax.swing.JPanel polymorhpismPanel;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JToggleButton propertiesToggle;
     private org.gcreator.pineapple.gui.ResourceChooser spriteChooser;

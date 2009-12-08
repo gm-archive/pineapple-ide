@@ -56,6 +56,7 @@ public class DefaultProject extends Project {
     protected DefaultProject(String name, File folder, ProjectType type, DefaultProjectManager manager, boolean save) {
         this.projectFolder = folder;
         File f = new File(folder, "files");
+        F_files = f;
         DefaultFile df = new DefaultFile(f, null, this);
         this.files = new ProjectFolder(df, this);
         df.element = this.files;

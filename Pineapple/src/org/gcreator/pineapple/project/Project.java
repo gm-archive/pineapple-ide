@@ -32,7 +32,6 @@ import org.gcreator.pineapple.managers.EventManager;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.project.io.ProjectManager;
-import org.gcreator.pineapple.project.standard.DefaultProject;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
 
 /**
@@ -43,6 +42,7 @@ import org.gcreator.pineapple.tree.ProjectTreeNode;
 public abstract class Project {
 
     protected File projectFolder;
+    protected File F_files;
     protected ProjectFolder files;
     
     /**
@@ -96,7 +96,7 @@ public abstract class Project {
     public abstract ProjectType getProjectType();
 
     /**
-     * Gets the folder that this project stores all
+     * Returns the folder that this project stores all
      * of its junk in. This may return <tt>null</tt> if
      * this has not been set.
      * 
@@ -109,6 +109,18 @@ public abstract class Project {
     }
 
     /**
+     * Returns the folder that all the user project files
+     * (images, actors, etc.) is stored in.
+     *
+     * @return The user data folder.
+     *
+     */
+    public File getProjectDataFolder() {
+        return F_files;
+    }
+
+
+    /**
      * Gets the project's file that it stores project information in.
      * This may be something like a project manifest file, or perhaps
      * even an archive.
@@ -117,18 +129,6 @@ public abstract class Project {
      * the project on the filesystem.
      */
     public abstract File getProjectFile();
-
-    /**
-     * Sets the folder that this project can use for
-     * storing data in.
-     * 
-     * @param f The new folder for storing data in.
-     * 
-     * @see #getProjectFolder() 
-     */
-    public void setProjectFolder(File f) {
-        this.projectFolder = f;
-    }
 
     /**
      * This allows you to set wether the the user

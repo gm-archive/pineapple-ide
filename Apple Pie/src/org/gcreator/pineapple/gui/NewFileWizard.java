@@ -88,6 +88,7 @@ public final class NewFileWizard extends javax.swing.JDialog {
             }
         });
 
+        setLocationRelativeTo(parent);
 
     }
 

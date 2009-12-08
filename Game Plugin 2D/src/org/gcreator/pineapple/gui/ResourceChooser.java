@@ -83,7 +83,7 @@ public class ResourceChooser extends JPanel {
                     }
                 });
                 menu.add(none);
-                popupMenu(menu, PineappleCore.getProject().getFiles());
+                popupMenu(menu, PineappleCore.getProject().getFiles().getChildren());
                 menu.show(label, evt.getX(), evt.getY());
             }
         });
