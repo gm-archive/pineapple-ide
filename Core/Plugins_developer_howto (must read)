@@ -1,0 +1,19 @@
+For the development version of Sabre a hack was put into Core so it also looks for a ../Plugins folder.
+To set up plugins correctly do the following:
+
+1. Create a Sabre/Trunk/Core/Plugins folder
+2. Put Symbolic Links for the following.
+Apple_Pie.jar -> ...Sabre/Trunk/Apple Pie/dist/Apple_Pie.jar
+Game_Plugin_2D.jar -> ...Sabre/Trunk/Game Plugin 2D/dist/Game_Plugin_2D.jar
+Pineapple.jar -> ...Sabre/Trunk/Pineapple/dist/Pineapple.jar
+Syntax_Highlighter.jar -> ...Sabre/Trunk/Syntax Highlighter/dist/Syntax_Highlighter.jar
+mydoggy-api-1.5.0.jar
+mydoggy-plaf-1.5.0.jar
+mydoggy-res-1.5.0.jar
+TableLayout-bin-jdk1.1-2007-04-21.jar
+
+You can just copy the 4 libraries at the bottom from Pineapple/dist/lib.
+Additional Plugins can be added in the same manner.
+Also, you should svn:ignore the Plugins folder like so:
+$ svn propedit svn:ignore Sabre/Trunk/Core/Plugins
+Do this because Symbolic Links don't commit through Subversion too well.
