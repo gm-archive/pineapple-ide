@@ -1,7 +1,7 @@
 For the development version of Sabre a hack was put into Core so it also looks for a ../Plugins folder.
 To set up plugins correctly do the following:
 
-1. Create a Sabre/Trunk/Core/Plugins folder
+1. Create a Sabre/Trunk/Core/Plugins folder if it doesn't already exist.
 2. Put Symbolic Links for the following.
 Apple_Pie.jar -> ...Sabre/Trunk/Apple Pie/dist/Apple_Pie.jar
 Game_Plugin_2D.jar -> ...Sabre/Trunk/Game Plugin 2D/dist/Game_Plugin_2D.jar
@@ -16,4 +16,5 @@ You can just copy the 4 libraries at the bottom from Pineapple/dist/lib.
 Additional Plugins can be added in the same manner.
 Also, you should svn:ignore the Plugins folder like so:
 $ svn propedit svn:ignore Sabre/Trunk/Core/Plugins
+then enter * hit then CTRL+O enter and CTRL+X
 Do this because Symbolic Links don't commit through Subversion too well.
