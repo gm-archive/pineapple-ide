@@ -180,7 +180,7 @@ public class DefaultFile implements BasicFile {
     @Override
     public String getPath() {
         return file.getPath().replaceAll("\\" + File.separator, "/").
-                substring(project.getProjectFolder().getPath().length());
+                substring(project.getProjectFolder().getPath().length()+7); // 7 for /files/ root folder
     }
 
     /**

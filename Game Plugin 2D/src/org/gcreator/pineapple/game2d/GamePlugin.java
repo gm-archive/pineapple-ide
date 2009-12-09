@@ -177,7 +177,7 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                 palette.setAvailable(false);
             }
         } else if (e.getEventType().equals(PineappleCore.REGISTER_PROJECT_TYPE)) {
-            PineappleCore.projectType =  new GameProjectType();
+            PineappleCore.projectType = new GameProjectType();
         } else if (e.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
             GUIBase.addFormatSupporter(this);
             /* Set the default FormatSupporters for certain types. */

@@ -1653,7 +1653,7 @@ public class PineappleGUI implements EventHandler {
                         }
                     }
                     try {
-                        if (!f.getCanonicalPath().startsWith(PineappleCore.getProject().getProjectFolder().getCanonicalPath())) {
+                        if (!f.getCanonicalPath().startsWith(PineappleCore.getProject().getProjectDataFolder().getCanonicalPath())) {
 
                             bf = new CopyFileDialog(Core.getStaticContext().getMainFrame(),
                                     PineappleCore.getProject(), f, "Copy File to Project", defaultFolder, allowBrowse).getCreatedFile();
@@ -1849,11 +1849,13 @@ public class PineappleGUI implements EventHandler {
                 }
             }
         });
+        final boolean[] canceled = {false};
         cancel = new JButton("Cancel");
         cancel.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                canceled[0] = true;
                 d.dispose();
             }
         });
@@ -1873,11 +1875,12 @@ public class PineappleGUI implements EventHandler {
         d.setVisible(true);
         d.setLocationRelativeTo(null);
 
+        if (list.getSelectedIndex() < 0 || canceled[0]) {
+            return null;
+        }
+
         if (cbox.isSelected() && format != null) {
             SettingsManager.set(key, supporters[list.getSelectedIndex()].getClass().getName());
-        }
-        if (list.getSelectedIndex() < 0) {
-            return null;
         }
         return supporters[list.getSelectedIndex()];
     }

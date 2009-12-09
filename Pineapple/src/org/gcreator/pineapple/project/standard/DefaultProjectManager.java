@@ -30,12 +30,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -71,7 +71,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class DefaultProjectManager implements ProjectManager {
 
     protected DefaultProject project;
-    public static final float PROJECT_VERSION = 1.05F;
+    public static final float PROJECT_VERSION = 1.08F;
 
     /**
      * Creates a new manger, with a given project.
@@ -221,14 +221,6 @@ public class DefaultProjectManager implements ProjectManager {
             Element root = doc.createElement("pineapple-project");
             root.setAttribute("version", Float.toString(PROJECT_VERSION));
             root.setAttribute("name", project.getName());
-            /* Files */
-            Element files = doc.createElement("files");
-            for (ProjectElement p : project.getFiles().getChildren()) {
-                Element elem = doc.createElement("file");
-                elem.setAttribute("path", p.getFile().getPath());
-                files.appendChild(elem);
-            }
-            root.appendChild(files);
 
             /* Settings */
             Element settings = doc.createElement("settings");
@@ -249,6 +241,8 @@ public class DefaultProjectManager implements ProjectManager {
             Transformer xformer;
             result = new StreamResult(new FileOutputStream(f));
             xformer = TransformerFactory.newInstance().newTransformer();
+            xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             xformer.transform(source, result);
         } catch (IOException ex) {
             Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -316,7 +310,7 @@ public class DefaultProjectManager implements ProjectManager {
         File newFile = copyFile(file, newName,
                 ((folder != null)
                 ? ((DefaultFile) folder.getFile()).file
-                : project.getProjectFolder()));
+                : project.getProjectDataFolder()));
 
         BasicFile f = new DefaultFile(newFile, folder, project);
         if (folder != null) {
@@ -483,8 +477,8 @@ public class DefaultProjectManager implements ProjectManager {
                 } else if (version.equals(Float.toString(PROJECT_VERSION))) {
                     loading = true;
                 } else {
-                    System.err.println("FATAL ERROR: Wrong project version: " + version + " :: required: " + PROJECT_VERSION);
-                    loading = false;
+                    System.err.println("WARNING: Wrong project version: " + version + " :: required: " + PROJECT_VERSION + " (oh well)");
+                    loading = true;
                 }
 
                 String name = atts.getValue("name");
@@ -516,8 +510,8 @@ public class DefaultProjectManager implements ProjectManager {
                     System.err.println("ERROR: No path attribute for file.");
                 } else {
                     try {
-                        BasicFile f = getFile(path, this.project);
-                        f.getElement();
+                        //Creates new file I guess
+                        getFile(path, this.project);
                         project.getFiles().reload();
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(DefaultProjectManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -563,7 +557,7 @@ public class DefaultProjectManager implements ProjectManager {
          */
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
-            System.out.println("NOTE: Charachters '" + Arrays.copyOfRange(ch, start, start + length) + "'");
+         //   System.out.println("NOTE: Charachters '" + Arrays.copyOfRange(ch, start, start + length) + "'");
         }
 
         /**
@@ -571,7 +565,7 @@ public class DefaultProjectManager implements ProjectManager {
          */
         @Override
         public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-            System.out.println("NOTE: Ignorable Witespace '" + Arrays.copyOfRange(ch, start, start + length) + "'");
+          //  System.out.println("NOTE: Ignorable Witespace '" + Arrays.copyOfRange(ch, start, start + length) + "'");
         }
 
         /**

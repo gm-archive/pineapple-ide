@@ -27,9 +27,6 @@ package org.gcreator.pineapple.gui.formats;
 import org.gcreator.pineapple.gui.editors.*;
 import javax.imageio.ImageIO;
 import org.gcreator.pineapple.gui.DocumentPane;
-import org.gcreator.pineapple.gui.base.GUIBase;
-import org.gcreator.pineapple.plugins.EventHandler;
-import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
@@ -37,22 +34,13 @@ import org.gcreator.pineapple.project.io.BasicFile;
  * 
  * @author Serge Humphrey
  */
-public class PlainTextSupporter implements FormatSupporter, EventHandler {
+public class PlainTextSupporter implements FormatSupporter {
     
     /**
      * {@inheritDoc}
      */
     public DocumentPane load(BasicFile f) {
         return new TextEditor(f);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void handleEvent(Event event) {
-        if (event.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
-            GUIBase.addFormatSupporter(this);
-        }
     }
     
     /**

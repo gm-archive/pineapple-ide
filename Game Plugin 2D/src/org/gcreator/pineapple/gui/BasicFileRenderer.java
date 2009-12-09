@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-
 package org.gcreator.pineapple.gui;
 
 import java.awt.Component;
@@ -32,31 +31,32 @@ import org.gcreator.pineapple.project.io.BasicFile;
  * Renders a BasicFile instance on a JList
  * @author Luís Reis
  */
-public class BasicFileRenderer extends DefaultListCellRenderer{
+public class BasicFileRenderer extends DefaultListCellRenderer {
+
     private static final long serialVersionUID = 6041354836252183100L;
 
     @Override
     public Component getListCellRendererComponent(JList list,
-            Object value, int index, boolean isSelected, boolean hasFocus){
+            Object value, int index, boolean isSelected, boolean hasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
-        
-        if(value==null){
+
+        if (value == null) {
             setText("INVALID SCENE");
             return this;
         }
-        
+
         String path = ((BasicFile) value).getPath();
-        System.out.println("path="+path);
         int indexofdot = path.lastIndexOf('.');
         int indexofslash = path.lastIndexOf('/');
-        String beforeSlash = path.substring(0, indexofslash);
-        System.out.println("beforeSlash="+beforeSlash);
-        String text = "<html><div>" + beforeSlash
-                + "/" + path.substring(indexofslash+1, indexofdot)
-                + "<font color='gray'>." + path.substring(indexofdot+1) + "</font></div>";
-        System.out.println("text="+text);
-        setText(text);
-        
+        String beforeSlash;
+        if (indexofslash >= 0) {
+            beforeSlash = path.substring(0, indexofslash);
+        } else {
+            beforeSlash = "";
+        }
+        String text = "<html><div>" + beforeSlash + "/" + path.substring(indexofslash + 1, indexofdot) + "<font color='gray'>." + path.substring(indexofdot + 1) + "</font></div>";
+        this.setText(text);
+
         return this;
     }
 }

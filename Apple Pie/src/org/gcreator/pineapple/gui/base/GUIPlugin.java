@@ -22,6 +22,15 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui.base;
 
+import javax.swing.ImageIcon;
+import org.gcreator.pineapple.core.PineappleCore;
+import org.gcreator.pineapple.gui.ProjectTreeRenderer;
+import org.gcreator.pineapple.gui.formats.ImageSupporter;
+import org.gcreator.pineapple.gui.formats.PlainTextSupporter;
+import org.gcreator.pineapple.managers.EventManager;
+import org.gcreator.pineapple.plugins.DefaultEventTypes;
+import org.gcreator.pineapple.plugins.Event;
+import org.gcreator.pineapple.plugins.EventHandler;
 import org.gcreator.pineapple.plugins.Plugin;
 
 /**
@@ -29,7 +38,7 @@ import org.gcreator.pineapple.plugins.Plugin;
  *
  * @author Luís Reis
  */
-public final class GUIPlugin extends Plugin {
+public final class GUIPlugin extends Plugin implements EventHandler {
 
     /**
      * Gives static access to the plugin's name.
@@ -58,6 +67,8 @@ public final class GUIPlugin extends Plugin {
     @Override
     public void initialize() {
         GUIBase.initialize();
+        EventManager.addEventHandler(this, DefaultEventTypes.PLUGINS_LOADED);
+        EventManager.addEventHandler(this, GUIBase.REGISTER_FORMATS);
     }
 
     /**
@@ -66,5 +77,29 @@ public final class GUIPlugin extends Plugin {
     @Override
     public String getAuthor() {
         return "Serge Humphrey, Luís Reis";
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getEventType().equals(DefaultEventTypes.PLUGINS_LOADED)) {
+            try {
+                ProjectTreeRenderer.icons.put(".*\\.actor",
+                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/actor.png")));
+                ProjectTreeRenderer.icons.put(".*\\.scene",
+                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/scene.png")));
+                ProjectTreeRenderer.icons.put(".*\\.pdl",
+                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/script.png")));
+                ProjectTreeRenderer.icons.put(".*\\.txt",
+                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/text.png")));
+                ProjectTreeRenderer.icons.put(".*\\.java",
+                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/java.png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (event.getEventType().equals(GUIBase.REGISTER_FORMATS)) {
+            /* Supporters */
+            GUIBase.addFormatSupporter(new PlainTextSupporter());
+            GUIBase.addFormatSupporter(new ImageSupporter());
+        }
     }
 }

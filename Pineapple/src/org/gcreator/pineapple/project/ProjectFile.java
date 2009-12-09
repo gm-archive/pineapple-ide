@@ -19,10 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
+ */
 package org.gcreator.pineapple.project;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.tree.BaseTreeNode;
 import org.gcreator.pineapple.tree.FileTreeNode;
@@ -38,7 +40,14 @@ public class ProjectFile extends ProjectElement {
     protected Icon icon;
     protected FileTreeNode treeNode;
     protected Project project;
-    
+    private static ImageIcon IMG;
+
+    static {
+        try {
+            IMG = new ImageIcon(FileTreeNode.class.getResource("/org/gcreator/pineapple/resources/tree/img.png"));
+        } catch (Exception e) { /*  ...  */ }
+    }
+
     /**
      * Creates a new {@link ProjectFile} object and sets the format automatically.
      * 
@@ -46,9 +55,7 @@ public class ProjectFile extends ProjectElement {
      * @param p The {@link Project} that this file should belong to.
      */
     public ProjectFile(BasicFile file, Project p) {
-        this.file = file;
-        this.project = p;
-        this.treeNode = new FileTreeNode(this);
+        this(file, null, p);
     }
 
     /**
@@ -59,8 +66,24 @@ public class ProjectFile extends ProjectElement {
      * @param p The {@link Project} that this file should belong to.
      */
     public ProjectFile(BasicFile file, Icon icon, Project p) {
-        this(file, p);
+        this.file = file;
+        this.project = p;
+        this.treeNode = new FileTreeNode(this);
         this.icon = icon;
+        icon();
+    }
+
+    private void icon()
+    {
+        if (icon == null) {
+
+            // Check for an image file and if so fix icon.
+            for (String s : ImageIO.getReaderFileSuffixes()) {
+                if (file.getName().toLowerCase().endsWith("." + s.toLowerCase())) {
+                    icon = IMG;
+                }
+            }
+        }
     }
 
     /**
@@ -118,13 +141,13 @@ public class ProjectFile extends ProjectElement {
     public String toString() {
         return ((file != null) ? file.getName() : "null");
     }
-    
+
     private static String getFormat(String file) {
         int i = file.lastIndexOf(".");
         if (i < 0 || i >= file.length()) {
             return null;
         }
-        return file.substring(i+1);
+        return file.substring(i + 1);
     }
 
     /**
@@ -157,6 +180,6 @@ public class ProjectFile extends ProjectElement {
         if (file == null || !(o instanceof ProjectElement)) {
             return 0;
         }
-        return file.compareTo(((ProjectElement)o).getFile());
+        return file.compareTo(((ProjectElement) o).getFile());
     }
 }

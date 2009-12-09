@@ -38,7 +38,6 @@ import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.gcreator.pineapple.gui.DocumentPane;
-import org.gcreator.pineapple.gui.editors.IntegratedUndoManager;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
@@ -66,10 +65,10 @@ public class TextEditor extends DocumentPane {
         super(e);
         this.file = e;
 
-        setBackground(Color.white);
-        setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
         this.scroll = new JScrollPane();
         this.editor = new JTextPane();
+        editor.setBackground(Color.white);
         this.editor.setVisible(true);
         this.scroll.setVisible(true);
         this.scroll.setViewportView(editor);

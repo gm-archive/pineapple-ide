@@ -94,7 +94,7 @@ public class GameSettingsDialog extends javax.swing.JDialog {
     }
 
     private BasicFile getScene(String scene, Project p) {
-        for (ProjectElement elem : p.getFiles()) {
+        for (ProjectElement elem : p.getFiles().getChildren()) {
             if (elem instanceof ProjectFile) {
                 if (elem.getFile().getPath().equals(scene)) {
                     return elem.getFile();

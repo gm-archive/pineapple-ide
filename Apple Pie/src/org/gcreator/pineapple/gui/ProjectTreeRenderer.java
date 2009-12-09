@@ -23,12 +23,15 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import java.awt.Component;
+import java.util.HashMap;
+import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import org.gcreator.pineapple.tree.ProjectTreeNode;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.tree.BaseTreeNode;
+import org.gcreator.pineapple.tree.FileTreeNode;
 
 /**
  * A FolderProject tree cell renderer
@@ -39,6 +42,12 @@ import org.gcreator.pineapple.tree.BaseTreeNode;
 public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
 
     private static final long serialVersionUID = 1;
+
+    /**
+     * HashMap for icons in the tree. The Sting must be a regular expression.
+     * Will only work if a file does not have it's icon set in the FileTreeNode class.
+     */
+    public static HashMap<String, Icon> icons = new HashMap<String, Icon>();
 
     public ProjectTreeRenderer() {
         setOpaque(false);
@@ -66,13 +75,19 @@ public class ProjectTreeRenderer extends DefaultTreeCellRenderer {
                 this.setText(exc.getLocalizedMessage());
             }
         } else if (val instanceof BaseTreeNode) {
+            String s = this.getText();
             BaseTreeNode node = (BaseTreeNode) val;
             this.setText(node.getElement().getName());
             ProjectElement el = node.getElement();
             if (el.getIcon() != null) {
                 this.setIcon(el.getIcon());
+            } else if (val instanceof FileTreeNode) {
+                for (String exp : icons.keySet()) {
+                    if (s.matches(exp)) {
+                        this.setIcon(icons.get(exp));
+                    }
+                }
             }
-            String s = this.getText();
             int index = s.lastIndexOf('.');
             if (index != -1 && !isSelected) {
                 String name = s.substring(0, index);
