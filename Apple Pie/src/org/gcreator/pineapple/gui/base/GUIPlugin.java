@@ -22,8 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.gui.base;
 
-import javax.swing.ImageIcon;
-import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.gui.ProjectTreeRenderer;
 import org.gcreator.pineapple.gui.formats.ImageSupporter;
 import org.gcreator.pineapple.gui.formats.PlainTextSupporter;
@@ -83,16 +81,12 @@ public final class GUIPlugin extends Plugin implements EventHandler {
     public void handleEvent(Event event) {
         if (event.getEventType().equals(DefaultEventTypes.PLUGINS_LOADED)) {
             try {
-                ProjectTreeRenderer.icons.put(".*\\.actor",
-                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/actor.png")));
-                ProjectTreeRenderer.icons.put(".*\\.scene",
-                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/scene.png")));
-                ProjectTreeRenderer.icons.put(".*\\.pdl",
-                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/script.png")));
-                ProjectTreeRenderer.icons.put(".*\\.txt",
-                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/text.png")));
-                ProjectTreeRenderer.icons.put(".*\\.java",
-                        new ImageIcon(this.getClass().getResource("/org/gcreator/pineapple/resources/tree/java.png")));
+                IconManager.load();
+                ProjectTreeRenderer.icons.put(".*\\.actor", IconManager.getIcon("actor"));
+                ProjectTreeRenderer.icons.put(".*\\.scene", IconManager.getIcon("scene"));
+                ProjectTreeRenderer.icons.put(".*\\.pdl", IconManager.getIcon("script"));
+                ProjectTreeRenderer.icons.put(".*\\.txt", IconManager.getIcon("text"));
+                ProjectTreeRenderer.icons.put(".*\\.java", IconManager.getIcon("java"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

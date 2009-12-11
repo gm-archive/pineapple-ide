@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -35,9 +36,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.gcreator.pineapple.gui.DocumentPane;
+import org.gcreator.pineapple.gui.base.IconManager;
 import org.gcreator.pineapple.project.io.BasicFile;
 
 /**
@@ -135,7 +138,9 @@ public class TextEditor extends DocumentPane {
     @Override
     public boolean setupEditMenu(JMenu editMenu) {
         JMenuItem undoItem = new JMenuItem("Undo");
+        undoItem.setIcon(IconManager.getIcon("undo"));
         undoItem.setMnemonic('u');
+        undoItem.setAccelerator(KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK));
         undoItem.setVisible(true);
         undoItem.addActionListener(new ActionListener() {
 
@@ -148,7 +153,9 @@ public class TextEditor extends DocumentPane {
         editMenu.add(undoItem);
 
         JMenuItem redoItem = new JMenuItem("Redo");
+        redoItem.setIcon(IconManager.getIcon("redo"));
         redoItem.setMnemonic('r');
+        redoItem.setAccelerator(KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         redoItem.setVisible(true);
         redoItem.addActionListener(new ActionListener() {
 
@@ -163,7 +170,9 @@ public class TextEditor extends DocumentPane {
         editMenu.addSeparator();
 
         JMenuItem cut = new JMenuItem("Cut");
+        cut.setIcon(IconManager.getIcon("cut"));
         cut.setMnemonic('t');
+        cut.setAccelerator(KeyStroke.getKeyStroke('X', InputEvent.CTRL_DOWN_MASK));
         cut.setVisible(true);
         cut.addActionListener(new ActionListener() {
 
@@ -174,7 +183,9 @@ public class TextEditor extends DocumentPane {
         });
         editMenu.add(cut);
         JMenuItem copy = new JMenuItem("Copy");
+        copy.setIcon(IconManager.getIcon("copy"));
         copy.setMnemonic('y');
+        copy.setAccelerator(KeyStroke.getKeyStroke('C', InputEvent.CTRL_DOWN_MASK));
         copy.setVisible(true);
         copy.addActionListener(new ActionListener() {
 
@@ -185,7 +196,9 @@ public class TextEditor extends DocumentPane {
         });
         editMenu.add(copy);
         JMenuItem paste = new JMenuItem("Paste");
+        paste.setIcon(IconManager.getIcon("paste"));
         paste.setMnemonic('P');
+        paste.setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_DOWN_MASK));
         paste.setVisible(true);
         paste.addActionListener(new ActionListener() {
 
@@ -196,7 +209,9 @@ public class TextEditor extends DocumentPane {
         });
         editMenu.add(paste);
         JMenuItem selall = new JMenuItem("Select All");
+        selall.setIcon(IconManager.getIcon("select-all"));
         selall.setMnemonic('A');
+        selall.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
         selall.setVisible(true);
         selall.addActionListener(new ActionListener() {
 

@@ -25,6 +25,7 @@ package org.gcreator.pineapple.project;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.gcreator.pineapple.gui.base.IconManager;
 import org.gcreator.pineapple.project.io.BasicFile;
 import org.gcreator.pineapple.tree.BaseTreeNode;
 import org.gcreator.pineapple.tree.FileTreeNode;
@@ -40,13 +41,6 @@ public class ProjectFile extends ProjectElement {
     protected Icon icon;
     protected FileTreeNode treeNode;
     protected Project project;
-    private static ImageIcon IMG;
-
-    static {
-        try {
-            IMG = new ImageIcon(FileTreeNode.class.getResource("/org/gcreator/pineapple/resources/tree/img.png"));
-        } catch (Exception e) { /*  ...  */ }
-    }
 
     /**
      * Creates a new {@link ProjectFile} object and sets the format automatically.
@@ -80,7 +74,7 @@ public class ProjectFile extends ProjectElement {
             // Check for an image file and if so fix icon.
             for (String s : ImageIO.getReaderFileSuffixes()) {
                 if (file.getName().toLowerCase().endsWith("." + s.toLowerCase())) {
-                    icon = IMG;
+                    icon = IconManager.getIcon("img");
                 }
             }
         }

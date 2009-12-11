@@ -131,17 +131,6 @@ public abstract class Project {
     public abstract File getProjectFile();
 
     /**
-     * This allows you to set wether the the user
-     * can save their project.
-     * For example, the user would not need to save
-     * their project if it were something like {@link DefaultProject}
-     * and it updated the project manifest when something was changed.
-     * 
-     * @return Whether the user is allowed to save the project.
-     */
-    public abstract boolean allowsSave();
-
-    /**
      * Renames a child file which fires a
      * {@link PineappleGUI#FILE_RENAMED} event.
      * 

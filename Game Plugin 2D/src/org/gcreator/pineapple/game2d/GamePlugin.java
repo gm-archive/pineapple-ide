@@ -49,6 +49,7 @@ import org.gcreator.pineapple.managers.SettingsManager;
 import org.gcreator.pineapple.core.PineappleCore;
 import org.gcreator.pineapple.gui.CheckResourceNamesPanel;
 import org.gcreator.pineapple.gui.base.GUIBase;
+import org.gcreator.pineapple.gui.base.IconManager;
 import org.gcreator.pineapple.plugins.Event;
 import org.gcreator.pineapple.plugins.Plugin;
 import org.gcreator.pineapple.project.Project;
@@ -195,6 +196,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
                 Project p = PineappleCore.getProject();
                 if (p.getProjectType() instanceof GameProjectType) {
                     JMenuItem item = new JMenuItem("Game Settings");
+                    item.setIcon(IconManager.getIcon("settings"));
+                    item.setMnemonic('G');
                     item.setVisible(true);
                     item.addActionListener(new ActionListener() {
 
@@ -210,6 +213,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
             }
         } else if (e.getEventType().equals(PineappleGUI.PINEAPPLE_GUI_INITIALIZED)) {
             gameSettings = new JMenuItem("Game Settings");
+            gameSettings.setMnemonic('G');
+            gameSettings.setIcon(IconManager.getIcon("settings"));
             gameSettings.setVisible(true);
             gameSettings.addActionListener(new ActionListener() {
 
@@ -232,6 +237,8 @@ public class GamePlugin extends Plugin implements FormatSupporter {
 
             /* Check resource names menu item */
             checkres = new JMenuItem("Check Resource Names");
+            checkres.setMnemonic('h');
+            checkres.setIcon(IconManager.getIcon("check"));
             checkres.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {

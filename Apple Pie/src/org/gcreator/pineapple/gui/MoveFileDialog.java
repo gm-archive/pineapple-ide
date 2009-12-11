@@ -24,6 +24,7 @@ THE SOFTWARE.
 package org.gcreator.pineapple.gui;
 
 import javax.swing.SwingUtilities;
+import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.ProjectFolder;
@@ -81,6 +82,7 @@ public final class MoveFileDialog extends javax.swing.JDialog {
             fileTypeLabel.setText("." + type);
         }
         fileNameTextField.setText(fname);
+        this.setLocationRelativeTo(Core.getStaticContext().getMainFrame());
         this.setVisible(true);
     }
     

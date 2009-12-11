@@ -40,15 +40,6 @@ import org.gcreator.pineapple.project.ProjectFolder;
 public interface ProjectManager {
     
     /**
-     * Saves the project to a given file.
-     * 
-     * @param f The {@link java.io.File} to save to.
-     * This should be one the strings from {@see #getProjectFileTypes()}.
-     * 
-     */
-    public void save(File f);
-    
-    /**
      * @return This manager's project.
      */
     public Project getProject();

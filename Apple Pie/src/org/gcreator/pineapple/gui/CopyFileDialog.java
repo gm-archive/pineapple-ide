@@ -25,6 +25,7 @@ package org.gcreator.pineapple.gui;
 
 import java.io.File;
 import javax.swing.SwingUtilities;
+import org.gcreator.pineapple.core.Core;
 import org.gcreator.pineapple.project.Project;
 import org.gcreator.pineapple.project.ProjectElement;
 import org.gcreator.pineapple.project.ProjectFolder;
@@ -82,6 +83,7 @@ public final class CopyFileDialog extends javax.swing.JDialog {
             fileTypeLabel.setText("." + type);
         }
         fileNameTextField.setText(fname);
+        this.setLocationRelativeTo(Core.getStaticContext().getMainFrame());
         this.setVisible(true);
     }
     

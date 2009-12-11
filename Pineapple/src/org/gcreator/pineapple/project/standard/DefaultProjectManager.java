@@ -106,15 +106,6 @@ public class DefaultProjectManager implements ProjectManager {
     }
 
     /**
-     * Not supported.
-     */
-    @Override
-    public void save(File f) {
-        //Save the project anyway.
-        saveToManifest();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

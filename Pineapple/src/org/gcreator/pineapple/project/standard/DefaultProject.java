@@ -111,14 +111,6 @@ public class DefaultProject extends Project {
      * {@inheritDoc}
      */
     @Override
-    public boolean allowsSave() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ProjectTreeNode getTreeNode() {
         return treeNode;
     }

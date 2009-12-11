@@ -45,7 +45,7 @@ import org.gcreator.pineapple.plugins.Plugin;
  */
 public final class PluginManager {
 
-    private static Vector<File> modules = new Vector<File>();
+    public static Vector<File> modules = new Vector<File>();
     private static URLClassLoader clsloader;
 
     /** Don't allow instantation
