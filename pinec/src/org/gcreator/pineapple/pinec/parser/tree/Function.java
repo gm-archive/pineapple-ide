@@ -27,6 +27,10 @@ public final class Function extends Leaf{
         this.isStatic = isStatic;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public Keyword getKeyword(){
         return t;
     }

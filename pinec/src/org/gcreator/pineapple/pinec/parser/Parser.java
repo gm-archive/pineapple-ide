@@ -126,6 +126,7 @@ public final class Parser {
         return new CompilerReturnData<ClassConstant>(i+1, cls);
     }
     //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Constructor">
     public CompilerReturnData<Constructor> parseConstructor(int i)
     throws ParserException{
@@ -298,6 +299,7 @@ public final class Parser {
     throws ParserException{
         final CompilerReturnData<Expression> expr = parseRightList(i);
         if(expr==null) return null;
+        //TODO: Prevent statements like "1 + 2;"
 
         demandToken(expr.i, Operator.SEMICOLON);
 

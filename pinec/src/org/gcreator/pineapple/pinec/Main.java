@@ -11,9 +11,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
+import org.gcreator.pineapple.pinec.compiler.api.APIClass;
+import org.gcreator.pineapple.pinec.compiler.api.APIImporter;
+import org.gcreator.pineapple.pinec.compiler.api.CommonLibrary;
+import org.gcreator.pineapple.pinec.compiler.api.NameLibrary;
 import org.gcreator.pineapple.pinec.lexer.Lexer;
 import org.gcreator.pineapple.pinec.lexer.LexerHandler;
-import org.gcreator.pineapple.pinec.lexer.Token;
 import org.gcreator.pineapple.pinec.parser.Parser;
 import org.gcreator.pineapple.pinec.parser.tree.ClassConstant;
 import org.gcreator.pineapple.pinec.parser.tree.Document;
@@ -27,11 +30,35 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void xmain(String[] args) {
-        final double d = testParser();
-        String s = Double.toString(d);
-        s = s.replaceAll("\\.", ",");
-        System.out.println(s);
+    public static void main(String[] args) {
+        //final double d = testParser();
+        //String s = Double.toString(d);
+        //s = s.replaceAll("\\.", ",");
+        //System.out.println(s);
+
+        try{
+            final CommonLibrary lib = new CommonLibrary();
+            final APIImporter importer = new APIImporter(lib);
+            importer.importLibrary(Main.class.getResourceAsStream("/testapi.xml"));
+
+            final LexerHandler handler = new LexerHandler();
+            final InputStream stream = Main.class.getResourceAsStream("/org/gcreator/pineapple/pinec/test.pdl");
+            final Reader reader = new BufferedReader(new InputStreamReader(stream));
+
+            final Lexer lexer = new Lexer(reader, handler);
+            lexer.run();
+            final Parser parser = new Parser(handler);
+            final Document d = parser.run();
+            importer.importFromDocument(d);
+            final NameLibrary names = new NameLibrary(lib);
+
+            for(APIClass cls : lib.getClasses()){
+                System.out.println(cls);
+            }
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public static double testParser(){

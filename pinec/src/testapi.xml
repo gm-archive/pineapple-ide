@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<api xmlns="http://www.g-creator.org/pineapple-doc/xmlformat-1.0.html">
+    <class name="array" internal="true">
+        <function name="copy" />
+        <function name="each" />
+        <function name="find" />
+        <function name="keys" />
+        <function name="last" />
+        <function name="length" />
+        <function name="pop" />
+        <function name="random" />
+        <function name="sort" />
+        <function name="transform" />
+        <function name="where" />
+    </class>
+
+    <class name="bool" internal="true" />
+
+    <class name="char" internal="true">
+        <function name="isAlpha" />
+        <function name="isAlphanumeric" />
+        <function name="isDigit" />
+        <function name="toLowerCase" />
+        <function name="toUpperCase" />
+    </class>
+
+    <class name="null" internal="true" />
+</api>
