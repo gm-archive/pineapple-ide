@@ -70,6 +70,9 @@ public class ProjectFolder extends ProjectElement {
      */
     @SuppressWarnings("unchecked")
     public void reload() {
+        if (folder == null || folder.list() == null) {
+            return;
+        }
         children.clear();
         for (BasicFile f : folder.list()) {
             ProjectElement e = project.createElement(f);
@@ -95,6 +98,9 @@ public class ProjectFolder extends ProjectElement {
     public ProjectElement getChildAt(int index) throws ArrayIndexOutOfBoundsException {
         if (folder.lastModified() != modified) {
             reload();
+        }
+        if (index >= children.size()) {
+            return null;
         }
         return children.get(index);
     }

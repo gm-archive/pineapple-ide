@@ -372,9 +372,7 @@ public class PineappleGUI implements EventHandler {
 
                 BaseTreeNode n = (BaseTreeNode) o;
                 ProjectElement el = n.getElement();
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    deleteFile(el);
-                } else if (e.getKeyCode() == KeyEvent.VK_F2) {
+                if (e.getKeyCode() == KeyEvent.VK_F2) {
                     tree.startEditingAtPath(tp);
                 }
 
@@ -601,7 +599,7 @@ public class PineappleGUI implements EventHandler {
                 return PineappleCore.getProject() != null && super.isEnabled();
             }
         };
-        projectAdd.setMnemonic('A');
+        projectAdd.setMnemonic('I');
         projectAdd.setVisible(true);
         projectAdd.addActionListener(new ActionListener() {
 
@@ -655,6 +653,7 @@ public class PineappleGUI implements EventHandler {
             }
         };
         projectDelete.setMnemonic('D');
+        projectDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
         projectDelete.setVisible(true);
         projectDelete.setEnabled(false);
         projectDelete.addActionListener(new ActionListener() {
@@ -1341,6 +1340,7 @@ public class PineappleGUI implements EventHandler {
         if (o instanceof FileTreeNode) {
             final FileTreeNode n = (FileTreeNode) o;
             JMenuItem om = menu.add("Open");
+            om.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
             om.addActionListener(new ActionListener() {
 
                 @Override
@@ -1354,6 +1354,7 @@ public class PineappleGUI implements EventHandler {
             om.setIcon(IconManager.getIcon("file-open"));
 
             JMenu openWith = new JMenu("Open With");
+            openWith.setMnemonic('W');
             for (final FormatSupporter s : getFormatSupporters(n.getElement().getName())) {
                 if (s == null) {
                     continue;
@@ -1419,7 +1420,7 @@ public class PineappleGUI implements EventHandler {
                 }
             };
             importFile.setIcon(IconManager.getIcon("import"));
-            importFile.setMnemonic('A');
+            importFile.setMnemonic('I');
             importFile.setVisible(true);
             importFile.addActionListener(new ActionListener() {
 
@@ -1447,6 +1448,7 @@ public class PineappleGUI implements EventHandler {
                     updateTreeUI();
                 }
             });
+            m.setMnemonic('f');
             m.setIcon(IconManager.getIcon("refresh"));
         }
 
@@ -1516,6 +1518,7 @@ public class PineappleGUI implements EventHandler {
                     return el != null && el.allowsDelete();
                 }
             };
+            del.setMnemonic('D');
             del.setIcon(IconManager.getIcon("delete"));
             del.addActionListener(new ActionListener() {
 
@@ -1530,6 +1533,7 @@ public class PineappleGUI implements EventHandler {
             menu.add(del);
 
             JMenuItem move = menu.add("Move...");
+            move.setMnemonic('M');
             move.addActionListener(new ActionListener() {
 
                 @Override
@@ -1546,6 +1550,7 @@ public class PineappleGUI implements EventHandler {
 
         if (o instanceof BaseTreeNode) {
             JMenuItem m = menu.add("Rename");
+            m.setMnemonic('R');
             m.setIcon(IconManager.getIcon("rename"));
             m.addActionListener(new ActionListener() {
 
@@ -1989,11 +1994,7 @@ public class PineappleGUI implements EventHandler {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                BasicFile folder = PineappleCore.getProject().getManager().createFolder(f, getFileName("newFolder", "", f, PineappleCore.getProject()));
-                try {
-                    tree.startEditingAtPath(new TreePath(((DefaultMutableTreeNode) folder.getElement().getTreeNode()).getPath()));
-                } catch (Exception exc) {
-                }
+                PineappleCore.getProject().getManager().createFolder(f, getFileName("newFolder", "", f, PineappleCore.getProject()));
             }
         });
         menu.add(item);

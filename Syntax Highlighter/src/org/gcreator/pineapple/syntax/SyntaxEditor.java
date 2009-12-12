@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.gcreator.pineapple.gui.base.IconManager;
 import org.gcreator.pineapple.gui.editors.TextEditor;
 import org.gcreator.pineapple.project.io.Register;
 
@@ -88,6 +89,7 @@ public class SyntaxEditor extends JPanel {
     public boolean setupEditMenu(JMenu editMenu) {
         JMenuItem cut = new JMenuItem("Cut");
         cut.setMnemonic('t');
+        cut.setIcon(IconManager.getIcon("cut"));
         cut.setVisible(true);
         cut.addActionListener(new ActionListener() {
 
@@ -97,6 +99,7 @@ public class SyntaxEditor extends JPanel {
         });
         editMenu.add(cut);
         JMenuItem copy = new JMenuItem("Copy");
+        copy.setIcon(IconManager.getIcon("copy"));
         copy.setMnemonic('y');
         copy.setVisible(true);
         copy.addActionListener(new ActionListener() {
@@ -107,6 +110,7 @@ public class SyntaxEditor extends JPanel {
         });
         editMenu.add(copy);
         JMenuItem paste = new JMenuItem("Paste");
+        paste.setIcon(IconManager.getIcon("paste"));
         paste.setMnemonic('P');
         paste.setVisible(true);
         paste.addActionListener(new ActionListener() {
@@ -117,6 +121,7 @@ public class SyntaxEditor extends JPanel {
         });
         editMenu.add(paste);
         JMenuItem selall = new JMenuItem("Select All");
+        selall.setIcon(IconManager.getIcon("select-all"));
         selall.setMnemonic('A');
         selall.setVisible(true);
         selall.addActionListener(new ActionListener() {

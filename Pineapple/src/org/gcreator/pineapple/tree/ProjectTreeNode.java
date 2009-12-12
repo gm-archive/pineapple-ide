@@ -56,7 +56,11 @@ public final class ProjectTreeNode extends DefaultMutableTreeNode implements Tre
      */
     @Override
     public BaseTreeNode getChildAt(int childIndex) {
-        return project.getFiles().getChildAt(childIndex).getTreeNode();
+        try {
+            return project.getFiles().getChildAt(childIndex).getTreeNode();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
