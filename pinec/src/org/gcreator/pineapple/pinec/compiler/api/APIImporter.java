@@ -53,8 +53,7 @@ public class APIImporter {
                 if(localName.equals("api")){
                     return; //Ignore
                 }
-
-                if(localName.equals("class")){
+                else if(localName.equals("class")){
                     APIClass cls = new APIClass();
 
                     final int attrSize = attribs.getLength();
@@ -79,11 +78,11 @@ public class APIImporter {
                     return;
 
                 }
-
-                if(localName.equals("function")){
+                else if(localName.equals("function")){
 
                     final APIClass cls = classNesting.peek();
                     final APIField field = new APIField();
+                    field.variable = false;
                     final int attrSize = attribs.getLength();
                     for(int i = 0; i < attrSize; ++i){
                         final String name = attribs.getLocalName(i);
@@ -91,10 +90,30 @@ public class APIImporter {
                         if(name.equals("name")){
                             field.name= attribs.getValue(i);
                         }
+                        else if(name.equals("static")){
+                            field.isStatic = attribs.getValue(i).equalsIgnoreCase("true");
+                        }
                     }
                     cls.fields.add(field);
-
                 }
+                else if(localName.equals("const")){
+                    final APIClass cls = classNesting.peek();
+                    final APIField field = new APIField();
+                    field.variable = false;
+                    final int attrSize = attribs.getLength();
+                    for(int i = 0; i < attrSize; ++i){
+                        final String name = attribs.getLocalName(i);
+
+                        if(name.equals("name")){
+                            field.name= attribs.getValue(i);
+                        }
+                        else if(name.equals("static")){
+                            field.isStatic = attribs.getValue(i).equalsIgnoreCase("true");
+                        }
+                    }
+                    cls.fields.add(field);
+                }
+
             }
 
         }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<api xmlns="http://www.g-creator.org/pineapple-doc/xmlformat-1.0.html">
+    <class name="array" internal="true">
+        <function name="copy" />
+        <function name="each" />
+        <function name="find" />
+        <function name="keys" />
+        <function name="last" />
+        <function name="length" />
+        <function name="pop" />
+        <function name="random" />
+        <function name="sort" />
+        <function name="transform" />
+        <function name="where" />
+    </class>
+
+    <class name="bool" internal="true" />
+
+    <class name="char" internal="true">
+        <function name="isAlpha" />
+        <function name="isAlphanumeric" />
+        <function name="isDigit" />
+        <function name="toLowerCase" />
+        <function name="toUpperCase" />
+    </class>
+
+    <class name="null" internal="true" />
+
+    <class name="number" internal="true">
+        <function name="abs" />
+        <function name="acos" />
+        <function name="asin" />
+        <function name="atan" />
+        <function name="ceil" />
+        <function name="cos" />
+        <function name="floor" />
+        <function name="ln" />
+        <function name="logn" />
+        <function name="power" />
+        <function name="random" />
+        <function name="round" />
+        <function name="sign" />
+        <function name="sin" />
+        <function name="sqrt" />
+        <function name="tan" />
+        <function name="times" />
+
+        <const static="true" name="e" />
+        <const static="true" name="pi" />
+
+        <function static="true" name="atan2" />
+        <function static="true" name="min" />
+        <function static="true" name="max" />
+    </class>
+
+    <class name="range" internal="true">
+        <function name="contains" />
+        <function name="end" />
+        <function name="intersection" />
+        <function name="ints" />
+        <function name="length" />
+        <function name="start" />
+    </class>
+
+    <class name="string" internal="true">
+        <function name="contains" />
+        <function name="indexOf" />
+        <function name="lastIndexOf" />
+        <function name="length" />
+        <function name="repeat" />
+        <function name="replace" />
+        <function name="split" />
+        <function name="toLowerCase" />
+        <function name="toUpperCase" />
+        <function name="trim" />
+    </class>
+
+    <class name="function" internal="true">
+        <function name="call" />
+    </class>
+
+    <class name="type" internal="true" />
+</api>

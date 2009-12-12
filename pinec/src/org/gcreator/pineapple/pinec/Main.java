@@ -5,16 +5,23 @@
 
 package org.gcreator.pineapple.pinec;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.util.List;
 import org.gcreator.pineapple.pinec.compiler.api.APIClass;
 import org.gcreator.pineapple.pinec.compiler.api.APIImporter;
 import org.gcreator.pineapple.pinec.compiler.api.CommonLibrary;
 import org.gcreator.pineapple.pinec.compiler.api.NameLibrary;
+import org.gcreator.pineapple.pinec.compiler.generation.Archive;
+import org.gcreator.pineapple.pinec.compiler.generation.ArchiveOutputter;
+import org.gcreator.pineapple.pinec.compiler.generation.ArchiveSettingsTable;
 import org.gcreator.pineapple.pinec.lexer.Lexer;
 import org.gcreator.pineapple.pinec.lexer.LexerHandler;
 import org.gcreator.pineapple.pinec.parser.Parser;
@@ -51,10 +58,18 @@ public class Main {
             final Document d = parser.run();
             importer.importFromDocument(d);
             final NameLibrary names = new NameLibrary(lib);
+            final ArchiveSettingsTable table = new ArchiveSettingsTable();
+            table.stringValues.put("X-Powered-By", "Official PineDL Compiler");
+            table.stringValues.put("X-Version", "0.01");
+            final Archive archive = new Archive();
 
-            for(APIClass cls : lib.getClasses()){
-                System.out.println(cls);
-            }
+            File f = new File("output.pba");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(f));
+
+            final ArchiveOutputter out = new ArchiveOutputter(os, table, names, archive);
+            out.output();
+
+            os.close();
         }
         catch(IOException e){
             e.printStackTrace();

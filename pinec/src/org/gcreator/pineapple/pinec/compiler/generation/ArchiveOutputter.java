@@ -22,12 +22,14 @@ public class ArchiveOutputter {
     private final OutputStream ostream;
     private final ArchiveSettingsTable table;
     private final NameLibrary names;
+    private final Archive archive;
 
     public ArchiveOutputter(final OutputStream ostream, final ArchiveSettingsTable table,
-            final NameLibrary names){
+            final NameLibrary names, final Archive archive){
         this.ostream = ostream;
         this.table = table;
         this.names = names;
+        this.archive = archive;
     }
 
     public void output() throws IOException{
@@ -35,6 +37,19 @@ public class ArchiveOutputter {
 
         writeTable();
         writeNameTable();
+        writeArchive();
+    }
+
+    private void writeArchive() throws IOException{
+        writeUnsignedInt16(archive.classes.size());
+        for(BytecodeClass cls : archive.classes){
+            writeClass(cls);
+        }
+
+        writeUnsignedInt16(archive.functions.size());
+        for(BytecodeFunction function : archive.functions){
+            writeFunction(function);
+        }
     }
 
     private void writeNameTable() throws IOException{
@@ -81,7 +96,63 @@ public class ArchiveOutputter {
         }
     }
 
-    private void writeUnsignedInt16(short value) throws IOException{
+    private void writeFunction(BytecodeFunction function) throws IOException{
+        //Write constant table
+        writeUnsignedInt32(function.charConstants.size());
+        for(Character c : function.charConstants){
+            writeUnicodeChar(c);
+        }
+
+        writeUnsignedInt32(function.floatConstants.size());
+        for(Float f : function.floatConstants){
+            writeFloat(f);
+        }
+
+        writeUnsignedInt32(function.stringConstants.size());
+        for(String s : function.stringConstants){
+            writeUnicodeString(s);
+        }
+
+        writeUnsignedInt16(function.varNumber);
+
+        List<BytecodeInstruction> instructions = function.instructions;
+        int iCount = instructions.size();
+        if(iCount>0xFFFF){
+            throw new IOException("Too many instructions in function");
+        }
+
+        writeUnsignedInt32(iCount);
+        byte[] b = new byte[iCount*5];
+        int pos = 0;
+        for(BytecodeInstruction instr : function.instructions){
+            instr.storeToBytes(b, pos);
+            pos += 5;
+        }
+
+        ostream.write(b);
+    }
+
+    private void writeClass(BytecodeClass cls) throws IOException{
+        writeUnsignedInt16(cls.base.size());
+
+        for(Integer i : cls.base){
+            writeUnsignedInt16(i);
+        }
+
+        writeUnsignedInt16(cls.creatorFunction);
+        writeUnsignedInt16(cls.constructorFunction);
+        writeUnsignedInt16(cls.fields.size());
+
+        for(Integer i : cls.fields){
+            writeUnsignedInt16(i);
+        }
+    }
+
+    private void writeFloat(Float value) throws IOException{
+        writeSignedInt32(Float.floatToRawIntBits(value));
+    }
+
+    private void writeUnsignedInt16(int value) throws IOException{
         final byte[] bArray = new byte[]{
             (byte) (value >> 8),
             (byte) value
@@ -124,8 +195,15 @@ public class ArchiveOutputter {
         ostream.write(bArray);
     }
 
+    private void writeUnicodeChar(Character value) throws IOException{
+        final byte[] bArray = value.toString().getBytes(stringEncoding);
+
+        writeUnsignedInt32(bArray.length);
+        ostream.write(bArray);
+    }
+
     private void writeUnicodeString(String value) throws IOException{
-        final byte[] bArray = value.getBytes("UTF-8");
+        final byte[] bArray = value.getBytes(stringEncoding);
 
         writeUnsignedInt32(bArray.length); //Byte count, NOT char count
                                 //assuming otherwise will corrupt archive.
