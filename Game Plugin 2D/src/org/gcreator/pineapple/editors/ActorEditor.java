@@ -22,7 +22,6 @@ THE SOFTWARE.
  */
 package org.gcreator.pineapple.editors;
 
-import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -51,7 +50,6 @@ public final class ActorEditor extends DocumentPane {
     private static final long serialVersionUID = 1L;
     private Actor actor = null;
     private BehaviourPanel behaviour;
-    private CardLayout clayout = new CardLayout();
     
     /**
      * Creates a new ActorEditor
@@ -79,7 +77,7 @@ public final class ActorEditor extends DocumentPane {
                 setModified(true);
             }
         });
-        view.add(behaviour, "behavior");
+        area.add(behaviour);
         
         spriteChooser.setResourceValidator(new ImageValidator());
         spriteChooser.setSelectedFile(actor.getImage());
@@ -126,47 +124,13 @@ public final class ActorEditor extends DocumentPane {
     private void initComponents() {
 
         toggles = new javax.swing.ButtonGroup();
-        toolBar = new javax.swing.JToolBar();
-        propertiesToggle = new javax.swing.JToggleButton();
-        membersToggle = new javax.swing.JToggleButton();
-        view = new javax.swing.JPanel();
-        propertiesPanel = new javax.swing.JPanel();
         inGameRenderingPanel = new javax.swing.JPanel();
         depthSpinner = new javax.swing.JSpinner();
         depthLabel = new javax.swing.JLabel();
         drawSpriteCheckBox = new javax.swing.JCheckBox();
         spriteChooser = new org.gcreator.pineapple.gui.ResourceChooser();
         spriteLabel = new javax.swing.JLabel();
-
-        toolBar.setFloatable(false);
-        toolBar.setRollover(true);
-
-        toggles.add(propertiesToggle);
-        propertiesToggle.setSelected(true);
-        propertiesToggle.setText("Properties");
-        propertiesToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                propertiesToggleActionPerformed(evt);
-            }
-        });
-        toolBar.add(propertiesToggle);
-
-        toggles.add(membersToggle);
-        membersToggle.setText("Members");
-        membersToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                membersToggleActionPerformed(evt);
-            }
-        });
-        toolBar.add(membersToggle);
-
-        view.setLayout(clayout = new java.awt.CardLayout());
-        /*
-        view.setLayout(new java.awt.CardLayout());
-        */
-
-        propertiesPanel.setMinimumSize(new java.awt.Dimension(100, 218));
-        propertiesPanel.setPreferredSize(new java.awt.Dimension(100, 218));
+        area = new javax.swing.JPanel();
 
         inGameRenderingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("In-Game Rendering"));
 
@@ -190,19 +154,18 @@ public final class ActorEditor extends DocumentPane {
         inGameRenderingPanel.setLayout(inGameRenderingPanelLayout);
         inGameRenderingPanelLayout.setHorizontalGroup(
             inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inGameRenderingPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(spriteLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spriteChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
+                        .addComponent(spriteChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                         .addComponent(depthLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
-                        .addComponent(drawSpriteCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(drawSpriteCheckBox))
                 .addContainerGap())
         );
         inGameRenderingPanelLayout.setVerticalGroup(
@@ -210,53 +173,34 @@ public final class ActorEditor extends DocumentPane {
             .addGroup(inGameRenderingPanelLayout.createSequentialGroup()
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(spriteChooser, 0, 0, Short.MAX_VALUE)
-                    .addComponent(spriteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(spriteLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inGameRenderingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(depthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(depthSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(drawSpriteCheckBox)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(202, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
-        propertiesPanel.setLayout(propertiesPanelLayout);
-        propertiesPanelLayout.setHorizontalGroup(
-            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-        );
-        propertiesPanelLayout.setVerticalGroup(
-            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        view.add(propertiesPanel, "card2");
+        area.setBackground(new java.awt.Color(255, 255, 255));
+        area.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(area, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 119, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(inGameRenderingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(area, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-private void propertiesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_propertiesToggleActionPerformed
-    clayout.first(view);
-}//GEN-LAST:event_propertiesToggleActionPerformed
-
-private void membersToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membersToggleActionPerformed
-    clayout.last(view);
-}//GEN-LAST:event_membersToggleActionPerformed
 
 private void drawSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawSpriteCheckBoxActionPerformed
     actor.setVisible(drawSpriteCheckBox.isSelected());
@@ -264,18 +208,14 @@ private void drawSpriteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {
 }//GEN-LAST:event_drawSpriteCheckBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel area;
     private javax.swing.JLabel depthLabel;
     private javax.swing.JSpinner depthSpinner;
     private javax.swing.JCheckBox drawSpriteCheckBox;
     private javax.swing.JPanel inGameRenderingPanel;
-    private javax.swing.JToggleButton membersToggle;
-    private javax.swing.JPanel propertiesPanel;
-    private javax.swing.JToggleButton propertiesToggle;
     private org.gcreator.pineapple.gui.ResourceChooser spriteChooser;
     private javax.swing.JLabel spriteLabel;
     private javax.swing.ButtonGroup toggles;
-    private javax.swing.JToolBar toolBar;
-    private javax.swing.JPanel view;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -83,7 +83,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="newEventButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="New..."/>
+                    <Property name="text" type="java.lang.String" value="Add"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>

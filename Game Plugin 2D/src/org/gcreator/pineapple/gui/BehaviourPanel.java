@@ -208,7 +208,7 @@ public class BehaviourPanel extends JPanel implements Event.EventChangeListener 
 
         eventButtonsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
-        newEventButton.setText("New...");
+        newEventButton.setText("Add");
         newEventButton.setEnabled(false);
         newEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
