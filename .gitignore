@@ -1,0 +1,71 @@
+
+# /Apple Pie/
+/Apple Pie/build
+/Apple Pie/dist
+
+# /Apple Pie/nbproject/
+/Apple Pie/nbproject/private
+
+# /Core/
+/Core/links
+/Core/build
+/Core/dist
+
+# /Core/Plugins/
+/Core/Plugins/*
+
+# /Core/nbproject/
+/Core/nbproject/private
+
+# /Game Plugin 2D/
+/Game Plugin 2D/dist
+/Game Plugin 2D/build
+
+# /Game Plugin 2D/nbproject/
+/Game Plugin 2D/nbproject/private
+
+# /PineDL Compiler/
+/PineDL Compiler/build
+/PineDL Compiler/dist
+
+# /PineDL Compiler/nbproject/
+/PineDL Compiler/nbproject/private
+
+# /PineDL Cpp Compiler/
+/PineDL Cpp Compiler/build
+/PineDL Cpp Compiler/dist
+
+# /PineDL Cpp Compiler/nbproject/
+/PineDL Cpp Compiler/nbproject/private
+
+# /Pineapple/
+/Pineapple/build
+/Pineapple/dist
+
+# /Pineapple/nbproject/
+/Pineapple/nbproject/private
+
+# /Pineapple Design/
+/Pineapple Design/dist
+/Pineapple Design/build
+
+# /Pineapple Design/nbproject/
+/Pineapple Design/nbproject/private
+
+# /Pineapple Design/src/
+/Pineapple Design/src/.~lock.pineapple-spec.odt#
+/Pineapple Design/src/.~lock.pinedl-spec.odt#
+
+# /Resources/
+/Resources/build
+/Resources/dist
+
+# /Resources/nbproject/
+/Resources/nbproject/private
+
+# /Syntax Highlighter/
+/Syntax Highlighter/build
+/Syntax Highlighter/dist
+
+# /Syntax Highlighter/nbproject/
+/Syntax Highlighter/nbproject/private
