@@ -1,0 +1,14 @@
+
+# /PineDL Compiler/
+/PineDL Compiler/build
+/PineDL Compiler/dist
+
+# /PineDL Compiler/nbproject/
+/PineDL Compiler/nbproject/private
+
+# /pinec/
+/pinec/build
+/pinec/dist
+
+# /pinec/nbproject/
+/pinec/nbproject/private
